@@ -1,0 +1,36 @@
+<?php
+
+namespace {{namespace}}
+
+use Illuminate\Database\Eloquent\Builder;
+
+class {{class}}
+{
+    /**
+     * Apply the filter after validation passes & sanitize
+     * @param string $value
+     * @param Builder $builder
+     */
+    public function handle(string $value, Builder $builder): void
+    {
+        $builder->where('name', $value);
+    }
+
+    /**
+     * @param mixed $value
+     * @return mixed
+     */
+    public function sanitize($value)
+    {
+        return $value;
+    }
+
+    /**
+     * @param mixed $value
+     * @return bool|string|array
+     */
+    public function validate($value)
+    {
+        return true;
+    }
+}
