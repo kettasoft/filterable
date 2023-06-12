@@ -7,7 +7,7 @@
 You can install this package via composer using this command:
 
 ```bash
-composer require kettasoft/laravel-eloquent-filter
+composer require kettasoft/filterable
 ```
 
 In Laravel 5.5 the service provider will automatically get registered. In older versions of the framework, you must install the service provider:
@@ -16,13 +16,13 @@ In Laravel 5.5 the service provider will automatically get registered. In older 
 // config/app.php
 'providers' => [
     ...
-    Kettasoft\EloquentFilter\Providers\ServiceProvider::class,
+    Kettasoft\EloquentFilter\Providers\FilterableServiceProvider::class,
 ];
 ```
 
 You can publish the config with:
 ```bash
-php artisan vendor:publish --provider="Kettasoft\EloquentFilter\Providers\ServiceProvider" --tag="config"
+php artisan vendor:publish --provider="Kettasoft\Filterable\Providers\FilterableServiceProvider" --tag="config"
 ```
 
 You can make a new filter class with:
@@ -32,5 +32,5 @@ php artisan kettasoft:make-filter YourFilterName
 
 You must publish the Stubs with:
 ```bash
-php artisan vendor:publish --provider="Kettasoft\EloquentFilter\Providers\ServiceProvider" --tag="stubs"
+php artisan vendor:publish --provider="Kettasoft\Filterable\Providers\FilterableServiceProvider" --tag="stubs"
 ```
