@@ -3,9 +3,8 @@
 namespace Kettasoft\EloquentFilter\Commands;
 
 use Illuminate\Console\Command;
-use Kettasoft\EloquentFilter\Support\Stub;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
+use Illuminate\Support\Str;
+use Illuminate\Filesystem\Filesystem;
 
 class GenerateEloquentFilter extends Command
 {
@@ -134,7 +133,7 @@ class GenerateEloquentFilter extends Command
         $className = array_pop($parts);
         $ns = count($parts) > 0 ? implode('\\', $parts).'\\' : '';
 
-        $fqClass = config('eloquentfilter.namespace', 'App\\eloquentfilters\\').$ns.$className;
+        $fqClass = config('eloquent-filter.namespace', 'App\\eloquentfilters\\').$ns.$className;
 
         if (substr($fqClass, -6, 6) !== 'Filter') {
             $fqClass .= 'Filter';

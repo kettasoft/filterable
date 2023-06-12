@@ -15,8 +15,12 @@ class ServiceProvider extends LaravelServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/../config/eloquentfilter.php' => config_path('eloquentfilter.php'),
-        ]);
+            __DIR__ . '/../../config/eloquent-filter.php' => config_path('eloquent-filter.php'),
+        ], 'config');
+
+        $this->publishes([
+            __DIR__ . '/../stubs/filter.php' => base_path('stubs/laravel-eloquent-filter/filter.php')
+        ], 'stub');
     }
 
     /**

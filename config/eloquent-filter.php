@@ -10,7 +10,7 @@ return [
      |
      */
 
-    'namespace' => 'App\\ModelFilters\\',
+    'namespace' => 'App\\Http\\Filters\\',
 
     /*
     |--------------------------------------------------------------------------
@@ -22,7 +22,7 @@ return [
     |
     */
        'generator' => [
-           'stub' => app_path('stubs/template.stub')
+           'stub' => 'path' => base_path('vendor/kettasoft/laravel-eloquent-filter/src/stubs'),
        ],
 
     /*
