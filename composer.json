@@ -2,6 +2,7 @@
     "name": "kettasoft/laravel-eloquent-filter",
     "description": "Easy and fast Eloquent filter package",
     "type": "library",
+    "license": "MIT",
     "keywords": [
         "laravel",
         "eloquent",
