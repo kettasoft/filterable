@@ -1,8 +1,8 @@
 <?php
 
-namespace Kettasoft\EloquentFilter\Providers;
+namespace Kettasoft\Filterable\Providers;
 
-use Kettasoft\EloquentFilter\Commands\GenerateEloquentFilter;
+use Kettasoft\Filterable\Commands\GenerateEloquentFilter;
 use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
 
 class ServiceProvider extends LaravelServiceProvider

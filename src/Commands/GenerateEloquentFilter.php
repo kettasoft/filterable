@@ -1,6 +1,6 @@
 <?php
 
-namespace Kettasoft\EloquentFilter\Commands;
+namespace Kettasoft\filterable\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;

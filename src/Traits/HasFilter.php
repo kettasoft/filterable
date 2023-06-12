@@ -1,13 +1,13 @@
 <?php
 
-namespace Abdrzakoxa\EloquentFilter\Traits;
+namespace Kettasoft\Filterable\Traits;
 
-use Abdrzakoxa\EloquentFilter\Filter;
+use Kettasoft\Filterable\Filter;
 use Illuminate\Database\Eloquent\Builder;
 
 /**
  * Trait HasFilter
- * @package Abdrzakoxa\EloquentFilter\Traits
+ * @package Kettasoft\Filterable\Traits
  */
 trait HasFilter
 {

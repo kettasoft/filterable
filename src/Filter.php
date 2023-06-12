@@ -1,8 +1,8 @@
 <?php
 
-namespace Kettasoft\EloquentFilter;
+namespace Kettasoft\Filterable;
 
-use Kettasoft\EloquentFilter\Contracts\ForceApply;
+use Kettasoft\Filterable\Contracts\ForceApply;
 use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +14,7 @@ use ReflectionException;
 
 /**
  * Class Filter
- * @package Kettasoft\EloquentFilter
+ * @package Kettasoft\Filterable
  */
 class Filter
 {

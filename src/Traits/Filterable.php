@@ -1,15 +1,15 @@
 <?php
 
-namespace Kettasoft\EloquentFilter\Traits;
+namespace Kettasoft\Filterable\Traits;
 
-use Kettasoft\EloquentFilter\Filter;
+use Kettasoft\Filterable\Filter;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Builder;
 
 /**
  * Trait Filterable
- * @package Kettasoft\EloquentFilter\Traits
+ * @package Kettasoft\Filterable\Traits
  * @method static Builder filter(array $data, ?array $filters = null)
  * @method static LengthAwarePaginator paginateFilter(?int $perPage = null, array $columns = ['*'], string $pageName = 'page', ?int $page = null)
  * @method static Paginator simplePaginateFilter(?int $perPage = null, array $columns = ['*'], string $pageName = 'page', ?int $page = null)
