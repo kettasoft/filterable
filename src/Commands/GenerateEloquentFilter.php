@@ -13,7 +13,7 @@ class GenerateEloquentFilter extends Command
      *
      * @var string
      */
-    protected $signature = 'make:filter {name}';
+    protected $signature = 'kettasoft:make-filter {name}';
 
     /**
      * The console command description.
@@ -67,7 +67,7 @@ class GenerateEloquentFilter extends Command
         }
         $this->makeDirectory($path);
 
-        $stubPath = config('eloquentfilter.generator.stub', __DIR__.'/../stubs/eloquentfilter.stub');
+        $stubPath = config('eloquent-filter.generator.stub', __DIR__.'/../../stubs/filter.stub');
 
         if (! $this->files->exists($stubPath) || ! is_readable($stubPath)) {
             $this->error(sprintf('File "%s" does not exist or is unreadable.', $stubPath));
