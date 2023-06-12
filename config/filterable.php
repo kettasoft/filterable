@@ -22,7 +22,7 @@ return [
     |
     */
        'generator' => [
-           'stub' => 'path' => base_path('vendor/kettasoft/laravel-eloquent-filter/src/stubs'),
+           'stub' => base_path('vendor/kettasoft/laravel-eloquent-filter/src/stubs'),
        ],
 
     /*
