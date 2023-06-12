@@ -1,6 +1,6 @@
 <?php
 
-namespace Kettasoft\EloquentFilter\Support;
+namespace Kettasoft\Filterable\Support;
 
 class Stub
 {

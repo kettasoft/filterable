@@ -1,6 +1,6 @@
 <?php
 
-namespace Kettasoft\filterable\Commands;
+namespace Kettasoft\Filterable\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
@@ -67,7 +67,7 @@ class GenerateEloquentFilter extends Command
         }
         $this->makeDirectory($path);
 
-        $stubPath = config('eloquent-filter.generator.stub', __DIR__.'/../../stubs/filter.stub');
+        $stubPath = config('filterable.generator.stub', __DIR__.'/../../stubs/filter.stub');
 
         if (! $this->files->exists($stubPath) || ! is_readable($stubPath)) {
             $this->error(sprintf('File "%s" does not exist or is unreadable.', $stubPath));
@@ -133,7 +133,7 @@ class GenerateEloquentFilter extends Command
         $className = array_pop($parts);
         $ns = count($parts) > 0 ? implode('\\', $parts).'\\' : '';
 
-        $fqClass = config('eloquent-filter.namespace', 'App\\eloquentfilters\\').$ns.$className;
+        $fqClass = config('filterable.namespace', 'App\\eloquentfilters\\').$ns.$className;
 
         if (substr($fqClass, -6, 6) !== 'Filter') {
             $fqClass .= 'Filter';
