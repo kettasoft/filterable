@@ -16,7 +16,7 @@ In Laravel 5.5 the service provider will automatically get registered. In older 
 // config/app.php
 'providers' => [
     ...
-    Kettasoft\EloquentFilter\ServiceProvider::class,
+    Kettasoft\EloquentFilter\Providers\ServiceProvider::class,
 ];
 ```
 
