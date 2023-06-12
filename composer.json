@@ -1,5 +1,5 @@
 {
-    "name": "kettasoft/laravel-eloquent-filter",
+    "name": "kettasoft/filterable",
     "description": "Easy and fast Eloquent filter package",
     "type": "library",
     "license": "MIT",
