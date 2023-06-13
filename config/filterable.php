@@ -22,7 +22,7 @@ return [
     |
     */
        'generator' => [
-           'stub' => base_path('vendor/kettasoft/filterable/src/stubs/filter.php'),
+           'stub' => base_path('vendor/kettasoft/filterable/src/stubs/filter.stub'),
        ],
 
     /*
