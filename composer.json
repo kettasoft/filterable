@@ -1,0 +1,35 @@
+{
+  "name": "kettasoft/filterable",
+  "description": "Easy and fast Eloquent filter package",
+  "type": "library",
+  "license": "MIT",
+  "keywords": [
+    "laravel",
+    "eloquent",
+    "search",
+    "model",
+    "query",
+    "filter"
+  ],
+  "autoload": {
+    "psr-4": {
+      "Kettasoft\\Filterable\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Abdalrhman Emad Saad",
+      "email": "kettasoft@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^8.0",
+    "illuminate/database": "^8.0|^9.0|^10.0",
+    "illuminate/support": "^8.0|^9.0|^10.0"
+  },
+  "extra": {
+    "version": "1.0.0"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
