@@ -52,4 +52,13 @@ class Filterable implements FilterableContext
 
     return $this;
   }
+
+  /**
+   * Get current engine.
+   * @return Engine
+   */
+  public function getEngin(): Engine
+  {
+    return $this->engine;
+  }
 }
