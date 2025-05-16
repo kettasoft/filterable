@@ -9,7 +9,7 @@ use Illuminate\Contracts\Support\Arrayable;
  * @template TKey of array-key
  * @template TValue
  */
-class Payload implements \Stringable, Arrayable, Jsonable
+readonly class Payload implements \Stringable, Arrayable, Jsonable
 {
   /**
    * Request field.
