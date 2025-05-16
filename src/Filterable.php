@@ -2,6 +2,7 @@
 
 namespace Kettasoft\Filterable;
 
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Kettasoft\Filterable\Contracts\FilterableContext;
@@ -60,5 +61,14 @@ class Filterable implements FilterableContext
   public function getEngin(): Engine
   {
     return $this->engine;
+  }
+
+  /**
+   * Get the current request instance.
+   * @return Request
+   */
+  public function getRequest(): Request
+  {
+    return $this->request;
   }
 }
