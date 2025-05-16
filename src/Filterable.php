@@ -31,6 +31,12 @@ class Filterable implements FilterableContext
   protected $sanitizers = [];
 
   /**
+   * All receved data from request.
+   * @var array
+   */
+  protected $data = [];
+
+  /**
    * The Sanitizer instance.
    * @var Sanitizer
    */
@@ -44,6 +50,7 @@ class Filterable implements FilterableContext
   {
     $this->request = $request ?: App::make(Request::class);
     $this->sanitizer = new Sanitizer($this->sanitizers);
+    $this->parseIncommingRequestData();
   }
 
   /**
@@ -105,5 +112,23 @@ class Filterable implements FilterableContext
     $this->sanitizers = $override ? $sanitizers : array_merge($this->sanitizers, $sanitizers);
     $this->sanitizer->setSanitizers($this->sanitizers);
     return $this;
+  }
+
+  /**
+   * Parse incomming data from request.
+   * @return void
+   */
+  private function parseIncommingRequestData()
+  {
+    $this->data = [...$this->request->all(), ...$this->request->json()->all()];
+  }
+
+  /**
+   * Get current data.
+   * @return array
+   */
+  public function getData(): mixed
+  {
+    return $this->data;
   }
 }
