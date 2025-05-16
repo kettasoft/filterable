@@ -16,6 +16,11 @@
       "Kettasoft\\Filterable\\": "src/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Kettasoft\\Filterable\\Tests\\": "tests/"
+    }
+  },
   "authors": [
     {
       "name": "Abdalrhman Emad Saad",
