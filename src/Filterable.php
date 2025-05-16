@@ -62,6 +62,7 @@ class Filterable implements FilterableContext
     $this->request = $request ?: App::make(Request::class);
     $this->sanitizer = new Sanitizer($this->sanitizers);
     $this->parseIncommingRequestData();
+    $this->resolveEngine();
   }
 
   /**
@@ -174,5 +175,14 @@ class Filterable implements FilterableContext
   {
     return property_exists($this, 'filters')
       && is_array($this->filters) ? $this->filters : [];
+  }
+
+  /**
+   * Resolve default engine to Filterable instance.
+   * @return void
+   */
+  private function resolveEngine()
+  {
+    $this->useEngin(config('filterable.default_engine'));
   }
 }
