@@ -32,6 +32,11 @@
     "illuminate/database": "^8.0|^9.0|^10.0",
     "illuminate/support": "^8.0|^9.0|^10.0"
   },
+  "require-dev": {
+    "mockery/mockery": "^1.3.2",
+    "orchestra/testbench": "^8.0|^9.0",
+    "phpunit/phpunit": "^8.4|^9.0|^10.5"
+  },
   "scripts": {
     "test": "php vendor/bin/phpunit"
   },
