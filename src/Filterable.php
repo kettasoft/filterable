@@ -31,6 +31,12 @@ class Filterable implements FilterableContext
   protected $filters = [];
 
   /**
+   * Ignore empty or null values option.
+   * @var bool
+   */
+  protected $ignoreEmptyValues;
+
+  /**
    * The Request instance.
    * @var Request
    */
@@ -227,6 +233,25 @@ class Filterable implements FilterableContext
 
     $this->requestSource = $source;
     return $this;
+  }
+
+  /**
+   * Ignore empty or null values.
+   * @return Filterable
+   */
+  public function ignoreEmptyValues(): static
+  {
+    $this->ignoreEmptyValues = true;
+    return $this;
+  }
+
+  /**
+   * Check if current filterable class has ignored empty values.
+   * @return bool
+   */
+  public function hasIgnoredEmptyValues(): bool
+  {
+    return $this->ignoreEmptyValues === true;
   }
 
   /**

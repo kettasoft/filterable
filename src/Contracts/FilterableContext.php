@@ -22,4 +22,10 @@ interface FilterableContext
    * @return array
    */
   public function getMentors(): array;
+
+  /**
+   * Check if current filterable class has ignored empty values.
+   * @return bool
+   */
+  public function hasIgnoredEmptyValues(): bool;
 }

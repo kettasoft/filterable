@@ -65,7 +65,17 @@ return [
         | The Invokeable Engine provides a powerful way to dynamically map incomming reuqest parameters to corresponding methods in a filter class.
         |
         */
-        'invokeable' => [],
+        'invokeable' => [
+            /*
+            |--------------------------------------------------------------------------
+            | Egnore empty values
+            |--------------------------------------------------------------------------
+            |
+            | If 'true' filters with null or empty string values will be ignored.
+            |
+            */
+            'ignore_empty_values' => false,
+        ],
 
         /*
         |--------------------------------------------------------------------------

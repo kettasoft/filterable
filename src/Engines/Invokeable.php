@@ -38,6 +38,10 @@ class Invokeable implements Engine
     foreach ($this->context->getFilterAttributes() as $filter) {
       $value = $this->context->getRequest()->get($filter);
 
+      if (($this->context->hasIgnoredEmptyValues() || config('filterable.engines.invokeable.ignore_empty_values')) && !$value) {
+        continue;
+      }
+
       $method = $this->getMethodName($filter);
 
       $this->initializeFilters($filter, $method, $value);
