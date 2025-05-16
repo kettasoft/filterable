@@ -85,4 +85,25 @@ class Filterable implements FilterableContext
   {
     return $this->request;
   }
+
+  /**
+   * Get sanitizer instance.
+   * @return Sanitizer
+   */
+  public function getSanitizerInstance(): Sanitizer
+  {
+    return $this->sanitizer;
+  }
+
+  /**
+   * Set a new sanitizers classes.
+   * @param array $sanitizers
+   * @return Filterable
+   */
+  public function setSanitizers(array $sanitizers, bool $override = true): static
+  {
+    $this->sanitizers = $override ? $sanitizers : array_merge($this->sanitizers, $sanitizers);
+    $this->sanitizer->setSanitizers($this->sanitizers);
+    return $this;
+  }
 }
