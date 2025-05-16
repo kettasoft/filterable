@@ -24,6 +24,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Default Request Source.
+    |--------------------------------------------------------------------------
+    |
+    | By default, filters will read query parameters from the request instance.
+    | You can change the source here if you want to use another source (e.g. JSON body).
+    | Options: 'query', 'input', 'json'
+    |
+    */
+    'request_source' => 'query',
+
+    /*
+    |--------------------------------------------------------------------------
     | Default Filter Engine
     |--------------------------------------------------------------------------
     |
