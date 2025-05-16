@@ -9,9 +9,12 @@ use Kettasoft\Filterable\Engines\Contracts\Engine;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Contracts\FilterableContext;
 use Kettasoft\Filterable\Engines\Factory\EngineManager;
+use Kettasoft\Filterable\Traits\InteractsWithFilterKey;
 
 class Filterable implements FilterableContext
 {
+  use InteractsWithFilterKey;
+
   /**
    * The running filter engine.
    * @var Engine

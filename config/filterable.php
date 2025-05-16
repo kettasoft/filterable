@@ -9,8 +9,18 @@ return [
     | This is the namespace all you Eloquent Model Filters will reside
     |
     */
-
     'namespace' => 'App\\Http\\Filters\\',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Default Request Key
+    |--------------------------------------------------------------------------
+    |
+    | The query string key to look for filter inputs automatically from requests.
+    | Example: /posts?filter[title]=test
+    |
+    */
+    'filter_key' => 'filter',
 
     /*
     |--------------------------------------------------------------------------
