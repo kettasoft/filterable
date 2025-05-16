@@ -2,11 +2,12 @@
 
 namespace Kettasoft\Filterable;
 
-use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
-use Kettasoft\Filterable\Contracts\FilterableContext;
+use Kettasoft\Filterable\Sanitization\Sanitizer;
 use Kettasoft\Filterable\Engines\Contracts\Engine;
+use Illuminate\Contracts\Database\Eloquent\Builder;
+use Kettasoft\Filterable\Contracts\FilterableContext;
 use Kettasoft\Filterable\Engines\Factory\EngineManager;
 
 class Filterable implements FilterableContext
@@ -24,12 +25,25 @@ class Filterable implements FilterableContext
   protected Request $request;
 
   /**
+   * Registered sanitizers to operate upon.
+   * @var array
+   */
+  protected $sanitizers = [];
+
+  /**
+   * The Sanitizer instance.
+   * @var Sanitizer
+   */
+  public Sanitizer $sanitizer;
+
+  /**
    * Create a new Filterable instance.
    * @param Request|null $request
    */
   public function __construct(Request|null $request = null)
   {
-    $this->request = $request ?: App::make(Request::class);;
+    $this->request = $request ?: App::make(Request::class);
+    $this->sanitizer = new Sanitizer($this->sanitizers);
   }
 
   /**
