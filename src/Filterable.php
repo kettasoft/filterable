@@ -11,6 +11,7 @@ use Kettasoft\Filterable\Contracts\FilterableContext;
 use Kettasoft\Filterable\Engines\Factory\EngineManager;
 use Kettasoft\Filterable\Traits\InteractsWithFilterKey;
 use Kettasoft\Filterable\Traits\InteractsWithMethodMentoring;
+use Kettasoft\Filterable\Exceptions\RequestSourceIsNotSupportedException;
 
 class Filterable implements FilterableContext
 {
@@ -34,6 +35,12 @@ class Filterable implements FilterableContext
    * @var Request
    */
   protected Request $request;
+
+  /**
+   * Request source.
+   * @var string|null
+   */
+  protected $requestSource = 'query';
 
   /**
    * The Builder instance.
@@ -204,5 +211,35 @@ class Filterable implements FilterableContext
   private function resolveEngine()
   {
     $this->useEngin(config('filterable.default_engine'));
+  }
+
+  /**
+   * Set request source.
+   * @param string $source
+   * @throws \Kettasoft\Filterable\Exceptions\RequestSourceIsNotSupportedException
+   * @return static
+   */
+  public function setSource(string $source)
+  {
+    if (!in_array($source, ['query', 'input', 'json'])) {
+      throw new RequestSourceIsNotSupportedException($source);
+    }
+
+    $this->requestSource = $source;
+    return $this;
+  }
+
+  /**
+   * Retrieve an input item from the request.
+   * @param string $key
+   * @return mixed
+   */
+  public function get(string $key)
+  {
+    if (!in_array($source = $this->requestSource ?? config('filterable.request_source', 'query'), ['query', 'input', 'json'])) {
+      throw new RequestSourceIsNotSupportedException($source);
+    }
+
+    return $this->request->{$source}($key);
   }
 }
