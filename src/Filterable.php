@@ -103,6 +103,16 @@ class Filterable implements FilterableContext
   }
 
   /**
+   * Create new Filterable instance with custom Request.
+   * @param \Illuminate\Http\Request $request
+   * @return static
+   */
+  public static function withRequest(Request $request): static
+  {
+    return static::create($request);
+  }
+
+  /**
    * Set a new sanitizers classes.
    * @param array $sanitizers
    * @return Filterable
