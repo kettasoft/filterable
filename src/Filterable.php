@@ -10,10 +10,12 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Contracts\FilterableContext;
 use Kettasoft\Filterable\Engines\Factory\EngineManager;
 use Kettasoft\Filterable\Traits\InteractsWithFilterKey;
+use Kettasoft\Filterable\Traits\InteractsWithMethodMentoring;
 
 class Filterable implements FilterableContext
 {
-  use InteractsWithFilterKey;
+  use InteractsWithFilterKey,
+    InteractsWithMethodMentoring;
 
   /**
    * The running filter engine.

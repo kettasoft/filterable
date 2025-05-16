@@ -16,4 +16,10 @@ interface FilterableContext
    * @return array
    */
   public function getFilterAttributes(): array;
+
+  /**
+   * Get mentors.
+   * @return array
+   */
+  public function getMentors(): array;
 }
