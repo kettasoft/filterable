@@ -1,6 +1,10 @@
 # An easy to use powerful Elqouent Filter
 
-[![Total Downloads](https://img.shields.io/packagist/dt/kettasoft/laravel-eloquent-filter?style=flat-square)](https://packagist.org/packages/spatie/laravel-server-monitor)
+![Tests](https://github.com/kettasoft/filterable/actions/workflows/php.yml/badge.svg?style=flat-square)
+![PHP Version](https://img.shields.io/packagist/php-v/kettasoft/filterable?style=flat-square)
+![Downloads](https://img.shields.io/packagist/dt/kettasoft/filterable?style=flat-square)
+![License](https://img.shields.io/packagist/l/kettasoft/filterable?style=flat-square)
+![Latest Version](https://img.shields.io/packagist/v/kettasoft/filterable?style=flat-square)
 
 ## Installation
 
@@ -21,16 +25,19 @@ In Laravel 5.5 the service provider will automatically get registered. In older 
 ```
 
 You can publish the config with:
+
 ```bash
 php artisan vendor:publish --provider="Kettasoft\Filterable\Providers\FilterableServiceProvider" --tag="config"
 ```
 
 You can make a new filter class with:
+
 ```bash
 php artisan kettasoft:make-filter YourFilterName
 ```
 
 You must publish the Stubs with:
+
 ```bash
 php artisan vendor:publish --provider="Kettasoft\Filterable\Providers\FilterableServiceProvider" --tag="stubs"
 ```
