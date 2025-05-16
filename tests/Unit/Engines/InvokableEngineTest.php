@@ -36,12 +36,14 @@ class InvokableEngineTest extends TestCase
    */
   public function it_can_filter_by_request_query_key_name()
   {
+
     request()->merge([
-      'status' => 'pending',
+      'status' => '',
     ]);
 
     $filter = new class extends Filterable {
       protected $filters = ['status'];
+      public $ignoreEmptyValues = true;
 
       public function status(Payload $payload)
       {
@@ -51,7 +53,7 @@ class InvokableEngineTest extends TestCase
 
     $posts = Post::filter($filter)->count();
 
-    $this->assertEquals(5, $posts);
+    $this->assertEquals(12, $posts);
   }
 
   /**
@@ -73,6 +75,37 @@ class InvokableEngineTest extends TestCase
       public function filterBystatus(Payload $payload)
       {
         return $this->builder->where('status', $payload);
+      }
+    };
+
+    $posts = Post::filter($filter)->count();
+
+    $this->assertEquals(5, $posts);
+  }
+
+  /**
+   * It can filter with basic class filter.
+   * @test
+   */
+  public function it_filter_with_ignored_null_or_empty_values()
+  {
+    request()->merge([
+      'status' => ''
+    ]);
+
+    $filter = new class extends Filterable {
+      protected $filters = ['status'];
+      protected $mentors = [
+        'status' => 'filterBystatus'
+      ];
+
+      public function filterBystatus(Payload $payload)
+      {
+        if ($payload->value) {
+          return $this->builder->where('status', $payload);
+        }
+
+        return $this->builder->where($payload->field, 'pending');
       }
     };
 
