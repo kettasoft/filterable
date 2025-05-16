@@ -22,6 +22,12 @@ class Filterable implements FilterableContext
   protected Engine $engine;
 
   /**
+   * Registered filters to operate upon.
+   * @var array
+   */
+  protected $filters = [];
+
+  /**
    * The Request instance.
    * @var Request
    */
@@ -155,5 +161,16 @@ class Filterable implements FilterableContext
   public function getData(): mixed
   {
     return $this->data;
+  }
+
+  /**
+   * Fetch all relevant filters from the filter API class.
+   *
+   * @return array
+   */
+  public function getFilterAttributes(): array
+  {
+    return property_exists($this, 'filters')
+      && is_array($this->filters) ? $this->filters : [];
   }
 }
