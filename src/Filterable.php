@@ -103,6 +103,18 @@ class Filterable implements FilterableContext
   }
 
   /**
+   * Set manual data injection.
+   * @param array $data
+   * @param bool $override
+   * @return static
+   */
+  public function setData(array $data, bool $override = true): static
+  {
+    $this->data = $override ? $data : array_merge($this->data, $data);
+    return $this;
+  }
+
+  /**
    * Create new Filterable instance with custom Request.
    * @param \Illuminate\Http\Request $request
    * @return static
