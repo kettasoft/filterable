@@ -36,6 +36,12 @@ class Filterable implements FilterableContext
   protected Request $request;
 
   /**
+   * The Builder instance.
+   * @var Builder
+   */
+  protected Builder $builder;
+
+  /**
    * Registered sanitizers to operate upon.
    * @var array
    */
@@ -63,6 +69,20 @@ class Filterable implements FilterableContext
     $this->sanitizer = new Sanitizer($this->sanitizers);
     $this->parseIncommingRequestData();
     $this->resolveEngine();
+  }
+
+  /**
+   * Apply all filters.
+   *
+   * @param Builder $builder
+   * @return Builder
+   */
+  public function apply(Builder|null $builder = null): Builder
+  {
+    $this->builder = $builder;
+    $query = $this->engine->apply($this->builder);
+
+    return $query;
   }
 
   /**
