@@ -3,6 +3,7 @@
 namespace Kettasoft\Filterable\Tests;
 
 use Orchestra\Testbench\TestCase as BaseTestCase;
+use Kettasoft\Filterable\Tests\Database\Migrations\CreatePostsTable;
 
 class TestCase extends BaseTestCase
 {
@@ -31,7 +32,9 @@ class TestCase extends BaseTestCase
 
   public function migrate()
   {
-    $migrations = [];
+    $migrations = [
+      CreatePostsTable::class
+    ];
 
     foreach ($migrations as $migration) {
       (new $migration)->up();
