@@ -10,18 +10,20 @@ use Kettasoft\Filterable\Sanitization\Sanitizer;
 use Kettasoft\Filterable\Engines\Contracts\Engine;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Contracts\FilterableContext;
+use Kettasoft\Filterable\Contracts\Validatable;
 use Kettasoft\Filterable\Engines\Factory\EngineManager;
-use Kettasoft\Filterable\Pipes\FilterAuthorizationPipe;
 use Kettasoft\Filterable\Traits\InteractsWithFilterKey;
+use Kettasoft\Filterable\Traits\InteractsWithValidation;
 use Kettasoft\Filterable\Traits\InteractsWithMethodMentoring;
 use Kettasoft\Filterable\Traits\InteractsWithFilterAuthorization;
 use Kettasoft\Filterable\Exceptions\RequestSourceIsNotSupportedException;
 
-class Filterable implements FilterableContext, Authorizable
+class Filterable implements FilterableContext, Authorizable, Validatable
 {
   use InteractsWithFilterKey,
     InteractsWithMethodMentoring,
-    InteractsWithFilterAuthorization;
+    InteractsWithFilterAuthorization,
+    InteractsWithValidation;
 
   /**
    * The running filter engine.
@@ -98,7 +100,8 @@ class Filterable implements FilterableContext, Authorizable
   public function apply(Builder|null $builder = null): Builder
   {
     App::make(Pipeline::class)->send($this)->through([
-      FilterAuthorizationPipe::class
+      \Kettasoft\Filterable\Pipes\FilterAuthorizationPipe::class,
+      \Kettasoft\Filterable\Pipes\ValidateBeforeFilteringPipe::class
     ])->thenReturn();
 
 
