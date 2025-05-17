@@ -133,5 +133,83 @@ return [
     | Set paginate limit
     |
     */
-    'paginate_limit' => env('PAGINATION_LIMIT_DEFAULT', 15)
+    'paginate_limit' => env('PAGINATION_LIMIT_DEFAULT', 15),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Header Driven Filter Mode
+    |--------------------------------------------------------------------------
+    | Allows dynamically selecting the filter engine via HTTP headers.
+    | When enabled, the package will check for the specified header and use
+    | its value to determine which filter engine to apply for that request.
+    |
+    | This is useful when you need different filtering behavior for:
+    | - Different client types (mobile/web)
+    | - API versions
+    | - Special request cases
+    */
+    'header_driven_mode' => [
+        /*
+        |--------------------------------------------------------------------------
+        | Enable Header Driven Mode
+        |--------------------------------------------------------------------------
+        | When true, the package will check for the filter mode header
+        | and attempt to use the specified engine if valid.
+        |
+        | Set to false to completely ignore the header.
+        */
+        'enabled' => false,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Filter Mode Header Name
+        |--------------------------------------------------------------------------
+        | The HTTP header name that will be checked for engine selection.
+        |
+        */
+        'header_name' => 'X-Filter-Mode',
+
+        /*
+        |--------------------------------------------------------------------------
+        | Available Engines Whitelist
+        |--------------------------------------------------------------------------
+        | List of engine names that can be specified in the header.
+        | Empty array means all configured engines are allowed.
+        |
+        | Example: ['dynamic', 'tree'] would only allow these two engines
+        | via header selection.
+        */
+        'allowed_engines' => [],
+
+        /*
+        |--------------------------------------------------------------------------
+        | Engine Name Mapping
+        |--------------------------------------------------------------------------
+        | Maps header values to actual engine names.
+        | Useful when you want to expose different names to clients.
+        |
+        | Example:
+        | 'engine_map' => [
+        |     'simple' => 'ruleset',
+        |     'advanced' => 'dynamic',
+        |     'full' => 'expression'
+        | ]
+        |
+        | Header value 'simple' would use the 'ruleset' engine
+        */
+        'engine_map' => [],
+
+        /*
+        |--------------------------------------------------------------------------
+        | Fallback Strategy
+        |--------------------------------------------------------------------------
+        | Determines behavior when an invalid engine is specified:
+        |
+        | 'default' - Silently falls back to default engine
+        | 'error' - Returns 400 Bad Request response
+        |
+        | Note: Always validates against configured engines in 'engines' section.
+        */
+        'fallback_strategy' => 'default',
+    ],
 ];

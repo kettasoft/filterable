@@ -5,17 +5,18 @@ namespace Kettasoft\Filterable;
 use Illuminate\Http\Request;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Facades\App;
+use Kettasoft\Filterable\Contracts\Validatable;
 use Kettasoft\Filterable\Contracts\Authorizable;
 use Kettasoft\Filterable\Sanitization\Sanitizer;
 use Kettasoft\Filterable\Engines\Contracts\Engine;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Contracts\FilterableContext;
-use Kettasoft\Filterable\Contracts\Validatable;
 use Kettasoft\Filterable\Engines\Factory\EngineManager;
 use Kettasoft\Filterable\Traits\InteractsWithFilterKey;
 use Kettasoft\Filterable\Traits\InteractsWithValidation;
 use Kettasoft\Filterable\Traits\InteractsWithMethodMentoring;
 use Kettasoft\Filterable\Traits\InteractsWithFilterAuthorization;
+use Kettasoft\Filterable\HttpIntegration\HeaderDrivenEngineSelector;
 use Kettasoft\Filterable\Exceptions\RequestSourceIsNotSupportedException;
 
 class Filterable implements FilterableContext, Authorizable, Validatable
@@ -229,7 +230,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable
    */
   private function resolveEngine()
   {
-    $this->useEngin(config('filterable.default_engine'));
+    $this->useEngin((new HeaderDrivenEngineSelector($this->request))->resolve());
   }
 
   /**
@@ -265,6 +266,20 @@ class Filterable implements FilterableContext, Authorizable, Validatable
   public function hasIgnoredEmptyValues(): bool
   {
     return $this->ignoreEmptyValues === true;
+  }
+
+  /**
+   * Enable Header-driven mode per request.
+   * @param mixed $config
+   * @return Filterable
+   */
+  public function withHeaderDrivenMode($config = []): static
+  {
+    return $this->useEngin((new HeaderDrivenEngineSelector($this->request, array_merge(
+      config('filterable.header_driven_mode', []),
+      ['enabled' => true],
+      $config
+    )))->resolve());
   }
 
   /**
