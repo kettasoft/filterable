@@ -75,6 +75,24 @@ class Filterable implements FilterableContext, Authorizable, Validatable
   protected $data = [];
 
   /**
+   * Specify which fields are allowed to be filtered.
+   * @var array
+   */
+  protected $allowdFields = [];
+
+  /**
+   * List of supported SQL operators you want to allow when parsing the expressions.
+   * @var array
+   */
+  protected $allowdOperators = [];
+
+  /**
+   * Strict mode.
+   * @var bool|null
+   */
+  protected $strict;
+
+  /**
    * The Sanitizer instance.
    * @var Sanitizer
    */
@@ -283,6 +301,79 @@ class Filterable implements FilterableContext, Authorizable, Validatable
   }
 
   /**
+   * Get allowed fields to apply filtering.
+   * @return array
+   */
+  public function getAllowedFields(): array
+  {
+    return $this->allowdFields;
+  }
+
+  /**
+   * List of supported SQL operators you want to allow when parsing the expressions.
+   * @return array
+   */
+  public function getAllowedOperators(): array
+  {
+    return $this->allowdOperators;
+  }
+
+  /**
+   * Set allowed operators and override global operators.
+   * @param array $operators
+   * @return static
+   */
+  public function allowdOperators(array $operators): static
+  {
+    $this->allowdOperators = $operators;
+    return $this;
+  }
+
+  /**
+   * Define allowed fields to filtering.
+   * @param array $fields
+   * @return Filterable
+   */
+  public function setAllowedFields(array $fields, bool $override = false): static
+  {
+    $this->allowdFields = $override ? $fields : array_merge($this->allowdFields, $fields);
+    return $this;
+  }
+
+  /**
+   * Enable strict mode in this instance.
+   * @return Filterable
+   */
+  public function strict(): static
+  {
+    $this->strict = true;
+    return $this;
+  }
+
+  /**
+   * Enable strict mode in this instance.
+   * @return Filterable
+   */
+  public function permissive(): static
+  {
+    $this->strict = false;
+    return $this;
+  }
+
+  /**
+   * Check if filter has strict mode.
+   * @return mixed
+   */
+  public function isStrict()
+  {
+    if (is_bool($this->strict)) {
+      return $this->strict;
+    }
+
+    return null;
+  }
+
+  /**
    * Retrieve an input item from the request.
    * @param string $key
    * @return mixed
@@ -294,5 +385,19 @@ class Filterable implements FilterableContext, Authorizable, Validatable
     }
 
     return $this->request->{$source}($key);
+  }
+
+  /**
+   * Dynamically retrieve attributes from the request.
+   * @param mixed $property
+   * @return mixed
+   */
+  public function __get($property): mixed
+  {
+    if (property_exists($this, $property)) {
+      return $this->{$property};
+    }
+
+    return $this->get($property);
   }
 }

@@ -98,7 +98,64 @@ return [
         | is great when your filters are not deeply nested or hierarchical.
         |
         */
-        'ruleset' => [],
+        'ruleset' => [
+            /*
+            |--------------------------------------------------------------------------
+            | Strict Mode
+            |--------------------------------------------------------------------------
+            |
+            | When enabled, if any filter key is not allowed, the entire filtering process
+            | will stop and throw exception. Otherwise, it will ignore unallowed filters.
+            |
+            */
+            'strict' => true,
+
+            /*
+            |--------------------------------------------------------------------------
+            | Allowed Fields
+            |--------------------------------------------------------------------------
+            |
+            | Specify which fields are allowed to be filtered. Leave empty
+            | to allow all fields.
+            |
+            */
+            'allowed_fields' => [],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Allowed SQL Operators
+            |--------------------------------------------------------------------------
+            |
+            | List of supported SQL operators you want to allow when parsing
+            | the expressions.
+            |
+            */
+            'allowed_operators' => [
+                'eq' => '=',
+                'neq' => '!=',
+                'gt' => '>',
+                'lt' => '<',
+                'gte' => '>=',
+                'lte' => '<=',
+                'like' => 'like',
+                'nlike' => 'not like',
+                'in' => 'in',
+                'nin' => 'not in',
+                'null' => 'is null',
+                'notnull' => 'is not null',
+                'between' => 'between',
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Default Operator
+            |--------------------------------------------------------------------------
+            |
+            | Default operator when request dosen't has operator.
+            |
+            */
+            'default_operator' => 'eq', // =
+        ],
 
         /*
         |--------------------------------------------------------------------------
