@@ -3,7 +3,7 @@
 namespace Kettasoft\Filterable\Sanitization;
 
 use Illuminate\Support\Traits\ForwardsCalls;
-use Kettasoft\Filterable\Sanitization\Contracts\HasSanitize;
+use Kettasoft\Filterable\Sanitization\HandlerFactory;
 
 class Sanitizer
 {
@@ -36,8 +36,8 @@ class Sanitizer
     }
 
     foreach ($this->sanitizers as $key => $resolver) {
-      if ($field == $key && (class_exists($resolver) && is_subclass_of($resolver, HasSanitize::class))) {
-        $value = (new $resolver)->sanitize($value);
+      if ($key === $field) {
+        $value = HandlerFactory::handle($value, $resolver);
       }
     }
 
