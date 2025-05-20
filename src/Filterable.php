@@ -2,9 +2,11 @@
 
 namespace Kettasoft\Filterable;
 
+use function DI\create;
 use Illuminate\Http\Request;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Facades\App;
+use Illuminate\Database\Eloquent\Model;
 use Kettasoft\Filterable\Contracts\Validatable;
 use Kettasoft\Filterable\Contracts\Authorizable;
 use Kettasoft\Filterable\Sanitization\Sanitizer;
@@ -17,10 +19,9 @@ use Kettasoft\Filterable\Traits\InteractsWithValidation;
 use Kettasoft\Filterable\Traits\InteractsWithMethodMentoring;
 use Kettasoft\Filterable\Traits\InteractsWithRelationsFiltering;
 use Kettasoft\Filterable\Traits\InteractsWithFilterAuthorization;
+
 use Kettasoft\Filterable\HttpIntegration\HeaderDrivenEngineSelector;
 use Kettasoft\Filterable\Exceptions\RequestSourceIsNotSupportedException;
-
-use function DI\create;
 
 class Filterable implements FilterableContext, Authorizable, Validatable
 {
@@ -421,6 +422,19 @@ class Filterable implements FilterableContext, Authorizable, Validatable
   public function setBuilder(Builder $builder): static
   {
     $this->builder = $builder;
+    return $this;
+  }
+
+  /**
+   * Auto-detect filterable fields from model fillable attributes.
+   * @param bool $override To override current fields
+   * @return static
+   */
+  public function autoSetAllowedFieldsFromModel(bool $override = false): static
+  {
+    $fillable = $this->builder->getModel()->getFillable();
+    $this->allowdFields = $override ? $fillable : array_merge($this->allowdFields, $fillable);
+
     return $this;
   }
 
