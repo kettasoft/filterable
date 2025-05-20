@@ -1,0 +1,14 @@
+    /**
+    * Filter the query by a given $$NAME$$.
+    *
+    * @param Payload $payload
+    * @return Builder
+    */
+    public function $$NAME$$(Payload $payload)
+    {
+        if ($payload->value) {
+            return $this->builder->where('$$NAME$$', $payload->operator, $payload);
+        }
+
+        return $this->builder;
+    }

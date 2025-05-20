@@ -9,7 +9,17 @@ return [
     | This is the namespace all you Eloquent Model Filters will reside
     |
     */
-    'namespace' => 'App\\Http\\Filters\\',
+    'namespace' => 'App\\Http\\Filters',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Path of saving new filters
+    |--------------------------------------------------------------------------
+    |
+    | This is the namespace all you Eloquent Model Filters will reside
+    |
+    */
+    'save_filters_at' => app_path('Http/Filters'),
 
     /*
     |--------------------------------------------------------------------------
@@ -255,7 +265,7 @@ return [
     |
     */
     'generator' => [
-        'stub' => base_path('vendor/kettasoft/filterable/src/stubs/filter.stub'),
+        'stubs' => base_path('vendor/kettasoft/filterable/src/stubs/'),
     ],
 
     /*

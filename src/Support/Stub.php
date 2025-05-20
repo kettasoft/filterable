@@ -113,6 +113,10 @@ class Stub implements \Stringable
      */
     public function saveTo($path, $filename): bool|int
     {
+        if (!is_dir($path)) {
+            mkdir($path);
+        }
+
         return file_put_contents($path . '/' . $filename, $this->getContents());
     }
 
