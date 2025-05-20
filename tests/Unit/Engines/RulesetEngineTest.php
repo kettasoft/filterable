@@ -9,6 +9,7 @@ use Kettasoft\Filterable\Engines\Ruleset;
 use Kettasoft\Filterable\Tests\Models\Post;
 use Kettasoft\Filterable\Exceptions\InvalidOperatorException;
 use Kettasoft\Filterable\Exceptions\NotAllowedFieldException;
+use Symfony\Component\HttpFoundation\InputBag;
 
 class RulesetEngineTest extends TestCase
 {
@@ -159,5 +160,28 @@ class RulesetEngineTest extends TestCase
         ->strict()
         ->apply(Post::query());
     }, InvalidOperatorException::class);
+  }
+
+  /**
+   * It can sent json data to filtering operate.
+   * @test
+   */
+  public function it_can_sent_json_data_to_filtering_operate()
+  {
+    config()->set('filterable.engines.ruleset.strict', false);
+
+    $request = Request::create('/posts');
+
+    $request->setJson(new InputBag([
+      'status' => 'pending'
+    ]));
+
+    $filter = Filterable::withRequest($request)
+      ->setAllowedFields(['status'])
+      ->useEngin(Ruleset::class)
+      ->strict()
+      ->apply(Post::query());
+
+    $this->assertEquals(15, $filter->count());
   }
 }
