@@ -20,6 +20,8 @@ use Kettasoft\Filterable\Traits\InteractsWithFilterAuthorization;
 use Kettasoft\Filterable\HttpIntegration\HeaderDrivenEngineSelector;
 use Kettasoft\Filterable\Exceptions\RequestSourceIsNotSupportedException;
 
+use function DI\create;
+
 class Filterable implements FilterableContext, Authorizable, Validatable
 {
   use InteractsWithFilterKey,
@@ -399,6 +401,26 @@ class Filterable implements FilterableContext, Authorizable, Validatable
   public function setFieldsMap($fields, bool $override = true): static
   {
     $this->fieldsMap = $override ? $fields : array_merge($this->fieldsMap, $fields);
+    return $this;
+  }
+
+  /**
+   * Get registered filter builder. 
+   * @return Builder
+   */
+  public function getBuilder(): Builder
+  {
+    return $this->builder;
+  }
+
+  /**
+   * Set a new builder.
+   * @param Builder $builder
+   * @return static
+   */
+  public function setBuilder(Builder $builder): static
+  {
+    $this->builder = $builder;
     return $this;
   }
 
