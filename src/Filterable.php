@@ -15,6 +15,7 @@ use Kettasoft\Filterable\Engines\Factory\EngineManager;
 use Kettasoft\Filterable\Traits\InteractsWithFilterKey;
 use Kettasoft\Filterable\Traits\InteractsWithValidation;
 use Kettasoft\Filterable\Traits\InteractsWithMethodMentoring;
+use Kettasoft\Filterable\Traits\InteractsWithRelationsFiltering;
 use Kettasoft\Filterable\Traits\InteractsWithFilterAuthorization;
 use Kettasoft\Filterable\HttpIntegration\HeaderDrivenEngineSelector;
 use Kettasoft\Filterable\Exceptions\RequestSourceIsNotSupportedException;
@@ -24,7 +25,8 @@ class Filterable implements FilterableContext, Authorizable, Validatable
   use InteractsWithFilterKey,
     InteractsWithMethodMentoring,
     InteractsWithFilterAuthorization,
-    InteractsWithValidation;
+    InteractsWithValidation,
+    InteractsWithRelationsFiltering;
 
   /**
    * The running filter engine.
@@ -91,6 +93,12 @@ class Filterable implements FilterableContext, Authorizable, Validatable
    * @var bool|null
    */
   protected $strict;
+
+  /**
+   * The field name mapping.
+   * @var array
+   */
+  protected $fieldsMap = [];
 
   /**
    * The Sanitizer instance.
@@ -228,7 +236,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable
    */
   public function getData(): mixed
   {
-    return $this->data;
+    return $this->filterKey === null ? $this->data : $this->data[$this->filterKey] ?? $this->data;
   }
 
   /**
@@ -371,6 +379,27 @@ class Filterable implements FilterableContext, Authorizable, Validatable
     }
 
     return null;
+  }
+
+  /**
+   * Get columns wrapper.
+   * @return array
+   */
+  public function getFieldsMap(): array
+  {
+    return $this->fieldsMap;
+  }
+
+  /**
+   * Set fields wrapper.
+   * @param array $fields
+   * @param bool $override
+   * @return static
+   */
+  public function setFieldsMap($fields, bool $override = true): static
+  {
+    $this->fieldsMap = $override ? $fields : array_merge($this->fieldsMap, $fields);
+    return $this;
   }
 
   /**

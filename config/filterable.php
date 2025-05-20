@@ -166,7 +166,83 @@ return [
         | fine-grained control over generated SQL queries.
         |
         */
-        'expression' => []
+        'expression' => [
+            /*
+            |--------------------------------------------------------------------------
+            | ignore empty values
+            |--------------------------------------------------------------------------
+            |
+            | If 'true' filters with null or empty string values will be ignored.
+            |
+            */
+            'ignore_empty_values' => false,
+
+            /*
+            |--------------------------------------------------------------------------
+            | Allowed SQL Operators
+            |--------------------------------------------------------------------------
+            |
+            | List of supported SQL operators you want to allow when parsing
+            | the expressions.
+            |
+            */
+            'allowed_operators' => [
+                'eq' => '=',
+                'neq' => '!=',
+                'gt' => '>',
+                'lt' => '<',
+                'gte' => '>=',
+                'lte' => '<=',
+                'like' => 'like',
+                'nlike' => 'not like',
+                'in' => 'in',
+                'nin' => 'not in',
+                'null' => 'is null',
+                'notnull' => 'is not null',
+                'between' => 'between',
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Default Operator
+            |--------------------------------------------------------------------------
+            |
+            | Default operator when request dosen't has operator.
+            |
+            */
+            'default_operator' => 'eq',
+
+            /*
+            |--------------------------------------------------------------------------
+            | Validate Columns
+            |--------------------------------------------------------------------------
+            |
+            | Whether to check if a column exists in the schema before
+            | building the SQL expression.
+            |
+            */
+            'validate_columns' => true,
+
+            /*
+            |--------------------------------------------------------------------------
+            | Allowed Fields
+            |--------------------------------------------------------------------------
+            |
+            | Specify which fields are allowed to be filtered. Leave empty
+            | to allow all fields.
+            |
+            */
+            'allowed_fields' => [],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Strict Mode
+            |--------------------------------------------------------------------------
+            | If true, the package will throw an exception if a field
+            | is not allowed in the allowed fields.
+            */
+            'strict' => true
+        ]
     ],
 
     /*
