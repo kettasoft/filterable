@@ -4,6 +4,7 @@ namespace Kettasoft\Filterable\Tests\Feature\Commands;
 
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
+use Kettasoft\Filterable\Support\Stub;
 use Kettasoft\Filterable\Tests\TestCase;
 
 class MakeFilterCommandTest extends TestCase
@@ -18,7 +19,7 @@ class MakeFilterCommandTest extends TestCase
   {
     parent::setUp();
 
-    config()->set('filterable.generator.stubs', '/var/www/html/filterable/stubs/');
+    config()->set('filterable.generator.stubs', __DIR__ . '/../../../stubs/');
   }
 
   /**
