@@ -97,7 +97,63 @@ return [
         | with nested conditions.
         |
         */
-        'tree' => [],
+        'tree' => [
+            /*
+            |--------------------------------------------------------------------------
+            | Strict Mode
+            |--------------------------------------------------------------------------
+            |
+            | When enabled, if any filter key is not allowed, the entire filtering process
+            | will stop and throw exception. Otherwise, it will ignore unallowed filters.
+            |
+            */
+            'strict' => true,
+
+            /*
+            |--------------------------------------------------------------------------
+            | Allowed SQL Operators
+            |--------------------------------------------------------------------------
+            |
+            | List of supported SQL operators you want to allow when parsing
+            | the expressions.
+            |
+            */
+            'allowed_operators' => [
+                'eq' => '=',
+                'neq' => '!=',
+                'gt' => '>',
+                'lt' => '<',
+                'gte' => '>=',
+                'lte' => '<=',
+                'like' => 'like',
+                'nlike' => 'not like',
+                'in' => 'in',
+                'nin' => 'not in',
+                'null' => 'is null',
+                'notnull' => 'is not null',
+                'between' => 'between',
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Default Operator
+            |--------------------------------------------------------------------------
+            |
+            | Default operator when request dosen't has operator.
+            |
+            */
+            'default_operator' => '=', // =
+
+            /*
+            |--------------------------------------------------------------------------
+            | ignore empty values
+            |--------------------------------------------------------------------------
+            |
+            | If 'true' filters with null or empty string values will be ignored.
+            |
+            */
+            'ignore_empty_values' => false,
+        ],
 
         /*
         |--------------------------------------------------------------------------
