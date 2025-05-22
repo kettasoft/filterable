@@ -1,43 +1,52 @@
-# An easy to use powerful Elqouent Filter
+<p align="center"><img src="docs/logo.png" width="180" alt="Filterable Logo" /></p>
+<h1 align="center">Filterable</h1>
+<p align="center">A powerful and flexible Laravel package for advanced, clean, and scalable filtering of Eloquent models using multiple customizable engines.</p><p align="center">
+<a href="https://packagist.org/packages/kettasoft/filterable"><img src="https://github.com/kettasoft/filterable/actions/workflows/php.yml/badge.svg?style=flat-square" alt="Tests"></a>
+<a href="https://packagist.org/packages/kettasoft/filterable"><img src="http://poser.pugx.org/kettasoft/filterable/v?style=flat-square" alt="Latest Version on Packagist"></a>
+<a href="https://packagist.org/packages/kettasoft/filterable"><img src="https://img.shields.io/packagist/dt/kettasoft/filterable?style=flat-square" alt="Total Downloads"></a>
+<a href="https://github.com/kettasoft/filterable/blob/master/LICENSE"><img src="https://poser.pugx.org/kettasoft/filterable/license?style=flat-square" alt="License"></a></p>
 
-![Tests](https://github.com/kettasoft/filterable/actions/workflows/php.yml/badge.svg?style=flat-square)
-![PHP Version](https://img.shields.io/packagist/php-v/kettasoft/filterable?style=flat-square)
-![Downloads](https://img.shields.io/packagist/dt/kettasoft/filterable?style=flat-square)
-![License](https://img.shields.io/packagist/l/kettasoft/filterable?style=flat-square)
-![Latest Version](https://img.shields.io/packagist/v/kettasoft/filterable?style=flat-square)
+## ✨ Overview
 
-## Installation
+**Filterable** lets you build highly customizable filtering logic for Laravel's Eloquent queries without messy conditions. With support for multiple engines like:
 
-You can install this package via composer using this command:
+- Ruleset Engine
+- Invokable Engine
+- Expression Engine
+- Tree Engine
+
+...you can structure your filter logic however you like — from simple lists to deeply nested conditional trees with relationship support.
+
+## ⚙️ Key Features
+
+- **Multiple Filtering Engines**
+- **Chainable & Nested Filter Logic**
+- **Relation & Nested Relation Filtering**
+- **Custom Operators & Sanitization**
+- **SOLID & Extensible Design**
+- **Zero-Config Optional Defaults**
+
+
+## 📚 Documentation
+
+For full documentation, installation, and usage examples, visit: **[https://kettasoft.github.io/filterable](https://kettasoft.github.io/filterable)**
+
+---
+
+## ✅ Quick Start
 
 ```bash
 composer require kettasoft/filterable
 ```
 
-In Laravel 5.5 the service provider will automatically get registered. In older versions of the framework, you must install the service provider:
+Use it in your controller:
 
 ```php
-// config/app.php
-'providers' => [
-    ...
-    Kettasoft\Filterable\Providers\FilterableServiceProvider::class,
-];
+$posts = Post::filter(new PostFilter)->paginate();
 ```
 
-You can publish the config with:
+Create your PostFilter using your preferred engine.
 
-```bash
-php artisan vendor:publish --provider="Kettasoft\Filterable\Providers\FilterableServiceProvider" --tag="config"
-```
+License
 
-You can make a new filter class with:
-
-```bash
-php artisan kettasoft:make-filter YourFilterName
-```
-
-You must publish the Stubs with:
-
-```bash
-php artisan vendor:publish --provider="Kettasoft\Filterable\Providers\FilterableServiceProvider" --tag="stubs"
-```
+MIT © 2024-present Kettasoft
