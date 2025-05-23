@@ -97,5 +97,7 @@ export default defineUserConfig({
     ],
   }),
 
+  base: "/filterable",
+
   bundler: viteBundler(),
 });
