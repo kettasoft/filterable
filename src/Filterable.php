@@ -5,6 +5,8 @@ namespace Kettasoft\Filterable;
 use Illuminate\Http\Request;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Facades\App;
+use Illuminate\Database\Eloquent\Model;
+use Kettasoft\Filterable\Tests\Models\Post;
 use Kettasoft\Filterable\Contracts\Validatable;
 use Kettasoft\Filterable\Contracts\Authorizable;
 use Kettasoft\Filterable\Sanitization\Sanitizer;
@@ -14,10 +16,11 @@ use Kettasoft\Filterable\Contracts\FilterableContext;
 use Kettasoft\Filterable\Engines\Factory\EngineManager;
 use Kettasoft\Filterable\Traits\InteractsWithFilterKey;
 use Kettasoft\Filterable\Traits\InteractsWithValidation;
+use Kettasoft\Filterable\Exceptions\MissingBuilderException;
 use Kettasoft\Filterable\Traits\InteractsWithMethodMentoring;
+
 use Kettasoft\Filterable\Traits\InteractsWithRelationsFiltering;
 use Kettasoft\Filterable\Traits\InteractsWithFilterAuthorization;
-
 use Kettasoft\Filterable\HttpIntegration\HeaderDrivenEngineSelector;
 use Kettasoft\Filterable\Exceptions\RequestSourceIsNotSupportedException;
 
@@ -101,6 +104,8 @@ class Filterable implements FilterableContext, Authorizable, Validatable
    */
   protected $fieldsMap = [];
 
+  protected $model;
+
   /**
    * The Sanitizer instance.
    * @var Sanitizer
@@ -132,9 +137,68 @@ class Filterable implements FilterableContext, Authorizable, Validatable
       \Kettasoft\Filterable\Pipes\ValidateBeforeFilteringPipe::class
     ])->thenReturn();
 
+    $builder = $this->initQueryBuilderInstance($builder);
+
     $this->builder = $builder;
 
-    return $this->engine->apply($this->builder);
+    return $this->engine->apply($builder);
+  }
+
+  /**
+   * Get builder instance from model.
+   * @param \Illuminate\Contracts\Database\Eloquent\Builder|null $builder
+   * @throws \Kettasoft\Filterable\Exceptions\MissingBuilderException
+   */
+  private function initQueryBuilderInstance(Builder|null $builder = null)
+  {
+    if ($builder) return $builder;
+
+    if ($this->model instanceof Model) {
+      return $this->model->query();
+    }
+
+    if (is_string($this->model) && class_exists($this->model) && is_subclass_of($this->model, Model::class)) {
+      return $this->model::query();
+    }
+
+    throw new MissingBuilderException;
+  }
+
+  /**
+   * Set model.
+   * @param \Illuminate\Database\Eloquent\Model|string $model
+   * @return static
+   */
+  public function setModel(Model|string $model): static
+  {
+    $this->model = $model;
+    return $this;
+  }
+
+  /**
+   * Get model.
+   * @return Model|string
+   */
+  public function getModel()
+  {
+    return $this->model;
+  }
+
+  /**
+   * Get model instance object.
+   * @return Model|object|null
+   */
+  public function getModelInstance()
+  {
+    if ($this->model instanceof Model) {
+      return $this->model;
+    }
+
+    if (is_string($this->model) && class_exists($this->model) && is_subclass_of($this->model, Model::class)) {
+      return new $this->model;
+    }
+
+    return null;
   }
 
   /**
