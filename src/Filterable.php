@@ -2,11 +2,9 @@
 
 namespace Kettasoft\Filterable;
 
-use function DI\create;
 use Illuminate\Http\Request;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Facades\App;
-use Illuminate\Database\Eloquent\Model;
 use Kettasoft\Filterable\Contracts\Validatable;
 use Kettasoft\Filterable\Contracts\Authorizable;
 use Kettasoft\Filterable\Sanitization\Sanitizer;
@@ -134,11 +132,9 @@ class Filterable implements FilterableContext, Authorizable, Validatable
       \Kettasoft\Filterable\Pipes\ValidateBeforeFilteringPipe::class
     ])->thenReturn();
 
-
     $this->builder = $builder;
-    $query = $this->engine->apply($this->builder);
 
-    return $query;
+    return $this->engine->apply($this->builder);
   }
 
   /**
