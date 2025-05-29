@@ -145,6 +145,16 @@ class Filterable implements FilterableContext, Authorizable, Validatable
   }
 
   /**
+   * Alias name for @apply method.
+   * @param \Illuminate\Contracts\Database\Eloquent\Builder|null $builder
+   * @return Builder
+   */
+  public function filter(Builder|null $builder = null): Builder
+  {
+    return $this->apply($builder);
+  }
+
+  /**
    * Get builder instance from model.
    * @param \Illuminate\Contracts\Database\Eloquent\Builder|null $builder
    * @throws \Kettasoft\Filterable\Exceptions\MissingBuilderException
