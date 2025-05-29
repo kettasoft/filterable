@@ -7,6 +7,7 @@ use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Facades\App;
 use Illuminate\Database\Eloquent\Model;
 use Kettasoft\Filterable\Tests\Models\Post;
+use Kettasoft\Filterable\Engines\EngineRunner;
 use Kettasoft\Filterable\Contracts\Validatable;
 use Kettasoft\Filterable\Contracts\Authorizable;
 use Kettasoft\Filterable\Sanitization\Sanitizer;
@@ -17,8 +18,8 @@ use Kettasoft\Filterable\Engines\Factory\EngineManager;
 use Kettasoft\Filterable\Traits\InteractsWithFilterKey;
 use Kettasoft\Filterable\Traits\InteractsWithValidation;
 use Kettasoft\Filterable\Exceptions\MissingBuilderException;
-use Kettasoft\Filterable\Traits\InteractsWithMethodMentoring;
 
+use Kettasoft\Filterable\Traits\InteractsWithMethodMentoring;
 use Kettasoft\Filterable\Traits\InteractsWithRelationsFiltering;
 use Kettasoft\Filterable\Traits\InteractsWithFilterAuthorization;
 use Kettasoft\Filterable\HttpIntegration\HeaderDrivenEngineSelector;
@@ -141,7 +142,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable
 
     $this->builder = $builder;
 
-    return $this->engine->apply($builder);
+    return EngineRunner::run($this->engine, $builder);
   }
 
   /**
