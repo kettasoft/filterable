@@ -2,12 +2,12 @@
 
 namespace Kettasoft\Filterable\Sanitization\Handlers;
 
-use Kettasoft\Filterable\Sanitization\Contracts\HasSanitize;
+use Kettasoft\Filterable\Sanitization\Contracts\Sanitizable;
 use Kettasoft\Filterable\Sanitization\Contracts\SanitizeHandler;
 
 class ObjectHandler implements SanitizeHandler
 {
-  protected HasSanitize $sanitizer;
+  protected Sanitizable $sanitizer;
 
   /**
    * ObjectHandler constructor.
@@ -16,8 +16,8 @@ class ObjectHandler implements SanitizeHandler
    */
   public function __construct($sanitizer)
   {
-    if (! ($sanitizer instanceof HasSanitize)) {
-      throw new \InvalidArgumentException(sprintf("Sanitizer class %s is not implemented from %s interface", get_class($sanitizer), HasSanitize::class));
+    if (! ($sanitizer instanceof Sanitizable)) {
+      throw new \InvalidArgumentException(sprintf("Sanitizer class %s is not implemented from %s interface", get_class($sanitizer), Sanitizable::class));
     }
 
     $this->sanitizer = $sanitizer;
