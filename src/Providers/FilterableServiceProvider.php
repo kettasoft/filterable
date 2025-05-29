@@ -17,6 +17,10 @@ class FilterableServiceProvider extends ServiceProvider
       __DIR__ . '/../../config/filterable.php' => config_path('filterable.php'),
     ], 'config');
 
+    $this->publishes([
+      __DIR__ . '/../../stubs/' => base_path('stubs')
+    ], 'stubs');
+
     $this->registerCommands();
   }
 
