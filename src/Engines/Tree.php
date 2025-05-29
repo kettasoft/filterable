@@ -4,9 +4,10 @@ namespace Kettasoft\Filterable\Engines;
 
 use Kettasoft\Filterable\Support\TreeNode;
 use Kettasoft\Filterable\Support\OperatorMapper;
+use Kettasoft\Filterable\Traits\FieldNormalizer;
 use Kettasoft\Filterable\Engines\Contracts\Engine;
-use Kettasoft\Filterable\Support\RelationPathParser;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Kettasoft\Filterable\Support\RelationPathParser;
 use Kettasoft\Filterable\Contracts\FilterableContext;
 use Kettasoft\Filterable\Support\AllowedFieldChecker;
 use Kettasoft\Filterable\Support\TreeBasedRelationsResolver;
@@ -16,6 +17,8 @@ use Kettasoft\Filterable\Engines\Contracts\HasInteractsWithOperators;
 
 class Tree implements Engine, HasInteractsWithOperators, HasAllowedFieldChecker
 {
+  use FieldNormalizer;
+
   protected operatorMapper $operatorMapper;
   /**
    * Create Engine instance.
@@ -57,7 +60,7 @@ class Tree implements Engine, HasInteractsWithOperators, HasAllowedFieldChecker
 
       [$relation, $field] = RelationPathParser::resolve($node->field);
 
-      $field = $this->context->getFieldsMap()[$field] ?? $field;
+      $field = $this->normalizeField($this->context->getFieldsMap()[$field] ?? $field);
       $operator = $this->operatorMapper->map($node->operator);
       $value = $this->context->getSanitizerInstance()->handle($field, $node->value);
 
@@ -75,6 +78,15 @@ class Tree implements Engine, HasInteractsWithOperators, HasAllowedFieldChecker
     }
 
     return $builder;
+  }
+
+  /**
+   * Check if normalize field option is enable in engine.
+   * @return bool
+   */
+  protected function hasNormalizeFieldCondition(): bool
+  {
+    return config('filterable.engines.tree.normalize_keys', false);
   }
 
   /**

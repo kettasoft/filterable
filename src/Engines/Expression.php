@@ -2,6 +2,7 @@
 
 namespace Kettasoft\Filterable\Engines;
 
+use Kettasoft\Filterable\Traits\FieldNormalizer;
 use Kettasoft\Filterable\Engines\Contracts\Engine;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Contracts\FilterableContext;
@@ -12,6 +13,8 @@ use Kettasoft\Filterable\Exceptions\NotAllowedFieldException;
 
 class Expression implements Engine
 {
+  use FieldNormalizer;
+
   /**
    * Create Engine instance.
    * @param \Kettasoft\Filterable\Contracts\FilterableContext $context
@@ -28,6 +31,9 @@ class Expression implements Engine
     $filters = $this->context->getData();
 
     foreach ($filters as $field => $condition) {
+
+      $field = $this->normalizeField($field);
+
       if (! is_array($condition)) {
         $condition = ConditionNormalizer::normalize($condition, 'eq');
       }
@@ -204,5 +210,14 @@ class Expression implements Engine
   private function defaultOperator(): string
   {
     return config('filterable.engines.expression.default_operator', 'eq');
+  }
+
+  /**
+   * Check if normalize field option is enable in engine.
+   * @return bool
+   */
+  protected function hasNormalizeFieldCondition(): bool
+  {
+    return config('filterable.engines.expression.normalize_keys', false);
   }
 }

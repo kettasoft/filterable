@@ -85,6 +85,17 @@ return [
             |
             */
             'ignore_empty_values' => false,
+
+            /*
+            |--------------------------------------------------------------------------
+            | Normalize Field Names
+            |--------------------------------------------------------------------------
+            |
+            | Whether to automatically convert field names to lowercase
+            | for consistency when parsing filters.
+            |
+            */
+            'normalize_keys' => false,
         ],
 
         /*
@@ -153,6 +164,17 @@ return [
             |
             */
             'ignore_empty_values' => false,
+
+            /*
+            |--------------------------------------------------------------------------
+            | Normalize Field Names
+            |--------------------------------------------------------------------------
+            |
+            | Whether to automatically convert field names to lowercase
+            | for consistency when parsing filters.
+            |
+            */
+            'normalize_keys' => false,
         ],
 
         /*
@@ -221,6 +243,17 @@ return [
             |
             */
             'default_operator' => 'eq', // =
+
+            /*
+            |--------------------------------------------------------------------------
+            | Normalize Field Names
+            |--------------------------------------------------------------------------
+            |
+            | Whether to automatically convert field names to lowercase
+            | for consistency when parsing filters.
+            |
+            */
+            'normalize_keys' => false,
         ],
 
         /*
@@ -307,7 +340,18 @@ return [
             | If true, the package will throw an exception if a field
             | is not allowed in the allowed fields.
             */
-            'strict' => true
+            'strict' => true,
+
+            /*
+            |--------------------------------------------------------------------------
+            | Normalize Field Names
+            |--------------------------------------------------------------------------
+            |
+            | Whether to automatically convert field names to lowercase
+            | for consistency when parsing filters.
+            |
+            */
+            'normalize_keys' => false,
         ]
     ],
 

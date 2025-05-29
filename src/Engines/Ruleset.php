@@ -2,6 +2,7 @@
 
 namespace Kettasoft\Filterable\Engines;
 
+use Kettasoft\Filterable\Traits\FieldNormalizer;
 use Kettasoft\Filterable\Engines\Contracts\Engine;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Contracts\FilterableContext;
@@ -10,6 +11,8 @@ use Kettasoft\Filterable\Exceptions\NotAllowedFieldException;
 
 class Ruleset implements Engine
 {
+  use FieldNormalizer;
+
   /**
    * Create Engine instance.
    * @param \Kettasoft\Filterable\Contracts\FilterableContext $context
@@ -26,6 +29,8 @@ class Ruleset implements Engine
     $data = $this->context->getData();
 
     foreach ($data as $field => $rawValue) {
+
+      $field = $this->normalizeField($field);
 
       if (! in_array($field, $this->getAllowedFields())) {
         if ($this->isStrict()) {
@@ -45,6 +50,15 @@ class Ruleset implements Engine
     }
 
     return $builder;
+  }
+
+  /**
+   * Check if normalize field option is enable in engine.
+   * @return bool
+   */
+  protected function hasNormalizeFieldCondition(): bool
+  {
+    return config('filterable.engines.ruleset.normalize_keys', false);
   }
 
   /**
