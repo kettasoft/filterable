@@ -23,4 +23,14 @@ trait HasFilterable
   {
     return (new FilterRegisterator($query, $filter))->register();
   }
+
+  /**
+   * Get the number of models to return per page.
+   *
+   * @return int
+   */
+  public function getPerPage()
+  {
+    return config('filterable.paginate_limit') ?? request('perPage', parent::getPerPage());
+  }
 }
