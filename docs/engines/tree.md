@@ -1,4 +1,4 @@
-# Tree Based Engine
+# Tree Engine
 
 This engine allows for advanced query filtering using a logical tree structure with AND/OR grouping. It is ideal for complex, nested conditions that simulate SQL-like logical grouping.
 

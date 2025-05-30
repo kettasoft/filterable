@@ -45,7 +45,7 @@ Filterable::withRequest($request)
     ->useEngine('ruleset')
     ->setAllowedFields(['status', 'title', 'author.name'])
     ->setRelations(['author'])
-    ->run(Post::query());
+    ->filter(Post::query());
 ```
 
 ## 🧪 Tested & Production-Ready

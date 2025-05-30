@@ -1,6 +1,7 @@
 # **Introduction**
 
 [![Total Downloads](https://img.shields.io/packagist/dt/kettasoft/filterable?style=flat-square)](https://packagist.org/packages/kettasoft/filterable)
+<a href="https://packagist.org/packages/kettasoft/filterable"><img src="https://github.com/kettasoft/filterable/actions/workflows/php.yml/badge.svg?style=flat-square" alt="Tests"></a>
 
 Filterable is an elegant, developer-friendly Laravel package designed to simplify and streamline advanced filtering of Eloquent queries. Whether you're building APIs, admin dashboards, or complex data search systems, Filterable gives you full control over how data is filtered — without compromising on flexibility or performance.
 
@@ -12,11 +13,10 @@ Filterable supports a multi-engine architecture, allowing you to choose or defin
 
 ###### 🧠 Multiple filtering engines out of the box:
 
-- Ruleset-Based Engine
-- Dynamic Method Engine
-- Tree-Based Expression Engine
-- Closure Pipeline Engine
-- Callback-Based Engine
+- Ruleset Engine
+- Invokable Engine
+- Tree Engine
+- Expression Engine
 
 ###### 🔧 Customizable filter sanitizers
 

@@ -8,8 +8,6 @@ composer require kettasoft/filterable
 
 ### **Service Provider Registration**
 
-For Laravel 5.5 and above, the service provider is automatically registered. For older versions, you'll need to register the service provider manually.
-
 Add the following line to the **`providers`** array in **`config/app.php`**:
 
 ```php
@@ -37,37 +35,25 @@ These are the contents of the default config file that will be published:
 <?php
 
 return [
+    /*
+    |--------------------------------------------------------------------------
+    | Eloquent Filter Settings
+    |--------------------------------------------------------------------------
+    |
+    | This is the namespace all you Eloquent Model Filters will reside
+    |
+    */
+    'namespace' => 'App\\Http\\Filters',
 
     /*
     |--------------------------------------------------------------------------
-    | Default Filters Namespace.
+    | Path of saving new filters
     |--------------------------------------------------------------------------
     |
-    | When using auto-discovery for filters (without manual injection) ,
-    | this is the  namespace where your filter classes are located.
-    |
-    */
-    'filter_namespace' => 'App\\Http\\Filters\\',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Automatically Register Filters
-    |--------------------------------------------------------------------------
-    | If enabled, the package will automatically resolve the filter class
-    | based on the model name (e.g. Book => BookFilter).
-    */
-    'auto_register_filters' => false,
-
-    /*
-    |--------------------------------------------------------------------------
-    | Auto Inject Request
-    |--------------------------------------------------------------------------
-    |
-    | If true, the package will auto-inject the current request using the app container.
-    | Set it to false if you want to manually inject the request in custom filters.
+    | This is the namespace all you Eloquent Model Filters will reside
     |
     */
-    'auto_inject_request' => true,
+    'save_filters_at' => app_path('Http/Filters'),
 
     /*
     |--------------------------------------------------------------------------
@@ -79,374 +65,6 @@ return [
     |
     */
     'filter_key' => 'filter',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Default Filter Engine
-    |--------------------------------------------------------------------------
-    |
-    | The filter engine that will be used by default when no engine is specified
-    | explicitly. You can change it to any of the engines listed in the
-    | "engines" section below.
-    |
-    */
-    'default_engine' => 'dynamic',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Filter Engines
-    |--------------------------------------------------------------------------
-    |
-    | Define all available filter engines in your application. Each engine
-    | contains its own options that control its behavior and logic.
-    | You can create your own custom engines and register them here.
-    |
-    */
-    'engines' => [
-        /*
-        |--------------------------------------------------------------------------
-        | Dynamic Methods Filter Engine
-        |--------------------------------------------------------------------------
-        |
-        | The Dynamic Method Engine provides a powerful way to dynamically map incomming reuqest parameters to corresponding methods in a filter class.
-        |
-        */
-        'dynamic' => [
-            'description' => 'The Dynamic Method Engine provides a powerful way to dynamically map incomming reuqest parameters to corresponding methods in a filter class',
-            'options' => [
-
-                /*
-                |--------------------------------------------------------------------------
-                | Normalize Field Names
-                |--------------------------------------------------------------------------
-                |
-                | Whether to automatically convert field names to lowercase
-                | for consistency when parsing filters.
-                |
-                */
-                'normalize_keys' => true,
-            ],
-        ],
-
-        /*
-        |--------------------------------------------------------------------------
-        | Tree Based Filter Engine
-        |--------------------------------------------------------------------------
-        |
-        | This engine uses a tree-like structure to combine conditions using
-        | logical operators (AND/OR). It's useful for building complex queries
-        | with nested conditions.
-        |
-        */
-        'tree' => [
-            'description' => 'Logical tree structure using AND/OR to group nested conditions.',
-            'options' => [
-
-                /*
-                |--------------------------------------------------------------------------
-                | Default Logic Operator
-                |--------------------------------------------------------------------------
-                |
-                | Determines how conditions are combined by default. Options:
-                | "and" for intersection, "or" for union.
-                |
-                */
-                'logic_operator' => 'and',
-
-                /*
-                |--------------------------------------------------------------------------
-                | Allowed SQL Operators
-                |--------------------------------------------------------------------------
-                |
-                | List of supported SQL operators you want to allow when parsing
-                | the expressions.
-                |
-                */
-                'allowed_operators' => [
-                    'eq' => '=',
-                    'neq' => '!=',
-                    'gt' => '>',
-                    'lt' => '<',
-                    'gte' => '>=',
-                    'lte' => '<=',
-                    'like' => 'like',
-                    'nlike' => 'not like',
-                    'in' => 'in',
-                    'nin' => 'not in',
-                    'null' => 'is null',
-                    'notnull' => 'is not null',
-                    'between' => 'between',
-                ],
-
-                /*
-                |--------------------------------------------------------------------------
-                | Tree Depth Limit
-                |--------------------------------------------------------------------------
-                |
-                | Limits how deeply nested the filter tree can be. Set to null
-                | to allow unlimited nesting.
-                |
-                */
-                'depth_limit' => null,
-
-                /*
-                |--------------------------------------------------------------------------
-                | Normalize Field Names
-                |--------------------------------------------------------------------------
-                |
-                | Whether to automatically convert field names to lowercase
-                | for consistency when parsing filters.
-                |
-                */
-                'normalize_keys' => true,
-            ],
-        ],
-
-        /*
-        |--------------------------------------------------------------------------
-        | Rule Set Filter Engine
-        |--------------------------------------------------------------------------
-        |
-        | A simple engine that applies a flat list of rules independently. This
-        | is great when your filters are not deeply nested or hierarchical.
-        |
-        */
-        'ruleset' => [
-            'description' => 'Flat list of independent rules applied sequentially.',
-            'options' => [
-
-                /*
-                |--------------------------------------------------------------------------
-                | Strict Mode
-                |--------------------------------------------------------------------------
-                |
-                | When enabled, if any rule fails, the entire filtering process
-                | will stop and fail. Otherwise, it will continue with the rest.
-                |
-                */
-                'strict_mode' => false,
-
-                /*
-                |--------------------------------------------------------------------------
-                | Fail Silently
-                |--------------------------------------------------------------------------
-                |
-                | If set to true, unsupported or invalid rules will be ignored
-                | without throwing an error.
-                |
-                */
-                'fail_silently' => true,
-
-                /*
-                |--------------------------------------------------------------------------
-                | Allowed Fields
-                |--------------------------------------------------------------------------
-                |
-                | Specify which fields are allowed to be filtered. Leave empty
-                | to allow all fields.
-                |
-                */
-                'allowed_fields' => [],
-                /*
-
-                |--------------------------------------------------------------------------
-                | Allowed SQL Operators
-                |--------------------------------------------------------------------------
-                |
-                | List of supported SQL operators you want to allow when parsing
-                | the expressions.
-                |
-                */
-                'allowed_operators' => [
-                    'eq' => '=',
-                    'neq' => '!=',
-                    'gt' => '>',
-                    'lt' => '<',
-                    'gte' => '>=',
-                    'lte' => '<=',
-                    'like' => 'like',
-                    'nlike' => 'not like',
-                    'in' => 'in',
-                    'nin' => 'not in',
-                    'null' => 'is null',
-                    'notnull' => 'is not null',
-                    'between' => 'between',
-                ],
-            ],
-        ],
-
-        /*
-        |--------------------------------------------------------------------------
-        | Closure Pipeline Filter Engine
-        |--------------------------------------------------------------------------
-        |
-        | Executes filters through a pipeline of closures. This gives you full
-        | control over filter stages and behavior with middleware-like logic.
-        |
-        */
-        'closure_pipeline' => [
-            'description' => 'Filter execution as a sequence of Closures (pipeline style).',
-            'options' => [
-
-                /*
-                |--------------------------------------------------------------------------
-                | Middlewares
-                |--------------------------------------------------------------------------
-                |
-                | An array of closure-based functions that are executed before
-                | the filter logic. Useful for preprocessing or validation.
-                |
-                */
-                'middlewares' => [],
-
-                /*
-                |--------------------------------------------------------------------------
-                | Catch Exceptions
-                |--------------------------------------------------------------------------
-                |
-                | Whether to catch and handle exceptions in each closure step
-                | or let them bubble up.
-                |
-                */
-                'catch_exceptions' => true,
-
-                /*
-                |--------------------------------------------------------------------------
-                | Enable Logging
-                |--------------------------------------------------------------------------
-                |
-                | Log each step and its outcome during filter execution.
-                | Useful for debugging and tracking logic flow.
-                |
-                */
-                'enable_logging' => false,
-            ],
-        ],
-
-        /*
-        |--------------------------------------------------------------------------
-        | SQL Expression Filter Engine
-        |--------------------------------------------------------------------------
-        |
-        | Converts filters into raw SQL expressions. Ideal when you need
-        | fine-grained control over generated SQL queries.
-        |
-        */
-        'expression' => [
-            'description' => 'Converts filters to raw SQL expressions for precision control.',
-            'options' => [
-
-                /*
-                |--------------------------------------------------------------------------
-                | Allowed SQL Operators
-                |--------------------------------------------------------------------------
-                |
-                | List of supported SQL operators you want to allow when parsing
-                | the expressions.
-                |
-                */
-                'allowed_operators' => [
-                    'eq' => '=',
-                    'neq' => '!=',
-                    'gt' => '>',
-                    'lt' => '<',
-                    'gte' => '>=',
-                    'lte' => '<=',
-                    'like' => 'like',
-                    'nlike' => 'not like',
-                    'in' => 'in',
-                    'nin' => 'not in',
-                    'null' => 'is null',
-                    'notnull' => 'is not null',
-                    'between' => 'between',
-                ],
-
-                /*
-                |--------------------------------------------------------------------------
-                | Validate Columns
-                |--------------------------------------------------------------------------
-                |
-                | Whether to check if a column exists in the schema before
-                | building the SQL expression.
-                |
-                */
-                'validate_columns' => true,
-
-                /*
-                |--------------------------------------------------------------------------
-                | Allowed Fields
-                |--------------------------------------------------------------------------
-                |
-                | Specify which fields are allowed to be filtered. Leave empty
-                | to allow all fields.
-                |
-                */
-                'allowed_fields' => [],
-
-                /*
-                |--------------------------------------------------------------------------
-                | Case-insensitive filtering
-                |--------------------------------------------------------------------------
-                |
-                | Whether the 'like' operator should apply case-insensitive comparison by default.
-                |
-                */
-                'case_insensitive_like' => true,
-
-                /*
-                |--------------------------------------------------------------------------
-                | Quote Values
-                |--------------------------------------------------------------------------
-                |
-                | Automatically wrap values in quotes during SQL generation.
-                | Helps avoid syntax errors with string values.
-                |
-                */
-                'quote_values' => true,
-
-                /*
-                |--------------------------------------------------------------------------
-                | Expression Wrapper
-                |--------------------------------------------------------------------------
-                |
-                | Format string used to wrap the final SQL expression.
-                | For example: '(%s)' will wrap the entire condition in parentheses.
-                |
-                */
-                'expression_wrapper' => '(%s)',
-
-                /*
-                |--------------------------------------------------------------------------
-                | Throw on Invalid Filter
-                |--------------------------------------------------------------------------
-                | If true, the package will throw an exception if a field
-                | is not allowed in the allowed fields.
-                */
-                'throw_on_invalid_fields' => false,
-            ],
-        ],
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Maximum number of filterable fields allowed in a single request.
-    |--------------------------------------------------------------------------
-    |
-    | This setting limits how many fields can be filtered simultaneously to:
-    | - Prevent performance degradation from overly complex queries
-    | - Mitigate potential DDoS attacks through filter bombing
-    | - Maintain API stability and response times
-    |
-    | Accepted values:
-    | - Positive integer (recommended 10-20 for most applications)
-    | - 0 to disable limit (not recommended in production)
-    |
-    | When exceeded:
-    | - Returns 422 Unprocessable Entity response
-    | - Includes error message specifying the allowed limit
-    |
-    */
-    'max_filterable_fields' => 15,
 
     /*
     |--------------------------------------------------------------------------
@@ -462,84 +80,270 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Define filters mapping.
+    | Default Filter Engine
     |--------------------------------------------------------------------------
     |
-    | This is the namespace all you Eloquent Model Filters will reside
+    | The filter engine that will be used by default when no engine is specified
+    | explicitly. You can change it to any of the engines listed in the
+    | "engines" section below.
     |
     */
-    'mapping' => [
-        //
-    ],
+    'default_engine' => 'invokeable',
 
     /*
     |--------------------------------------------------------------------------
-    | Global Sanitizers
+    | Filter Engines
     |--------------------------------------------------------------------------
     |
-    | Define sanitizers to apply to all incomming values before filtering.
-    | You can enable/disable built-in sanitizers
+    | Define all available filter engines in your application. Each engine
+    | contains its own options that control its behavior and logic.
+    | You can create your own custom engines and register them here.
     |
     */
-    'global_sanitizers' => [
-        'enable' => false,
-        'defaults' => [
-            'trim' => true,
-            'strtolower' => true
+    'engines' => [
+        /*
+        |--------------------------------------------------------------------------
+        | Invokeable Filter Engine
+        |--------------------------------------------------------------------------
+        |
+        | The Invokeable Engine provides a powerful way to dynamically map incomming reuqest parameters to corresponding methods in a filter class.
+        |
+        */
+        'invokeable' => [
+            /*
+            |--------------------------------------------------------------------------
+            | Egnore empty values
+            |--------------------------------------------------------------------------
+            |
+            | If 'true' filters with null or empty string values will be ignored.
+            |
+            */
+            'ignore_empty_values' => false,
         ],
+
+        /*
+        |--------------------------------------------------------------------------
+        | Tree Filter Engine
+        |--------------------------------------------------------------------------
+        |
+        | This engine uses a tree-like structure to combine conditions using
+        | logical operators (AND/OR). It's useful for building complex queries
+        | with nested conditions.
+        |
+        */
+        'tree' => [
+            /*
+            |--------------------------------------------------------------------------
+            | Strict Mode
+            |--------------------------------------------------------------------------
+            |
+            | When enabled, if any filter key is not allowed, the entire filtering process
+            | will stop and throw exception. Otherwise, it will ignore unallowed filters.
+            |
+            */
+            'strict' => true,
+
+            /*
+            |--------------------------------------------------------------------------
+            | Allowed SQL Operators
+            |--------------------------------------------------------------------------
+            |
+            | List of supported SQL operators you want to allow when parsing
+            | the expressions.
+            |
+            */
+            'allowed_operators' => [
+                'eq' => '=',
+                'neq' => '!=',
+                'gt' => '>',
+                'lt' => '<',
+                'gte' => '>=',
+                'lte' => '<=',
+                'like' => 'like',
+                'nlike' => 'not like',
+                'in' => 'in',
+                'nin' => 'not in',
+                'null' => 'is null',
+                'notnull' => 'is not null',
+                'between' => 'between',
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Default Operator
+            |--------------------------------------------------------------------------
+            |
+            | Default operator when request dosen't has operator.
+            |
+            */
+            'default_operator' => '=', // =
+
+            /*
+            |--------------------------------------------------------------------------
+            | ignore empty values
+            |--------------------------------------------------------------------------
+            |
+            | If 'true' filters with null or empty string values will be ignored.
+            |
+            */
+            'ignore_empty_values' => false,
+        ],
+
+        /*
+        |--------------------------------------------------------------------------
+        | Ruleset Filter Engine
+        |--------------------------------------------------------------------------
+        |
+        | A simple engine that applies a simple queries independently. This
+        | is great when your filters are not deeply nested or hierarchical.
+        |
+        */
+        'ruleset' => [
+            /*
+            |--------------------------------------------------------------------------
+            | Strict Mode
+            |--------------------------------------------------------------------------
+            |
+            | When enabled, if any filter key is not allowed, the entire filtering process
+            | will stop and throw exception. Otherwise, it will ignore unallowed filters.
+            |
+            */
+            'strict' => true,
+
+            /*
+            |--------------------------------------------------------------------------
+            | Allowed Fields
+            |--------------------------------------------------------------------------
+            |
+            | Specify which fields are allowed to be filtered. Leave empty
+            | to allow all fields.
+            |
+            */
+            'allowed_fields' => [],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Allowed SQL Operators
+            |--------------------------------------------------------------------------
+            |
+            | List of supported SQL operators you want to allow when parsing
+            | the expressions.
+            |
+            */
+            'allowed_operators' => [
+                'eq' => '=',
+                'neq' => '!=',
+                'gt' => '>',
+                'lt' => '<',
+                'gte' => '>=',
+                'lte' => '<=',
+                'like' => 'like',
+                'nlike' => 'not like',
+                'in' => 'in',
+                'nin' => 'not in',
+                'null' => 'is null',
+                'notnull' => 'is not null',
+                'between' => 'between',
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Default Operator
+            |--------------------------------------------------------------------------
+            |
+            | Default operator when request dosen't has operator.
+            |
+            */
+            'default_operator' => 'eq', // =
+        ],
+
+        /*
+        |--------------------------------------------------------------------------
+        | SQL Expression Filter Engine
+        |--------------------------------------------------------------------------
+        |
+        | Converts filters into raw SQL expressions. Ideal when you need
+        | fine-grained control over generated SQL queries.
+        |
+        */
+        'expression' => [
+            /*
+            |--------------------------------------------------------------------------
+            | ignore empty values
+            |--------------------------------------------------------------------------
+            |
+            | If 'true' filters with null or empty string values will be ignored.
+            |
+            */
+            'ignore_empty_values' => false,
+
+            /*
+            |--------------------------------------------------------------------------
+            | Allowed SQL Operators
+            |--------------------------------------------------------------------------
+            |
+            | List of supported SQL operators you want to allow when parsing
+            | the expressions.
+            |
+            */
+            'allowed_operators' => [
+                'eq' => '=',
+                'neq' => '!=',
+                'gt' => '>',
+                'lt' => '<',
+                'gte' => '>=',
+                'lte' => '<=',
+                'like' => 'like',
+                'nlike' => 'not like',
+                'in' => 'in',
+                'nin' => 'not in',
+                'null' => 'is null',
+                'notnull' => 'is not null',
+                'between' => 'between',
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Default Operator
+            |--------------------------------------------------------------------------
+            |
+            | Default operator when request dosen't has operator.
+            |
+            */
+            'default_operator' => 'eq',
+
+            /*
+            |--------------------------------------------------------------------------
+            | Validate Columns
+            |--------------------------------------------------------------------------
+            |
+            | Whether to check if a column exists in the schema before
+            | building the SQL expression.
+            |
+            */
+            'validate_columns' => true,
+
+            /*
+            |--------------------------------------------------------------------------
+            | Allowed Fields
+            |--------------------------------------------------------------------------
+            |
+            | Specify which fields are allowed to be filtered. Leave empty
+            | to allow all fields.
+            |
+            */
+            'allowed_fields' => [],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Strict Mode
+            |--------------------------------------------------------------------------
+            | If true, the package will throw an exception if a field
+            | is not allowed in the allowed fields.
+            */
+            'strict' => true
+        ]
     ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Allow empty values
-    |--------------------------------------------------------------------------
-    |
-    | If 'false' filters with null or empty string values will be ignored.
-    |
-    */
-    'allow_empty_values' => false,
-
-    /*
-    |--------------------------------------------------------------------------
-    | Default Filters Behavior
-    |--------------------------------------------------------------------------
-    |
-    | You can specify whether the default behavior when no filters are passed
-    | should return all records or an empty query.
-    |
-    | Supported: "all", "none"
-    |
-    */
-    'default_behavior' => 'all',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Throw on Invalid Filter
-    |--------------------------------------------------------------------------
-    | If true, the package will throw an exception if a requested filter
-    | is not defined in the filters list.
-    */
-    'throw_on_invalid_filter' => false,
-
-    /*
-    |--------------------------------------------------------------------------
-    | Log applied filters query.
-    |--------------------------------------------------------------------------
-    |
-    | If true, all filters and their values will be logged queries using Laravel's logger.
-    |
-    */
-    'log_queries' => false,
-
-    /*
-    |--------------------------------------------------------------------------
-    | Path of saving new filters
-    |--------------------------------------------------------------------------
-    |
-    | This is the namespace all you Eloquent Model Filters will reside
-    |
-    */
-    'save_filters_at' => 'Http/Filters',
 
     /*
     |--------------------------------------------------------------------------
@@ -551,10 +355,8 @@ return [
     |
     */
     'generator' => [
-        'stub' => base_path('vendor/kettasoft/filterable/stubs/filter.stub'),
+        'stubs' => base_path('vendor/kettasoft/filterable/src/stubs/'),
     ],
-
-    'sanitizer' => [],
 
     /*
     |--------------------------------------------------------------------------
@@ -564,7 +366,7 @@ return [
     | Set paginate limit
     |
     */
-    'paginate_limit' => null,
+    'paginate_limit' => env('PAGINATION_LIMIT_DEFAULT', 15),
 
     /*
     |--------------------------------------------------------------------------
@@ -645,6 +447,7 @@ return [
     ],
 ];
 
+
 ```
 
 ---
@@ -652,6 +455,17 @@ return [
 ### **Step 1: Add the `Filterable` Trait to Your Model**
 
 To enable filtering on your model, you need to include the `Filterable` trait in the model you want to apply filters on.
+
+```php
+<?php
+
+use Kettasoft\Filterable\Filterable;
+
+class Post extends Model
+{
+    use Filterable;
+}
+```
 
 ---
 

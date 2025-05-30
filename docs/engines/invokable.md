@@ -2,9 +2,9 @@
 sidebarDepth: 2
 ---
 
-# Dynamic Method Engine
+# Invokable Engine
 
-The **Dynamic Method Engine** provides a powerful way to dynamically map incomming reuqest parameters to corresponding methods in a filter class. This mechanism enables clean, scalable filtering logic and behavior injection without requiring large **switch** or **if-else** blocks.
+The **Invokable Engine** provides a powerful way to dynamically map incomming reuqest parameters to corresponding methods in a filter class. This mechanism enables clean, scalable filtering logic and behavior injection without requiring large **switch** or **if-else** blocks.
 
 ---
 

@@ -26,7 +26,7 @@ export default defineUserConfig({
     selectLanguageName: "ar",
     lastUpdated: true,
     contributors: true,
-    contributorsText: "dasdasd",
+    // contributorsText: "dasdasd",
 
     navbar: ["/", "/installation"],
     sidebar: [
@@ -51,20 +51,20 @@ export default defineUserConfig({
         collapsible: true,
         children: [
           {
-            text: "Dynamic method",
-            link: "engines/dynamic-methods",
+            text: "Invokable",
+            link: "engines/invokable",
           },
           {
-            text: "Tree based",
-            link: "engines/tree-based",
+            text: "Tree",
+            link: "engines/tree",
           },
           {
             text: "Ruleset",
             link: "engines/rule-set",
           },
           {
-            text: "Closure pipeline",
-            link: "engines/closure",
+            text: "Expression",
+            link: "engines/expression",
           },
         ],
       },
@@ -89,10 +89,6 @@ export default defineUserConfig({
       {
         text: "Sanitization",
         link: "sanitization",
-      },
-      {
-        text: "Configurations",
-        link: "configurations",
       },
     ],
   }),

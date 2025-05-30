@@ -6,19 +6,18 @@ Each **engine** encapsulates a distinct filtering strategy — allowing you to c
 
 ## Engine Overview
 
-| Engine                                       | Description                                                                                                                                |
-| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| [`Ruleset`](/engines/ruleset)                | Applies a flat array of key-operator-value pairs. Best for simple APIs or when using query strings.                                        |
-| [`Dynamic Method`](/engines/dynamic-methods) | Maps each filter key to a method on your filter class. Great for encapsulating filter logic per field.                                     |
-| [`Closure Pipeline`](/engines/closure)       | Accepts an array of closures or a filter class implementing `HasFieldFilterable`. Maximum flexibility at the cost of bypassing validation. |
-| [`SQL Expression`](/engines/sql-expression)  | Global callback to handle raw SQL filtering expressions dynamically.                                                                       |
-| [`Tree-Based`](/engines/tree-based)          | Supports nested and grouped logical filtering (`AND` / `OR`), ideal for advanced search scenarios.                                         |
+| Engine                                  | Description                                                                                            |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| [`Ruleset`](/engines/ruleset)           | Applies a flat array of key-operator-value pairs. Best for simple APIs or when using query strings.    |
+| [`Invokable`](/engines/dynamic-methods) | Maps each filter key to a method on your filter class. Great for encapsulating filter logic per field. |
+| [`Expression`](/engines/sql-expression) | Global callback to handle raw SQL filtering expressions dynamically.                                   |
+| [`Tree`](/engines/tree-based)           | Supports nested and grouped logical filtering (`AND` / `OR`), ideal for advanced search scenarios.     |
 
 ---
 
-## Dynamic Method Engine
+## Invokable Engine
 
-The **Dynamic Method Engine** maps each incoming filter key to a method within your custom filter class.
+The **Invokable Engine** maps each incoming filter key to a method within your custom filter class.
 
 ### Example Filter Class
 
@@ -51,26 +50,7 @@ public function index(PostFilter $filter)
 
 ---
 
-## Closure Pipeline Engine
-
-The **Closure Pipeline Engine** allows you to define filters as closures directly in your controller or a custom class.
-
-### Example
-
-```php
-Post::filter([
-    'status' => fn($q) => $q->where('status', 'active'),
-    'title' => fn($q) => $q->where('title', 'like', '%laravel%')
-])->get();
-```
-
-::: danger Important
-This engine **does not** go through [Sanitization](/sanitization) or [Validation](/validation). Always handle input validation manually.
-:::
-
----
-
-## SQL Expression Engine
+## Expression Engine
 
 Write custom SQL logic for filtering in a centralized callback.
 
@@ -87,24 +67,38 @@ Post::filterUsing(function ($query, $filters) {
 
 ---
 
-## Tree-Based Engine
+## Tree Engine
 
 Ideal for complex filters with nested conditions.
 
-```php
-$filters = [
-    'and' => [
-        ['field' => 'status', 'operator' => 'eq', 'value' => 'active'],
-        ['or' => [
-            ['field' => 'title', 'operator' => 'like', 'value' => 'Laravel'],
-            ['field' => 'author.name', 'operator' => 'eq', 'value' => 'John']
-        ]]
-    ]
-];
+```json
+{
+  "and": [
+    {
+      "field": "status",
+      "operator": "eq",
+      "value": "active"
+    },
+    {
+      "or": [
+        {
+          "field": "title",
+          "operator": "like",
+          "value": "Laravel"
+        },
+        {
+          "field": "author.name",
+          "operator": "eq",
+          "value": "John"
+        }
+      ]
+    }
+  ]
+}
 ```
 
 ```php
-Post::filter($filters)->get();
+Post::filter(Filterable::create()->useEngine('tree'))->get();
 ```
 
 Supports relation filtering and nested depth control via configuration.
