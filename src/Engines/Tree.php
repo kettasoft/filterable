@@ -8,9 +8,9 @@ use Kettasoft\Filterable\Traits\FieldNormalizer;
 use Kettasoft\Filterable\Engines\Contracts\Engine;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Support\RelationPathParser;
-use Kettasoft\Filterable\Contracts\FilterableContext;
 use Kettasoft\Filterable\Support\AllowedFieldChecker;
 use Kettasoft\Filterable\Support\TreeBasedRelationsResolver;
+use Kettasoft\Filterable\Engines\Contracts\TreeFilterableContext;
 use Kettasoft\Filterable\Engines\Contracts\HasAllowedFieldChecker;
 use Kettasoft\Filterable\Support\TreeBasedSignelConditionResolver;
 use Kettasoft\Filterable\Engines\Contracts\HasInteractsWithOperators;
@@ -22,9 +22,9 @@ class Tree implements Engine, HasInteractsWithOperators, HasAllowedFieldChecker
   protected operatorMapper $operatorMapper;
   /**
    * Create Engine instance.
-   * @param \Kettasoft\Filterable\Contracts\FilterableContext $context
+   * @param \Kettasoft\Filterable\Engines\Contracts\TreeFilterableContext $context
    */
-  public function __construct(protected FilterableContext $context)
+  public function __construct(protected TreeFilterableContext $context)
   {
     $this->operatorMapper = new OperatorMapper($this);
   }

@@ -5,11 +5,11 @@ namespace Kettasoft\Filterable\Engines;
 use Kettasoft\Filterable\Traits\FieldNormalizer;
 use Kettasoft\Filterable\Engines\Contracts\Engine;
 use Illuminate\Contracts\Database\Eloquent\Builder;
-use Kettasoft\Filterable\Contracts\FilterableContext;
 use Kettasoft\Filterable\Support\ConditionNormalizer;
 use Kettasoft\Filterable\Support\ValidateTableColumns;
 use Kettasoft\Filterable\Exceptions\InvalidOperatorException;
 use Kettasoft\Filterable\Exceptions\NotAllowedFieldException;
+use Kettasoft\Filterable\Engines\Contracts\ExpressionEngineContext;
 
 class Expression implements Engine
 {
@@ -17,9 +17,9 @@ class Expression implements Engine
 
   /**
    * Create Engine instance.
-   * @param \Kettasoft\Filterable\Contracts\FilterableContext $context
+   * @param \Kettasoft\Filterable\Engines\Contracts\ExpressionEngineContext $context
    */
-  public function __construct(protected FilterableContext $context) {}
+  public function __construct(protected ExpressionEngineContext $context) {}
 
   /**
    * Apply filters to the query.

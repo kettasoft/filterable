@@ -7,7 +7,7 @@ use Kettasoft\Filterable\Support\Payload;
 use Illuminate\Support\Traits\ForwardsCalls;
 use Kettasoft\Filterable\Engines\Contracts\Engine;
 use Illuminate\Contracts\Database\Eloquent\Builder;
-use Kettasoft\Filterable\Contracts\FilterableContext;
+use Kettasoft\Filterable\Engines\Contracts\InvokableEngineContext;
 use Kettasoft\Filterable\Support\ConditionNormalizer;
 
 class Invokeable implements Engine
@@ -22,9 +22,9 @@ class Invokeable implements Engine
 
   /**
    * Create Engine instance.
-   * @param \Kettasoft\Filterable\Contracts\FilterableContext $context
+   * @param \Kettasoft\Filterable\Engines\Contracts\InvokableEngineContext $context
    */
-  public function __construct(protected FilterableContext $context) {}
+  public function __construct(protected InvokableEngineContext $context) {}
 
   /**
    * Apply filters to the query.
