@@ -75,7 +75,7 @@ When `fallback_strategy = 'error'`:
 ### Per-Query Selection
 
 ```php
-Filterable::make(Product::query)->withHeaderDrivenMode();
+Filterable::create()->filter(Product::query())->withHeaderDrivenMode([...]);
 ```
 
 #### Method Reference
@@ -97,18 +97,7 @@ withHeaderDrivenMode(array $config)
 'allowed_engines' => ['dynamic', 'tree']
 ```
 
-## Important Notes
-
-### Closure Engine Limitation
-
-::: warning Warning
-Header-driven mode **cannot** be used with [**Closure Pipeline Engine**](engines/closure) because:
-
-- Closures cannot be serialized in headers
-- Runtime pipeline modifications require code-level changes
-  :::
-
-#### Security Considerations
+## Security Considerations
 
 - Always whitelist allowed engines in production
 - Consider rate limiting header modifications

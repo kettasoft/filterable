@@ -1,7 +1,7 @@
 ---
 home: true
 title: Home
-heroImage: /logo.png
+heroImage: logo.png
 actions:
   - text: Introduction
     link: /introduction

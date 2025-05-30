@@ -9,13 +9,6 @@ To enable sanitization in your filter class,
 define a `protected $sanitizers` property.
 Each entry in this array maps a **request key** to one or more sanitizer classes.
 
-## Important Note
-
-::: danger Important Node
-The [**Closure Pipeline Engine**](/engines/closure) dose **not** og through any [sanitization](sanitization) or [validation](validation) processes.
-Ensuer that you manually handle input validation and security checks when using closures in filter logic to avoid unexpected behavior or security vulnerabilities.
-:::
-
 ## Basic Example
 
 ```php
@@ -51,11 +44,11 @@ You can apply multiple sanitizers to the same field by using array:
 
 ```php
 protected $sanitizers = [
-    'title' => [
-      TrimSanitizer::class,
-      CapitalizeSanitizer::class
-    ]
-  ];
+  'title' => [
+    TrimSanitizer::class,
+    CapitalizeSanitizer::class
+  ]
+];
 ```
 
 Sanitizers are applied **in the order defined**.

@@ -6,12 +6,12 @@ Each **engine** encapsulates a distinct filtering strategy — allowing you to c
 
 ## Engine Overview
 
-| Engine                                  | Description                                                                                            |
-| --------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| [`Ruleset`](/engines/ruleset)           | Applies a flat array of key-operator-value pairs. Best for simple APIs or when using query strings.    |
-| [`Invokable`](/engines/dynamic-methods) | Maps each filter key to a method on your filter class. Great for encapsulating filter logic per field. |
-| [`Expression`](/engines/sql-expression) | Global callback to handle raw SQL filtering expressions dynamically.                                   |
-| [`Tree`](/engines/tree-based)           | Supports nested and grouped logical filtering (`AND` / `OR`), ideal for advanced search scenarios.     |
+| Engine                             | Description                                                                                            |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| [`Ruleset`](engines/rule-set)      | Applies a flat array of key-operator-value pairs. Best for simple APIs or when using query strings.    |
+| [`Invokable`](engines/invokable)   | Maps each filter key to a method on your filter class. Great for encapsulating filter logic per field. |
+| [`Expression`](engines/expression) | Flexible and expressive filtering engine designed to handle both flat and deeply nested filters.       |
+| [`Tree`](engines/tree)             | Supports nested and grouped logical filtering (`AND` / `OR`), ideal for advanced search scenarios.     |
 
 ---
 
