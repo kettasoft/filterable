@@ -105,6 +105,10 @@ class Filterable implements FilterableContext, Authorizable, Validatable
    */
   protected $fieldsMap = [];
 
+  /**
+   * Registered model.
+   * @var Model
+   */
   protected $model;
 
   /**
