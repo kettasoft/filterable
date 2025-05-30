@@ -300,6 +300,18 @@ class Filterable implements FilterableContext, Authorizable, Validatable
   }
 
   /**
+   * Disable running sanitizers on the filters.
+   * @return static
+   */
+  public function withoutSanitizers(): static
+  {
+    $this->sanitizers = [];
+    $this->sanitizer->setSanitizers([]);
+
+    return $this;
+  }
+
+  /**
    * Parse incomming data from request.
    * @return void
    */
