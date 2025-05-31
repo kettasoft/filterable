@@ -14,7 +14,10 @@
   "autoload": {
     "psr-4": {
       "Kettasoft\\Filterable\\": "src/"
-    }
+    },
+    "files": [
+      "src/Support/helpers.php"
+    ]
   },
   "autoload-dev": {
     "psr-4": {
