@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Facades\App;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Traits\Macroable;
 use Kettasoft\Filterable\Tests\Models\Post;
 use Kettasoft\Filterable\Engines\EngineRunner;
 use Kettasoft\Filterable\Contracts\Validatable;
@@ -17,8 +18,8 @@ use Kettasoft\Filterable\Contracts\FilterableContext;
 use Kettasoft\Filterable\Engines\Factory\EngineManager;
 use Kettasoft\Filterable\Traits\InteractsWithFilterKey;
 use Kettasoft\Filterable\Traits\InteractsWithValidation;
-use Kettasoft\Filterable\Exceptions\MissingBuilderException;
 
+use Kettasoft\Filterable\Exceptions\MissingBuilderException;
 use Kettasoft\Filterable\Traits\InteractsWithMethodMentoring;
 use Kettasoft\Filterable\Traits\InteractsWithRelationsFiltering;
 use Kettasoft\Filterable\Traits\InteractsWithFilterAuthorization;
@@ -31,7 +32,8 @@ class Filterable implements FilterableContext, Authorizable, Validatable
     InteractsWithMethodMentoring,
     InteractsWithFilterAuthorization,
     InteractsWithValidation,
-    InteractsWithRelationsFiltering;
+    InteractsWithRelationsFiltering,
+    Macroable;
 
   /**
    * The running filter engine.
