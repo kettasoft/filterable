@@ -528,6 +528,19 @@ class Filterable implements FilterableContext, Authorizable, Validatable
   }
 
   /**
+   * Get the SQL representation of the filtered query.
+   * @param \Illuminate\Contracts\Database\Eloquent\Builder|null $builder
+   * @param mixed $withBindings
+   * @return string
+   */
+  public function toSql(Builder|null $builder = null, $withBindings = false): string
+  {
+    $builder = $this->apply($builder ?? $this->builder);
+
+    return $withBindings ? $builder->toRawSql() : $builder->toSql();
+  }
+
+  /**
    * Retrieve an input item from the request.
    * @param string $key
    * @return mixed
