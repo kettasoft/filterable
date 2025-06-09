@@ -5,7 +5,7 @@ namespace Kettasoft\Filterable\Sanitization;
 use Illuminate\Support\Traits\ForwardsCalls;
 use Kettasoft\Filterable\Sanitization\HandlerFactory;
 
-class Sanitizer
+class Sanitizer implements \Countable
 {
   use ForwardsCalls;
 
@@ -42,6 +42,15 @@ class Sanitizer
     }
 
     return $value;
+  }
+
+  /**
+   * Get the number of registered sanitizers.
+   * @return int
+   */
+  public function count(): int
+  {
+    return count($this->sanitizers);
   }
 
   /**
