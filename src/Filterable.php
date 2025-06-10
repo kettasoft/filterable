@@ -230,7 +230,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable
 
   /**
    * Use filter engine.
-   * @param \Kettasoft\Filterable\Engines\Contracts\Engine|string $engine
+   * @param \Kettasoft\Filterable\Engines\Foundation\Engine|string $engine
    * @return Filterable
    */
   public function useEngin(Engine|string $engine): static
