@@ -5,7 +5,7 @@ namespace Kettasoft\Filterable\Engines;
 use Kettasoft\Filterable\Support\TreeNode;
 use Kettasoft\Filterable\Support\OperatorMapper;
 use Kettasoft\Filterable\Traits\FieldNormalizer;
-use Kettasoft\Filterable\Engines\Contracts\Engine;
+use Kettasoft\Filterable\Engines\Foundation\Engine;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Support\RelationPathParser;
 use Kettasoft\Filterable\Support\AllowedFieldChecker;
@@ -15,19 +15,9 @@ use Kettasoft\Filterable\Engines\Contracts\HasAllowedFieldChecker;
 use Kettasoft\Filterable\Support\TreeBasedSignelConditionResolver;
 use Kettasoft\Filterable\Engines\Contracts\HasInteractsWithOperators;
 
-class Tree implements Engine, HasInteractsWithOperators, HasAllowedFieldChecker
+class Tree extends Engine implements HasInteractsWithOperators, HasAllowedFieldChecker
 {
   use FieldNormalizer;
-
-  protected operatorMapper $operatorMapper;
-  /**
-   * Create Engine instance.
-   * @param \Kettasoft\Filterable\Engines\Contracts\TreeFilterableContext $context
-   */
-  public function __construct(protected TreeFilterableContext $context)
-  {
-    $this->operatorMapper = new OperatorMapper($this);
-  }
 
   /**
    * Apply filters to the query.
@@ -61,7 +51,7 @@ class Tree implements Engine, HasInteractsWithOperators, HasAllowedFieldChecker
       [$relation, $field] = RelationPathParser::resolve($node->field);
 
       $field = $this->normalizeField($this->context->getFieldsMap()[$field] ?? $field);
-      $operator = $this->operatorMapper->map($node->operator);
+      $operator = (new OperatorMapper($this))->map($node->operator);
       $value = $this->context->getSanitizerInstance()->handle($field, $node->value);
 
       if ($relation) {

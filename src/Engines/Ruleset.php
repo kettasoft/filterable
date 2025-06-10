@@ -3,21 +3,14 @@
 namespace Kettasoft\Filterable\Engines;
 
 use Kettasoft\Filterable\Traits\FieldNormalizer;
-use Kettasoft\Filterable\Engines\Contracts\Engine;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Kettasoft\Filterable\Engines\Foundation\Engine;
 use Kettasoft\Filterable\Exceptions\InvalidOperatorException;
 use Kettasoft\Filterable\Exceptions\NotAllowedFieldException;
-use Kettasoft\Filterable\Engines\Contracts\RulesetFilterableContect;
 
-class Ruleset implements Engine
+class Ruleset extends Engine
 {
   use FieldNormalizer;
-
-  /**
-   * Create Engine instance.
-   * @param \Kettasoft\Filterable\Engines\Contracts\RulesetFilterableContect $context
-   */
-  public function __construct(protected RulesetFilterableContect $context) {}
 
   /**
    * Apply filters to the query.

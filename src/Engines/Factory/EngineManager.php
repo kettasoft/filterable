@@ -6,7 +6,7 @@ use Kettasoft\Filterable\Engines\Tree;
 use Kettasoft\Filterable\Engines\Ruleset;
 use Kettasoft\Filterable\Engines\Expression;
 use Kettasoft\Filterable\Engines\Invokeable;
-use Kettasoft\Filterable\Engines\Contracts\Engine;
+use Kettasoft\Filterable\Engines\Foundation\Engine;
 
 class EngineManager
 {
@@ -23,7 +23,7 @@ class EngineManager
 
   /**
    * Generate a new engine instance.
-   * @param \Kettasoft\Filterable\Engines\Contracts\Engine|string $engine
+   * @param \Kettasoft\Filterable\Engines\Foundation\Engine|string $engine
    * @throws \InvalidArgumentException
    * @return Engine|object
    */

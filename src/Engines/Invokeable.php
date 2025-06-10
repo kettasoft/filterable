@@ -5,12 +5,11 @@ namespace Kettasoft\Filterable\Engines;
 use Illuminate\Support\Str;
 use Kettasoft\Filterable\Support\Payload;
 use Illuminate\Support\Traits\ForwardsCalls;
-use Kettasoft\Filterable\Engines\Contracts\Engine;
 use Illuminate\Contracts\Database\Eloquent\Builder;
-use Kettasoft\Filterable\Engines\Contracts\InvokableEngineContext;
+use Kettasoft\Filterable\Engines\Foundation\Engine;
 use Kettasoft\Filterable\Support\ConditionNormalizer;
 
-class Invokeable implements Engine
+class Invokeable extends Engine
 {
   use ForwardsCalls;
 
@@ -19,12 +18,6 @@ class Invokeable implements Engine
    * @var Builder
    */
   protected Builder $builder;
-
-  /**
-   * Create Engine instance.
-   * @param \Kettasoft\Filterable\Engines\Contracts\InvokableEngineContext $context
-   */
-  public function __construct(protected InvokableEngineContext $context) {}
 
   /**
    * Apply filters to the query.

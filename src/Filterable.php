@@ -12,7 +12,7 @@ use Kettasoft\Filterable\Engines\EngineRunner;
 use Kettasoft\Filterable\Contracts\Validatable;
 use Kettasoft\Filterable\Contracts\Authorizable;
 use Kettasoft\Filterable\Sanitization\Sanitizer;
-use Kettasoft\Filterable\Engines\Contracts\Engine;
+use Kettasoft\Filterable\Engines\Foundation\Engine;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Contracts\FilterableContext;
 use Kettasoft\Filterable\Engines\Factory\EngineManager;
