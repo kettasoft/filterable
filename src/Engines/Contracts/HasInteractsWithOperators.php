@@ -5,10 +5,10 @@ namespace Kettasoft\Filterable\Engines\Contracts;
 interface HasInteractsWithOperators extends Strictable
 {
   /**
-   * Get defined engine operators. 
+   * Get operators from engine config. 
    * @return array
    */
-  public function operators(): array;
+  public function getOperatorsFromConfig(): array;
 
   /**
    * Get allowed operators only.
