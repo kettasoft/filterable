@@ -7,6 +7,7 @@ use Kettasoft\Filterable\Contracts\FilterableContext;
 use Kettasoft\Filterable\Engines\Contracts\HasFieldMap;
 use Kettasoft\Filterable\Engines\Contracts\HasInteractsWithOperators;
 use Kettasoft\Filterable\Engines\Contracts\Strictable;
+use Kettasoft\Filterable\Filterable;
 
 abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Strictable
 {
@@ -51,5 +52,14 @@ abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Stricta
   public function isStrict(): bool
   {
     return is_bool($this->context->isStrict()) ? $this->context->isStrict() : $this->isStrictFromConfig();
+  }
+
+  /**
+   * Get the context instance.
+   * @return Filterable
+   */
+  public function getContext(): Filterable
+  {
+    return $this->context;
   }
 }
