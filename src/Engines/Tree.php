@@ -98,15 +98,6 @@ class Tree extends Engine implements HasInteractsWithOperators, HasAllowedFieldC
   }
 
   /**
-   * Get only selected operators.
-   * @return array
-   */
-  public function allowedOperators(): array
-  {
-    return $this->context->getAllowedOperators();
-  }
-
-  /**
    * Default operator for use.
    * @return mixed|\Illuminate\Config\Repository
    */
@@ -115,12 +106,13 @@ class Tree extends Engine implements HasInteractsWithOperators, HasAllowedFieldC
     return config('filterable.engines.tree.default_operator', null);
   }
 
-  /**
-   * Check if engine strictable.
-   * @return bool
-   */
-  public function isStrict(): bool
+  public function getOperatorsFromConfig(): array
   {
-    return $this->context->isStrict() ?? config('filterable.engines.tree.strict', true);
+    return config('filterable.engines.tree.allowed_operators', []);
+  }
+
+  public function isStrictFromConfig(): bool
+  {
+    return config('filterable.engines.tree.strict', true);
   }
 }

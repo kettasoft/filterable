@@ -87,9 +87,19 @@ class Ruleset extends Engine
    * Get engine default operator.
    * @return string
    */
-  private function defaultOperator(): string
+  public function defaultOperator(): string
   {
     return config('filterable.engines.ruleset.default_operator', 'eq');
+  }
+
+  public function getOperatorsFromConfig(): array
+  {
+    return config('filterable.engines.ruleset.allowed_operators', []);
+  }
+
+  public function isStrictFromConfig(): bool
+  {
+    return config('filterable.engines.ruleset.strict', true);
   }
 
   /**
@@ -112,18 +122,5 @@ class Ruleset extends Engine
     }
 
     return $operators[$this->defaultOperator()];
-  }
-
-  /**
-   * Check if strict mode is enabled.
-   * @return bool
-   */
-  private function isStrict(): bool
-  {
-    if (is_bool($this->context->strict)) {
-      return $this->context->strict;
-    }
-
-    return config('filterable.engines.ruleset.strict', true);
   }
 }

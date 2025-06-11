@@ -93,4 +93,23 @@ class Invokeable extends Engine
 
     return $this->context->getRequest()->has($filter) ? Str::camel($filter) : 'default' . Str::studly($filter);
   }
+
+  public function getOperatorsFromConfig(): array
+  {
+    return config('filterable.engines.invokeable.allowed_operators', []);
+  }
+
+  public function isStrictFromConfig(): bool
+  {
+    return config('filterable.engines.invokeable.strict', true);
+  }
+
+  /**
+   * Get engine default operator.
+   * @return string
+   */
+  public function defaultOperator(): string
+  {
+    return config('filterable.engines.invokeable.default_operator', 'eq');
+  }
 }

@@ -187,12 +187,13 @@ class Expression extends Engine
     return $operators[$this->defaultOperator()];
   }
 
-  public function isStrict()
+  public function getOperatorsFromConfig(): array
   {
-    if (is_bool($this->context->strict)) {
-      return $this->context->strict;
-    }
+    return config('filterable.engines.expression.allowed_operators', []);
+  }
 
+  public function isStrictFromConfig(): bool
+  {
     return config('filterable.engines.expression.strict', true);
   }
 
@@ -200,7 +201,7 @@ class Expression extends Engine
    * Get engine default operator.
    * @return string
    */
-  private function defaultOperator(): string
+  public function defaultOperator(): string
   {
     return config('filterable.engines.expression.default_operator', 'eq');
   }
