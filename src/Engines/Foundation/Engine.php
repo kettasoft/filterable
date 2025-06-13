@@ -22,7 +22,7 @@ abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Stricta
    * @param \Illuminate\Contracts\Database\Eloquent\Builder $builder
    * @return Builder
    */
-  abstract public function apply(Builder $builder);
+  abstract public function execute(Builder $builder);
 
   /**
    * Check if the strict mode is enable in an engine config.
