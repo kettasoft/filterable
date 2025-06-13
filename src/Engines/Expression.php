@@ -4,7 +4,7 @@ namespace Kettasoft\Filterable\Engines;
 
 use Kettasoft\Filterable\Traits\FieldNormalizer;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
-use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Support\ConditionNormalizer;
 use Kettasoft\Filterable\Support\ValidateTableColumns;
 use Kettasoft\Filterable\Exceptions\InvalidOperatorException;
@@ -16,7 +16,7 @@ class Expression extends Engine
 
   /**
    * Apply filters to the query.
-   * @param \Illuminate\Contracts\Database\Eloquent\Builder $builder
+   * @param \Illuminate\Database\Eloquent\Builder $builder
    * @return Builder
    */
   public function execute(Builder $builder)

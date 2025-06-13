@@ -3,7 +3,7 @@
 namespace Kettasoft\Filterable\Engines;
 
 use Kettasoft\Filterable\Traits\FieldNormalizer;
-use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
 use Kettasoft\Filterable\Exceptions\InvalidOperatorException;
 use Kettasoft\Filterable\Exceptions\NotAllowedFieldException;
@@ -14,7 +14,7 @@ class Ruleset extends Engine
 
   /**
    * Apply filters to the query.
-   * @param \Illuminate\Contracts\Database\Eloquent\Builder $builder
+   * @param \Illuminate\Database\Eloquent\Builder $builder
    * @return Builder
    */
   public function execute(Builder $builder): Builder

@@ -5,7 +5,7 @@ namespace Kettasoft\Filterable\Engines;
 use Illuminate\Support\Str;
 use Kettasoft\Filterable\Support\Payload;
 use Illuminate\Support\Traits\ForwardsCalls;
-use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
 use Kettasoft\Filterable\Support\ConditionNormalizer;
 
@@ -21,7 +21,7 @@ class Invokeable extends Engine
 
   /**
    * Apply filters to the query.
-   * @param \Illuminate\Contracts\Database\Eloquent\Builder $builder
+   * @param \Illuminate\Database\Eloquent\Builder $builder
    * @return Builder
    */
   public function execute(Builder $builder): Builder

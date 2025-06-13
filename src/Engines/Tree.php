@@ -6,7 +6,7 @@ use Kettasoft\Filterable\Support\TreeNode;
 use Kettasoft\Filterable\Support\OperatorMapper;
 use Kettasoft\Filterable\Traits\FieldNormalizer;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
-use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Support\RelationPathParser;
 use Kettasoft\Filterable\Support\AllowedFieldChecker;
 use Kettasoft\Filterable\Support\TreeBasedRelationsResolver;
@@ -21,7 +21,7 @@ class Tree extends Engine implements HasInteractsWithOperators, HasAllowedFieldC
 
   /**
    * Apply filters to the query.
-   * @param \Illuminate\Contracts\Database\Eloquent\Builder $builder
+   * @param \Illuminate\Database\Eloquent\Builder $builder
    * @return Builder
    */
   public function execute(Builder $builder)

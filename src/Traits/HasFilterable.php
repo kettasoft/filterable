@@ -3,7 +3,7 @@
 namespace Kettasoft\Filterable\Traits;
 
 use Kettasoft\Filterable\Filterable;
-use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Support\FilterRegisterator;
 
 /**
@@ -15,9 +15,9 @@ trait HasFilterable
 {
   /**
    * Apply all relevant thread filters.
-   * @param \Illuminate\Contracts\Database\Eloquent\Builder $query
+   * @param \Illuminate\Database\Eloquent\Builder $query
    * @param \Kettasoft\Filterable\Filterable|string|null $filter
-   * @return \Illuminate\Contracts\Database\Eloquent\Builder
+   * @return \Illuminate\Database\Eloquent\Builder
    */
   public function scopeFilter(Builder $query, Filterable|string|array|null $filter = null): Builder
   {

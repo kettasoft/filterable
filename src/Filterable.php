@@ -8,17 +8,18 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Traits\Macroable;
 use Kettasoft\Filterable\Tests\Models\Post;
-use Kettasoft\Filterable\Engines\EngineExecuter;
 use Kettasoft\Filterable\Contracts\Validatable;
 use Kettasoft\Filterable\Contracts\Authorizable;
+use Kettasoft\Filterable\Engines\EngineExecuter;
 use Kettasoft\Filterable\Sanitization\Sanitizer;
+use Illuminate\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
-use Illuminate\Contracts\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Contracts\FilterableContext;
+use Kettasoft\Filterable\Engines\Foundation\Executer;
 use Kettasoft\Filterable\Engines\Factory\EngineManager;
 use Kettasoft\Filterable\Traits\InteractsWithFilterKey;
-use Kettasoft\Filterable\Traits\InteractsWithValidation;
 
+use Kettasoft\Filterable\Traits\InteractsWithValidation;
 use Kettasoft\Filterable\Exceptions\MissingBuilderException;
 use Kettasoft\Filterable\Traits\InteractsWithMethodMentoring;
 use Kettasoft\Filterable\Traits\InteractsWithRelationsFiltering;
@@ -148,12 +149,12 @@ class Filterable implements FilterableContext, Authorizable, Validatable
 
     $this->builder = $builder;
 
-    return EngineExecuter::run($this->engine, $builder);
+    return Executer::execute($this->engine, $builder);
   }
 
   /**
    * Alias name for @apply method.
-   * @param \Illuminate\Contracts\Database\Eloquent\Builder|null $builder
+   * @param \Illuminate\Database\Eloquent\Builder|null $builder
    * @return Builder
    */
   public function filter(Builder|null $builder = null): Builder
@@ -163,7 +164,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable
 
   /**
    * Get builder instance from model.
-   * @param \Illuminate\Contracts\Database\Eloquent\Builder|null $builder
+   * @param \Illuminate\Database\Eloquent\Builder|null $builder
    * @throws \Kettasoft\Filterable\Exceptions\MissingBuilderException
    */
   private function initQueryBuilderInstance(Builder|null $builder = null)
@@ -529,7 +530,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable
 
   /**
    * Get the SQL representation of the filtered query.
-   * @param \Illuminate\Contracts\Database\Eloquent\Builder|null $builder
+   * @param \Illuminate\Database\Eloquent\Builder|null $builder
    * @param mixed $withBindings
    * @return string
    */

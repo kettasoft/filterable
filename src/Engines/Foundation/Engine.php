@@ -2,14 +2,15 @@
 
 namespace Kettasoft\Filterable\Engines\Foundation;
 
-use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Contracts\FilterableContext;
+use Kettasoft\Filterable\Engines\Contracts\Executable;
 use Kettasoft\Filterable\Engines\Contracts\HasFieldMap;
 use Kettasoft\Filterable\Engines\Contracts\HasInteractsWithOperators;
 use Kettasoft\Filterable\Engines\Contracts\Strictable;
 use Kettasoft\Filterable\Filterable;
 
-abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Strictable
+abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Strictable, Executable
 {
   /**
    * Create Engine instance.
@@ -19,7 +20,7 @@ abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Stricta
 
   /**
    * Apply filters to the query.
-   * @param \Illuminate\Contracts\Database\Eloquent\Builder $builder
+   * @param \Illuminate\Database\Eloquent\Builder $builder
    * @return Builder
    */
   abstract public function execute(Builder $builder);
