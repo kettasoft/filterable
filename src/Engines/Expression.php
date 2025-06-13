@@ -19,7 +19,7 @@ class Expression extends Engine
    * @param \Illuminate\Contracts\Database\Eloquent\Builder $builder
    * @return Builder
    */
-  public function apply(Builder $builder)
+  public function execute(Builder $builder)
   {
     $filters = $this->context->getData();
 

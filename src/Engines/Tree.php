@@ -24,7 +24,7 @@ class Tree extends Engine implements HasInteractsWithOperators, HasAllowedFieldC
    * @param \Illuminate\Contracts\Database\Eloquent\Builder $builder
    * @return Builder
    */
-  public function apply(Builder $builder)
+  public function execute(Builder $builder)
   {
     $data = $this->context->getData();
 

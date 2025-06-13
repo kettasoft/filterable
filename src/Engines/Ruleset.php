@@ -17,7 +17,7 @@ class Ruleset extends Engine
    * @param \Illuminate\Contracts\Database\Eloquent\Builder $builder
    * @return Builder
    */
-  public function apply(Builder $builder): Builder
+  public function execute(Builder $builder): Builder
   {
     $data = $this->context->getData();
 

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Traits\Macroable;
 use Kettasoft\Filterable\Tests\Models\Post;
-use Kettasoft\Filterable\Engines\EngineRunner;
+use Kettasoft\Filterable\Engines\EngineExecuter;
 use Kettasoft\Filterable\Contracts\Validatable;
 use Kettasoft\Filterable\Contracts\Authorizable;
 use Kettasoft\Filterable\Sanitization\Sanitizer;
@@ -148,7 +148,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable
 
     $this->builder = $builder;
 
-    return EngineRunner::run($this->engine, $builder);
+    return EngineExecuter::run($this->engine, $builder);
   }
 
   /**

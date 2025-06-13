@@ -24,7 +24,7 @@ class Invokeable extends Engine
    * @param \Illuminate\Contracts\Database\Eloquent\Builder $builder
    * @return Builder
    */
-  public function apply(Builder $builder): Builder
+  public function execute(Builder $builder): Builder
   {
     $this->builder = $builder;
 
