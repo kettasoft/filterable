@@ -24,6 +24,8 @@ use Kettasoft\Filterable\Traits\InteractsWithRelationsFiltering;
 use Kettasoft\Filterable\Traits\InteractsWithFilterAuthorization;
 use Kettasoft\Filterable\HttpIntegration\HeaderDrivenEngineSelector;
 use Kettasoft\Filterable\Exceptions\RequestSourceIsNotSupportedException;
+use Kettasoft\Filterable\Foundation\FilterableSettings;
+use Kettasoft\Filterable\Foundation\Resources;
 
 class Filterable implements FilterableContext, Authorizable, Validatable
 {
@@ -39,6 +41,12 @@ class Filterable implements FilterableContext, Authorizable, Validatable
    * @var Engine
    */
   protected Engine $engine;
+
+  /**
+   * Resources instance.
+   * @var Resources
+   */
+  protected Resources $resources;
 
   /**
    * Registered filters to operate upon.
@@ -126,8 +134,33 @@ class Filterable implements FilterableContext, Authorizable, Validatable
   {
     $this->request = $request ?: App::make(Request::class);
     $this->sanitizer = new Sanitizer($this->sanitizers);
-    $this->parseIncommingRequestData();
+    $this->resources = new Resources($this->settings());
     $this->resolveEngine();
+    $this->parseIncommingRequestData();
+  }
+
+  /**
+   * Get Resources instance.
+   * @return Resources
+   */
+  public function getResources(): Resources
+  {
+    return $this->resources;
+  }
+
+  /**
+   * Get FilterableSettings instance.
+   * @return FilterableSettings
+   */
+  public function settings(): FilterableSettings
+  {
+    return FilterableSettings::init(
+      $this->allowdFields,
+      $this->relations,
+      $this->allowdOperators,
+      $this->sanitizers,
+      $this->fieldsMap
+    );
   }
 
   /**
@@ -161,7 +194,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable
   }
 
   /**
-   * Get builder instance from model.
+   * Initialize query builder instance.
    * @param \Illuminate\Database\Eloquent\Builder|null $builder
    * @throws \Kettasoft\Filterable\Exceptions\MissingBuilderException
    */
@@ -436,6 +469,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable
   public function setAllowedFields(array $fields, bool $override = false): static
   {
     $this->allowdFields = $override ? $fields : array_merge($this->allowdFields, $fields);
+    $this->resources->fields->fill($this->allowdFields);
     return $this;
   }
 
