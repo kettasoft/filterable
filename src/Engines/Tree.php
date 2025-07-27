@@ -2,11 +2,11 @@
 
 namespace Kettasoft\Filterable\Engines;
 
-use Kettasoft\Filterable\Support\TreeNode;
-use Kettasoft\Filterable\Support\OperatorMapper;
-use Kettasoft\Filterable\Traits\FieldNormalizer;
-use Kettasoft\Filterable\Engines\Foundation\Engine;
 use Illuminate\Database\Eloquent\Builder;
+use Kettasoft\Filterable\Support\TreeNode;
+use Kettasoft\Filterable\Traits\FieldNormalizer;
+use Kettasoft\Filterable\Engines\Foundation\Clause;
+use Kettasoft\Filterable\Engines\Foundation\Engine;
 use Kettasoft\Filterable\Support\RelationPathParser;
 use Kettasoft\Filterable\Support\AllowedFieldChecker;
 use Kettasoft\Filterable\Support\TreeBasedRelationsResolver;
@@ -15,7 +15,7 @@ use Kettasoft\Filterable\Engines\Contracts\HasAllowedFieldChecker;
 use Kettasoft\Filterable\Support\TreeBasedSignelConditionResolver;
 use Kettasoft\Filterable\Engines\Contracts\HasInteractsWithOperators;
 
-class Tree extends Engine implements HasInteractsWithOperators, HasAllowedFieldChecker
+class Tree extends Engine
 {
   use FieldNormalizer;
 
@@ -45,25 +45,28 @@ class Tree extends Engine implements HasInteractsWithOperators, HasAllowedFieldC
       });
     } else {
 
+      $clause = Clause::make($this->getResources(), $node->field, [
+        'operator' => $node->operator,
+        'value' => $node->value
+      ])->strict($this->isStrict());
+
       // Ignore empty/null values if option is enable.
-      if (!$node->value && ($this->context->hasIgnoredEmptyValues() || config('filterable.engines.tree.ignore_empty_values'))) return $builder;
+      if ($clause->isEmptyValue() && ($this->context->hasIgnoredEmptyValues() || config('filterable.engines.tree.ignore_empty_values'))) return $builder;
 
-      [$relation, $field] = RelationPathParser::resolve($node->field);
+      [$_, $field] = RelationPathParser::resolve($node->field);
 
-      $field = $this->normalizeField($this->context->getFieldsMap()[$field] ?? $field);
-      $operator = (new OperatorMapper($this))->map($node->operator);
-      $value = $this->context->getSanitizerInstance()->handle($field, $node->value);
+      $field = $clause->getOriginalField();
+      $operator = $clause->getOperator();
+      $value = $clause->getValue();
 
-      if ($relation) {
-        $instance = new TreeBasedRelationsResolver($this->context);
-        $instance->resolve($builder, $relation, $field, $operator, $value);
+      if ($clause->isRelational()) {
+        $clause->relation($this->getResources()->relations)->resolve($builder, $clause);
       } else {
         if (! AllowedFieldChecker::check($this, $field)) {
           return;
         }
 
-        $instance = new TreeBasedSignelConditionResolver($this->context);
-        $instance->resolve($builder, $field, $operator, $value);
+        TreeBasedSignelConditionResolver::resolve($builder, $field, $operator, $value);
       }
     }
 
@@ -80,12 +83,12 @@ class Tree extends Engine implements HasInteractsWithOperators, HasAllowedFieldC
   }
 
   /**
-   * Get all allowed fields.
+   * Get allowed fields to filtering.
    * @return array
    */
-  public function getAllowedFields(): array
+  protected function getAllowedFieldsFromConfig(): array
   {
-    return $this->context->getAllowedFields();
+    return config('filterable.engines.tree.allowed_fields', []);
   }
 
   /**

@@ -36,6 +36,8 @@ class RulesetEngineTest extends TestCase
       'title' => 'Java',
       'content' => 'Java artical'
     ]);
+
+    config()->set('filterable.default_engine', 'ruleset');
   }
 
   /**
@@ -119,8 +121,8 @@ class RulesetEngineTest extends TestCase
     $this->assertThrows(function () use ($request) {
       Filterable::withRequest($request)
         ->setAllowedFields(['status'])
-        ->useEngin(Ruleset::class)
         ->allowdOperators(['eq'])
+        ->useEngin(Ruleset::class)
         ->apply(Post::query());
     }, InvalidOperatorException::class);
   }

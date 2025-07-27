@@ -9,23 +9,23 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Tests\Models\Post;
+use Kettasoft\Filterable\Foundation\Resources;
 use Kettasoft\Filterable\Contracts\Validatable;
 use Kettasoft\Filterable\Contracts\Authorizable;
 use Kettasoft\Filterable\Sanitization\Sanitizer;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
 use Kettasoft\Filterable\Contracts\FilterableContext;
-use Kettasoft\Filterable\Engines\Foundation\Executer;
 use Kettasoft\Filterable\Engines\Factory\EngineManager;
+use Kettasoft\Filterable\Foundation\FilterableSettings;
 use Kettasoft\Filterable\Traits\InteractsWithFilterKey;
 use Kettasoft\Filterable\Traits\InteractsWithValidation;
 use Kettasoft\Filterable\Exceptions\MissingBuilderException;
 use Kettasoft\Filterable\Traits\InteractsWithMethodMentoring;
+use Kettasoft\Filterable\Engines\Foundation\Executors\Executer;
 use Kettasoft\Filterable\Traits\InteractsWithRelationsFiltering;
 use Kettasoft\Filterable\Traits\InteractsWithFilterAuthorization;
 use Kettasoft\Filterable\HttpIntegration\HeaderDrivenEngineSelector;
 use Kettasoft\Filterable\Exceptions\RequestSourceIsNotSupportedException;
-use Kettasoft\Filterable\Foundation\FilterableSettings;
-use Kettasoft\Filterable\Foundation\Resources;
 
 class Filterable implements FilterableContext, Authorizable, Validatable
 {

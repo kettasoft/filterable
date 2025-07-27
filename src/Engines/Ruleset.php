@@ -2,10 +2,12 @@
 
 namespace Kettasoft\Filterable\Engines;
 
-use Kettasoft\Filterable\Traits\FieldNormalizer;
 use Illuminate\Database\Eloquent\Builder;
+use Kettasoft\Filterable\Traits\FieldNormalizer;
+use Kettasoft\Filterable\Engines\Foundation\Clause;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
-use Kettasoft\Filterable\Exceptions\InvalidOperatorException;
+use Kettasoft\Filterable\Engines\Foundation\ClauseApplier;
+use Kettasoft\Filterable\Engines\Foundation\Appliers\Applier;
 use Kettasoft\Filterable\Exceptions\NotAllowedFieldException;
 
 class Ruleset extends Engine
@@ -21,11 +23,12 @@ class Ruleset extends Engine
   {
     $data = $this->context->getData();
 
-    foreach ($data as $field => $rawValue) {
+    foreach ($data as $field => $dissector) {
 
-      $field = $this->normalizeField($field);
+      $clause = Clause::make($this->getResources(), $field, $dissector)->strict($this->isStrict());
 
-      if (! in_array($field, $this->getAllowedFields())) {
+      if (! $clause->isAllowedField()) {
+
         if ($this->isStrict()) {
           throw new NotAllowedFieldException($field);
         }
@@ -33,13 +36,7 @@ class Ruleset extends Engine
         continue;
       }
 
-      [$operator, $value] = $this->parseOperatorAndValue($rawValue); // Check for operator
-
-      $builder->where(
-        $field,
-        $operator,
-        $this->context->getSanitizerInstance()->handle($field, $value)
-      );
+      Applier::apply(new ClauseApplier($clause), $builder);
     }
 
     return $builder;
@@ -55,41 +52,21 @@ class Ruleset extends Engine
   }
 
   /**
-   * Get allowed fields to filtering.
-   * @return array
-   */
-  private function getAllowedFields(): array
-  {
-    return array_merge(config('filterable.engines.ruleset.allowed_fields', []), $this->context->getAllowedFields());
-  }
-
-  /**
-   * Parse operator and value from input.
-   * @param string|array $raw
-   * @return array{string|mixed}
-   */
-  private function parseOperatorAndValue(string|array $raw): array
-  {
-    if (is_array($raw)) {
-      return $raw;
-    }
-
-    if (str_contains($raw, ':')) {
-      [$operator, $value] = explode(':', $raw, 2);
-    } else {
-      [$operator, $value] = [$this->defaultOperator(), $raw];
-    }
-
-    return [$this->mapToValidOperator($operator), $value];
-  }
-
-  /**
    * Get engine default operator.
    * @return string
    */
   public function defaultOperator(): string
   {
     return config('filterable.engines.ruleset.default_operator', 'eq');
+  }
+
+  /**
+   * Get allowed fields to filtering.
+   * @return array
+   */
+  protected function getAllowedFieldsFromConfig(): array
+  {
+    return config('filterable.engines.ruleset.allowed_fields', []);
   }
 
   public function getOperatorsFromConfig(): array
@@ -100,27 +77,5 @@ class Ruleset extends Engine
   public function isStrictFromConfig(): bool
   {
     return config('filterable.engines.ruleset.strict', true);
-  }
-
-  /**
-   * Operator mapping.
-   * @param string $operator
-   * @throws \Kettasoft\Filterable\Exceptions\InvalidOperatorException
-   * @return string
-   */
-  private function mapToValidOperator(string $operator): string
-  {
-    $allowed = $this->context->getAllowedOperators();
-    $operators = config('filterable.engines.ruleset.allowed_operators', []);
-
-    if ($allowed === []) {
-      return $operators[$operator] ?? $operators[$this->defaultOperator()];
-    }
-
-    if (!array_key_exists($operator, array_intersect_key($operators, array_flip($allowed))) && $this->isStrict()) {
-      throw new InvalidOperatorException($operator);
-    }
-
-    return $operators[$this->defaultOperator()];
   }
 }

@@ -2,18 +2,19 @@
 
 namespace Kettasoft\Filterable\Tests\Unit\Engines;
 
+use PHPUnit\Framework\Test;
+use Illuminate\Http\Request;
 use Kettasoft\Filterable\Filterable;
 use Illuminate\Support\Facades\Config;
 use Kettasoft\Filterable\Engines\Tree;
 use Kettasoft\Filterable\Tests\TestCase;
 use Kettasoft\Filterable\Tests\Models\Tag;
 use Kettasoft\Filterable\Tests\Models\Post;
+use Symfony\Component\HttpFoundation\InputBag;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Http\Request;
-use Kettasoft\Filterable\Exceptions\InvalidDataFormatException;
 use Kettasoft\Filterable\Exceptions\InvalidOperatorException;
 use Kettasoft\Filterable\Exceptions\NotAllowedFieldException;
-use Symfony\Component\HttpFoundation\InputBag;
+use Kettasoft\Filterable\Exceptions\InvalidDataFormatException;
 
 class TreeEngineTest extends TestCase
 {
@@ -176,7 +177,7 @@ class TreeEngineTest extends TestCase
    * It filter with tree based engin and enable strict mode option.
    * @test
    */
-  public function it_cant_filter_with_tree_engine_and_not_allowed_operator()
+  public function it_cant_filtering_with_not_allowed_operator()
   {
     $data = [
       "filter" => [
@@ -188,10 +189,10 @@ class TreeEngineTest extends TestCase
     ];
 
     $this->assertThrows(function () use ($data) {
-      Filterable::create()
-        ->strict()
-        ->setAllowedFields(['*'])
+      Filterable::create()->strict()
         ->allowdOperators(['eq'])
+        ->setAllowedFields(['*'])
+        ->useEngin(Tree::class)
         ->setData($data)
         ->apply(Post::query());
     }, InvalidOperatorException::class);
@@ -284,6 +285,7 @@ class TreeEngineTest extends TestCase
    * It filter with tree based engin and enable strict mode option.
    * @test
    */
+  #[Test]
   public function it_filter_with_tree_based_engin_relations_and_allowed_specific_relation_path()
   {
     $data = [
@@ -302,6 +304,7 @@ class TreeEngineTest extends TestCase
     $filter = Filterable::create()
       ->setRelations(['tags' => ['name']])
       ->setAllowedFields(['status'])
+      ->useEngin(Tree::class)
       ->setData($data)
       ->apply(Post::query());
 

@@ -2,7 +2,7 @@
 
 namespace Kettasoft\Filterable\Tests\Unit\Filterable;
 
-use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Kettasoft\Filterable\Filterable;
 use Kettasoft\Filterable\Providers\AutoRegisterFilterableServiceProvider;

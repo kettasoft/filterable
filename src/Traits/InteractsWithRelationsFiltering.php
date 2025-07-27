@@ -18,6 +18,7 @@ trait InteractsWithRelationsFiltering
   public function allowRelations(array $relations, bool $override = false): static
   {
     $this->relations = $override ? $relations : array_merge($this->relations, $relations);
+    $this->resources->relations->fill($this->relations);
     return $this;
   }
 

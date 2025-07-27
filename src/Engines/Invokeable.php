@@ -51,15 +51,16 @@ class Invokeable extends Engine
    */
   protected function initializeFilters(string $key, string $method, mixed $value): void
   {
-    $value = ConditionNormalizer::normalize($value, '=');
+    $clause = ConditionNormalizer::normalize($value, '=');
 
-    foreach ($value as $operator => $val) {
-      if (method_exists($this->context, $method)) {
+    $operator = $clause['operator'];
+    $val = $clause['value'];
 
-        $payload = new Payload($key, $operator, $this->resolveValueSanitizer($key, $val), $val);
+    if (method_exists($this->context, $method)) {
 
-        $this->forwardCallTo($this->context, $method, [$payload]);
-      }
+      $payload = new Payload($key, $operator, $this->resolveValueSanitizer($key, $val), $val);
+
+      $this->forwardCallTo($this->context, $method, [$payload]);
     }
   }
 
@@ -92,6 +93,15 @@ class Invokeable extends Engine
     }
 
     return $this->context->getRequest()->has($filter) ? Str::camel($filter) : 'default' . Str::studly($filter);
+  }
+
+  /**
+   * Get allowed fields to filtering.
+   * @return array
+   */
+  protected function getAllowedFieldsFromConfig(): array
+  {
+    return config('filterable.engines.invokeable.allowed_fields', []);
   }
 
   public function getOperatorsFromConfig(): array

@@ -42,7 +42,7 @@ class ExpressionEngineTest extends TestCase
 
   /**
    * It applies basic ruleset filters correctly.
-   * @return void
+   * @test
    */
   public function it_applies_basic_ruleset_filters_correctly()
   {
@@ -119,11 +119,12 @@ class ExpressionEngineTest extends TestCase
     $request = Request::create('/posts?filter[tags.name]=stopped&filter[status][eq]=stopped');
 
     $filter = Filterable::withRequest($request)
-      ->useEngin('expression')
       ->setAllowedFields(['status'])
       ->setRelations([
         'tags'
-      ])->apply(Post::query());
+      ])
+      ->useEngin('expression')
+      ->apply(Post::query());
 
     $this->assertEquals(1, $filter->count());
   }
@@ -139,8 +140,8 @@ class ExpressionEngineTest extends TestCase
     $this->assertThrows(function () use ($request) {
       Filterable::withRequest($request)
         ->setAllowedFields(['status'])
-        ->useEngin(Expression::class)
         ->allowdOperators(['eq'])
+        ->useEngin(Expression::class)
         ->apply(Post::query());
     }, InvalidOperatorException::class);
   }
@@ -202,6 +203,8 @@ class ExpressionEngineTest extends TestCase
       ->useEngin(Expression::class)
       ->strict()
       ->apply(Post::query());
+
+    // dd($filter->toRawSql());
 
     $this->assertEquals(15, $filter->count());
   }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Kettasoft\Filterable\Engines\Foundation;
+namespace Kettasoft\Filterable\Engines\Foundation\Executors;
 
 use Illuminate\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Engines\Contracts\Executable;

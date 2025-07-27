@@ -3,20 +3,29 @@
 namespace Kettasoft\Filterable\Engines\Foundation;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Arr;
 use Kettasoft\Filterable\Contracts\FilterableContext;
 use Kettasoft\Filterable\Engines\Contracts\Executable;
+use Kettasoft\Filterable\Engines\Contracts\HasAllowedFieldChecker;
 use Kettasoft\Filterable\Engines\Contracts\HasFieldMap;
 use Kettasoft\Filterable\Engines\Contracts\HasInteractsWithOperators;
 use Kettasoft\Filterable\Engines\Contracts\Strictable;
 use Kettasoft\Filterable\Filterable;
+use Kettasoft\Filterable\Foundation\Resources;
 
-abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Strictable, Executable
+abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Strictable, Executable, HasAllowedFieldChecker
 {
   /**
    * Create Engine instance.
    * @param \Kettasoft\Filterable\Contracts\FilterableContext $context
    */
-  public function __construct(protected FilterableContext $context) {}
+  public function __construct(protected FilterableContext $context)
+  {
+    $resources = $this->context->getResources()
+      ->setOperators($this->allowedOperators());
+
+    $resources->operators->setDefault($this->defaultOperator());
+  }
 
   /**
    * Apply filters to the query.
@@ -31,12 +40,23 @@ abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Stricta
    */
   abstract protected function isStrictFromConfig(): bool;
 
+  abstract protected function getAllowedFieldsFromConfig(): array;
+
+  public function getAllowedFields(): array
+  {
+    return array_merge($this->getAllowedFieldsFromConfig(), $this->context->getAllowedFields());
+  }
+
   /**
    * @inheritDoc
    */
   public function allowedOperators(): array
   {
-    return $this->context->getAllowedOperators();
+    if (empty($this->context->getAllowedOperators())) {
+      return $this->getOperatorsFromConfig();
+    }
+
+    return Arr::only($this->getOperatorsFromConfig(), $this->context->getAllowedOperators());
   }
 
   /**
@@ -62,5 +82,10 @@ abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Stricta
   public function getContext(): Filterable
   {
     return $this->context;
+  }
+
+  public function getResources(): Resources
+  {
+    return $this->context->getResources();
   }
 }

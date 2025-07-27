@@ -153,7 +153,7 @@ return [
             | Default operator when request dosen't has operator.
             |
             */
-            'default_operator' => '=', // =
+            'default_operator' => 'eq', // =
 
             /*
             |--------------------------------------------------------------------------
