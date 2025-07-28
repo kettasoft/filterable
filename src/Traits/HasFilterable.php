@@ -5,6 +5,7 @@ namespace Kettasoft\Filterable\Traits;
 use Kettasoft\Filterable\Filterable;
 use Illuminate\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Support\FilterRegisterator;
+use Kettasoft\Filterable\Exceptions\FilterClassNotResolvedException;
 
 /**
  * Apply filters dynamically to Eloquent Query.
@@ -22,6 +23,19 @@ trait HasFilterable
   public function scopeFilter(Builder $query, Filterable|string|array|null $filter = null): Builder
   {
     return (new FilterRegisterator($query, $filter))->register();
+  }
+
+  /**
+   * Get defined filterable class from model.
+   * @throws \Kettasoft\Filterable\Exceptions\FilterClassNotResolvedException
+   */
+  public function getFilterable()
+  {
+    if (! property_exists($this, 'filterable')) {
+      throw new FilterClassNotResolvedException(get_class($this));
+    }
+
+    return $this->filterable;
   }
 
   /**

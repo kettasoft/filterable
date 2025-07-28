@@ -16,7 +16,7 @@ class AutoRegisterFilterableServiceProvider extends ServiceProvider
    */
   public function boot()
   {
-    Builder::macro('filter', function (FilterableContext|string $filter) {
+    Builder::macro('filter', function (FilterableContext|string|null $filter = null) {
       /** @var Builder */
       $builder = $this;
 
