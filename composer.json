@@ -44,7 +44,12 @@
     "test": "php vendor/bin/phpunit"
   },
   "extra": {
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "laravel": {
+      "providers": [
+        "Kettasoft\\Filterable\\Providers\\FilterableServiceProvider"
+      ]
+    }
   },
   "minimum-stability": "dev",
   "prefer-stable": true
