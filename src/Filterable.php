@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Database\Eloquent\Builder;
-use Kettasoft\Filterable\Tests\Models\Post;
 use Kettasoft\Filterable\Foundation\Resources;
 use Kettasoft\Filterable\Contracts\Validatable;
 use Kettasoft\Filterable\Contracts\Authorizable;
