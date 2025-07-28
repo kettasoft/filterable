@@ -80,6 +80,10 @@ export default defineUserConfig({
                         text: "Filter Aliases",
                         link: "features/aliasing",
                     },
+                    {
+                        text: "Auto Binding",
+                        link: "features/auto-binding",
+                    },
                 ],
             },
             {

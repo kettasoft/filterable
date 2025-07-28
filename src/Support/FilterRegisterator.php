@@ -30,7 +30,7 @@ class FilterRegisterator
    * @param \Illuminate\Database\Eloquent\Builder $builder
    * @param mixed $filter
    */
-  public function __construct(Builder $builder, $filter)
+  public function __construct(Builder $builder, $filter = null)
   {
     $this->builder = $builder;
     $this->filter = $filter;
@@ -48,6 +48,12 @@ class FilterRegisterator
     }
 
     if (is_string($this->filter) && $filter = config('filterable.aliases')->get($this->filter)) {
+      $filter = App::make($filter);
+
+      return $this->forwardCallTo($filter, 'apply', [$this->builder]);
+    }
+
+    if ($this->filter === null && $filter = $this->getModel()->getFilterable()) {
       $filter = App::make($filter);
 
       return $this->forwardCallTo($filter, 'apply', [$this->builder]);
