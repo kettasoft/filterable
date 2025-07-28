@@ -80,6 +80,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Filter Aliases
+    |--------------------------------------------------------------------------
+    |
+    | Define short, human-friendly aliases for your filter classes.
+    | These aliases allow you to reference filters using simple names
+    | when building dynamic or automatic filter logic, instead of full class paths.
+    |
+    */
+    'aliases' => Filterable::aliases([
+        // 'users' => App\Http\Filters\UserFilter::class
+    ]),
+
+    /*
+    |--------------------------------------------------------------------------
     | Default Filter Engine
     |--------------------------------------------------------------------------
     |
