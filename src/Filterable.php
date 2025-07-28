@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 use Kettasoft\Filterable\Foundation\Resources;
 use Kettasoft\Filterable\Contracts\Validatable;
 use Kettasoft\Filterable\Contracts\Authorizable;
@@ -25,6 +26,7 @@ use Kettasoft\Filterable\Traits\InteractsWithRelationsFiltering;
 use Kettasoft\Filterable\Traits\InteractsWithFilterAuthorization;
 use Kettasoft\Filterable\HttpIntegration\HeaderDrivenEngineSelector;
 use Kettasoft\Filterable\Exceptions\RequestSourceIsNotSupportedException;
+use Kettasoft\Filterable\Foundation\Bags\Bag;
 
 class Filterable implements FilterableContext, Authorizable, Validatable
 {
@@ -120,6 +122,12 @@ class Filterable implements FilterableContext, Authorizable, Validatable
   protected $model;
 
   /**
+   * Aliases of filter class
+   * @var array
+   */
+  protected static Collection $aliases;
+
+  /**
    * The Sanitizer instance.
    * @var Sanitizer
    */
@@ -190,6 +198,17 @@ class Filterable implements FilterableContext, Authorizable, Validatable
   public function filter(Builder|null $builder = null): Builder
   {
     return $this->apply($builder);
+  }
+
+  /**
+   * Get all aliases.
+   * @return Collection
+   */
+  public static function aliases(array $aliases)
+  {
+    self::$aliases = collect($aliases);
+
+    return self::$aliases;
   }
 
   /**
