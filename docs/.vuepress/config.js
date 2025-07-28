@@ -76,6 +76,11 @@ export default defineUserConfig({
                         text: "Header-Driven Filter Mode",
                         link: "features/header-driven-filter-mode",
                     },
+
+                    {
+                        text: "Auto Register Filterable Macro",
+                        link: "features/auto-register-filterable-macro",
+                    },
                     {
                         text: "Filter Aliases",
                         link: "features/aliasing",
