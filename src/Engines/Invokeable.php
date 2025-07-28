@@ -31,7 +31,7 @@ class Invokeable extends Engine
     foreach ($this->context->getFilterAttributes() as $filter) {
       $value = $this->context->getRequest()->get($filter);
 
-      if (($this->context->hasIgnoredEmptyValues() || config('filterable.engines.invokeable.ignore_empty_values')) && !$value) {
+      if (($this->context->hasIgnoredEmptyValues() || config('filterable.engines.invokable.ignore_empty_values')) && !$value) {
         continue;
       }
 
@@ -101,17 +101,17 @@ class Invokeable extends Engine
    */
   protected function getAllowedFieldsFromConfig(): array
   {
-    return config('filterable.engines.invokeable.allowed_fields', []);
+    return config('filterable.engines.invokable.allowed_fields', []);
   }
 
   public function getOperatorsFromConfig(): array
   {
-    return config('filterable.engines.invokeable.allowed_operators', []);
+    return config('filterable.engines.invokable.allowed_operators', []);
   }
 
   public function isStrictFromConfig(): bool
   {
-    return config('filterable.engines.invokeable.strict', true);
+    return config('filterable.engines.invokable.strict', true);
   }
 
   /**
@@ -120,6 +120,6 @@ class Invokeable extends Engine
    */
   public function defaultOperator(): string
   {
-    return config('filterable.engines.invokeable.default_operator', 'eq');
+    return config('filterable.engines.invokable.default_operator', 'eq');
   }
 }

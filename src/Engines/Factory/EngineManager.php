@@ -18,7 +18,7 @@ class EngineManager
     'tree' => Tree::class,
     'ruleset' => Ruleset::class,
     'expression' => Expression::class,
-    'invokeable' => Invokeable::class
+    'invokable' => Invokeable::class
   ];
 
   /**

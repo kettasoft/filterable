@@ -54,7 +54,7 @@ return [
     | "engines" section below.
     |
     */
-    'default_engine' => 'invokeable',
+    'default_engine' => 'invokable',
 
     /*
     |--------------------------------------------------------------------------
@@ -75,7 +75,7 @@ return [
         | The Invokeable Engine provides a powerful way to dynamically map incomming reuqest parameters to corresponding methods in a filter class.
         |
         */
-        'invokeable' => [
+        'invokable' => [
             /*
             |--------------------------------------------------------------------------
             | Egnore empty values

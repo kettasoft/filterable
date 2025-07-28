@@ -48,7 +48,7 @@ class EngineManagerTest extends TestCase
    */
   public function it_can_create_invokeablke_engine_from_engine_manager()
   {
-    $engine = EngineManager::generate('invokeable', new Filterable());
+    $engine = EngineManager::generate('invokable', new Filterable());
 
     $this->assertInstanceOf(Invokeable::class, $engine);
   }
