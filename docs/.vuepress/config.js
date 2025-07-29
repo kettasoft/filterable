@@ -82,6 +82,10 @@ export default defineUserConfig({
                         link: "features/auto-register-filterable-macro",
                     },
                     {
+                        text: "Conditional Logic",
+                        link: "features/conditional-logic-with-when",
+                    },
+                    {
                         text: "Filter Aliases",
                         link: "features/aliasing",
                     },

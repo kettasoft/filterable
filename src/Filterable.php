@@ -279,6 +279,22 @@ class Filterable implements FilterableContext, Authorizable, Validatable
   }
 
   /**
+   * Apply a callback conditionally and return a new modified instance.
+   * @param bool $condition
+   * @param callable(static): void $callback
+   * @return static
+   * @link https://kettasoft.github.io/filterable/features/conditional-logic-with-when
+   */
+  public function when(bool $condition, callable $callback)
+  {
+    if ($condition) {
+      call_user_func($callback, $this);
+    }
+
+    return $this;
+  }
+
+  /**
    * Override the default engine for this filterable instance.
    * @param \Kettasoft\Filterable\Engines\Foundation\Engine|string $engine
    * @return Filterable
