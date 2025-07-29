@@ -279,7 +279,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable
   }
 
   /**
-   * Use filter engine.
+   * Override the default engine for this filterable instance.
    * @param \Kettasoft\Filterable\Engines\Foundation\Engine|string $engine
    * @return Filterable
    */
