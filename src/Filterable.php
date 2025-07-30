@@ -220,6 +220,8 @@ class Filterable implements FilterableContext, Authorizable, Validatable
   {
     if ($builder) return $builder;
 
+    if (isset($this->builder)) return $this->builder;
+
     if ($this->model instanceof Model) {
       return $this->model->query();
     }
@@ -289,6 +291,26 @@ class Filterable implements FilterableContext, Authorizable, Validatable
   {
     if ($condition) {
       call_user_func($callback, $this);
+    }
+
+    return $this;
+  }
+
+  /**
+   * Allow the query to pass through a custom pipeline of pipes (callables).
+   *
+   * @param array<callable(\Illuminate\Database\Eloquent\Builder, static): \Illuminate\Database\Eloquent\Builder> $pipes
+   * @return static
+   * @link https://kettasoft.github.io/filterable/features/through
+   */
+  public function through(array $pipes): static
+  {
+    foreach ($pipes as $pipe) {
+      if (! is_callable($pipe)) {
+        throw new \InvalidArgumentException('All pipes passed to `through` must be callable.');
+      }
+
+      $pipe($this->builder, $this);
     }
 
     return $this;

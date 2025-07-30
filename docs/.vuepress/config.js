@@ -90,6 +90,10 @@ export default defineUserConfig({
                         link: "features/aliasing",
                     },
                     {
+                        text: "Through callbacks",
+                        link: "features/through",
+                    },
+                    {
                         text: "Auto Binding",
                         link: "features/auto-binding",
                     },
