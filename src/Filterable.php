@@ -4,11 +4,11 @@ namespace Kettasoft\Filterable;
 
 use Illuminate\Http\Request;
 use Illuminate\Pipeline\Pipeline;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Collection;
 use Kettasoft\Filterable\Foundation\Resources;
 use Kettasoft\Filterable\Contracts\Validatable;
 use Kettasoft\Filterable\Contracts\Authorizable;
@@ -25,8 +25,9 @@ use Kettasoft\Filterable\Engines\Foundation\Executors\Executer;
 use Kettasoft\Filterable\Traits\InteractsWithRelationsFiltering;
 use Kettasoft\Filterable\Traits\InteractsWithFilterAuthorization;
 use Kettasoft\Filterable\HttpIntegration\HeaderDrivenEngineSelector;
+use Kettasoft\Filterable\Foundation\Contracts\ShouldReturnQueryBuilder;
 use Kettasoft\Filterable\Exceptions\RequestSourceIsNotSupportedException;
-use Kettasoft\Filterable\Foundation\Bags\Bag;
+use Kettasoft\Filterable\Foundation\Invoker;
 
 class Filterable implements FilterableContext, Authorizable, Validatable
 {
@@ -134,6 +135,11 @@ class Filterable implements FilterableContext, Authorizable, Validatable
   public Sanitizer $sanitizer;
 
   /**
+   * @var bool
+   */
+  protected $shouldReturnQueryBuilder = false;
+
+  /**
    * Create a new Filterable instance.
    * @param Request|null $request
    */
@@ -174,9 +180,9 @@ class Filterable implements FilterableContext, Authorizable, Validatable
    * Apply all filters.
    *
    * @param Builder $builder
-   * @return Builder
+   * @return Builder|Invoker
    */
-  public function apply(Builder|null $builder = null): Builder
+  public function apply(Builder|null $builder = null): Invoker|Builder
   {
     App::make(Pipeline::class)->send($this)->through([
       \Kettasoft\Filterable\Pipes\FilterAuthorizationPipe::class,
@@ -187,15 +193,32 @@ class Filterable implements FilterableContext, Authorizable, Validatable
 
     $this->builder = $builder;
 
-    return Executer::execute($this->engine, $builder);
+    $builder = Executer::execute($this->engine, $builder);
+
+    if ($this instanceof ShouldReturnQueryBuilder || $this->shouldReturnQueryBuilder) {
+      return $builder;
+    }
+
+    return new Invoker($builder);
+  }
+
+  /**
+   * Should return Query Builder instance when invoke `@apply`
+   * @return static
+   */
+  public function shouldReturnQueryBuilder()
+  {
+    $this->shouldReturnQueryBuilder = true;
+
+    return $this;
   }
 
   /**
    * Alias name for @apply method.
    * @param \Illuminate\Database\Eloquent\Builder|null $builder
-   * @return Builder
+   * @return Invoker|Builder
    */
-  public function filter(Builder|null $builder = null): Builder
+  public function filter(Builder|null $builder = null): Invoker|Builder
   {
     return $this->apply($builder);
   }

@@ -20,6 +20,12 @@ class Tree extends Engine
   use FieldNormalizer;
 
   /**
+   * Engine name.
+   * @var string
+   */
+  protected $name = 'tree';
+
+  /**
    * Apply filters to the query.
    * @param \Illuminate\Database\Eloquent\Builder $builder
    * @return Builder
@@ -117,5 +123,14 @@ class Tree extends Engine
   public function isStrictFromConfig(): bool
   {
     return config('filterable.engines.tree.strict', true);
+  }
+
+  /**
+   * Get engine name.
+   * @return string
+   */
+  public function getEngineName(): string
+  {
+    return $this->name;
   }
 }

@@ -2,12 +2,13 @@
 
 namespace Kettasoft\Filterable\Support;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Traits\ForwardsCalls;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\App;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Traits\ForwardsCalls;
 use Kettasoft\Filterable\Contracts\FilterableContext;
 use Kettasoft\Filterable\Exceptions\FilterIsNotDefinedException;
+use Kettasoft\Filterable\Foundation\Contracts\QueryBuilderInterface;
 
 class FilterRegisterator
 {
@@ -39,9 +40,9 @@ class FilterRegisterator
   /**
    * Bind the filter instance to model.
    * @throws \Kettasoft\Filterable\Exceptions\FilterIsNotDefinedException
-   * @return \Illuminate\Database\Eloquent\Builder
+   * @return QueryBuilderInterface
    */
-  public function register(): Builder
+  public function register(): QueryBuilderInterface
   {
     if ($this->filter instanceof FilterableContext) {
       return $this->forwardCallTo($this->filter, 'apply', [$this->builder]);
