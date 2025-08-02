@@ -4,8 +4,8 @@ namespace Kettasoft\Filterable\Tests\Unit\Filterable;
 
 use Illuminate\Database\Eloquent\Model;
 use Kettasoft\Filterable\Tests\TestCase;
-use Illuminate\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Traits\HasFilterable;
+use Illuminate\Contracts\Database\Query\Builder;
 use Kettasoft\Filterable\Tests\Http\Filters\PostFilter;
 use Kettasoft\Filterable\Exceptions\FilterClassNotResolvedException;
 

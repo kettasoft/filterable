@@ -6,6 +6,7 @@ use Kettasoft\Filterable\Filterable;
 use Illuminate\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Support\FilterRegisterator;
 use Kettasoft\Filterable\Exceptions\FilterClassNotResolvedException;
+use Kettasoft\Filterable\Foundation\Contracts\QueryBuilderInterface;
 
 /**
  * Apply filters dynamically to Eloquent Query.
@@ -20,7 +21,7 @@ trait HasFilterable
    * @param \Kettasoft\Filterable\Filterable|string|null $filter
    * @return \Illuminate\Database\Eloquent\Builder
    */
-  public function scopeFilter(Builder $query, Filterable|string|array|null $filter = null): Builder
+  public function scopeFilter(Builder $query, Filterable|string|array|null $filter = null): QueryBuilderInterface
   {
     return (new FilterRegisterator($query, $filter))->register();
   }
