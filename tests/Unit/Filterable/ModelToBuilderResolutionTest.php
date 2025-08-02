@@ -2,10 +2,10 @@
 
 namespace Kettasoft\Filterable\Tests\Unit\Filterable;
 
-use Illuminate\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Filterable;
-use Kettasoft\Filterable\Tests\Models\Post;
 use Kettasoft\Filterable\Tests\TestCase;
+use Kettasoft\Filterable\Tests\Models\Post;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class ModelToBuilderResolutionTest extends TestCase
 {

@@ -14,6 +14,12 @@ class Invokeable extends Engine
   use ForwardsCalls;
 
   /**
+   * Engine name.
+   * @var string
+   */
+  protected $name = 'invokable';
+
+  /**
    * The Eloquent builder instance.
    * @var Builder
    */
@@ -121,5 +127,14 @@ class Invokeable extends Engine
   public function defaultOperator(): string
   {
     return config('filterable.engines.invokable.default_operator', 'eq');
+  }
+
+  /**
+   * Get engine name.
+   * @return string
+   */
+  public function getEngineName(): string
+  {
+    return $this->name;
   }
 }

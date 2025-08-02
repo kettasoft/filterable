@@ -15,6 +15,12 @@ class Ruleset extends Engine
   use FieldNormalizer;
 
   /**
+   * Engine name.
+   * @var string
+   */
+  protected $name = 'ruleset';
+
+  /**
    * Apply filters to the query.
    * @param \Illuminate\Database\Eloquent\Builder $builder
    * @return Builder
@@ -77,5 +83,14 @@ class Ruleset extends Engine
   public function isStrictFromConfig(): bool
   {
     return config('filterable.engines.ruleset.strict', true);
+  }
+
+  /**
+   * Get engine name.
+   * @return string
+   */
+  public function getEngineName(): string
+  {
+    return $this->name;
   }
 }
