@@ -3,10 +3,16 @@
 namespace Kettasoft\Filterable\Foundation;
 
 use Closure;
+use Serializable;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\App;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Traits\ForwardsCalls;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Kettasoft\Filterable\Foundation\Traits\HandleFluentReturn;
 use Kettasoft\Filterable\Foundation\Contracts\QueryBuilderInterface;
+
+use function Opis\Closure\{serialize, unserialize};
 
 /**
  * Class Invoker
@@ -17,7 +23,7 @@ use Kettasoft\Filterable\Foundation\Contracts\QueryBuilderInterface;
  * 
  * @link https://kettasoft.github.io/filterable/execution/invoker
  */
-class Invoker implements QueryBuilderInterface
+class Invoker implements QueryBuilderInterface, Serializable
 {
   use ForwardsCalls,
     HandleFluentReturn;
@@ -48,7 +54,7 @@ class Invoker implements QueryBuilderInterface
    *
    * @param \Illuminate\Database\Query\Builder|\Illuminate\Database\Eloquent\Builder|QueryBuilderInterface $builder
    */
-  public function __construct(protected EloquentBuilder|QueryBuilderInterface $builder) {}
+  public function __construct(protected EloquentBuilder|Builder|QueryBuilderInterface $builder) {}
 
   /**
    * Instantiate a new Invoker object using a builder.
@@ -134,6 +140,34 @@ class Invoker implements QueryBuilderInterface
   }
 
   /**
+   * Get the underlying query builder instance.
+   *
+   * @return Builder|EloquentBuilder|QueryBuilderInterface
+   */
+  public function getBuilder(): EloquentBuilder|Builder|QueryBuilderInterface
+  {
+    return $this->builder;
+  }
+
+  public function luncheBy(string $method, ...$args): static
+  {
+    $this->builder = $this->builder->{$method}(...$args);
+
+    return $this;
+  }
+
+  /**
+   * Get the SQL query string from the builder.
+   *
+   * @return string
+   * @link https://kettasoft.github.io/filterable/execution/invoker.html#getBuilderSql
+   */
+  private function getBuilderSql(): string
+  {
+    return $this->builder->toSql();
+  }
+
+  /**
    * Dispatch the query execution as a Laravel job.
    *
    * @param string $jobClass
@@ -159,6 +193,42 @@ class Invoker implements QueryBuilderInterface
     }
 
     return dispatch($job);
+  }
+
+  /**
+   * Serialize the Invoker instance.
+   *
+   * @return string
+   */
+  public function serialize(): string
+  {
+    return serialize([
+      'builder_sql' => $this->builder->toSql(),
+      'builder_bindings' => $this->builder->getBindings(),
+      'beforeCallback' => $this->beforeCallback ? serialize($this->beforeCallback) : null,
+      'afterCallback' => $this->afterCallback ? serialize($this->afterCallback) : null,
+      'errorCallback' => $this->errorCallback ? serialize($this->errorCallback) : null
+    ]);
+  }
+
+  /**
+   * Unserialize the Invoker instance.
+   *
+   * @param string $data
+   * @return void
+   */
+  public function unserialize($data): void
+  {
+    $unserialized = unserialize($data);
+    $connection = App::make('db')->connection();
+
+    $this->builder = $connection->table(DB::raw("({$unserialized['builder_sql']}) as t"));
+
+    $this->builder->setBindings($unserialized['builder_bindings']);
+
+    $this->beforeCallback = $unserialized['beforeCallback'];
+    $this->afterCallback = $unserialized['afterCallback'];
+    $this->errorCallback = $unserialized['errorCallback'];
   }
 
   /**
