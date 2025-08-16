@@ -149,24 +149,6 @@ class Invoker implements QueryBuilderInterface, Serializable
     return $this->builder;
   }
 
-  public function luncheBy(string $method, ...$args): static
-  {
-    $this->builder = $this->builder->{$method}(...$args);
-
-    return $this;
-  }
-
-  /**
-   * Get the SQL query string from the builder.
-   *
-   * @return string
-   * @link https://kettasoft.github.io/filterable/execution/invoker.html#getBuilderSql
-   */
-  private function getBuilderSql(): string
-  {
-    return $this->builder->toSql();
-  }
-
   /**
    * Dispatch the query execution as a Laravel job.
    *
