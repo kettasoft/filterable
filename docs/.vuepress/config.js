@@ -110,6 +110,16 @@ export default defineUserConfig({
                 ],
             },
             {
+                text: "API",
+                collapsible: true,
+                children: [
+                    {
+                        text: "Payload",
+                        link: "api/payload",
+                    },
+                ],
+            },
+            {
                 text: "Profiler",
                 link: "profiler",
             },
