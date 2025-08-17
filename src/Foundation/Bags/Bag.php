@@ -97,6 +97,16 @@ abstract class Bag implements Countable, Arrayable, ArrayAccess, IteratorAggrega
   }
 
   /**
+   * Merge the items.
+   * @param array $items
+   * @return void
+   */
+  public function merge(array $items)
+  {
+    $this->items = array_merge($this->items, $items);
+  }
+
+  /**
    * Remove an item by key
    * @param TKey $key
    * @return void

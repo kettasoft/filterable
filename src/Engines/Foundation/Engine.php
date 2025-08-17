@@ -42,6 +42,8 @@ abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Stricta
 
   abstract protected function getAllowedFieldsFromConfig(): array;
 
+  abstract public function getEngineName(): string;
+
   public function getAllowedFields(): array
   {
     return array_merge($this->getAllowedFieldsFromConfig(), $this->context->getAllowedFields());

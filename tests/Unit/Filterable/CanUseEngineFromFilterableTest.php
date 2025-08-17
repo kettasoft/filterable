@@ -22,12 +22,12 @@ class CanUseEngineFromFilterableTest extends TestCase
     $this->assertInstanceOf(Ruleset::class, $filterable->getEngin());
   }
   /**
-   * It can filterable class use invokeable engine instance
+   * It can filterable class use invokable engine instance
    * @test
    */
-  public function it_can_filterable_class_use_invokeable_engine_instance()
+  public function it_can_filterable_class_use_invokable_engine_instance()
   {
-    $filterable = Filterable::create()->useEngin('invokeable');
+    $filterable = Filterable::create()->useEngin('invokable');
 
     $this->assertInstanceOf(Invokeable::class, $filterable->getEngin());
   }

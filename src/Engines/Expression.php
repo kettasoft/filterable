@@ -17,6 +17,12 @@ use Kettasoft\Filterable\Exceptions\NotAllowedFieldException;
 class Expression extends Engine
 {
   /**
+   * Engine name.
+   * @var string
+   */
+  protected $name = 'expression';
+
+  /**
    * Apply filters to the query.
    * @param \Illuminate\Contracts\Database\Eloquent\Builder $builder
    * @return Builder
@@ -86,5 +92,14 @@ class Expression extends Engine
   public function defaultOperator(): string
   {
     return config('filterable.engines.expression.default_operator', 'eq');
+  }
+
+  /**
+   * Get engine name.
+   * @return string
+   */
+  public function getEngineName(): string
+  {
+    return $this->name;
   }
 }

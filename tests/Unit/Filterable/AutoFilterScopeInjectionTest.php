@@ -2,11 +2,11 @@
 
 namespace Kettasoft\Filterable\Tests\Unit\Filterable;
 
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Kettasoft\Filterable\Filterable;
-use Kettasoft\Filterable\Providers\AutoRegisterFilterableServiceProvider;
+use Illuminate\Database\Eloquent\Model;
 use Kettasoft\Filterable\Tests\TestCase;
+use Illuminate\Contracts\Database\Query\Builder;
+use Kettasoft\Filterable\Providers\AutoRegisterFilterableServiceProvider;
 
 class AutoFilterScopeInjectionTest extends TestCase
 {
