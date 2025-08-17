@@ -471,4 +471,72 @@ return [
         */
         'fallback_strategy' => 'default',
     ],
+
+    'profiler' => [
+
+        /*
+        |--------------------------------------------------------------------------
+        | Enable or Disable Query Profiler
+        |--------------------------------------------------------------------------
+        |
+        | This option allows you to enable or disable the query profiler system.
+        | You may want to disable it in production or when running background jobs.
+        |
+        */
+        'enabled' => env('FILTERABLE_PROFILER_ENABLED', true),
+
+        /*
+        |--------------------------------------------------------------------------
+        | Log Queries or Store in Database
+        |--------------------------------------------------------------------------
+        |
+        | Determines how query profiling data will be stored.
+        | Supported: "log", "database", "none"
+        |
+        */
+        'store' => env('FILTERABLE_PROFILER_STORE', 'log'),
+
+        /*
+        |--------------------------------------------------------------------------
+        | Minimum Execution Time Threshold (ms)
+        |--------------------------------------------------------------------------
+        |
+        | Queries that execute faster than this threshold will not be stored.
+        | This helps avoid logging trivial queries.
+        |
+        */
+        'slow_query_threshold' => env('FILTERABLE_PROFILER_MIN_TIME', 1.0),
+
+        /*
+        |--------------------------------------------------------------------------
+        | Sampling Percentage
+        |--------------------------------------------------------------------------
+        |
+        | To reduce overhead, you can profile only X% of the requests randomly.
+        | For example, 10 means 10% of calls will be stored.
+        |
+        */
+        'sampling' => env('FILTERABLE_PROFILER_SAMPLING', 100),
+
+        /*
+        |--------------------------------------------------------------------------
+        | Database Table Name
+        |--------------------------------------------------------------------------
+        |
+        | If using "database" as a storage method, this is the table where
+        | query profiles will be stored.
+        |
+        */
+        'table' => 'query_profiles',
+
+        /*
+        |--------------------------------------------------------------------------
+        | Log Channel
+        |--------------------------------------------------------------------------
+        |
+        | If using "log" as a storage method, this is the log channel used.
+        |
+        */
+        'log_channel' => env('FILTERABLE_PROFILER_LOG_CHANNEL', 'daily'),
+    ],
 ];

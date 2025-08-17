@@ -1,56 +1,57 @@
 {
-  "name": "kettasoft/filterable",
-  "description": "Easy and fast Eloquent filter package",
-  "type": "library",
-  "license": "MIT",
-  "keywords": [
-    "laravel",
-    "eloquent",
-    "search",
-    "model",
-    "query",
-    "filter"
-  ],
-  "autoload": {
-    "psr-4": {
-      "Kettasoft\\Filterable\\": "src/"
+    "name": "kettasoft/filterable",
+    "description": "Easy and fast Eloquent filter package",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "laravel",
+        "eloquent",
+        "search",
+        "model",
+        "query",
+        "filter"
+    ],
+    "autoload": {
+        "psr-4": {
+            "Kettasoft\\Filterable\\": "src/",
+            "Kettasoft\\Filterable\\Database\\Migrations\\": "database/migrations/"
+        },
+        "files": [
+            "src/Support/helpers.php"
+        ]
     },
-    "files": [
-      "src/Support/helpers.php"
-    ]
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Kettasoft\\Filterable\\Tests\\": "tests/"
-    }
-  },
-  "authors": [
-    {
-      "name": "Abdalrhman Emad Saad",
-      "email": "kettasoft@gmail.com"
-    }
-  ],
-  "require": {
-    "php": "^8.0",
-    "illuminate/database": "^8.0|^9.0|^10.0|^11.0|^12.0",
-    "illuminate/support": "^8.0|^9.0|^10.0|^11.0|^12.0"
-  },
-  "require-dev": {
-    "mockery/mockery": "^1.3.2",
-    "orchestra/testbench": "^8.0|^9.0",
-    "phpunit/phpunit": "^8.4|^9.0|^10.5"
-  },
-  "scripts": {
-    "test": "php vendor/bin/phpunit"
-  },
-  "extra": {
-    "version": "1.0.0",
-    "laravel": {
-      "providers": [
-        "Kettasoft\\Filterable\\Providers\\FilterableServiceProvider"
-      ]
-    }
-  },
-  "minimum-stability": "dev",
-  "prefer-stable": true
+    "autoload-dev": {
+        "psr-4": {
+            "Kettasoft\\Filterable\\Tests\\": "tests/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Abdalrhman Emad Saad",
+            "email": "kettasoft@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^8.0",
+        "illuminate/database": "^8.0|^9.0|^10.0|^11.0|^12.0",
+        "illuminate/support": "^8.0|^9.0|^10.0|^11.0|^12.0"
+    },
+    "require-dev": {
+        "mockery/mockery": "^1.3.2",
+        "orchestra/testbench": "^8.0|^9.0",
+        "phpunit/phpunit": "^8.4|^9.0|^10.5"
+    },
+    "scripts": {
+        "test": "php vendor/bin/phpunit"
+    },
+    "extra": {
+        "version": "1.0.0",
+        "laravel": {
+            "providers": [
+                "Kettasoft\\Filterable\\Providers\\FilterableServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
