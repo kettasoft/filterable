@@ -6,7 +6,7 @@ use Closure;
 use Serializable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Traits\ForwardsCalls;
 use Kettasoft\Filterable\Foundation\Profiler\Profiler;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
@@ -54,9 +54,9 @@ class Invoker implements QueryBuilderInterface, Serializable, HasDynamicCalls
   /**
    * Create a new Invoker instance.
    *
-   * @param \Illuminate\Database\Query\Builder|\Illuminate\Database\Eloquent\Builder|QueryBuilderInterface $builder
+   * @param QueryBuilder|EloquentBuilder|QueryBuilderInterface $builder
    */
-  public function __construct(protected EloquentBuilder|QueryBuilderInterface $builder)
+  public function __construct(protected QueryBuilder|EloquentBuilder|QueryBuilderInterface $builder)
   {
     if (config('filterable.profiler.enabled', false)) {
       app(Profiler::class)->start();
