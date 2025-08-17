@@ -13,7 +13,8 @@
   ],
   "autoload": {
     "psr-4": {
-      "Kettasoft\\Filterable\\": "src/"
+      "Kettasoft\\Filterable\\": "src/",
+      "Kettasoft\\Filterable\\Database\\Migrations\\": "database/migrations/"
     },
     "files": [
       "src/Support/helpers.php"

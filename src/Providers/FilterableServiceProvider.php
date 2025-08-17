@@ -3,6 +3,8 @@
 namespace Kettasoft\Filterable\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Kettasoft\Filterable\Filterable;
+use Kettasoft\Filterable\Foundation\Profiler\Contracts\ProfilerStorageContract;
 
 class FilterableServiceProvider extends ServiceProvider
 {
@@ -31,6 +33,18 @@ class FilterableServiceProvider extends ServiceProvider
    */
   public function register()
   {
+    $this->app->bind(ProfilerStorageContract::class, function ($app) {
+      return match (config('filterable.profiler.store', 'database')) {
+        'database' => new \Kettasoft\Filterable\Foundation\Profiler\Storage\DatabaseProfilerStorage(),
+        'log' => new \Kettasoft\Filterable\Foundation\Profiler\Storage\FileProfilerStorage(),
+        default => throw new \InvalidArgumentException('Invalid profiler storage type specified.'),
+      };
+    });
+
+    $this->app->singleton('filterable', function ($app) {
+      return (new Filterable($app['request']));
+    });
+
     $this->mergeConfigFrom(
       __DIR__ . '/../../config/filterable.php',
       'filterable'

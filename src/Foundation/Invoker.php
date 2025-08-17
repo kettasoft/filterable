@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Traits\ForwardsCalls;
+use Kettasoft\Filterable\Foundation\Profiler\Profiler;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Kettasoft\Filterable\Foundation\Contracts\HasDynamicCalls;
 use Kettasoft\Filterable\Foundation\Traits\HandleFluentReturn;
 use Kettasoft\Filterable\Foundation\Contracts\QueryBuilderInterface;
 
@@ -23,7 +25,7 @@ use function Opis\Closure\{serialize, unserialize};
  * 
  * @link https://kettasoft.github.io/filterable/execution/invoker
  */
-class Invoker implements QueryBuilderInterface, Serializable
+class Invoker implements QueryBuilderInterface, Serializable, HasDynamicCalls
 {
   use ForwardsCalls,
     HandleFluentReturn;
@@ -54,7 +56,12 @@ class Invoker implements QueryBuilderInterface, Serializable
    *
    * @param \Illuminate\Database\Query\Builder|\Illuminate\Database\Eloquent\Builder|QueryBuilderInterface $builder
    */
-  public function __construct(protected EloquentBuilder|Builder|QueryBuilderInterface $builder) {}
+  public function __construct(protected EloquentBuilder|QueryBuilderInterface $builder)
+  {
+    if (config('filterable.profiler.enabled', false)) {
+      app(Profiler::class)->start();
+    }
+  }
 
   /**
    * Instantiate a new Invoker object using a builder.
