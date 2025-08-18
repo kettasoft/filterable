@@ -1,4 +1,4 @@
-<p align="center"><img src="docs/logo.png" width="180" alt="Filterable Logo" /></p>
+<p align="center"><img src="https://github.com/kettasoft/filterable/blob/docs/images/logo.png" width="180" alt="Filterable Logo" /></p>
 <h1 align="center">Filterable</h1>
 <p align="center">A powerful and flexible Laravel package for advanced, clean, and scalable filtering of Eloquent models using multiple customizable engines.</p><p align="center">
 <a href="https://packagist.org/packages/kettasoft/filterable"><img src="https://github.com/kettasoft/filterable/actions/workflows/php.yml/badge.svg?style=flat-square" alt="Tests"></a>
