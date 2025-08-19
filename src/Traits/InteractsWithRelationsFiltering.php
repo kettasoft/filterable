@@ -2,6 +2,8 @@
 
 namespace Kettasoft\Filterable\Traits;
 
+use Illuminate\Support\Arr;
+
 trait InteractsWithRelationsFiltering
 {
   /**
@@ -53,6 +55,32 @@ trait InteractsWithRelationsFiltering
   public function getRelations(): array
   {
     return $this->relations;
+  }
+
+  /**
+   * Check if the given path is a valid relation path.
+   * 
+   * @param string $path
+   * @return bool
+   */
+  public function hasRelationPath(string $path)
+  {
+    if (str_contains($path, '.')) {
+
+      $relations = explode('.', $path);
+
+      $field = array_pop($relations);
+
+      $path = implode('.', $relations);
+
+      if (Arr::isAssoc($this->relations)) {
+        return isset($this->relations[$path]) && in_array($field, $this->relations[$path]);
+      }
+
+      return in_array($relations[0], $this->relations);
+    }
+
+    return false;
   }
 
   /**
