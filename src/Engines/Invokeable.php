@@ -120,6 +120,11 @@ class Invokeable extends Engine
     return config('filterable.engines.invokable.strict', true);
   }
 
+  public function isIgnoredEmptyValuesFromConfig(): bool
+  {
+    return config('filterable.engines.invokable.ignore_empty_values', false);
+  }
+
   /**
    * Get engine default operator.
    * @return string
