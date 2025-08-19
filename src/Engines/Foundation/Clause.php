@@ -6,20 +6,11 @@ use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Contracts\Support\Arrayable;
-use Kettasoft\Filterable\Foundation\Resources;
-use Kettasoft\Filterable\Engines\Foundation\Mapper;
-use Kettasoft\Filterable\Support\ValidateTableColumns;
 use Kettasoft\Filterable\Engines\Foundation\Parsers\Dissector;
-use Kettasoft\Filterable\Engines\Foundation\Mappers\OperatorMapper;
 use Kettasoft\Filterable\Engines\Foundation\Resolvers\RelationResolver;
 
 class Clause implements Arrayable, Jsonable
 {
-  /**
-   * Current registered engine.
-   * @var Resources
-   */
-  public Resources $resources;
 
   /**
    * Original field.
@@ -40,16 +31,10 @@ class Clause implements Arrayable, Jsonable
   public readonly string|null $value;
 
   /**
-   * Dissector instance.
-   * @var Dissector
-   */
-  public readonly Dissector $dissector;
-
-  /**
-   * Strict mode.
+   * Check if the clause is validated.
    * @var bool
    */
-  protected bool $strict = false;
+  public bool $validated = false;
 
   /**
    * Clause constructor.
@@ -57,26 +42,22 @@ class Clause implements Arrayable, Jsonable
    * @param mixed $field
    * @param mixed $dissector
    */
-  public function __construct(Resources $resources, $field, $dissector)
+  public function __construct($field, $operator, $value)
   {
-    $this->resources = $resources;
     $this->field = $field;
-    $this->dissector = Dissector::parse($dissector, 'eq');
-
-    $this->operator = $this->dissector->operator;
-    $this->value = $this->dissector->value;
+    $this->operator = $operator;
+    $this->value = $value;
   }
 
   /**
    * Create Dissector instance.
-   * @param \Kettasoft\Filterable\Foundation\Resources $resources
    * @param mixed $field
    * @param mixed $dissector
    * @return Clause
    */
-  public static function make(Resources $resources, $field, $dissector)
+  public static function make($field, $operator, $value)
   {
-    return new self($resources, $field, $dissector);
+    return new self($field, $operator, $value);
   }
 
   /**
@@ -87,9 +68,10 @@ class Clause implements Arrayable, Jsonable
     return is_string($this->field) && str_contains($this->field, '.');
   }
 
-  public function isEmptyValue(): bool
+  public function setStatus(bool $status)
   {
-    return empty($this->value) || is_null($this->value);
+    $this->validated = $status;
+    return $this;
   }
 
   /**
@@ -105,67 +87,7 @@ class Clause implements Arrayable, Jsonable
    */
   public function getValue()
   {
-    $sanitizers = $this->resources->sanitizers;
-
-    $value = $this->getOriginalValue();
-
-    if (count($sanitizers)) {
-      foreach ($sanitizers as $sanitizer) {
-        $value = $sanitizer->handle($this->getOriginalField(), $value);
-      }
-    }
-
-    return $value;
-  }
-
-  /**
-   * @inheritDoc
-   */
-  public function getOriginalValue()
-  {
-    return $this->dissector->value;
-  }
-
-  /**
-   * @inheritDoc
-   */
-  public function getOperator()
-  {
-    $instance = $this->resources->operators;
-
-    return Mapper::run(
-      OperatorMapper::init($instance, $this->strict),
-      $this->operator
-    );
-    // return $instance->get($this->operator, $instance->get($instance->default));
-  }
-
-  /**
-   * @inheritDoc
-   */
-  public function getDatabaseColumnName()
-  {
-    return $this->resources->fieldMap->get($this->field, $this->field);
-  }
-
-  /**
-   * Check if the field is allowed.
-   * @return bool
-   */
-  public function isAllowedField(): bool
-  {
-    return $this->resources->fields->has($this->field);
-  }
-
-  public function validateTableColumn()
-  {
-    // return ValidateTableColumns::validate($this->engine->getContext()->getBuilder(), $this->getDatabaseColumnName());
-  }
-
-  public function strict($enable = true): self
-  {
-    $this->strict = $enable;
-    return $this;
+    return $this->value;
   }
 
   public function relation($bag)
@@ -174,15 +96,24 @@ class Clause implements Arrayable, Jsonable
     return $instance;
   }
 
+  public function apply(Builder $builder)
+  {
+    return $builder->where(
+      $this->field,
+      $this->operator,
+      $this->value
+    );
+  }
+
   /**
    * @inheritDoc
    */
   public function toArray(): array
   {
     return [
-      'field' => $this->getDatabaseColumnName(),
-      'operator' => $this->getOperator(),
-      'value' => $this->getValue()
+      'field' => $this->field,
+      'operator' => $this->operator,
+      'value' => $this->value
     ];
   }
 

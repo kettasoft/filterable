@@ -42,7 +42,14 @@ abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Stricta
 
   abstract protected function getAllowedFieldsFromConfig(): array;
 
+  abstract protected function isIgnoredEmptyValuesFromConfig(): bool;
+
   abstract public function getEngineName(): string;
+
+  public function isIgnoredEmptyValues(): bool
+  {
+    return $this->isIgnoredEmptyValuesFromConfig() || $this->context->hasIgnoredEmptyValues();
+  }
 
   public function getAllowedFields(): array
   {

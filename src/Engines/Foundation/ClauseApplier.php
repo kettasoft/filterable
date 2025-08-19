@@ -20,9 +20,9 @@ class ClauseApplier implements Appliable
    */
   public function apply(Builder $builder): Builder
   {
-    if (! $this->clause->isAllowedField() && ! $this->clause->isRelational()) {
-      return $builder;
-    }
+    // if ($this->clause->isRelational()) {
+    //   return $builder;
+    // }
 
     if ($this->clause->isRelational()) {
       return $this->applyRelational($builder);
@@ -38,11 +38,7 @@ class ClauseApplier implements Appliable
    */
   protected function applyDirect(Builder $builder)
   {
-    return $builder->where(
-      $this->clause->getDatabaseColumnName(),
-      $this->clause->getOperator(),
-      $this->clause->getValue()
-    );
+    return $builder->where($this->clause->field, $this->clause->operator, $this->clause->value);
   }
 
   /**
@@ -52,9 +48,10 @@ class ClauseApplier implements Appliable
    */
   protected function applyRelational(Builder $builder)
   {
-    return $this->clause->relation($this->clause->resources->relations)->resolve(
-      $builder,
-      $this->clause
-    );
+    [$relation, $field] = explode('.', $this->clause->field, 2);
+
+    return $builder->whereHas($relation, function ($query) use ($field) {
+      $query->where($field, $this->clause->operator, $this->clause->value);
+    });
   }
 }

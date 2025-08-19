@@ -50,7 +50,7 @@ class RelationResolver
   public function resolve(Builder $builder, Clause $clause)
   {
     return $builder->whereHas($this->relationPath, function (Builder $sub) use ($clause): Builder {
-      return $sub->where($this->field, $clause->getOperator(), $clause->getValue());
+      return $sub->where($this->field, $clause->operator, $clause->value);
     });
   }
 }

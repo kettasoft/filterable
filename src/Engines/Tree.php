@@ -3,12 +3,14 @@
 namespace Kettasoft\Filterable\Engines;
 
 use Illuminate\Database\Eloquent\Builder;
+use Kettasoft\Filterable\Support\Payload;
 use Kettasoft\Filterable\Support\TreeNode;
 use Kettasoft\Filterable\Traits\FieldNormalizer;
 use Kettasoft\Filterable\Engines\Foundation\Clause;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
 use Kettasoft\Filterable\Support\RelationPathParser;
 use Kettasoft\Filterable\Support\AllowedFieldChecker;
+use Kettasoft\Filterable\Engines\Foundation\ClauseFactory;
 use Kettasoft\Filterable\Support\TreeBasedRelationsResolver;
 use Kettasoft\Filterable\Engines\Contracts\TreeFilterableContext;
 use Kettasoft\Filterable\Engines\Contracts\HasAllowedFieldChecker;
@@ -51,19 +53,19 @@ class Tree extends Engine
       });
     } else {
 
-      $clause = Clause::make($this->getResources(), $node->field, [
-        'operator' => $node->operator,
-        'value' => $node->value
-      ])->strict($this->isStrict());
+      $clause = (new ClauseFactory($this))->make(
+        new Payload($node->field, $node->operator ?? $this->defaultOperator(), $node->value, null)
+      );
 
-      // Ignore empty/null values if option is enable.
-      if ($clause->isEmptyValue() && ($this->context->hasIgnoredEmptyValues() || config('filterable.engines.tree.ignore_empty_values'))) return $builder;
+      if (! $clause->validated) {
+        return $builder; // skip disallowed field
+      }
 
       [$_, $field] = RelationPathParser::resolve($node->field);
 
-      $field = $clause->getOriginalField();
-      $operator = $clause->getOperator();
-      $value = $clause->getValue();
+      $field = $clause->field;
+      $operator = $clause->operator;
+      $value = $clause->value;
 
       if ($clause->isRelational()) {
         $clause->relation($this->getResources()->relations)->resolve($builder, $clause);
@@ -123,6 +125,11 @@ class Tree extends Engine
   public function isStrictFromConfig(): bool
   {
     return config('filterable.engines.tree.strict', true);
+  }
+
+  public function isIgnoredEmptyValuesFromConfig(): bool
+  {
+    return config('filterable.engines.tree.ignore_empty_values', false);
   }
 
   /**

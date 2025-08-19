@@ -3,12 +3,15 @@
 namespace Kettasoft\Filterable\Engines;
 
 use Illuminate\Database\Eloquent\Builder;
+use Kettasoft\Filterable\Support\Payload;
 use Kettasoft\Filterable\Traits\FieldNormalizer;
 use Kettasoft\Filterable\Engines\Foundation\Clause;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
 use Kettasoft\Filterable\Engines\Foundation\ClauseApplier;
+use Kettasoft\Filterable\Engines\Foundation\ClauseFactory;
 use Kettasoft\Filterable\Engines\Foundation\Appliers\Applier;
 use Kettasoft\Filterable\Exceptions\NotAllowedFieldException;
+use Kettasoft\Filterable\Engines\Foundation\Parsers\Dissector;
 
 class Ruleset extends Engine
 {
@@ -31,16 +34,13 @@ class Ruleset extends Engine
 
     foreach ($data as $field => $dissector) {
 
-      $clause = Clause::make($this->getResources(), $field, $dissector)->strict($this->isStrict());
+      $dissector = Dissector::parse($dissector, $this->defaultOperator());
 
-      if (! $clause->isAllowedField()) {
+      $clause = (new ClauseFactory($this))->make(
+        new Payload($field, $dissector->operator, $dissector->value, null)
+      );
 
-        if ($this->isStrict()) {
-          throw new NotAllowedFieldException($field);
-        }
-
-        continue;
-      }
+      if (! $clause->validated) continue;
 
       Applier::apply(new ClauseApplier($clause), $builder);
     }
@@ -83,6 +83,11 @@ class Ruleset extends Engine
   public function isStrictFromConfig(): bool
   {
     return config('filterable.engines.ruleset.strict', true);
+  }
+
+  protected function isIgnoredEmptyValuesFromConfig(): bool
+  {
+    return config('filterable.engines.ruleset.ignore_empty_values', false);
   }
 
   /**
