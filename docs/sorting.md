@@ -241,6 +241,24 @@ $sort->setSortKey('s');
 
 ---
 
+### Custom Sorting Delimiter
+
+You can override the default sorting delimiter (`,`) by calling `setDelimiter()`:
+
+```php
+$sort->setDelimiter('|');
+```
+
+This will now expect sorting parameters like:
+
+```http
+/posts?sort=id|title
+```
+
+> By default, the delimiter used is a comma (`,`), but using `setDelimiter()`, you can define a custom separator for multi-field sorting.
+
+---
+
 ## ⚠️ Warnings
 
 :::danger Be careful with `$sort->allow(['*'])`
