@@ -117,6 +117,10 @@ export default defineUserConfig({
                         text: "Payload",
                         link: "api/payload",
                     },
+                    {
+                        text: "Sorter",
+                        link: "api/sorter",
+                    },
                 ],
             },
             {
