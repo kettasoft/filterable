@@ -235,6 +235,23 @@ class Sorter implements Appliable, Sortable
   }
 
   /**
+   * Set the position of null values in sorting.
+   *
+   * @param string|null $position 'first', 'last', or null for default DB behavior
+   * @return $this
+   * @throws \InvalidArgumentException
+   */
+  public function setNullsPosition(string|null $position = null): self
+  {
+    if (!in_array(strtolower($position), ['first', 'last', null], true)) {
+      throw new \InvalidArgumentException('Nulls position must be either "first" or "last" or "null".');
+    }
+
+    $this->config->put('nulls_position', strtolower($position));
+    return $this;
+  }
+
+  /**
    * Apply sorting to the query.
    * 
    * @param \Illuminate\Database\Eloquent\Builder $query
@@ -376,7 +393,7 @@ class Sorter implements Appliable, Sortable
    */
   protected function orderBy(string $field, string $direction, Builder $query): void
   {
-    $nulls = $this->config['nulls_position'];
+    $nulls = $this->getNullsPosition();
 
     if ($nulls && in_array(strtolower($nulls), ['first', 'last'])) {
       $query->orderByRaw("{$field} {$direction} NULLS " . strtoupper($nulls));
@@ -453,5 +470,15 @@ class Sorter implements Appliable, Sortable
   public function getDelimiter(): string
   {
     return $this->delimiter ?? $this->config->get('delimiter', ',');
+  }
+
+  /**
+   * Get the position of null option in sorting.
+   *
+   * @return string|null
+   */
+  public function getNullsPosition(): string|null
+  {
+    return $this->config->get('nulls_position', null);
   }
 }

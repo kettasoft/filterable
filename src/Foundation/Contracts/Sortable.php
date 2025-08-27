@@ -110,4 +110,13 @@ interface Sortable
    * @return string
    */
   public function getDelimiter(): string;
+
+  /**
+   * Set the position of null values in sorting.
+   *
+   * @param string|null $position 'first', 'last', or null for default DB behavior
+   * @return $this
+   * @throws \InvalidArgumentException
+   */
+  public function setNullsPosition(string|null $position = null): self;
 }
