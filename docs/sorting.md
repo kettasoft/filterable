@@ -259,6 +259,35 @@ This will now expect sorting parameters like:
 
 ---
 
+### Custom NULLs Position
+
+Some databases allow controlling how `NULL` values are sorted — whether they appear at the beginning or end of the result set.
+
+You can customize this per instance using `setNullsPosition()`:
+
+```php
+$sort->setNullsPosition('last');
+```
+
+This would result in a query like:
+
+```sql
+ORDER BY created_at ASC NULLS LAST
+```
+
+Depending on your database driver and version.
+Available options:
+
+-   '**`first`**' — Puts NULL values at the beginning.
+-   '**`last`**' — Puts NULL values at the end.
+-   **`null`** — Uses database default behavior (no explicit NULLS FIRST/LAST clause).
+
+:::important Note
+Not all databases or database versions support explicit NULLS FIRST/LAST. **Use with caution and test on your environment**.
+:::
+
+---
+
 ## ⚠️ Warnings
 
 :::danger Be careful with `$sort->allow(['*'])`
