@@ -54,6 +54,12 @@ class Sorter implements Appliable, Sortable
   protected \Illuminate\Support\Collection $config;
 
   /**
+   * The key used for sorting.
+   * @var string
+   */
+  protected $sortKey;
+
+  /**
    * Create a new Sorter instance.
    *
    * @param Request $request
@@ -188,6 +194,23 @@ class Sorter implements Appliable, Sortable
   }
 
   /**
+   * Set the request key to look for sorting parameters.
+   *
+   * @param string $key
+   * @return $this
+   * @throws \InvalidArgumentException
+   */
+  public function setSortKey(string $key): self
+  {
+    if (empty($key)) {
+      throw new \InvalidArgumentException('Sort key cannot be empty.');
+    }
+
+    $this->sortKey = $key;
+    return $this;
+  }
+
+  /**
    * Apply sorting to the query.
    * 
    * @param \Illuminate\Database\Eloquent\Builder $query
@@ -196,7 +219,7 @@ class Sorter implements Appliable, Sortable
   public function apply(Builder $query): Builder
   {
     // Use provided input or fallback to alias/default
-    $sortInput = $this->request->input($this->config->get('sort_key'), '');
+    $sortInput = $this->request->input($this->getSortKey(), '');
 
     $aliases = array_merge($this->config->get('aliases'), $this->aliases);
 
@@ -386,5 +409,15 @@ class Sorter implements Appliable, Sortable
   public function getMap(): array
   {
     return $this->map;
+  }
+
+  /**
+   * Get the sort key used in the request.
+   *
+   * @return string
+   */
+  public function getSortKey(): string
+  {
+    return $this->sortKey ?? $this->config->get('sort_key', 'sort');
   }
 }

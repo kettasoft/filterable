@@ -78,4 +78,20 @@ interface Sortable
    * @return array
    */
   public function getAliases(): array;
+
+  /**
+   * Set the request key to look for sorting parameters.
+   *
+   * @param string $key
+   * @return $this
+   * @throws \InvalidArgumentException
+   */
+  public function setSortKey(string $key): self;
+
+  /**
+   * Get the sort key used in the request.
+   *
+   * @return string
+   */
+  public function getSortKey(): string;
 }
