@@ -223,6 +223,24 @@ ORDER BY created_at ASC NULLS LAST
 
 ---
 
+## Customizing Instance Settings
+
+In addition to configuring sorting behavior globally via the config file, you can override certain settings per instance when defining sorting logic — whether locally or globally.
+
+This provides greater flexibility when different filters require different query keys or behaviors.
+
+### Custom Sort Key
+
+You can override the default sort key (`sort`) by calling `setSortKey()`:
+
+```php
+$sort->setSortKey('s');
+```
+
+> This will now expect sorting parameters like: /posts?s=title
+
+---
+
 ## ⚠️ Warnings
 
 :::danger Be careful with `$sort->allow(['*'])`
