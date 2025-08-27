@@ -284,4 +284,29 @@ class SorterTest extends TestCase
 
     $this->assertStringContainsString('order by "title" asc, "created_at" desc', $sql);
   }
+
+  public function test_it_can_set_custom_sort_key()
+  {
+    request()->merge(['s' => 'title,-id']);
+
+    Filterable::addSorting(PostFilter::class, function (Sortable $sort) {
+      return $sort->allow(['title', 'id'])
+        ->setSortKey('s');
+    });
+
+    $query = Post::filter(new PostFilter());
+
+    $sql = $query->toSql();
+
+    $this->assertStringContainsString('order by "title" asc, "id" desc', $sql);
+  }
+
+  public function test_it_throws_exception_for_empty_sort_key()
+  {
+    $this->expectException(\InvalidArgumentException::class);
+
+    Filterable::addSorting(PostFilter::class, function (Sortable $sort) {
+      return $sort->setSortKey('');
+    });
+  }
 }
