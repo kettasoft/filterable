@@ -60,6 +60,13 @@ class Sorter implements Appliable, Sortable
   protected $sortKey;
 
   /**
+   * Delimiter for multi-field sorting.
+   * 
+   * @var string
+   */
+  protected $delimiter;
+
+  /**
    * Create a new Sorter instance.
    *
    * @param Request $request
@@ -211,6 +218,23 @@ class Sorter implements Appliable, Sortable
   }
 
   /**
+   * Set the delimiter for multi-field sorting.
+   * 
+   * @param string $delimiter
+   * @throws \InvalidArgumentException
+   * @return $this
+   */
+  public function setDelimiter(string $delimiter): self
+  {
+    if (empty($delimiter)) {
+      throw new \InvalidArgumentException('Delimiter cannot be empty.');
+    }
+
+    $this->delimiter = $delimiter;
+    return $this;
+  }
+
+  /**
    * Apply sorting to the query.
    * 
    * @param \Illuminate\Database\Eloquent\Builder $query
@@ -320,7 +344,7 @@ class Sorter implements Appliable, Sortable
   protected function parseSortInput(string $input): array
   {
     $fields = $this->config['multi_sort']
-      ? explode($this->config['delimiter'], $input)
+      ? explode($this->getDelimiter(), $input)
       : [$input];
 
     return array_map('trim', $fields);
@@ -419,5 +443,15 @@ class Sorter implements Appliable, Sortable
   public function getSortKey(): string
   {
     return $this->sortKey ?? $this->config->get('sort_key', 'sort');
+  }
+
+  /**
+   * Get the delimiter used for multi-field sorting.
+   *
+   * @return string
+   */
+  public function getDelimiter(): string
+  {
+    return $this->delimiter ?? $this->config->get('delimiter', ',');
   }
 }

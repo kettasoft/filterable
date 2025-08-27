@@ -94,4 +94,20 @@ interface Sortable
    * @return string
    */
   public function getSortKey(): string;
+
+  /**
+   * Set the delimiter for multi-field sorting.
+   * 
+   * @param string $delimiter
+   * @throws \InvalidArgumentException
+   * @return self
+   */
+  public function setDelimiter(string $delimiter): self;
+
+  /**
+   * Get the delimiter used for multi-field sorting.
+   *
+   * @return string
+   */
+  public function getDelimiter(): string;
 }
