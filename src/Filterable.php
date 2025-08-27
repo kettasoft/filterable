@@ -9,25 +9,28 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Database\Eloquent\Builder;
+use Kettasoft\Filterable\Foundation\Invoker;
 use Kettasoft\Filterable\Foundation\Resources;
 use Kettasoft\Filterable\Contracts\Validatable;
 use Kettasoft\Filterable\Contracts\Authorizable;
 use Kettasoft\Filterable\Sanitization\Sanitizer;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
+use Kettasoft\Filterable\Foundation\Sorting\Sorter;
 use Kettasoft\Filterable\Contracts\FilterableContext;
 use Kettasoft\Filterable\Engines\Factory\EngineManager;
+use Kettasoft\Filterable\Foundation\Contracts\Sortable;
 use Kettasoft\Filterable\Foundation\FilterableSettings;
 use Kettasoft\Filterable\Traits\InteractsWithFilterKey;
 use Kettasoft\Filterable\Traits\InteractsWithValidation;
 use Kettasoft\Filterable\Exceptions\MissingBuilderException;
 use Kettasoft\Filterable\Traits\InteractsWithMethodMentoring;
 use Kettasoft\Filterable\Engines\Foundation\Executors\Executer;
+use Kettasoft\Filterable\Foundation\Contracts\Sorting\Invokable;
 use Kettasoft\Filterable\Traits\InteractsWithRelationsFiltering;
 use Kettasoft\Filterable\Traits\InteractsWithFilterAuthorization;
 use Kettasoft\Filterable\HttpIntegration\HeaderDrivenEngineSelector;
 use Kettasoft\Filterable\Foundation\Contracts\ShouldReturnQueryBuilder;
 use Kettasoft\Filterable\Exceptions\RequestSourceIsNotSupportedException;
-use Kettasoft\Filterable\Foundation\Invoker;
 
 class Filterable implements FilterableContext, Authorizable, Validatable
 {
@@ -135,6 +138,12 @@ class Filterable implements FilterableContext, Authorizable, Validatable
   public Sanitizer $sanitizer;
 
   /**
+   * Sorters for each filterable.
+   * @var array<string, callable<Sorter>>
+   */
+  protected static array $sorters = [];
+
+  /**
    * @var bool
    */
   protected $shouldReturnQueryBuilder = false;
@@ -195,11 +204,67 @@ class Filterable implements FilterableContext, Authorizable, Validatable
 
     $builder = Executer::execute($this->engine, $builder);
 
+    if (isset(self::$sorters[static::class])) {
+      $builder = static::getSorting(static::class)?->apply($builder);
+    }
+
     if ($this instanceof ShouldReturnQueryBuilder || $this->shouldReturnQueryBuilder) {
       return $builder;
     }
 
     return new Invoker($builder);
+  }
+
+  /**
+   * Add a sorting callback for a specific filterable.
+   * 
+   * @param string|array $filterable
+   * @param callable $callback
+   * @return void
+   */
+  public static function addSorting(string|array $filterable, callable|string|Invokable $callback, Request|null $request = null): void
+  {
+    if (is_string($filterable)) {
+      $filterable = [$filterable];
+    }
+
+    foreach ($filterable as $filter) {
+      if (is_string($callback) && class_exists($callback) && is_subclass_of($callback, Invokable::class)) {
+        $callback = app($callback, ['request' => $request ?: app('request')]);
+        return;
+      }
+
+      if (! is_callable($callback) && ! $callback instanceof Invokable) {
+        throw new \InvalidArgumentException('The sorting callback must be a callable or an instance of ' . Invokable::class);
+      }
+
+      $request = $request ?: app('request');
+
+      self::$sorters[$filter] = $callback(new Sorter($request), $request);
+    }
+  }
+
+  /**
+   * Define sorting rules for the current filterable instance.
+   * 
+   * @param callable $sorting
+   * @return static
+   */
+  public function sorting(callable|string|Invokable $sorting): static
+  {
+    static::addSorting(static::class, $sorting);
+    return $this;
+  }
+
+  /**
+   * Get sorting rules for a Filterable class.
+   *
+   * @param string $filterClass
+   * @return Sortable|null
+   */
+  public static function getSorting(string $filterClass): ?Sortable
+  {
+    return static::$sorters[$filterClass] ?? null;
   }
 
   /**
