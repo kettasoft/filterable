@@ -334,4 +334,46 @@ class SorterTest extends TestCase
       return $sort->setDelimiter('');
     });
   }
+
+  public function test_it_can_set_nulls_position_first()
+  {
+    request()->merge(['sort' => 'title,-id']);
+
+    Filterable::addSorting(PostFilter::class, function (Sortable $sort) {
+      return $sort->allow(['title', 'id'])
+        ->setNullsPosition('first');
+    });
+
+    $query = Post::filter(new PostFilter());
+
+    $sql = $query->toSql();
+
+    $this->assertStringContainsString('order by title asc NULLS FIRST, id desc NULLS FIRST', $sql);
+  }
+
+  public function test_it_can_set_nulls_position_last()
+  {
+    request()->merge(['sort' => 'title,-id']);
+
+    Filterable::addSorting(PostFilter::class, function (Sortable $sort) {
+      return $sort->allow(['title', 'id'])
+        ->setNullsPosition('last');
+    });
+
+    $query = Post::filter(new PostFilter());
+
+
+    $sql = $query->toSql();
+
+    $this->assertStringContainsString('order by title asc NULLS LAST, id desc NULLS LAST', $sql);
+  }
+
+  public function test_it_throws_exception_for_invalid_nulls_position()
+  {
+    $this->expectException(\InvalidArgumentException::class);
+
+    Filterable::addSorting(PostFilter::class, function (Sortable $sort) {
+      return $sort->setNullsPosition('invalid_position');
+    });
+  }
 }
