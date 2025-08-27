@@ -309,4 +309,29 @@ class SorterTest extends TestCase
       return $sort->setSortKey('');
     });
   }
+
+  public function test_it_can_set_custom_delimiter()
+  {
+    request()->merge(['sort' => 'title|-id']);
+
+    Filterable::addSorting(PostFilter::class, function (Sortable $sort) {
+      return $sort->allow(['title', 'id'])
+        ->setDelimiter('|');
+    });
+
+    $query = Post::filter(new PostFilter());
+
+    $sql = $query->toSql();
+
+    $this->assertStringContainsString('order by "title" asc, "id" desc', $sql);
+  }
+
+  public function test_it_throws_exception_for_empty_delimiter()
+  {
+    $this->expectException(\InvalidArgumentException::class);
+
+    Filterable::addSorting(PostFilter::class, function (Sortable $sort) {
+      return $sort->setDelimiter('');
+    });
+  }
 }
