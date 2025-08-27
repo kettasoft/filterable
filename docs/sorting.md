@@ -217,7 +217,7 @@ Control how `NULL` values are ordered using `nulls_position`:
 
 Example (if supported by DB driver):
 
-```
+```sql
 ORDER BY created_at ASC NULLS LAST
 ```
 
