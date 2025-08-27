@@ -124,6 +124,10 @@ export default defineUserConfig({
                 link: "profiler",
             },
             {
+                text: "Sorting",
+                link: "sorting",
+            },
+            {
                 text: "Authorization",
                 link: "authorization",
             },
