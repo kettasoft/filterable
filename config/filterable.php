@@ -74,6 +74,117 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Sorting
+    |--------------------------------------------------------------------------
+    |
+    | Configure the sorting behavior for filterable queries.
+    | You can control which fields are allowed, define default sorting,
+    | set aliases (presets), and customize how multiple sorts are handled.
+    |
+    */
+    'sorting' => [
+
+        /*
+        |--------------------------------------------------------------------------
+        | Default Request Key
+        |--------------------------------------------------------------------------
+        |
+        | The query string key to look for filter inputs automatically from requests.
+        | Example: /posts?sort=-created_at,name
+        |
+        */
+        'sort_key' => 'sort',
+
+        /*
+        |--------------------------------------------------------------------------
+        | Allowed Fields
+        |--------------------------------------------------------------------------
+        |
+        | Define which fields are allowed for sorting.
+        | Example: ['id', 'name', 'created_at']
+        |
+        */
+        'allowed' => [],
+
+        /*
+        |--------------------------------------------------------------------------
+        | Default Sorting
+        |--------------------------------------------------------------------------
+        |
+        | Define a default sorting order if none is provided by the request.
+        | Format: ['field', 'direction']
+        | Example: ['created_at', 'desc']
+        |
+        */
+        'default' => null,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Aliases
+        |--------------------------------------------------------------------------
+        |
+        | Define shortcuts (aliases) for common sorting orders.
+        | Example:
+        | 'aliases' => [
+        |     'recent' => [['created_at', 'desc']],
+        |     'popular' => [['views', 'desc'], ['likes', 'desc']],
+        | ],
+        |
+        */
+        'aliases' => [],
+
+        /*
+        |--------------------------------------------------------------------------
+        | Multi-Sorting
+        |--------------------------------------------------------------------------
+        |
+        | Enable or disable multiple sorting fields in the same request.
+        |
+        */
+        'multi_sort' => true,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Delimiter
+        |--------------------------------------------------------------------------
+        |
+        | The delimiter used to separate multiple sorting fields in a request.
+        | Example: ?sort=name,-created_at
+        | With delimiter = ',' → "name,-created_at"
+        |
+        */
+        'delimiter' => ',',
+
+        /*
+        |--------------------------------------------------------------------------
+        | Direction Map
+        |--------------------------------------------------------------------------
+        |
+        | Define how sorting directions are interpreted.
+        | Example:
+        | '-' prefix means descending, no prefix = ascending.
+        |
+        */
+        'direction_map' => [
+            'asc' => 'asc',
+            'desc' => 'desc',
+            'prefix' => '-', // "-field" = desc
+        ],
+
+        /*
+        |--------------------------------------------------------------------------
+        | Nulls Position
+        |--------------------------------------------------------------------------
+        |
+        | Decide how to handle NULL values in sorting.
+        | Supported: 'first', 'last', or null (database default).
+        |
+        */
+        'nulls_position' => null,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Filter Engines
     |--------------------------------------------------------------------------
     |
