@@ -37,7 +37,7 @@ class Ruleset extends Engine
       $dissector = Dissector::parse($dissector, $this->defaultOperator());
 
       $clause = (new ClauseFactory($this))->make(
-        new Payload($field, $dissector->operator, $dissector->value, null)
+        new Payload($field, $dissector->operator, $this->sanitizeValue($field, $dissector->value), $dissector->value)
       );
 
       if (! $clause->validated) continue;

@@ -97,4 +97,17 @@ abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Stricta
   {
     return $this->context->getResources();
   }
+
+  /**
+   * Sanitize the given value using the sanitizer instance.
+   *
+   * @param mixed $filed
+   * @param mixed $value
+   */
+  final protected function sanitizeValue($filed, $value)
+  {
+    $sanitizer = $this->context->getSanitizerInstance();
+
+    return $sanitizer->handle($filed, $value);
+  }
 }

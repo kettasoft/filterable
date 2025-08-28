@@ -64,27 +64,10 @@ class Invokeable extends Engine
 
     if (method_exists($this->context, $method)) {
 
-      $payload = new Payload($key, $operator, $this->resolveValueSanitizer($key, $val), $val);
+      $payload = new Payload($key, $operator, $this->sanitizeValue($key, $val), $val);
 
       $this->forwardCallTo($this->context, $method, [$payload]);
     }
-  }
-
-  /**
-   * Run the filter value sanitizer if exist.
-   * @param string $key
-   * @param string $method
-   * @param mixed $value
-   */
-  protected function resolveValueSanitizer(string $key, mixed $value)
-  {
-    $sanitizer = $this->context->getSanitizerInstance();
-
-    if (!empty($sanitizer->getSanitizers())) {
-      $value = $sanitizer->handle($key, $value);
-    }
-
-    return $value;
   }
 
   /**
