@@ -8,5 +8,13 @@ use Kettasoft\Filterable\Engines\Contracts\{
   ExpressionEngineContext,
   InvokableEngineContext
 };
+use Kettasoft\Filterable\Sanitization\Sanitizer;
 
-interface FilterableContext extends TreeFilterableContext, RulesetFilterableContect, ExpressionEngineContext, InvokableEngineContext {}
+interface FilterableContext extends TreeFilterableContext, RulesetFilterableContect, ExpressionEngineContext, InvokableEngineContext
+{
+  /**
+   * Get sanitizer instance.
+   * @return Sanitizer
+   */
+  public function getSanitizerInstance(): Sanitizer;
+}

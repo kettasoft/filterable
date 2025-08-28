@@ -186,4 +186,19 @@ class RulesetEngineTest extends TestCase
 
     $this->assertEquals(15, $filter->count());
   }
+
+  public function test_it_sanitize_value_before_applying_to_query()
+  {
+    $request = Request::create('/posts?status=eq:PENDING');
+
+    $filter = Filterable::withRequest($request)
+      ->setAllowedFields(['status'])
+      ->useEngin(Ruleset::class)
+      ->setSanitizers([
+        'status' => fn($value) => strtolower($value)
+      ])
+      ->apply(Post::query());
+
+    $this->assertEquals(15, $filter->count());
+  }
 }

@@ -10,8 +10,10 @@ use Kettasoft\Filterable\Engines\Foundation\Clause;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
 use Kettasoft\Filterable\Support\RelationPathParser;
 use Kettasoft\Filterable\Support\AllowedFieldChecker;
+use Kettasoft\Filterable\Engines\Foundation\ClauseApplier;
 use Kettasoft\Filterable\Engines\Foundation\ClauseFactory;
 use Kettasoft\Filterable\Support\TreeBasedRelationsResolver;
+use Kettasoft\Filterable\Engines\Foundation\Appliers\Applier;
 use Kettasoft\Filterable\Engines\Contracts\TreeFilterableContext;
 use Kettasoft\Filterable\Engines\Contracts\HasAllowedFieldChecker;
 use Kettasoft\Filterable\Support\TreeBasedSignelConditionResolver;
@@ -54,27 +56,17 @@ class Tree extends Engine
     } else {
 
       $clause = (new ClauseFactory($this))->make(
-        new Payload($node->field, $node->operator ?? $this->defaultOperator(), $node->value, null)
+        new Payload($node->field, $node->operator ?? $this->defaultOperator(), $this->sanitizeValue($node->field, $node->value), $node->value)
       );
 
       if (! $clause->validated) {
         return $builder; // skip disallowed field
       }
 
-      [$_, $field] = RelationPathParser::resolve($node->field);
-
-      $field = $clause->field;
-      $operator = $clause->operator;
-      $value = $clause->value;
-
       if ($clause->isRelational()) {
         $clause->relation($this->getResources()->relations)->resolve($builder, $clause);
       } else {
-        if (! AllowedFieldChecker::check($this, $field)) {
-          return;
-        }
-
-        TreeBasedSignelConditionResolver::resolve($builder, $field, $operator, $value);
+        Applier::apply(new ClauseApplier($clause), $builder);
       }
     }
 
