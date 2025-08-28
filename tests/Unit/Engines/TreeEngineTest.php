@@ -336,4 +336,27 @@ class TreeEngineTest extends TestCase
 
     $this->assertEquals(45, $filter->count());
   }
+
+  public function test_it_sanitize_value_before_applying_to_query()
+  {
+    $data = [
+      "filter" => [
+        "and" => [
+          ["field" => "status", "operator" => "eq", "value" => "STOPPED"],
+          ['or' => []]
+        ]
+      ]
+    ];
+
+    $filter = Filterable::create()
+      ->setData($data, true)
+      ->setAllowedFields(['status'])
+      ->useEngin(Tree::class)
+      ->setSanitizers([
+        'status' => fn($value) => strtolower($value)
+      ])
+      ->apply(Post::query());
+
+    $this->assertEquals(15, $filter->count());
+  }
 }

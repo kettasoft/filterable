@@ -204,7 +204,24 @@ class ExpressionEngineTest extends TestCase
       ->strict()
       ->apply(Post::query());
 
-    // dd($filter->toRawSql());
+    $this->assertEquals(15, $filter->count());
+  }
+
+  public function test_it_sanitize_value_before_applying_to_query()
+  {
+    $request = Request::create('/posts');
+
+    $request->setJson(new InputBag([
+      'status' => 'PENDING'
+    ]));
+
+    $filter = Filterable::withRequest($request)
+      ->setAllowedFields(['status'])
+      ->useEngin(Expression::class)
+      ->setSanitizers([
+        'status' => fn($value) => strtolower($value)
+      ])
+      ->apply(Post::query());
 
     $this->assertEquals(15, $filter->count());
   }
