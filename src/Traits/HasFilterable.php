@@ -12,6 +12,8 @@ use Kettasoft\Filterable\Foundation\Contracts\QueryBuilderInterface;
  * Apply filters dynamically to Eloquent Query.
  *
  * This is not a typical Laravel Global Scope.
+ *
+ * @method static \Kettasoft\Filterable\Foundation\Invoker|\Illuminate\Database\Eloquent\Builder filter(\Kettasoft\Filterable\Filterable|string|null $filter = null)
  */
 trait HasFilterable
 {
