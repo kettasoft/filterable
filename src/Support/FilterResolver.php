@@ -53,6 +53,10 @@ class FilterResolver
       return $this->apply($filter);
     }
 
+    if (is_subclass_of($this->filter, FilterableContext::class)) {
+      return $this->apply($this->filter);
+    }
+
     if ($this->filter === null && $filter = $this->getModel()->getFilterable()) {
       return $this->apply($filter);
     }
