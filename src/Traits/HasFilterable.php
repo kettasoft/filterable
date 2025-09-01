@@ -4,7 +4,7 @@ namespace Kettasoft\Filterable\Traits;
 
 use Kettasoft\Filterable\Filterable;
 use Illuminate\Database\Eloquent\Builder;
-use Kettasoft\Filterable\Support\FilterRegisterator;
+use Kettasoft\Filterable\Support\FilterResolver;
 use Kettasoft\Filterable\Exceptions\FilterClassNotResolvedException;
 use Kettasoft\Filterable\Foundation\Contracts\QueryBuilderInterface;
 
@@ -23,7 +23,7 @@ trait HasFilterable
    */
   public function scopeFilter(Builder $query, Filterable|string|array|null $filter = null): QueryBuilderInterface
   {
-    return (new FilterRegisterator($query, $filter))->register();
+    return (new FilterResolver($query, $filter))->resolve();
   }
 
   /**
