@@ -5,7 +5,7 @@ namespace Kettasoft\Filterable\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Contracts\FilterableContext;
-use Kettasoft\Filterable\Support\FilterRegisterator;
+use Kettasoft\Filterable\Support\FilterResolver;
 
 class AutoRegisterFilterableServiceProvider extends ServiceProvider
 {
@@ -20,7 +20,7 @@ class AutoRegisterFilterableServiceProvider extends ServiceProvider
       /** @var Builder */
       $builder = $this;
 
-      return (new FilterRegisterator($builder, $filter))->register();
+      return (new FilterResolver($builder, $filter))->resolve();
     });
   }
 

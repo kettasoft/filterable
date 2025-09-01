@@ -4,7 +4,7 @@ namespace Kettasoft\Filterable\Traits;
 
 use Kettasoft\Filterable\Filterable;
 use Illuminate\Database\Eloquent\Builder;
-use Kettasoft\Filterable\Support\FilterRegisterator;
+use Kettasoft\Filterable\Support\FilterResolver;
 use Kettasoft\Filterable\Exceptions\FilterClassNotResolvedException;
 use Kettasoft\Filterable\Foundation\Contracts\QueryBuilderInterface;
 
@@ -12,6 +12,8 @@ use Kettasoft\Filterable\Foundation\Contracts\QueryBuilderInterface;
  * Apply filters dynamically to Eloquent Query.
  *
  * This is not a typical Laravel Global Scope.
+ *
+ * @method static \Kettasoft\Filterable\Foundation\Invoker|\Illuminate\Database\Eloquent\Builder filter(\Kettasoft\Filterable\Filterable|string|null $filter = null)
  */
 trait HasFilterable
 {
@@ -23,7 +25,7 @@ trait HasFilterable
    */
   public function scopeFilter(Builder $query, Filterable|string|array|null $filter = null): QueryBuilderInterface
   {
-    return (new FilterRegisterator($query, $filter))->register();
+    return (new FilterResolver($query, $filter))->resolve();
   }
 
   /**
