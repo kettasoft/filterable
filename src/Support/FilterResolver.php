@@ -8,9 +8,10 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Traits\ForwardsCalls;
 use Kettasoft\Filterable\Contracts\FilterableContext;
 use Kettasoft\Filterable\Exceptions\FilterIsNotDefinedException;
+use Kettasoft\Filterable\Filterable;
 use Kettasoft\Filterable\Foundation\Contracts\QueryBuilderInterface;
 
-class FilterRegisterator
+class FilterResolver
 {
   use ForwardsCalls;
 
@@ -42,25 +43,32 @@ class FilterRegisterator
    * @throws \Kettasoft\Filterable\Exceptions\FilterIsNotDefinedException
    * @return QueryBuilderInterface
    */
-  public function register(): QueryBuilderInterface
+  public function resolve(): QueryBuilderInterface|Filterable
   {
     if ($this->filter instanceof FilterableContext) {
       return $this->forwardCallTo($this->filter, 'apply', [$this->builder]);
     }
 
     if (is_string($this->filter) && $filter = config('filterable.aliases')->get($this->filter)) {
-      $filter = App::make($filter);
-
-      return $this->forwardCallTo($filter, 'apply', [$this->builder]);
+      return $this->apply($filter);
     }
 
     if ($this->filter === null && $filter = $this->getModel()->getFilterable()) {
-      $filter = App::make($filter);
-
-      return $this->forwardCallTo($filter, 'apply', [$this->builder]);
+      return $this->apply($filter);
     }
 
     throw new FilterIsNotDefinedException($this->filter);
+  }
+
+  /**
+   * Apply the filter to the query builder.
+   * 
+   * @param mixed $filter
+   */
+  protected function apply($filter)
+  {
+    $filter = App::make($filter);
+    return $this->forwardCallTo($filter, 'apply', [$this->builder]);
   }
 
   /**
