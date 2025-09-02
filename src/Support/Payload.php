@@ -9,7 +9,7 @@ use Illuminate\Contracts\Support\Arrayable;
  * @template TKey of array-key
  * @template TValue
  */
-readonly class Payload implements \Stringable, Arrayable, Jsonable
+class Payload implements \Stringable, Arrayable, Jsonable
 {
   /**
    * Request field.
@@ -214,6 +214,18 @@ readonly class Payload implements \Stringable, Arrayable, Jsonable
   public function asBoolean(): ?bool
   {
     return $this->isBoolean() ? filter_var($this->value, FILTER_VALIDATE_BOOLEAN) : null;
+  }
+
+  /**
+   * Return a new Payload instance with the given value.
+   *
+   * @param mixed $value
+   * @return Payload
+   */
+  public function setValue(mixed $value): Payload
+  {
+    $this->value = $value;
+    return $this;
   }
 
   /**
