@@ -3,11 +3,14 @@
 namespace Kettasoft\Filterable\Engines;
 
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Builder;
+use Kettasoft\Filterable\Engines\Foundation\Attributes\AttributeRegistry;
 use Kettasoft\Filterable\Support\Payload;
 use Illuminate\Support\Traits\ForwardsCalls;
-use Illuminate\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
 use Kettasoft\Filterable\Support\ConditionNormalizer;
+use Kettasoft\Filterable\Engines\Foundation\Attributes\AttributeContext;
+use Kettasoft\Filterable\Engines\Foundation\Attributes\AttributePipeline;
 
 class Invokeable extends Engine
 {
@@ -62,12 +65,22 @@ class Invokeable extends Engine
     $operator = $clause['operator'];
     $val = $clause['value'];
 
-    if (method_exists($this->context, $method)) {
-
-      $payload = new Payload($key, $operator, $this->sanitizeValue($key, $val), $val);
-
-      $this->forwardCallTo($this->context, $method, [$payload]);
+    if (! method_exists($this->context, $method)) {
+      return;
     }
+
+    $payload = new Payload($key, $operator, $this->sanitizeValue($key, $val), $val);
+
+    $attrContext = new AttributeContext(
+      $this->builder,
+      $payload,
+      state: ['method' => $method, 'key' => $key]
+    );
+
+    $pipeline = new AttributePipeline(new AttributeRegistry(), $attrContext);
+    $pipeline->process($this->context, $method);
+
+    $this->forwardCallTo($this->context, $method, [$payload]);
   }
 
   /**
