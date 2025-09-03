@@ -3,10 +3,12 @@
 namespace Kettasoft\Filterable\Engines\Foundation\Attributes;
 
 use Kettasoft\Filterable\Engines\Foundation\Attributes\Annotations\DefaultValue;
+use Kettasoft\Filterable\Engines\Foundation\Attributes\Annotations\Required;
 use ReflectionMethod;
 use Kettasoft\Filterable\Filterable;
 use Kettasoft\Filterable\Engines\Foundation\Attributes\Handlers\Contracts\AttributeHandlerInterface;
 use Kettasoft\Filterable\Engines\Foundation\Attributes\Handlers\DefaultValueHandler;
+use Kettasoft\Filterable\Engines\Foundation\Attributes\Handlers\RequiredHandler;
 
 class AttributeRegistry
 {
@@ -14,7 +16,8 @@ class AttributeRegistry
    * @var array<string, AttributeHandlerInterface>
    */
   protected array $handlers = [
-    DefaultValue::class => DefaultValueHandler::class
+    DefaultValue::class => DefaultValueHandler::class,
+    Required::class => RequiredHandler::class,
   ];
 
   /**
