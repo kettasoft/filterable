@@ -2,16 +2,20 @@
 
 namespace Kettasoft\Filterable\Engines\Foundation\Attributes;
 
+use Kettasoft\Filterable\Engines\Foundation\Attributes\Annotations\DefaultValue;
 use ReflectionMethod;
 use Kettasoft\Filterable\Filterable;
 use Kettasoft\Filterable\Engines\Foundation\Attributes\Handlers\Contracts\AttributeHandlerInterface;
+use Kettasoft\Filterable\Engines\Foundation\Attributes\Handlers\DefaultValueHandler;
 
 class AttributeRegistry
 {
   /**
    * @var array<string, AttributeHandlerInterface>
    */
-  protected array $handlers = [];
+  protected array $handlers = [
+    DefaultValue::class => DefaultValueHandler::class
+  ];
 
   /**
    * Register an attribute handler.
