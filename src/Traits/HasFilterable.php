@@ -14,6 +14,7 @@ use Kettasoft\Filterable\Foundation\Contracts\QueryBuilderInterface;
  * This is not a typical Laravel Global Scope.
  *
  * @method static \Kettasoft\Filterable\Foundation\Invoker|\Illuminate\Database\Eloquent\Builder filter(\Kettasoft\Filterable\Filterable|string|null $filter = null)
+ * @mixin \Illuminate\Database\Eloquent\Model
  */
 trait HasFilterable
 {
