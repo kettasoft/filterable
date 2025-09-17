@@ -11,7 +11,7 @@ class StringHandler implements SanitizeHandler
 
   public function __construct($sanitizer)
   {
-    if (! (class_exists($sanitizer) && is_subclass_of($sanitizer, Sanitizable::class))) {
+    if (! is_a($sanitizer, Sanitizable::class, true)) {
       throw new \InvalidArgumentException(sprintf("Sanitizer class %s is invalid", $sanitizer));
     }
 

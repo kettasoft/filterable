@@ -33,7 +33,7 @@ class EngineManager
       return $engine;
     }
 
-    if (class_exists($engine) && is_subclass_of($engine, Engine::class)) {
+    if (is_a($engine, Engine::class, true)) {
       return new $engine(...$args);
     }
 

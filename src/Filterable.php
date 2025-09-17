@@ -314,7 +314,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable
       return $this->model->query();
     }
 
-    if (is_string($this->model) && class_exists($this->model) && is_subclass_of($this->model, Model::class)) {
+    if (is_a($this->model, Model::class, true)) {
       return $this->model::query();
     }
 
@@ -351,7 +351,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable
       return $this->model;
     }
 
-    if (is_string($this->model) && class_exists($this->model) && is_subclass_of($this->model, Model::class)) {
+    if (is_a($this->model, Model::class, true)) {
       return new $this->model;
     }
 
