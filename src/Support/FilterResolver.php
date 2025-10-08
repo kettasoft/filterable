@@ -53,7 +53,7 @@ class FilterResolver
       return $this->apply($filter);
     }
 
-    if (is_subclass_of($this->filter, FilterableContext::class)) {
+    if (is_a($this->filter, FilterableContext::class, true)) {
       return $this->apply($this->filter);
     }
 

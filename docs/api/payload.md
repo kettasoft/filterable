@@ -46,6 +46,16 @@ Returns the value as string.
 
 ---
 
+### `setValue(mixed $value): Payload`
+
+Set a new value for the payload and return the updated instance.
+
+```php
+$payload = $payload->setValue('new value');
+```
+
+---
+
 ### `length(): int`
 
 Get the length of the value.  
