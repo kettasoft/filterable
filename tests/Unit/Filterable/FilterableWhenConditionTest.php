@@ -44,4 +44,54 @@ class FilterableWhenConditionTest extends TestCase
 
     $this->assertCount(4, $filter->getAllowedFields());
   }
+
+  public function test_it_can_use_unless()
+  {
+    $filter = Filterable::create()->unless(false, function (Filterable $filter) {
+      $filter->setAllowedFields(['test1']);
+    })->unless(true, function (Filterable $filter) {
+      $filter->setAllowedFields(['test2']);
+    });
+
+    $this->assertCount(1, $filter->getAllowedFields());
+  }
+
+  public function test_it_can_use_mixed_when_unless()
+  {
+    $filter = Filterable::create()
+      ->when(true, function (Filterable $filter) {
+        $filter->setAllowedFields(['test1']);
+      })
+      ->unless(false, function (Filterable $filter) {
+        $filter->setAllowedFields(['test2']);
+      })
+      ->when(false, function (Filterable $filter) {
+        $filter->setAllowedFields(['test3']);
+      })
+      ->unless(true, function (Filterable $filter) {
+        $filter->setAllowedFields(['test4']);
+      });
+
+    $this->assertCount(2, $filter->getAllowedFields());
+  }
+
+  public function test_it_can_use_nested_mixed_when_unless()
+  {
+    $filter = Filterable::create()
+      ->when(true, function (Filterable $filter) {
+        $filter->setAllowedFields(['test1']);
+
+        $filter->unless(false, function (Filterable $filter) {
+          $filter->setAllowedFields(['test2']);
+
+          $filter->when(true, fn($filter) => $filter->setAllowedFields(['test3']));
+
+          $filter->unless(true, function (Filterable $filter) {
+            $filter->setAllowedFields(['test4']);
+          });
+        });
+      });
+
+    $this->assertCount(3, $filter->getAllowedFields());
+  }
 }

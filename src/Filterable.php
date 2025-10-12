@@ -386,7 +386,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable
    * @param bool $condition
    * @param callable(static): void $callback
    * @return static
-   * @link https://kettasoft.github.io/filterable/features/conditional-logic-with-when
+   * @link https://kettasoft.github.io/filterable/features/conditional-logic
    */
   public function when(bool $condition, callable $callback)
   {
@@ -395,6 +395,18 @@ class Filterable implements FilterableContext, Authorizable, Validatable
     }
 
     return $this;
+  }
+
+  /**
+   * Inverse of `when` method.
+   * @param bool $condition
+   * @param callable(static): void $callback
+   * @return static
+   * @link https://kettasoft.github.io/filterable/features/conditional-logic
+   */
+  public function unless(bool $condition, callable $callback)
+  {
+    return $this->when(!$condition, $callback);
   }
 
   /**

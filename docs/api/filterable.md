@@ -281,6 +281,16 @@ Filterable::create()
   ->apply();
 ```
 
+#### `unless(bool $condition, callable $callback): static`
+
+Apply a callback to the instance when the condition is false.
+
+```php
+Filterable::create()
+  ->unless($isAdmin, fn ($f) => $f->setAllowedFields(['name', 'email']))
+  ->apply();
+```
+
 #### `through(array $pipes): static`
 
 Allow the query to pass through custom callables, each receiving `(Builder $builder, Filterable $filterable)`.

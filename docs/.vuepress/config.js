@@ -83,7 +83,7 @@ export default defineUserConfig({
                     },
                     {
                         text: "Conditional Logic",
-                        link: "features/conditional-logic-with-when",
+                        link: "features/conditional-logic",
                     },
                     {
                         text: "Filter Aliases",
