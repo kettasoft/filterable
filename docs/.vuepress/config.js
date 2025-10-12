@@ -114,6 +114,10 @@ export default defineUserConfig({
                 collapsible: true,
                 children: [
                     {
+                        text: "Filterable",
+                        link: "api/filterable",
+                    },
+                    {
                         text: "Payload",
                         link: "api/payload",
                     },
