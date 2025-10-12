@@ -216,6 +216,19 @@ class Filterable implements FilterableContext, Authorizable, Validatable
   }
 
   /**
+   * Create and return a new Filterable instance after applying the given callback.
+   *
+   * @param callable \Closure(static): void  $callback  A callback that receives the instance for configuration.
+   * @return static
+   */
+  public static function tap(callable $callback, $instance = null): static
+  {
+    $instance = $instance ?: new static;
+    $callback($instance);
+    return $instance;
+  }
+  
+  /**
    * Add a sorting callback for a specific filterable.
    * 
    * @param string|array $filterable
