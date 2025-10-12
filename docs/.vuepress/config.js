@@ -43,6 +43,10 @@ export default defineUserConfig({
                 link: "/installation",
             },
             {
+                text: "Service Provider",
+                link: "/service-provider",
+            },
+            {
                 text: "How It Works",
                 link: "how-it-works",
             },
@@ -96,6 +100,10 @@ export default defineUserConfig({
                     {
                         text: "Auto Binding",
                         link: "features/auto-binding",
+                    },
+                    {
+                        text: "Custom engines",
+                        link: "features/custom-engines",
                     },
                 ],
             },
