@@ -1,3 +1,14 @@
 {
-  "php.version": "8.4"
+    "php.version": "8.4",
+    "cSpell.words": [
+        "allowd",
+        "Authorizable",
+        "incomming",
+        "Incomming",
+        "Invokable",
+        "Macroable",
+        "receved",
+        "Validatable",
+        "laravel"
+    ]
 }
