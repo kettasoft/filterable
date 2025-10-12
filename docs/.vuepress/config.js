@@ -126,6 +126,10 @@ export default defineUserConfig({
                         link: "api/filterable",
                     },
                     {
+                        text: "Filterable facade",
+                        link: "api/facade",
+                    },
+                    {
                         text: "Payload",
                         link: "api/payload",
                     },
