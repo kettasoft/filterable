@@ -296,6 +296,17 @@ Filterable::create()
   ]);
 ```
 
+#### `tap(callable $callback): static`
+
+Invoke a callback with the current instance for side effects.
+
+```php
+Filterable::tap(function (Filterable $filterable) {
+    $filterable->setAllowedFields(['name']);
+    logger()->info('Current allowed fields: ', $filterable->getAllowedFields());
+});
+```
+
 ---
 
 ### SQL Export
