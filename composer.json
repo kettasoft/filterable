@@ -48,9 +48,7 @@
   "extra": {
     "version": "1.0.0",
     "laravel": {
-      "providers": [
-        "Kettasoft\\Filterable\\Providers\\FilterableServiceProvider"
-      ]
+      "providers": []
     }
   },
   "minimum-stability": "dev",

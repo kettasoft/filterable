@@ -43,6 +43,10 @@ export default defineUserConfig({
                 link: "/installation",
             },
             {
+                text: "Service Provider",
+                link: "/service-provider",
+            },
+            {
                 text: "How It Works",
                 link: "how-it-works",
             },
@@ -83,7 +87,7 @@ export default defineUserConfig({
                     },
                     {
                         text: "Conditional Logic",
-                        link: "features/conditional-logic-with-when",
+                        link: "features/conditional-logic",
                     },
                     {
                         text: "Filter Aliases",
@@ -96,6 +100,10 @@ export default defineUserConfig({
                     {
                         text: "Auto Binding",
                         link: "features/auto-binding",
+                    },
+                    {
+                        text: "Custom engines",
+                        link: "features/custom-engines",
                     },
                 ],
             },
@@ -113,6 +121,14 @@ export default defineUserConfig({
                 text: "API",
                 collapsible: true,
                 children: [
+                    {
+                        text: "Filterable",
+                        link: "api/filterable",
+                    },
+                    {
+                        text: "Filterable facade",
+                        link: "api/facade",
+                    },
                     {
                         text: "Payload",
                         link: "api/payload",

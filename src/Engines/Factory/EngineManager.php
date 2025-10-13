@@ -41,4 +41,21 @@ class EngineManager
 
     return new $engine(...$args);
   }
+
+  /**
+   * Extend the engine manager with a custom engine.
+   * 
+   * @param string $name The name to register the engine under.
+   * @param string $engineClass The engine class name.
+   * @throws \InvalidArgumentException
+   * @return void
+   */
+  public static function extend(string $name, string $engineClass)
+  {
+    if (!is_a($engineClass, Engine::class, true)) {
+      throw new \InvalidArgumentException("Engine class must implement " . Engine::class);
+    }
+
+    self::$engines[$name] = $engineClass;
+  }
 }

@@ -216,6 +216,19 @@ class Filterable implements FilterableContext, Authorizable, Validatable
   }
 
   /**
+   * Create and return a new Filterable instance after applying the given callback.
+   *
+   * @param callable \Closure(static): void  $callback  A callback that receives the instance for configuration.
+   * @return static
+   */
+  public static function tap(callable $callback, $instance = null): static
+  {
+    $instance = $instance ?: new static;
+    $callback($instance);
+    return $instance;
+  }
+  
+  /**
    * Add a sorting callback for a specific filterable.
    * 
    * @param string|array $filterable
@@ -373,7 +386,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable
    * @param bool $condition
    * @param callable(static): void $callback
    * @return static
-   * @link https://kettasoft.github.io/filterable/features/conditional-logic-with-when
+   * @link https://kettasoft.github.io/filterable/features/conditional-logic
    */
   public function when(bool $condition, callable $callback)
   {
@@ -382,6 +395,18 @@ class Filterable implements FilterableContext, Authorizable, Validatable
     }
 
     return $this;
+  }
+
+  /**
+   * Inverse of `when` method.
+   * @param bool $condition
+   * @param callable(static): void $callback
+   * @return static
+   * @link https://kettasoft.github.io/filterable/features/conditional-logic
+   */
+  public function unless(bool $condition, callable $callback)
+  {
+    return $this->when(!$condition, $callback);
   }
 
   /**
