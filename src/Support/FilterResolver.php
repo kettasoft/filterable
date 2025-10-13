@@ -49,7 +49,7 @@ class FilterResolver
       return $this->forwardCallTo($this->filter, 'apply', [$this->builder]);
     }
 
-    if (is_string($this->filter) && $filter = config('filterable.aliases')->get($this->filter)) {
+    if (is_string($this->filter) && $filter = config('filterable.aliases')[$this->filter] ?? null) {
       return $this->apply($filter);
     }
 
