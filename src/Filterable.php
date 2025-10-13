@@ -129,7 +129,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable
    * Aliases of filter class
    * @var array
    */
-  protected static Collection $aliases;
+  protected static $aliases;
 
   /**
    * The Sanitizer instance.
@@ -227,7 +227,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable
     $callback($instance);
     return $instance;
   }
-  
+
   /**
    * Add a sorting callback for a specific filterable.
    * 
@@ -247,7 +247,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable
         return;
       }
 
-      if (! is_callable($callback) && ! $callback instanceof Invokable) {
+      if (!is_callable($callback) && !$callback instanceof Invokable) {
         throw new \InvalidArgumentException('The sorting callback must be a callable or an instance of ' . Invokable::class);
       }
 
@@ -303,11 +303,11 @@ class Filterable implements FilterableContext, Authorizable, Validatable
 
   /**
    * Get all aliases.
-   * @return Collection
+   * @return array
    */
   public static function aliases(array $aliases)
   {
-    self::$aliases = collect($aliases);
+    self::$aliases = $aliases;
 
     return self::$aliases;
   }
@@ -319,9 +319,11 @@ class Filterable implements FilterableContext, Authorizable, Validatable
    */
   private function initQueryBuilderInstance(Builder|null $builder = null)
   {
-    if ($builder) return $builder;
+    if ($builder)
+      return $builder;
 
-    if (isset($this->builder)) return $this->builder;
+    if (isset($this->builder))
+      return $this->builder;
 
     if ($this->model instanceof Model) {
       return $this->model->query();
@@ -419,7 +421,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable
   public function through(array $pipes): static
   {
     foreach ($pipes as $pipe) {
-      if (! is_callable($pipe)) {
+      if (!is_callable($pipe)) {
         throw new \InvalidArgumentException('All pipes passed to `through` must be callable.');
       }
 
