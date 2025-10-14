@@ -16,6 +16,7 @@ use Kettasoft\Filterable\Contracts\Authorizable;
 use Kettasoft\Filterable\Sanitization\Sanitizer;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
 use Kettasoft\Filterable\Foundation\Sorting\Sorter;
+use Kettasoft\Filterable\Traits\HasFilterableEvents;
 use Kettasoft\Filterable\Contracts\FilterableContext;
 use Kettasoft\Filterable\Engines\Factory\EngineManager;
 use Kettasoft\Filterable\Foundation\Contracts\Sortable;
@@ -28,9 +29,11 @@ use Kettasoft\Filterable\Engines\Foundation\Executors\Executer;
 use Kettasoft\Filterable\Foundation\Contracts\Sorting\Invokable;
 use Kettasoft\Filterable\Traits\InteractsWithRelationsFiltering;
 use Kettasoft\Filterable\Traits\InteractsWithFilterAuthorization;
+use Kettasoft\Filterable\Foundation\Events\FilterableEventManager;
 use Kettasoft\Filterable\HttpIntegration\HeaderDrivenEngineSelector;
 use Kettasoft\Filterable\Foundation\Contracts\ShouldReturnQueryBuilder;
 use Kettasoft\Filterable\Exceptions\RequestSourceIsNotSupportedException;
+use Kettasoft\Filterable\Foundation\Events\Contracts\EventManager;
 
 class Filterable implements FilterableContext, Authorizable, Validatable
 {
@@ -39,6 +42,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable
     InteractsWithFilterAuthorization,
     InteractsWithValidation,
     InteractsWithRelationsFiltering,
+    HasFilterableEvents,
     Macroable;
 
   /**
@@ -149,16 +153,71 @@ class Filterable implements FilterableContext, Authorizable, Validatable
   protected $shouldReturnQueryBuilder = false;
 
   /**
+   * Event manager instance.
+   * @var EventManager
+   */
+  protected static EventManager $eventManager;
+
+  /**
    * Create a new Filterable instance.
    * @param Request|null $request
    */
   public function __construct(Request|null $request = null)
   {
+    $this->boot($request);
+    $this->booting();
+    $this->booted();
+  }
+
+  /**
+   * Initialize core dependencies and fire the initializing event.
+   * 
+   * @return void
+   */
+  public function boot($request = null)
+  {
     $this->request = $request ?: App::make(Request::class);
+    $this->registerEventManager();
+
+    // Fire initializing event
+    $this->fireEvent('filterable.initializing', ['filterable' => $this]);
+  }
+
+  /**
+   * Prepare, engine, and internal components.
+   * 
+   * @return void
+   */
+  public function booting()
+  {
     $this->sanitizer = new Sanitizer($this->sanitizers);
     $this->resources = new Resources($this->settings());
     $this->resolveEngine();
     $this->parseIncommingRequestData();
+  }
+
+  /**
+   * Finalize setup and fire the booted event.
+   * 
+   * @return void
+   */
+  public function booted()
+  {
+    // Fire resolved event after initialization is complete
+    $this->fireEvent('filterable.resolved', [
+      'engine' => $this->engine,
+      'data' => $this->data,
+    ]);
+  }
+
+  /**
+   * Register the event manager instance.
+   * @param array $options
+   * @return void
+   */
+  private function registerEventManager(array $options = [])
+  {
+    self::$eventManager = App::make(FilterableEventManager::class, $options);
   }
 
   /**
@@ -193,26 +252,47 @@ class Filterable implements FilterableContext, Authorizable, Validatable
    */
   public function apply(Builder|null $builder = null): Invoker|Builder
   {
-    App::make(Pipeline::class)->send($this)->through([
-      \Kettasoft\Filterable\Pipes\FilterAuthorizationPipe::class,
-      \Kettasoft\Filterable\Pipes\ValidateBeforeFilteringPipe::class
-    ])->thenReturn();
+    try {
+      App::make(Pipeline::class)->send($this)->through([
+        \Kettasoft\Filterable\Pipes\FilterAuthorizationPipe::class,
+        \Kettasoft\Filterable\Pipes\ValidateBeforeFilteringPipe::class
+      ])->thenReturn();
 
-    $builder = $this->initQueryBuilderInstance($builder);
+      $builder = $this->initQueryBuilderInstance($builder);
 
-    $this->builder = $builder;
+      $this->builder = $builder;
 
-    $builder = Executer::execute($this->engine, $builder);
+      $builder = Executer::execute($this->engine, $builder);
 
-    if (isset(self::$sorters[static::class])) {
-      $builder = static::getSorting(static::class)?->apply($builder);
+      if (isset(self::$sorters[static::class])) {
+        $builder = static::getSorting(static::class)?->apply($builder);
+      }
+
+      // Fire applied event on success
+      $this->fireEvent('filterable.applied', [
+        'filterable' => $this
+      ]);
+
+      if ($this instanceof ShouldReturnQueryBuilder || $this->shouldReturnQueryBuilder) {
+        return $builder;
+      }
+
+      return new Invoker($builder);
+    } catch (\Throwable $exception) {
+      // Fire failed event on exception
+      $this->fireEvent('filterable.failed', [
+        'exception' => $exception,
+        'filterable' => $this,
+      ]);
+
+      // Re-throw the exception after firing the event
+      throw $exception;
+    } finally {
+      // Always fire finished event
+      $this->fireEvent('filterable.finished', [
+        'filterable' => $this,
+      ]);
     }
-
-    if ($this instanceof ShouldReturnQueryBuilder || $this->shouldReturnQueryBuilder) {
-      return $builder;
-    }
-
-    return new Invoker($builder);
   }
 
   /**
