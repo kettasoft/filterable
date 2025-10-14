@@ -11,6 +11,14 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Kettasoft\Filterable\Filterable create(\Illuminate\Http\Request|null $request = null) Create new Filterable instance.
  * @method static \Kettasoft\Filterable\Filterable withRequest(\Illuminate\Http\Request $request) Create new Filterable instance with custom Request.
  * 
+ * Static Event Methods:
+ * @method static void on(string $event, callable $callback) Register a global event listener.
+ * @method static void observe(string $filterClass, callable $callback) Register an observer for a specific filter class.
+ * @method static void flushListeners() Remove all registered event listeners and observers.
+ * @method static array getListeners(string $event) Get all registered listeners for a specific event.
+ * @method static array getObservers(string $filterClass) Get all registered observers for a specific filter class.
+ * @method static void resetEventManager() Reset the event manager instance.
+ * 
  * Static Sorting Methods:
  * @method static void addSorting(string|array $filterable, callable|string|\Kettasoft\Filterable\Foundation\Contracts\Sorting\Invokable $callback, \Illuminate\Http\Request|null $request = null) Add a sorting callback for a specific filterable.
  * @method static \Kettasoft\Filterable\Foundation\Contracts\Sortable|null getSorting(string $filterClass) Get sorting rules for a Filterable class.
@@ -53,6 +61,10 @@ use Illuminate\Support\Facades\Facade;
  * Value Processing:
  * @method static \Kettasoft\Filterable\Filterable ignoreEmptyValues() Ignore empty or null values.
  * @method static bool hasIgnoredEmptyValues() Check if current filterable class has ignored empty values.
+ * 
+ * Event Control:
+ * @method static \Kettasoft\Filterable\Filterable enableEvents() Enable events for this specific filterable instance.
+ * @method static \Kettasoft\Filterable\Filterable disableEvents() Disable events for this specific filterable instance.
  * 
  * Header-Driven Mode:
  * @method static \Kettasoft\Filterable\Filterable withHeaderDrivenMode(mixed $config = []) Enable Header-driven mode per request.

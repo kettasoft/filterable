@@ -660,4 +660,35 @@ return [
         */
         'log_channel' => env('FILTERABLE_PROFILER_LOG_CHANNEL', 'daily'),
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Event System
+    |--------------------------------------------------------------------------
+    |
+    | Configure the filterable event system, which allows you to listen to
+    | lifecycle events during filtering operations.
+    |
+    */
+    'events' => [
+
+        /*
+        |--------------------------------------------------------------------------
+        | Enable or Disable Event System
+        |--------------------------------------------------------------------------
+        |
+        | This option allows you to enable or disable the event system globally.
+        | When disabled, no event listeners or observers will be triggered,
+        | which can improve performance if you don't need event functionality.
+        |
+        | Available events:
+        | - filterable.initializing: When a new Filterable instance is created
+        | - filterable.resolved: After resolving engine and request data
+        | - filterable.applied: After filters are executed successfully
+        | - filterable.failed: If any exception occurs during apply
+        | - filterable.finished: At the end of filtering lifecycle
+        |
+        */
+        'enabled' => env('FILTERABLE_EVENTS_ENABLED', true),
+    ],
 ];
