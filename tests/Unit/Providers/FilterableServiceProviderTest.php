@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Artisan;
 use Kettasoft\Filterable\Tests\TestCase;
 use Kettasoft\Filterable\Commands\MakeFilterCommand;
 use Kettasoft\Filterable\Providers\FilterableServiceProvider;
+use Kettasoft\Filterable\Foundation\Events\FilterableEventManager;
 use Kettasoft\Filterable\Foundation\Profiler\Storage\FileProfilerStorage;
 use Kettasoft\Filterable\Foundation\Profiler\Storage\DatabaseProfilerStorage;
 use Kettasoft\Filterable\Foundation\Profiler\Contracts\ProfilerStorageContract;
@@ -113,6 +114,8 @@ class FilterableServiceProviderTest extends TestCase
         $expectedServices = [
             'filterable',
             Filterable::class,
+            FilterableEventManager::class,
+            'filterable.events',
             ProfilerStorageContract::class,
         ];
 

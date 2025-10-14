@@ -10,6 +10,7 @@ use Kettasoft\Filterable\Commands\MakeFilterCommand;
 use Kettasoft\Filterable\Foundation\Profiler\Contracts\ProfilerStorageContract;
 use Kettasoft\Filterable\Foundation\Profiler\Storage\DatabaseProfilerStorage;
 use Kettasoft\Filterable\Foundation\Profiler\Storage\FileProfilerStorage;
+use Kettasoft\Filterable\Foundation\Events\FilterableEventManager;
 use InvalidArgumentException;
 
 /**
@@ -89,6 +90,7 @@ class FilterableServiceProvider extends ServiceProvider
     {
         $this->mergeConfiguration();
         $this->registerCoreBindings();
+        $this->registerEventManager();
         $this->registerProfilerStorage();
         $this->registerExtensions();
     }
@@ -160,6 +162,25 @@ class FilterableServiceProvider extends ServiceProvider
     }
 
     /**
+     * Register the FilterableEventManager as a singleton.
+     * 
+     * This ensures that only one instance of the event manager exists
+     * throughout the application lifecycle, maintaining consistent
+     * event listener registration across the entire application.
+     *
+     * @return void
+     */
+    protected function registerEventManager(): void
+    {
+        $this->app->singleton(FilterableEventManager::class, function (Application $app): FilterableEventManager {
+            return FilterableEventManager::getInstance(config('filterable.events', []));
+        });
+
+        // Register alias for easy access
+        $this->app->alias(FilterableEventManager::class, 'filterable.events');
+    }
+
+    /**
      * Register profiler storage implementations.
      * 
      * Uses a factory pattern to create storage instances based on
@@ -172,7 +193,7 @@ class FilterableServiceProvider extends ServiceProvider
     {
         $this->app->bind(ProfilerStorageContract::class, function (Application $app): ProfilerStorageContract {
             $driver = config('filterable.profiler.store', 'database');
-            
+
             if (!isset(static::PROFILER_DRIVERS[$driver])) {
                 throw new InvalidArgumentException(
                     "Unsupported profiler storage driver [{$driver}]. " .
@@ -181,7 +202,7 @@ class FilterableServiceProvider extends ServiceProvider
             }
 
             $storageClass = static::PROFILER_DRIVERS[$driver];
-            
+
             return $app->make($storageClass);
         });
     }
@@ -270,6 +291,8 @@ class FilterableServiceProvider extends ServiceProvider
         return [
             self::FACADE_BINDING,
             Filterable::class,
+            FilterableEventManager::class,
+            'filterable.events',
             ProfilerStorageContract::class,
         ];
     }
