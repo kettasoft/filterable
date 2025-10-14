@@ -140,6 +140,10 @@ export default defineUserConfig({
                 ],
             },
             {
+                text: "Event System",
+                link: "events",
+            },
+            {
                 text: "Profiler",
                 link: "profiler",
             },
