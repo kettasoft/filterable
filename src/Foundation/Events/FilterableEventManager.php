@@ -273,7 +273,7 @@ class FilterableEventManager implements EventManager
         $eventName = str_replace('filterable.', '', $event);
 
         foreach ($this->observers[$filterClass] as $observer) {
-            $this->executeObserver($observer, $eventName, $payload);
+            $this->executeObserver($observer, $eventName, $payload[0]);
         }
     }
 
@@ -310,7 +310,7 @@ class FilterableEventManager implements EventManager
      * 
      * @return void
      */
-    protected function executeObserver(callable $observer, string $event, array $payload): void
+    protected function executeObserver(callable $observer, string $event, array ...$payload): void
     {
         try {
             call_user_func($observer, $event, $payload);
