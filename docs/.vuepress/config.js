@@ -144,6 +144,10 @@ export default defineUserConfig({
                 link: "events",
             },
             {
+                text: "Profile Management",
+                link: "profile-management",
+            },
+            {
                 text: "Profiler",
                 link: "profiler",
             },
