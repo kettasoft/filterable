@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Kettasoft\Filterable\Filterable;
 use Kettasoft\Filterable\Tests\TestCase;
 use Kettasoft\Filterable\Tests\Models\Post;
-use Kettasoft\Filterable\Engines\Invokeable;
+use Kettasoft\Filterable\Engines\Invokable;
 use Kettasoft\Filterable\Support\Payload;
 
 class InvokableEngineWithMethodInjectionTest extends TestCase
@@ -15,7 +15,7 @@ class InvokableEngineWithMethodInjectionTest extends TestCase
     {
         parent::setUp();
 
-        Invokeable::injectGlobalMethod('withTrashed', function ($payload) {
+        Invokable::injectGlobalMethod('withTrashed', function ($payload) {
             return $this->builder->where('deleted_at', '!=', null);
         });
     }
@@ -27,12 +27,12 @@ class InvokableEngineWithMethodInjectionTest extends TestCase
 
         $filter = Filterable::create($request)->tap(function (Filterable $filterable) {
             $filterable->setFilters(['with_trashed']);
-            $filterable->useEngin(Invokeable::class);
+            $filterable->useEngin(Invokable::class);
         });
 
         $invoker = Post::filter($filter);
 
-        $this->assertTrue(Invokeable::hasInjectedMethod('withTrashed'));
+        $this->assertTrue(Invokable::hasInjectedMethod('withTrashed'));
         $this->assertStringContainsString('"deleted_at" is not null', $invoker->toSql());
     }
 }

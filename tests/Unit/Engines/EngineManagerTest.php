@@ -8,7 +8,7 @@ use Kettasoft\Filterable\Tests\TestCase;
 use Illuminate\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Engines\Ruleset;
 use Kettasoft\Filterable\Engines\Expression;
-use Kettasoft\Filterable\Engines\Invokeable;
+use Kettasoft\Filterable\Engines\Invokable;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
 use Kettasoft\Filterable\Engines\Factory\EngineManager;
 
@@ -52,12 +52,12 @@ class EngineManagerTest extends TestCase
   {
     $engine = EngineManager::generate('invokable', new Filterable());
 
-    $this->assertInstanceOf(Invokeable::class, $engine);
+    $this->assertInstanceOf(Invokable::class, $engine);
   }
 
   public function test_it_can_create_custom_engine_from_engine_manager()
   {
-    $engine = new class (new Filterable()) extends Engine {
+    $engine = new class(new Filterable()) extends Engine {
 
       public function execute(Builder $builder): Builder
       {

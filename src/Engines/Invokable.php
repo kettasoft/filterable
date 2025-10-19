@@ -13,7 +13,7 @@ use Kettasoft\Filterable\Engines\Foundation\Attributes\AttributeContext;
 use Kettasoft\Filterable\Engines\Foundation\Attributes\AttributePipeline;
 use Kettasoft\Filterable\Filterable;
 
-class Invokeable extends Engine
+class Invokable extends Engine
 {
   use ForwardsCalls;
 
