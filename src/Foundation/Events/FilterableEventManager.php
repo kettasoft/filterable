@@ -295,7 +295,6 @@ class FilterableEventManager implements EventManager
                 // TODO: Implement queue dispatching in future release
                 // For now, execute synchronously
             }
-
         } catch (Throwable $e) {
             $this->handleListenerException($e, $event, 'listener');
         }
@@ -313,7 +312,7 @@ class FilterableEventManager implements EventManager
     protected function executeObserver(callable $observer, string $event, array ...$payload): void
     {
         try {
-            call_user_func($observer, $event, $payload);
+            call_user_func($observer, new FilterableState($event), $payload);
         } catch (Throwable $e) {
             $this->handleListenerException($e, $event, 'observer');
         }

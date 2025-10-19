@@ -140,7 +140,7 @@ class FilterableEventSystemTest extends TestCase
         $observerCalled = false;
 
         Filterable::observe(PostFilter::class, function ($event, $payload) use (&$observerCalled) {
-            if ($event === 'applied') {
+            if ($event->is('applied')) {
                 $observerCalled = true;
             }
         });
@@ -345,7 +345,7 @@ class FilterableEventSystemTest extends TestCase
     {
         $receivedEvents = [];
 
-        Filterable::observe(PostFilter::class, function ($event, $payload) use (&$receivedEvents) {
+        Filterable::observe(PostFilter::class, function (string $event, $payload) use (&$receivedEvents) {
             $receivedEvents[] = $event;
         });
 
