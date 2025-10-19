@@ -212,6 +212,17 @@ class Filterable implements FilterableContext, Authorizable, Validatable
   }
 
   /**
+   * Set registered filters to operate upon.
+   * @param array $filters
+   * @return static
+   */
+  public function setFilters(array $filters, bool $override = true): static
+  {
+    $this->filters = $override ? $filters : array_merge($this->data, $filters);
+    return $this;
+  }
+
+  /**
    * Apply a filterable profile to the current instance.
    * 
    * @param FilterableProfile|string $profile
