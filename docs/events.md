@@ -120,12 +120,13 @@ Observers are called only for specific filter classes. This is ideal for filter-
 ```php
 use App\Http\Filters\PostFilter;
 use Kettasoft\Filterable\Filterable;
+use Kettasoft\Filterable\Foundation\Events\FilterableState;
 
-Filterable::observe(PostFilter::class, function ($event, Filterable $filterable) {
+Filterable::observe(PostFilter::class, function (FilterableState $event, Filterable $filterable) {
     // $event is the event name without 'filterable.' prefix
     // $filterable is instance of Filterable
 
-    if ($event === 'applied') {
+    if ($event->is('applied')) {
         activity()
             ->causedBy(auth()->user())
             ->performedOn($filterable->getModel())
@@ -137,7 +138,7 @@ Filterable::observe(PostFilter::class, function ($event, Filterable $filterable)
 **Multiple Observers:**
 
 ```php
-Filterable::observe(UserFilter::class, function ($event, Filterable $filterable) {
+Filterable::observe(UserFilter::class, function (string $event, Filterable $filterable) {
     match ($event) {
         'initializing' => logger()->info("UserFilter initializing"),
         'applied' => logger()->info("UserFilter applied successfully"),
