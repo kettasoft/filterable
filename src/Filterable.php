@@ -33,6 +33,7 @@ use Kettasoft\Filterable\Foundation\Events\FilterableEventManager;
 use Kettasoft\Filterable\HttpIntegration\HeaderDrivenEngineSelector;
 use Kettasoft\Filterable\Foundation\Contracts\ShouldReturnQueryBuilder;
 use Kettasoft\Filterable\Exceptions\RequestSourceIsNotSupportedException;
+use Kettasoft\Filterable\Foundation\Contracts\FilterableProfile;
 use Kettasoft\Filterable\Foundation\Events\Contracts\EventManager;
 
 class Filterable implements FilterableContext, Authorizable, Validatable
@@ -208,6 +209,47 @@ class Filterable implements FilterableContext, Authorizable, Validatable
       'engine' => $this->engine,
       'data' => $this->data,
     ]);
+  }
+
+  /**
+   * Apply a filterable profile to the current instance.
+   * 
+   * @param FilterableProfile|string $profile
+   * @return static
+   */
+  public function useProfile(FilterableProfile|callable|string $profile): static
+  {
+    // Handle callable or FilterableProfile instance directly
+    if (is_callable($profile)) {
+      $profile($this);
+      return $this;
+    }
+
+    if ($profile instanceof FilterableProfile) {
+      $profile($this);
+      return $this;
+    }
+
+    // Handle string references (class name or config key)
+    if (is_string($profile)) {
+      $profiles = config('filterable.profiles', []);
+      $resolved = $profiles[$profile] ?? $profile;
+
+      // If still not found or invalid, return as-is
+      if (!class_exists($resolved)) {
+        return $this;
+      }
+
+      $instance = App::make($resolved);
+
+      if (is_callable($instance)) {
+        $instance($this);
+      }
+
+      return $this;
+    }
+
+    return $this;
   }
 
   /**
