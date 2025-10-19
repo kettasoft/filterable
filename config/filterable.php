@@ -74,6 +74,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Filter Profiles
+    |--------------------------------------------------------------------------
+    | Configure filter profiles for different contexts or models.
+    | Each profile maps to a class that implements the FilterableProfile interface.
+    | Profiles allow you to encapsulate complex filtering logic and reuse it
+    | across different parts of your application.
+    */
+    'profiles' => [
+        // 'users' => 'App\Http\Filters\Users\Profiles\UserFilterProfile',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Sorting
     |--------------------------------------------------------------------------
     |
