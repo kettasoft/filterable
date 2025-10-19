@@ -11,10 +11,18 @@ use Kettasoft\Filterable\Engines\Foundation\Engine;
 use Kettasoft\Filterable\Support\ConditionNormalizer;
 use Kettasoft\Filterable\Engines\Foundation\Attributes\AttributeContext;
 use Kettasoft\Filterable\Engines\Foundation\Attributes\AttributePipeline;
+use Kettasoft\Filterable\Filterable;
 
 class Invokeable extends Engine
 {
   use ForwardsCalls;
+
+  /**
+   * Injected methods.
+   *
+   * @var array
+   */
+  protected static $injectedMethods = [];
 
   /**
    * Engine name.
@@ -53,6 +61,49 @@ class Invokeable extends Engine
   }
 
   /**
+   * Inject a global method.
+   *
+   * @template TFilterable of \Kettasoft\Filterable\Filterable
+   * @param string $name
+   * @param callable(\Kettasoft\Filterable\Support\Payload): mixed $callback
+   *        The callback will be bound to the Filterable instance at runtime.
+   * @return void
+   */
+  public static function injectGlobalMethod(string $name, callable $callback): void
+  {
+    self::$injectedMethods[$name] = $callback instanceof \Closure
+      ? $callback
+      : \Closure::fromCallable($callback);
+  }
+
+  /**
+   * Check if a method has been injected.
+   *
+   * @param string $name
+   * @return bool
+   */
+  public static function hasInjectedMethod(string $name): bool
+  {
+    return array_key_exists($name, self::$injectedMethods);
+  }
+
+  /**
+   * Resolve and execute an injected method.
+   *
+   * @template TFilterable of \Kettasoft\Filterable\Filterable
+   * @param string $method
+   * @param \Kettasoft\Filterable\Filterable $context
+   * @param \Kettasoft\Filterable\Support\Payload $payload
+   * @return void
+   */
+  protected static function resolveInjectedMethods(string $method, Filterable $context, Payload $payload): void
+  {
+    $callback = self::$injectedMethods[$method];
+    $bound = $callback->bindTo($context, $context::class);
+    $bound($payload);
+  }
+
+  /**
    * Initialize the filter methods and resolve value.
    * @param string $method
    * @param mixed $value
@@ -65,11 +116,14 @@ class Invokeable extends Engine
     $operator = $clause['operator'];
     $val = $clause['value'];
 
-    if (! method_exists($this->context, $method)) {
-      return;
-    }
-
     $payload = new Payload($key, $operator, $this->sanitizeValue($key, $val), $val);
+
+    if (! method_exists($this->context, $method)) {
+      if (self::hasInjectedMethod($method)) {
+        self::resolveInjectedMethods($method, $this->context, $payload);
+        return;
+      }
+    }
 
     $attrContext = new AttributeContext(
       $this->builder,
