@@ -4,7 +4,6 @@ namespace Kettasoft\Filterable;
 
 use Illuminate\Http\Request;
 use Illuminate\Pipeline\Pipeline;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Traits\Macroable;
@@ -16,19 +15,13 @@ use Kettasoft\Filterable\Contracts\Authorizable;
 use Kettasoft\Filterable\Sanitization\Sanitizer;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
 use Kettasoft\Filterable\Foundation\Sorting\Sorter;
-use Kettasoft\Filterable\Traits\HasFilterableEvents;
 use Kettasoft\Filterable\Contracts\FilterableContext;
 use Kettasoft\Filterable\Engines\Factory\EngineManager;
 use Kettasoft\Filterable\Foundation\Contracts\Sortable;
 use Kettasoft\Filterable\Foundation\FilterableSettings;
-use Kettasoft\Filterable\Traits\InteractsWithFilterKey;
-use Kettasoft\Filterable\Traits\InteractsWithValidation;
 use Kettasoft\Filterable\Exceptions\MissingBuilderException;
-use Kettasoft\Filterable\Traits\InteractsWithMethodMentoring;
 use Kettasoft\Filterable\Engines\Foundation\Executors\Executer;
 use Kettasoft\Filterable\Foundation\Contracts\Sorting\Invokable;
-use Kettasoft\Filterable\Traits\InteractsWithRelationsFiltering;
-use Kettasoft\Filterable\Traits\InteractsWithFilterAuthorization;
 use Kettasoft\Filterable\Foundation\Events\FilterableEventManager;
 use Kettasoft\Filterable\HttpIntegration\HeaderDrivenEngineSelector;
 use Kettasoft\Filterable\Foundation\Contracts\ShouldReturnQueryBuilder;
@@ -38,12 +31,12 @@ use Kettasoft\Filterable\Foundation\Events\Contracts\EventManager;
 
 class Filterable implements FilterableContext, Authorizable, Validatable
 {
-  use InteractsWithFilterKey,
-    InteractsWithMethodMentoring,
-    InteractsWithFilterAuthorization,
-    InteractsWithValidation,
-    InteractsWithRelationsFiltering,
-    HasFilterableEvents,
+  use Traits\InteractsWithFilterKey,
+    Traits\InteractsWithMethodMentoring,
+    Traits\InteractsWithFilterAuthorization,
+    Traits\InteractsWithValidation,
+    Traits\InteractsWithRelationsFiltering,
+    Traits\HasFilterableEvents,
     Macroable;
 
   /**
