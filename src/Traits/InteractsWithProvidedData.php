@@ -52,8 +52,12 @@ trait InteractsWithProvidedData
      * @param mixed $default
      * @return mixed
      */
-    public function provided(string $key, $default = null)
+    public function provided(string|null $key = null, $default = null)
     {
+        if ($key === null) {
+            return self::$provided;
+        }
+
         return $this->hasProvided($key) ? self::$provided[$key] : $default;
     }
 }
