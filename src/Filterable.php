@@ -37,6 +37,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable
     Traits\InteractsWithValidation,
     Traits\InteractsWithRelationsFiltering,
     Traits\HasFilterableEvents,
+    Traits\InteractsWithProvidedData,
     Macroable;
 
   /**
