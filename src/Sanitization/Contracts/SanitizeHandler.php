@@ -6,9 +6,9 @@ interface SanitizeHandler
 {
   /**
    * SanitizeHandler constructor.
-   * @param \Kettasoft\Filterable\Sanitization\Contracts\HasSanitize|\Closure|string|array $sanitizer
+   * @param \Kettasoft\Filterable\Sanitization\Contracts\Sanitizable|\Closure|string|array $sanitizer
    */
-  public function __construct(HasSanitize|\Closure|string|array $sanitizer);
+  public function __construct(Sanitizable|\Closure|string|array $sanitizer);
 
   /**
    * Handle incomming sanitizer.
