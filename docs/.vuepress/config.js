@@ -80,7 +80,6 @@ export default defineUserConfig({
                         text: "Header-Driven Filter Mode",
                         link: "features/header-driven-filter-mode",
                     },
-
                     {
                         text: "Auto Register Filterable Macro",
                         link: "features/auto-register-filterable-macro",
@@ -104,6 +103,10 @@ export default defineUserConfig({
                     {
                         text: "Custom engines",
                         link: "features/custom-engines",
+                    },
+                    {
+                        text: "Data Provisioning",
+                        link: "features/data-provisioning",
                     },
                 ],
             },
