@@ -4,17 +4,20 @@ namespace Kettasoft\Filterable\Foundation;
 
 use Closure;
 use Serializable;
+use DateTimeInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
-use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Traits\ForwardsCalls;
+use function Opis\Closure\{serialize, unserialize};
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Kettasoft\Filterable\Foundation\Profiler\Profiler;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Kettasoft\Filterable\Foundation\Caching\CacheKeyGenerator;
 use Kettasoft\Filterable\Foundation\Contracts\HasDynamicCalls;
 use Kettasoft\Filterable\Foundation\Traits\HandleFluentReturn;
-use Kettasoft\Filterable\Foundation\Contracts\QueryBuilderInterface;
 
-use function Opis\Closure\{serialize, unserialize};
+use Kettasoft\Filterable\Foundation\Caching\FilterableCacheManager;
+use Kettasoft\Filterable\Foundation\Contracts\QueryBuilderInterface;
 
 /**
  * Class Invoker
@@ -50,6 +53,41 @@ class Invoker implements QueryBuilderInterface, Serializable, HasDynamicCalls
    * @var Closure|null
    */
   protected $errorCallback;
+
+  /**
+   * Whether caching is enabled for this invoker
+   *
+   * @var bool
+   */
+  protected bool $cachingEnabled = false;
+
+  /**
+   * Cache key
+   *
+   * @var string|null
+   */
+  protected ?string $cacheKey = null;
+
+  /**
+   * Cache TTL
+   *
+   * @var DateTimeInterface|int|null
+   */
+  protected DateTimeInterface|int|null $cacheTtl = null;
+
+  /**
+   * Cache tags
+   *
+   * @var array
+   */
+  protected array $cacheTags = [];
+
+  /**
+   * Whether to cache forever
+   *
+   * @var bool
+   */
+  protected bool $cacheForever = false;
 
   /**
    * Create a new Invoker instance.
@@ -149,11 +187,73 @@ class Invoker implements QueryBuilderInterface, Serializable, HasDynamicCalls
   /**
    * Get the underlying query builder instance.
    *
-   * @return Builder|EloquentBuilder|QueryBuilderInterface
+   * @return QueryBuilder|EloquentBuilder|QueryBuilderInterface
    */
-  public function getBuilder(): EloquentBuilder|Builder|QueryBuilderInterface
+  public function getBuilder(): EloquentBuilder|QueryBuilder|QueryBuilderInterface
   {
     return $this->builder;
+  }
+
+  /**
+   * Enable caching for this invoker
+   *
+   * @param string $cacheKey
+   * @param DateTimeInterface|int|null $ttl
+   * @param array $tags
+   * @param bool $forever
+   * @return self
+   */
+  public function enableCaching(
+    string $cacheKey,
+    DateTimeInterface|int|null $ttl = null,
+    array $tags = [],
+    bool $forever = false
+  ): self {
+    $this->cachingEnabled = true;
+    $this->cacheKey = $cacheKey;
+    $this->cacheTtl = $ttl;
+    $this->cacheTags = $tags;
+    $this->cacheForever = $forever;
+
+    return $this;
+  }
+
+  /**
+   * Check if this is a terminal method that should fetch data
+   *
+   * @param string $method
+   * @return bool
+   */
+  protected function isTerminalMethod(string $method): bool
+  {
+    return in_array($method, [
+      'get',
+      'first',
+      'find',
+      'findOrFail',
+      'sole',
+      'value',
+      'pluck',
+      'implode',
+      'exists',
+      'doesntExist',
+      'count',
+      'min',
+      'max',
+      'sum',
+      'avg',
+      'average',
+      'paginate',
+      'simplePaginate',
+      'cursorPaginate',
+      'chunk',
+      'chunkById',
+      'each',
+      'eachById',
+      'lazy',
+      'lazyById',
+      'lazyByIdDesc'
+    ]);
   }
 
   /**
@@ -235,7 +335,12 @@ class Invoker implements QueryBuilderInterface, Serializable, HasDynamicCalls
     }
 
     try {
-      $result = $this->handleFluentReturn($method, $args);
+      // Check if caching is enabled and this is a terminal method
+      if ($this->cachingEnabled && $this->isTerminalMethod($method)) {
+        $result = $this->executionWithCache($method, $args);
+      } else {
+        $result = $this->handleFluentReturn($method, $args);
+      }
 
       if (is_callable($this->afterCallback)) {
         return call_user_func($this->afterCallback, $result);
@@ -249,5 +354,32 @@ class Invoker implements QueryBuilderInterface, Serializable, HasDynamicCalls
 
       throw $th;
     }
+  }
+
+  /**
+   * Execute a terminal method with caching
+   *
+   * @param string $method
+   * @param array $args
+   * @return mixed
+   */
+  protected function executionWithCache(string $method, array $args): mixed
+  {
+    $manager = FilterableCacheManager::getInstance()
+      ->withTags($this->cacheTags);
+
+    // Use the pre-generated cache key and append method+args for uniqueness
+    $methodArgsHash = md5(json_encode(['method' => $method, 'args' => $args]));
+    $fullCacheKey = $this->cacheKey . ':' . $method . ':' . $methodArgsHash;
+
+    if ($this->cacheForever) {
+      return $manager->rememberForever($fullCacheKey, function () use ($method, $args) {
+        return $this->forwardCallTo($this->builder, $method, $args);
+      });
+    }
+
+    return $manager->remember($fullCacheKey, $this->cacheTtl, function () use ($method, $args) {
+      return $this->forwardCallTo($this->builder, $method, $args);
+    });
   }
 }
