@@ -38,6 +38,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable
     Traits\InteractsWithRelationsFiltering,
     Traits\HasFilterableEvents,
     Traits\InteractsWithProvidedData,
+    Traits\HasFilterableCache,
     Macroable;
 
   /**
@@ -313,7 +314,19 @@ class Filterable implements FilterableContext, Authorizable, Validatable
         return $builder;
       }
 
-      return new Invoker($builder);
+      $invoker = new Invoker($builder);
+      
+      // Pass caching settings to invoker
+      if ($this->isCachingEnabled()) {
+        $invoker->enableCaching(
+          $this->generateCacheKey(),
+          $this->getCacheTtl(),
+          $this->getCacheTags(),
+          $this->cacheForever
+        );
+      }
+
+      return $invoker;
     } catch (\Throwable $exception) {
       // Fire failed event on exception
       $this->fireEvent('filterable.failed', [
