@@ -26,5 +26,8 @@ class ConditionNormalizer
         'value' => array_values($condition)[0] ?? null
       ];
     }
+
+    // Default case: return operator and condition as-is
+    return ['operator' => $operator, 'value' => $condition];
   }
 }
