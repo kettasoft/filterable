@@ -22,7 +22,8 @@ class FilterProfilerTest extends TestCase
       $triggered = true;
     });
 
-    $profiler = app(Profiler::class);
+    // Create a fresh profiler instance for this test
+    $profiler = $this->app->make(Profiler::class);
     $profiler->start();
 
     // Simulate a slow query manually
@@ -36,13 +37,15 @@ class FilterProfilerTest extends TestCase
   {
     $triggered = false;
 
-    app(Profiler::class)->dispatcher()->listen('onDuplicateQuery', function ($dup) use (&$triggered) {
+    // Create a fresh profiler instance for this test
+    $profiler = $this->app->make(Profiler::class);
+
+    $profiler->dispatcher()->listen('onDuplicateQuery', function ($dup) use (&$triggered) {
       $this->assertEquals('select 1', $dup['sql']);
       $this->assertEquals(2, $dup['count']);
       $triggered = true;
     });
 
-    $profiler = app(Profiler::class);
     $profiler->start();
 
     $event1 = new QueryExecuted('select 1', [], 5, DB::connection());
