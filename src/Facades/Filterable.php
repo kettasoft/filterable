@@ -66,6 +66,26 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Kettasoft\Filterable\Filterable enableEvents() Enable events for this specific filterable instance.
  * @method static \Kettasoft\Filterable\Filterable disableEvents() Disable events for this specific filterable instance.
  * 
+ * Caching Methods:
+ * @method static \Kettasoft\Filterable\Filterable cache(\DateTimeInterface|int|null $ttl = null) Enable caching with optional TTL.
+ * @method static \Kettasoft\Filterable\Filterable remember(\DateTimeInterface|int|null $ttl = null) Alias for cache() method.
+ * @method static \Kettasoft\Filterable\Filterable cacheForever() Cache results forever.
+ * @method static \Kettasoft\Filterable\Filterable cacheTags(array $tags) Set cache tags for tagging support.
+ * @method static \Kettasoft\Filterable\Filterable scopeByUser(int|string|null $userId = null) Scope cache by authenticated user.
+ * @method static \Kettasoft\Filterable\Filterable scopeByTenant(int|string $tenantId) Scope cache by tenant.
+ * @method static \Kettasoft\Filterable\Filterable scopeBy(string $key, mixed $value) Add a custom cache scope.
+ * @method static \Kettasoft\Filterable\Filterable withScopes(array $scopes) Set multiple cache scopes.
+ * @method static \Kettasoft\Filterable\Filterable cacheProfile(string $profile) Use a predefined cache profile.
+ * @method static \Kettasoft\Filterable\Filterable cacheWhen(bool|callable $condition, \DateTimeInterface|int|null $ttl = null) Cache only when condition is met.
+ * @method static \Kettasoft\Filterable\Filterable cacheUnless(bool|callable $condition, \DateTimeInterface|int|null $ttl = null) Cache unless condition is met.
+ * @method static bool flushCache() Flush cache for this filter instance.
+ * @method static bool flushCacheByTags(array|null $tags = null) Flush cache entries by tags.
+ * @method static bool isCachingEnabled() Check if caching is enabled.
+ * @method static \DateTimeInterface|int|null getCacheTtl() Get cache TTL.
+ * @method static array getCacheTags() Get cache tags.
+ * @method static array getCacheScopes() Get cache scopes.
+ * @method static string|null getCacheProfile() Get cache profile.
+ * 
  * Header-Driven Mode:
  * @method static \Kettasoft\Filterable\Filterable withHeaderDrivenMode(mixed $config = []) Enable Header-driven mode per request.
  * 
