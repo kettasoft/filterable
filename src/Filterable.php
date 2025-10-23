@@ -206,6 +206,16 @@ class Filterable implements FilterableContext, Authorizable, Validatable
   }
 
   /**
+   * Get request source.
+   * 
+   * @return string
+   */
+  public function getRequestSource(): string
+  {
+    return $this->requestSource;
+  }
+
+  /**
    * Apply a filterable profile to the current instance.
    * 
    * @param FilterableProfile|string $profile
