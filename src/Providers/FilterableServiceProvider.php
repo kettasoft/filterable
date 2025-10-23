@@ -2,16 +2,17 @@
 
 namespace Kettasoft\Filterable\Providers;
 
+use Illuminate\Http\Request;
+use InvalidArgumentException;
+use Kettasoft\Filterable\Filterable;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Http\Request;
-use Kettasoft\Filterable\Filterable;
 use Kettasoft\Filterable\Commands\MakeFilterCommand;
-use Kettasoft\Filterable\Foundation\Profiler\Contracts\ProfilerStorageContract;
-use Kettasoft\Filterable\Foundation\Profiler\Storage\DatabaseProfilerStorage;
-use Kettasoft\Filterable\Foundation\Profiler\Storage\FileProfilerStorage;
+use Kettasoft\Filterable\Commands\ListFiltersCommand;
 use Kettasoft\Filterable\Foundation\Events\FilterableEventManager;
-use InvalidArgumentException;
+use Kettasoft\Filterable\Foundation\Profiler\Storage\FileProfilerStorage;
+use Kettasoft\Filterable\Foundation\Profiler\Storage\DatabaseProfilerStorage;
+use Kettasoft\Filterable\Foundation\Profiler\Contracts\ProfilerStorageContract;
 
 /**
  * Service provider for the Kettasoft Filterable package.
@@ -223,6 +224,7 @@ class FilterableServiceProvider extends ServiceProvider
 
         $this->commands([
             MakeFilterCommand::class,
+            ListFiltersCommand::class
         ]);
     }
 
