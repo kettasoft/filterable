@@ -9,6 +9,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Contracts\Foundation\Application;
 use Kettasoft\Filterable\Commands\MakeFilterCommand;
 use Kettasoft\Filterable\Commands\ListFiltersCommand;
+use Kettasoft\Filterable\Commands\InspectFilterCommand;
 use Kettasoft\Filterable\Foundation\Events\FilterableEventManager;
 use Kettasoft\Filterable\Foundation\Profiler\Storage\FileProfilerStorage;
 use Kettasoft\Filterable\Foundation\Profiler\Storage\DatabaseProfilerStorage;
@@ -224,7 +225,8 @@ class FilterableServiceProvider extends ServiceProvider
 
         $this->commands([
             MakeFilterCommand::class,
-            ListFiltersCommand::class
+            ListFiltersCommand::class,
+            InspectFilterCommand::class
         ]);
     }
 
