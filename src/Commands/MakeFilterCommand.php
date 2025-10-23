@@ -13,7 +13,7 @@ class MakeFilterCommand extends Command
    *
    * @var string
    */
-  protected $signature = 'make:filter {name} {--filters}';
+  protected $signature = 'filterable:make-filter {name} {--filters}';
 
   /**
    * The console command description.
@@ -31,7 +31,6 @@ class MakeFilterCommand extends Command
   {
     $name = $this->argument('name');
     $keys = $this->option('filters');
-
     Stub::setBasePath(config('filterable.generator.stubs'));
 
     if (!$keys) {
@@ -42,7 +41,7 @@ class MakeFilterCommand extends Command
         'NAMESPACE' => Config::get('filterable.filter_namespace', 'App\\Http\\Filters')
       ])->saveTo($this->getFilterSavingPath(), "{$name}.php");
 
-      $this->info("Filter class '$name'.php created successfully.");
+      $this->info("Filter class '$name.php' created successfully.");
       return 1;
     }
 
