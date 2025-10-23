@@ -105,7 +105,7 @@ class FilterableServiceProviderTest extends TestCase
 
         $commands = Artisan::all();
 
-        $this->assertArrayHasKey('make:filter', $commands);
+        $this->assertArrayHasKey('filterable:make-filter', $commands);
     }
 
     /** @test */
