@@ -2,8 +2,7 @@
 namespace Kettasoft\Filterable\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\File;
-use Kettasoft\Filterable\Filterable;
+use Kettasoft\Filterable\Commands\Concerns\CommandHelpers;
 
 /**
  * Command to list all registered Filterable classes and their configurations.
@@ -16,6 +15,8 @@ use Kettasoft\Filterable\Filterable;
  */
 class ListFiltersCommand extends Command
 {
+    use CommandHelpers;
+
   /**
    * The name and signature of the console command.
    *
@@ -59,59 +60,5 @@ class ListFiltersCommand extends Command
         }
 
         $this->table(['Filter', 'Model', 'Fields', 'Operators', 'Engine'], $rows);
-    }
-
-    /**
-     * Scan the app/Http/Filters directory for Filterable classes.
-     *
-     * @return array
-     */
-    protected function getFilters(): array
-    {
-        $filtersPath = app_path('Http/Filters');
-        if (!File::isDirectory($filtersPath)) return [];
-
-        $classes = [];
-        foreach (File::allFiles($filtersPath) as $file) {
-            $class = $this->pathToClass($file->getRealPath());
-            if (class_exists($class) && is_subclass_of($class, Filterable::class)) {
-                $classes[] = $class;
-            }
-        }
-        return $classes;
-    }
-
-    /**
-     * Convert a file path to a fully qualified class name.
-     *
-     * @param string $path
-     * @return string
-     */
-    protected function pathToClass($path): string
-    {
-        $relative = str_replace([app_path() . '/', '.php'], '', $path);
-        return 'App\\' . str_replace('/', '\\', $relative);
-    }
-
-    /**
-     * Get the model associated with the filter.
-     *
-     * @param mixed $filter
-     * @return string
-     */
-    protected function getModel($filter): string
-    {
-        return method_exists($filter, 'getModel') ? (class_basename($filter->getModel()) ) : '-';
-    }
-
-    /**
-     * Get the engine associated with the filter.
-     *
-     * @param mixed $filter
-     * @return string
-     */
-    protected function getEngine($filter): string
-    {
-        return method_exists($filter, 'getEngin') ? class_basename($filter->getEngin()) : '-';
     }
 }
