@@ -42,7 +42,7 @@ class MakeFilterCommandTest extends TestCase
   {
     $filename = 'UserFilter';
 
-    $result = Artisan::call("make:filter", [
+    $result = Artisan::call("filterable:make-filter", [
       "name" => $filename
     ]);
 
@@ -58,7 +58,7 @@ class MakeFilterCommandTest extends TestCase
   {
     $filename = 'UserFilter';
 
-    $result = Artisan::call("make:filter", [
+    $result = Artisan::call("filterable:make-filter", [
       "name" => $filename,
       '--filters' => 'methods'
     ]);
