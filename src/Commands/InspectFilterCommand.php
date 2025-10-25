@@ -56,16 +56,16 @@ class InspectFilterCommand extends Command
 
         $this->table(['Property', 'Value'], [
             ['Model', $this->getModel($instance)],
-            ['Allowed Fields', $this->highlight(implode(', ', $instance->getAllowedFields() ?? []) ?: '-', 'yellow')],
-            ['Allowed Operators', $this->highlight(implode(', ', $instance->getAllowedOperators() ?? []), 'yellow') ?: '-'],
-            ['Provided Data', implode(', ', $this->getProvidedData($instance)) ?: '-'],
+            ['Allowed Fields', $this->highlight(implode(', ', $instance->getAllowedFields() ?? []) ?: 'N/A', 'yellow')],
+            ['Allowed Operators', $this->highlight(implode(', ', $instance->getAllowedOperators() ?? []) ?: 'N/A', 'yellow')],
+            ['Provided Data', implode(', ', $this->getProvidedData($instance)) ?: 'N/A'],
             ['Ignored Empty Value', $instance->hasIgnoredEmptyValues() ? $this->highlight('Yes', 'green') : $this->highlight('No', 'red')],
             ['Strict Mode', $instance->isStrict() ? $this->highlight('Yes', 'green') : $this->highlight('No', 'red')],
-            ['Engine', $this->getEngine($instance) ?: '-'],
+            ['Engine', $this->getEngine($instance) ?: 'N/A'],
             ['Has Sanitizers', $instance->getSanitizerInstance()->count() ? $this->highlight('Yes', 'green') : $this->highlight('No', 'red')],
-            ['Request Source', $instance->getRequestSource() ?: '-'],
-            ['Request Key', $instance->getFilterKey() ?: '-'],
-            ['Validation Roles', implode(', ', array_keys($instance->rules())) ?: '-'],
+            ['Request Source', $instance->getRequestSource() ?: 'N/A'],
+            ['Request Key', $instance->getFilterKey() ?: 'N/A'],
+            ['Validation Roles', implode(', ', array_keys($instance->rules())) ?: 'N/A'],
         ], 'box-double');
 
         return Command::SUCCESS;
