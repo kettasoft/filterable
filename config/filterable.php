@@ -540,7 +540,7 @@ return [
     |
     */
     'generator' => [
-        'stubs' => base_path('vendor/kettasoft/filterable/src/stubs/'),
+        'stubs' => base_path('vendor/kettasoft/filterable/stubs/'),
     ],
 
     /*

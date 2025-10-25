@@ -2,16 +2,21 @@
 
 namespace Kettasoft\Filterable\Providers;
 
+use Illuminate\Http\Request;
+use InvalidArgumentException;
+use Kettasoft\Filterable\Filterable;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Http\Request;
-use Kettasoft\Filterable\Filterable;
 use Kettasoft\Filterable\Commands\MakeFilterCommand;
-use Kettasoft\Filterable\Foundation\Profiler\Contracts\ProfilerStorageContract;
-use Kettasoft\Filterable\Foundation\Profiler\Storage\DatabaseProfilerStorage;
-use Kettasoft\Filterable\Foundation\Profiler\Storage\FileProfilerStorage;
+use Kettasoft\Filterable\Commands\TestFilterCommand;
+use Kettasoft\Filterable\Commands\ListFiltersCommand;
+use Kettasoft\Filterable\Commands\InspectFilterCommand;
+use Kettasoft\Filterable\Commands\FilterableDiscoverCommand;
+use Kettasoft\Filterable\Commands\SetupFilterableCommand;
 use Kettasoft\Filterable\Foundation\Events\FilterableEventManager;
-use InvalidArgumentException;
+use Kettasoft\Filterable\Foundation\Profiler\Storage\FileProfilerStorage;
+use Kettasoft\Filterable\Foundation\Profiler\Storage\DatabaseProfilerStorage;
+use Kettasoft\Filterable\Foundation\Profiler\Contracts\ProfilerStorageContract;
 
 /**
  * Service provider for the Kettasoft Filterable package.
@@ -197,7 +202,7 @@ class FilterableServiceProvider extends ServiceProvider
             if (!isset(static::PROFILER_DRIVERS[$driver])) {
                 throw new InvalidArgumentException(
                     "Unsupported profiler storage driver [{$driver}]. " .
-                    "Supported drivers are: " . implode(', ', array_keys(static::PROFILER_DRIVERS))
+                        "Supported drivers are: " . implode(', ', array_keys(static::PROFILER_DRIVERS))
                 );
             }
 
@@ -223,6 +228,11 @@ class FilterableServiceProvider extends ServiceProvider
 
         $this->commands([
             MakeFilterCommand::class,
+            ListFiltersCommand::class,
+            InspectFilterCommand::class,
+            FilterableDiscoverCommand::class,
+            TestFilterCommand::class,
+            SetupFilterableCommand::class,
         ]);
     }
 

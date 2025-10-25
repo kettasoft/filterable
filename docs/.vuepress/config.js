@@ -28,7 +28,20 @@ export default defineUserConfig({
         contributors: true,
         // contributorsText: "dasdasd",
 
-        navbar: ["/", "/installation"],
+        navbar: [
+            "/",
+            "/installation",
+            {
+                text: "CLI",
+                children: [
+                    "/cli/setup.md",
+                    "/cli/discover.md",
+                    "/cli/listing.md",
+                    "/cli/testing.md",
+                    "/cli/inspect.md",
+                ],
+            },
+        ],
         sidebar: [
             {
                 text: "Home",
@@ -139,6 +152,32 @@ export default defineUserConfig({
                     {
                         text: "Sorter",
                         link: "api/sorter",
+                    },
+                ],
+            },
+            {
+                text: "CLI",
+                collapsible: true,
+                children: [
+                    {
+                        text: "Setup Filterable",
+                        link: "cli/setup",
+                    },
+                    {
+                        text: "Discover Filters",
+                        link: "cli/discover",
+                    },
+                    {
+                        text: "Test Filter",
+                        link: "cli/testing",
+                    },
+                    {
+                        text: "List Filters",
+                        link: "cli/listing",
+                    },
+                    {
+                        text: "Inspect Filter",
+                        link: "cli/inspect.md",
                     },
                 ],
             },
