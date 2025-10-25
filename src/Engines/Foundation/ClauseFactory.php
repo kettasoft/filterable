@@ -43,8 +43,9 @@ class ClauseFactory
 
     $resolvedField    = $this->resolveField($payload);
     $resolvedOperator = $this->resolveOperator($payload);
+    $payload->setField($resolvedField)->setOperator($resolvedOperator);
 
-    return (new Clause($resolvedField, $resolvedOperator, $payload->value))
+    return (new Clause($payload))
       ->setStatus($valid);
   }
 

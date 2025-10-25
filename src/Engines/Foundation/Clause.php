@@ -8,6 +8,7 @@ use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Contracts\Support\Arrayable;
 use Kettasoft\Filterable\Engines\Foundation\Parsers\Dissector;
 use Kettasoft\Filterable\Engines\Foundation\Resolvers\RelationResolver;
+use Kettasoft\Filterable\Support\Payload;
 
 class Clause implements Arrayable, Jsonable
 {
@@ -38,26 +39,25 @@ class Clause implements Arrayable, Jsonable
 
   /**
    * Clause constructor.
-   * @param \Kettasoft\Filterable\Foundation\Resources $resources
-   * @param mixed $field
-   * @param mixed $dissector
+   * 
+   * @param Payload $payload
    */
-  public function __construct($field, $operator, $value)
+  public function __construct(protected Payload $payload)
   {
-    $this->field = $field;
-    $this->operator = $operator;
-    $this->value = $value;
+    $this->field = $payload->field;
+    $this->operator = $payload->operator;
+    $this->value = $payload->value;
   }
 
   /**
-   * Create Dissector instance.
-   * @param mixed $field
-   * @param mixed $dissector
+   * Create Clause instance.
+   * 
+   * @param Payload $payload
    * @return Clause
    */
-  public static function make($field, $operator, $value)
+  public static function make(Payload $payload)
   {
-    return new self($field, $operator, $value);
+    return new self($payload);
   }
 
   /**
@@ -94,6 +94,16 @@ class Clause implements Arrayable, Jsonable
   {
     $instance = new RelationResolver($bag, $this->field);
     return $instance;
+  }
+
+  /**
+   * Get the Payload instance.
+   * 
+   * @return Payload
+   */
+  public function getPayload(): Payload
+  {
+    return $this->payload;
   }
 
   public function apply(Builder $builder)
