@@ -56,8 +56,8 @@ class InspectFilterCommand extends Command
 
         $this->table(['Property', 'Value'], [
             ['Model', $this->getModel($instance)],
-            ['Allowed Fields', $this->highlight(implode(', ', $instance->getAllowedFields() ?? []) ?: 'N/A', 'yellow')],
-            ['Allowed Operators', $this->highlight(implode(', ', $instance->getAllowedOperators() ?? []) ?: 'N/A', 'yellow')],
+            ['Allowed Fields', implode(', ', $instance->getAllowedFields() ?? []) ?: 'N/A'],
+            ['Allowed Operators', implode(', ', $instance->getAllowedOperators() ?? []) ?: 'N/A'],
             ['Provided Data', implode(', ', $this->getProvidedData($instance)) ?: 'N/A'],
             ['Ignored Empty Value', $instance->hasIgnoredEmptyValues() ? $this->highlight('Yes', 'green') : $this->highlight('No', 'red')],
             ['Strict Mode', $instance->isStrict() ? $this->highlight('Yes', 'green') : $this->highlight('No', 'red')],
