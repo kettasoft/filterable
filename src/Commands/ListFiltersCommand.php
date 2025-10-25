@@ -1,4 +1,5 @@
 <?php
+
 namespace Kettasoft\Filterable\Commands;
 
 use Illuminate\Console\Command;
@@ -17,28 +18,28 @@ class ListFiltersCommand extends Command
 {
     use CommandHelpers;
 
-  /**
-   * The name and signature of the console command.
-   *
-   * @var string
-   */
-  protected $signature = 'filterable:list';
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'filterable:list';
 
-  /**
-   * The console command description.
-   *
-   * @var string
-   */
-  protected $description = 'List all registered Filterable classes and their configurations.';
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'List all registered Filterable classes and their configurations.';
 
-  /**
-   * Execute the console command.
-   *
-   * @return mixed
-   */
-  public function handle()
-  {
-    $filters = $this->getFilters();
+    /**
+     * Execute the console command.
+     *
+     * @return mixed
+     */
+    public function handle()
+    {
+        $filters = $this->getFilters();
 
         if (empty($filters)) {
             $this->warn('No filterable classes found.');
@@ -53,8 +54,8 @@ class ListFiltersCommand extends Command
             $rows[] = [
                 'Filter'   => class_basename($filterClass),
                 'Model'    => $this->getModel($instance),
-                'Fields'   => implode(', ', $instance->getAllowedFields() ?? []),
-                'Operators'=> implode(', ', $instance->getAllowedOperators() ?? []),
+                'Fields'   => implode(', ', $instance->getAllowedFields() ?? []) ?: 'N/A',
+                'Operators' => implode(', ', $instance->getAllowedOperators() ?? []) ?: 'N/A',
                 'Engine'   => $this->getEngine($instance),
             ];
         }
