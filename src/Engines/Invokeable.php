@@ -39,6 +39,9 @@ class Invokeable extends Engine
   {
     $this->builder = $builder;
 
+    // Set allowed fields from $filters property automatically.
+    $this->context->setAllowedFields($this->context->getFilterAttributes());
+
     foreach ($this->context->getFilterAttributes() as $filter) {
 
       $dissector = Dissector::parse($this->context->getRequest()->get($filter), $this->defaultOperator());
