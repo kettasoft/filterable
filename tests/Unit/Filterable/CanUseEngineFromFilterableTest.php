@@ -6,7 +6,7 @@ use Kettasoft\Filterable\Filterable;
 use Kettasoft\Filterable\Tests\TestCase;
 use Kettasoft\Filterable\Engines\Ruleset;
 use Kettasoft\Filterable\Engines\Expression;
-use Kettasoft\Filterable\Engines\Invokeable;
+use Kettasoft\Filterable\Engines\Invokable;
 use Kettasoft\Filterable\Engines\Tree;
 
 class CanUseEngineFromFilterableTest extends TestCase
@@ -29,7 +29,7 @@ class CanUseEngineFromFilterableTest extends TestCase
   {
     $filterable = Filterable::create()->useEngin('invokable');
 
-    $this->assertInstanceOf(Invokeable::class, $filterable->getEngin());
+    $this->assertInstanceOf(Invokable::class, $filterable->getEngin());
   }
   /**
    * It can filterable class use tree engine instance

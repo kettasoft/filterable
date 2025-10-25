@@ -5,7 +5,7 @@ namespace Kettasoft\Filterable\Engines\Factory;
 use Kettasoft\Filterable\Engines\Tree;
 use Kettasoft\Filterable\Engines\Ruleset;
 use Kettasoft\Filterable\Engines\Expression;
-use Kettasoft\Filterable\Engines\Invokeable;
+use Kettasoft\Filterable\Engines\Invokable;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
 
 class EngineManager
@@ -18,7 +18,7 @@ class EngineManager
     'tree' => Tree::class,
     'ruleset' => Ruleset::class,
     'expression' => Expression::class,
-    'invokable' => Invokeable::class
+    'invokable' => Invokable::class
   ];
 
   /**
