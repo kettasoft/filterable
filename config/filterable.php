@@ -236,6 +236,31 @@ return [
             |
             */
             'normalize_keys' => false,
+
+            /*
+            |--------------------------------------------------------------------------
+            | Allowed SQL Operators
+            |--------------------------------------------------------------------------
+            |
+            | List of supported SQL operators you want to allow when parsing
+            | the expressions.
+            |
+            */
+            'allowed_operators' => [
+                'eq' => '=',
+                'neq' => '!=',
+                'gt' => '>',
+                'lt' => '<',
+                'gte' => '>=',
+                'lte' => '<=',
+                'like' => 'like',
+                'nlike' => 'not like',
+                'in' => 'in',
+                'nin' => 'not in',
+                'null' => 'is null',
+                'notnull' => 'is not null',
+                'between' => 'between',
+            ],
         ],
 
         /*

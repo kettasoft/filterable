@@ -229,6 +229,50 @@ class Payload implements \Stringable, Arrayable, Jsonable
   }
 
   /**
+   * Set the payload field.
+   *
+   * @param string $field
+   * @return Payload
+   */
+  public function setField(string $field): Payload
+  {
+    $this->field = $field;
+    return $this;
+  }
+
+  /**
+   * Set the payload operator.
+   *
+   * @param string $operator
+   * @return Payload
+   */
+  public function setOperator(string $operator): Payload
+  {
+    $this->operator = $operator;
+    return $this;
+  }
+
+  /**
+   * Get the payload field.
+   *
+   * @return string
+   */
+  public function getField(): string
+  {
+    return $this->field;
+  }
+
+  /**
+   * Get the payload operator.
+   * 
+   * @return string
+   */
+  public function getOperator(): string
+  {
+    return $this->operator;
+  }
+
+  /**
    * Get the payload value as an array.
    *
    * If the value is a valid JSON string representing an array/object,

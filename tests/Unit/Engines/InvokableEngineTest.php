@@ -34,32 +34,6 @@ class InvokableEngineTest extends TestCase
    * It can filter with basic class filter.
    * @test
    */
-  public function it_can_filter_by_request_query_key_name()
-  {
-
-    request()->merge([
-      'status' => '',
-    ]);
-
-    $filter = new class extends Filterable {
-      protected $filters = ['status'];
-      public $ignoreEmptyValues = true;
-
-      public function status(Payload $payload)
-      {
-        return $this->builder->where('status', $payload->value);
-      }
-    };
-
-    $posts = Post::filter($filter)->count();
-
-    $this->assertEquals(12, $posts);
-  }
-
-  /**
-   * It can filter with basic class filter.
-   * @test
-   */
   public function it_can_test_method_mapping_filter()
   {
     request()->merge([
@@ -106,6 +80,33 @@ class InvokableEngineTest extends TestCase
         }
 
         return $this->builder->where($payload->field, 'pending');
+      }
+    };
+
+    $posts = Post::filter($filter)->count();
+
+    $this->assertEquals(5, $posts);
+  }
+
+  /**
+   * It can filter with field and operator.
+   * @test
+   */
+  public function it_can_filter_with_field_and_operator()
+  {
+    request()->merge([
+      'status' => [
+        'operator' => 'eq',
+        'value' => 'pending'
+      ]
+    ]);
+
+    $filter = new class extends Filterable {
+      protected $filters = ['status'];
+
+      public function status(Payload $payload)
+      {
+        return $this->builder->where('status', $payload->operator, $payload->value);
       }
     };
 
