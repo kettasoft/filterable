@@ -17,7 +17,7 @@ class CanUseEngineFromFilterableTest extends TestCase
    */
   public function it_can_filterable_class_use_engine_instance()
   {
-    $filterable = Filterable::create()->useEngin('ruleset');
+    $filterable = Filterable::create()->useEngine('ruleset');
 
     $this->assertInstanceOf(Ruleset::class, $filterable->getEngin());
   }
@@ -27,7 +27,7 @@ class CanUseEngineFromFilterableTest extends TestCase
    */
   public function it_can_filterable_class_use_invokable_engine_instance()
   {
-    $filterable = Filterable::create()->useEngin('invokable');
+    $filterable = Filterable::create()->useEngine('invokable');
 
     $this->assertInstanceOf(Invokable::class, $filterable->getEngin());
   }
@@ -37,7 +37,7 @@ class CanUseEngineFromFilterableTest extends TestCase
    */
   public function it_can_filterable_class_use_tree_engine_instance()
   {
-    $filterable = Filterable::create()->useEngin('tree');
+    $filterable = Filterable::create()->useEngine('tree');
 
     $this->assertInstanceOf(Tree::class, $filterable->getEngin());
   }
@@ -47,7 +47,7 @@ class CanUseEngineFromFilterableTest extends TestCase
    */
   public function it_can_filterable_class_use_expression_engine_instance()
   {
-    $filterable = Filterable::create()->useEngin('expression');
+    $filterable = Filterable::create()->useEngine('expression');
 
     $this->assertInstanceOf(Expression::class, $filterable->getEngin());
   }

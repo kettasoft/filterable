@@ -183,7 +183,7 @@ Retrieve an input value from the configured source.
 
 ### Engines
 
-#### `useEngin(Engine|string $engine): static`
+#### `useEngine(Engine|string $engine): static`
 
 Override the engine for this instance. Accepts an engine instance or a supported engine key.
 

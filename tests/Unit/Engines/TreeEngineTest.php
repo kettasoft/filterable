@@ -192,7 +192,7 @@ class TreeEngineTest extends TestCase
       Filterable::create()->strict()
         ->allowdOperators(['eq'])
         ->setAllowedFields(['*'])
-        ->useEngin(Tree::class)
+        ->useEngine(Tree::class)
         ->setData($data)
         ->apply(Post::query());
     }, InvalidOperatorException::class);
@@ -304,7 +304,7 @@ class TreeEngineTest extends TestCase
     $filter = Filterable::create()
       ->setRelations(['tags' => ['name']])
       ->setAllowedFields(['status'])
-      ->useEngin(Tree::class)
+      ->useEngine(Tree::class)
       ->setData($data)
       ->apply(Post::query());
 
@@ -351,7 +351,7 @@ class TreeEngineTest extends TestCase
     $filter = Filterable::create()
       ->setData($data, true)
       ->setAllowedFields(['status'])
-      ->useEngin(Tree::class)
+      ->useEngine(Tree::class)
       ->setSanitizers([
         'status' => fn($value) => strtolower($value)
       ])

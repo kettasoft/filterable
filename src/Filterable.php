@@ -562,7 +562,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable
    * @param \Kettasoft\Filterable\Engines\Foundation\Engine|string $engine
    * @return Filterable
    */
-  public function useEngin(Engine|string $engine): static
+  public function useEngine(Engine|string $engine): static
   {
     $this->engine = EngineManager::generate($engine, $this);
 
@@ -677,7 +677,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable
    */
   private function resolveEngine()
   {
-    $this->useEngin((new HeaderDrivenEngineSelector($this->request))->resolve());
+    $this->useEngine((new HeaderDrivenEngineSelector($this->request))->resolve());
   }
 
   /**
@@ -722,7 +722,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable
    */
   public function withHeaderDrivenMode($config = []): static
   {
-    return $this->useEngin((new HeaderDrivenEngineSelector($this->request, array_merge(
+    return $this->useEngine((new HeaderDrivenEngineSelector($this->request, array_merge(
       config('filterable.header_driven_mode', []),
       ['enabled' => true],
       $config

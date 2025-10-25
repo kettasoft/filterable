@@ -42,7 +42,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Kettasoft\Filterable\Filterable through(array $pipes) Allow the query to pass through a custom pipeline of pipes (callables).
  * 
  * Engine Configuration:
- * @method static \Kettasoft\Filterable\Filterable useEngin(\Kettasoft\Filterable\Engines\Foundation\Engine|string $engine) Override the default engine for this filterable instance.
+ * @method static \Kettasoft\Filterable\Filterable useEngine(\Kettasoft\Filterable\Engines\Foundation\Engine|string $engine) Override the default engine for this filterable instance.
  * @method static \Kettasoft\Filterable\Engines\Foundation\Engine getEngin() Get current engine.
  * 
  * Request & Data Management:

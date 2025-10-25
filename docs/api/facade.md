@@ -134,7 +134,7 @@ Filterable::create()->withoutSanitizers();
 
 ```php
 // Use specific engine
-Filterable::create()->useEngin('expression'); // or 'tree', 'ruleset', etc.
+Filterable::create()->useEngine('expression'); // or 'tree', 'ruleset', etc.
 
 // Enable header-driven mode
 Filterable::create()->withHeaderDrivenMode([
