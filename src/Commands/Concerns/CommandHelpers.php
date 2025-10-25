@@ -1,4 +1,5 @@
 <?php
+
 namespace Kettasoft\Filterable\Commands\Concerns;
 
 use Illuminate\Support\Facades\File;
@@ -58,7 +59,8 @@ trait CommandHelpers
      */
     protected function getModel($filter): string
     {
-        return method_exists($filter, 'getModel') ? (class_basename($filter->getModel()) ) : '-';
+        $model = class_basename($filter->getModel()) ?: "N/A";
+        return method_exists($filter, 'getModel') ? $model : '-';
     }
 
     /**
