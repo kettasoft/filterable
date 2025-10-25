@@ -44,7 +44,7 @@ class FilteringWithHeaderDrivenModeTest extends TestCase
 
     $this->assertEquals($engine, $request->header('X-Filter-Mode'));
 
-    $this->assertInstanceOf(Ruleset::class, $filter->getEngin());
+    $this->assertInstanceOf(Ruleset::class, $filter->getEngine());
   }
 
   /**
@@ -117,7 +117,7 @@ class FilteringWithHeaderDrivenModeTest extends TestCase
 
     $this->assertEquals($engine, $request->header('X-Filter-Mode'));
 
-    $this->assertInstanceOf(Ruleset::class, $filter->getEngin());
+    $this->assertInstanceOf(Ruleset::class, $filter->getEngine());
   }
 
   /**
@@ -142,7 +142,7 @@ class FilteringWithHeaderDrivenModeTest extends TestCase
 
     $this->assertEquals($engine, $request->header('X-Filter-Mode'));
 
-    $this->assertInstanceOf(get_class($filter->getEngin()), EngineManager::generate(config('filterable.default_engine'), $filter));
+    $this->assertInstanceOf(get_class($filter->getEngine()), EngineManager::generate(config('filterable.default_engine'), $filter));
   }
 
   /**

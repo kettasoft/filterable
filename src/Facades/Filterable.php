@@ -43,7 +43,7 @@ use Illuminate\Support\Facades\Facade;
  * 
  * Engine Configuration:
  * @method static \Kettasoft\Filterable\Filterable useEngine(\Kettasoft\Filterable\Engines\Foundation\Engine|string $engine) Override the default engine for this filterable instance.
- * @method static \Kettasoft\Filterable\Engines\Foundation\Engine getEngin() Get current engine.
+ * @method static \Kettasoft\Filterable\Engines\Foundation\Engine getEngine() Get current engine.
  * 
  * Request & Data Management:
  * @method static \Illuminate\Http\Request getRequest() Get the current request instance.
@@ -76,7 +76,7 @@ use Illuminate\Support\Facades\Facade;
  * 
  * Operator Configuration:
  * @method static array getAllowedOperators() List of supported SQL operators you want to allow when parsing the expressions.
- * @method static \Kettasoft\Filterable\Filterable allowdOperators(array $operators) Set allowed operators and override global operators.
+ * @method static \Kettasoft\Filterable\Filterable allowedOperators(array $operators) Set allowed operators and override global operators.
  * 
  * Mode Configuration:
  * @method static \Kettasoft\Filterable\Filterable strict() Enable strict mode in this instance.

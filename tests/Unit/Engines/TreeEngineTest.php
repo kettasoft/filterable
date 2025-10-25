@@ -165,7 +165,7 @@ class TreeEngineTest extends TestCase
 
     // Try after define allowed fields.
     $filter = Filterable::create()->strict()
-      ->allowdOperators(['eq'])
+      ->allowedOperators(['eq'])
       ->setAllowedFields(['status'])
       ->setData($data)
       ->apply(Post::query());
@@ -190,7 +190,7 @@ class TreeEngineTest extends TestCase
 
     $this->assertThrows(function () use ($data) {
       Filterable::create()->strict()
-        ->allowdOperators(['eq'])
+        ->allowedOperators(['eq'])
         ->setAllowedFields(['*'])
         ->useEngine(Tree::class)
         ->setData($data)
@@ -201,7 +201,7 @@ class TreeEngineTest extends TestCase
     $filter = Filterable::create()
       ->strict()
       ->setAllowedFields(['status'])
-      ->allowdOperators(['like'])
+      ->allowedOperators(['like'])
       ->setData($data)
       ->apply(Post::query());
 
@@ -226,7 +226,7 @@ class TreeEngineTest extends TestCase
     $filter = Filterable::create()
       ->permissive()
       ->setAllowedFields(['*'])
-      ->allowdOperators(['in'])
+      ->allowedOperators(['in'])
       ->setData($data)
       ->apply(Post::query());
 

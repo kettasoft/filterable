@@ -49,8 +49,8 @@ $users = $invoker->paginate();
 | `$builder`           | `\Illuminate\Database\Eloquent\Builder`           | The working Eloquent builder.                   |
 | `$sanitizers`        | `array`                                           | Registered sanitizers.                          |
 | `$data`              | `array`                                           | Merged request data (query + json).             |
-| `$allowdFields`      | `array`                                           | Whitelisted fields for filtering.               |
-| `$allowdOperators`   | `array`                                           | Allowed SQL operators for expression parsing.   |
+| `$allowedFields`     | `array`                                           | Whitelisted fields for filtering.               |
+| `$allowedOperators`  | `array`                                           | Allowed SQL operators for expression parsing.   |
 | `$strict`            | `bool \| null`                                    | Explicit strict or permissive mode.             |
 | `$fieldsMap`         | `array`                                           | Field-name mapping (input -> column).           |
 | `$model`             | `\Illuminate\Database\Eloquent\Model \| string`   | The target model or class-string.               |
@@ -187,7 +187,7 @@ Retrieve an input value from the configured source.
 
 Override the engine for this instance. Accepts an engine instance or a supported engine key.
 
-#### `getEngin(): Engine`
+#### `getEngine(): Engine`
 
 Return the current engine instance.
 
@@ -223,7 +223,7 @@ Define allowed fields for filtering (optionally merged).
 
 Return the allowed fields.
 
-#### `allowdOperators(array $operators): static`
+#### `allowedOperators(array $operators): static`
 
 Override globally allowed operators for this instance.
 
@@ -366,7 +366,7 @@ use App\Models\Post;
 $posts = Filterable::create()
     ->setModel(Post::class)
     ->setAllowedFields(['title', 'status', 'created_at'])
-    ->allowdOperators(['=', '!=', 'like', 'in', 'between'])
+    ->allowedOperators(['=', '!=', 'like', 'in', 'between'])
     ->ignoreEmptyValues()
     ->strict()
     ->sorting(function ($sorter) {
@@ -382,4 +382,4 @@ $posts = Filterable::create()
 
 -   The engine can be selected via header using `withHeaderDrivenMode()` or automatically via `HeaderDrivenEngineSelector`.
 -   `apply()` returns an `Invoker` by default to encourage fluent terminal operations; use `shouldReturnQueryBuilder()` to work with the raw Builder.
--   Prefer `setAllowedFields()` and `allowdOperators()` to constrain user input and reduce attack surface.
+-   Prefer `setAllowedFields()` and `allowedOperators()` to constrain user input and reduce attack surface.

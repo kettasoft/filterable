@@ -89,7 +89,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable
   protected $sanitizers = [];
 
   /**
-   * All receved data from request.
+   * All received data from request.
    * @var array
    */
   protected $data = [];
@@ -98,13 +98,13 @@ class Filterable implements FilterableContext, Authorizable, Validatable
    * Specify which fields are allowed to be filtered.
    * @var array
    */
-  protected $allowdFields = [];
+  protected $allowedFields = [];
 
   /**
    * List of supported SQL operators you want to allow when parsing the expressions.
    * @var array
    */
-  protected $allowdOperators = [];
+  protected $allowedOperators = [];
 
   /**
    * Strict mode.
@@ -179,7 +179,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable
   }
 
   /**
-   * Prepare, engine, and internal components.
+   * Prepare engine and internal components.
    * 
    * @return void
    */
@@ -188,7 +188,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable
     $this->sanitizer = new Sanitizer($this->sanitizers);
     $this->resources = new Resources($this->settings());
     $this->resolveEngine();
-    $this->parseIncommingRequestData();
+    $this->parseIncomingRequestData();
   }
 
   /**
@@ -282,9 +282,9 @@ class Filterable implements FilterableContext, Authorizable, Validatable
   public function settings(): FilterableSettings
   {
     return FilterableSettings::init(
-      $this->allowdFields,
+      $this->allowedFields,
       $this->relations,
-      $this->allowdOperators,
+      $this->allowedOperators,
       $this->sanitizers,
       $this->fieldsMap
     );
@@ -573,7 +573,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable
    * Get current engine.
    * @return Engine
    */
-  public function getEngin(): Engine
+  public function getEngine(): Engine
   {
     return $this->engine;
   }
@@ -646,7 +646,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable
    * Parse incomming data from request.
    * @return void
    */
-  private function parseIncommingRequestData()
+  private function parseIncomingRequestData()
   {
     $this->data = [...$this->request->all(), ...$this->request->json()->all()];
   }
@@ -735,7 +735,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable
    */
   public function getAllowedFields(): array
   {
-    return $this->allowdFields;
+    return $this->allowedFields;
   }
 
   /**
@@ -744,7 +744,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable
    */
   public function getAllowedOperators(): array
   {
-    return $this->allowdOperators;
+    return $this->allowedOperators;
   }
 
   /**
@@ -752,9 +752,9 @@ class Filterable implements FilterableContext, Authorizable, Validatable
    * @param array $operators
    * @return static
    */
-  public function allowdOperators(array $operators): static
+  public function allowedOperators(array $operators): static
   {
-    $this->allowdOperators = $operators;
+    $this->allowedOperators = $operators;
     return $this;
   }
 
@@ -765,8 +765,8 @@ class Filterable implements FilterableContext, Authorizable, Validatable
    */
   public function setAllowedFields(array $fields, bool $override = false): static
   {
-    $this->allowdFields = $override ? $fields : array_merge($this->allowdFields, $fields);
-    $this->resources->fields->fill($this->allowdFields);
+    $this->allowedFields = $override ? $fields : array_merge($this->allowedFields, $fields);
+    $this->resources->fields->fill($this->allowedFields);
     return $this;
   }
 
@@ -852,7 +852,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable
   public function autoSetAllowedFieldsFromModel(bool $override = false): static
   {
     $fillable = $this->builder->getModel()->getFillable();
-    $this->allowdFields = $override ? $fillable : array_merge($this->allowdFields, $fillable);
+    $this->allowedFields = $override ? $fillable : array_merge($this->allowedFields, $fillable);
 
     return $this;
   }

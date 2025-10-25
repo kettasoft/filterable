@@ -8,12 +8,12 @@ This engine is ideal for APIs and frontends that send clean key-value pairs or u
 
 ### ✅ When to Use
 
-- When handling **simple query structures** like:
-  ```
-  GET /posts?filter[status]=pending&filter[name][like]=kettasoft
-  ```
-- When you prefer clear mapping of field-operator-value.
-- When you want to use **default operators** for common fields without specifying one explicitly.
+-   When handling **simple query structures** like:
+    ```
+    GET /posts?filter[status]=pending&filter[name][like]=kettasoft
+    ```
+-   When you prefer clear mapping of field-operator-value.
+-   When you want to use **default operators** for common fields without specifying one explicitly.
 
 ---
 
@@ -85,9 +85,9 @@ use Kettasoft\Filterable\Filterable;
 
 class PostFilter extends Filterable
 {
-    protected $allowdFields = ['status', 'title', 'published_at'];
+    protected $allowedFields = ['status', 'title', 'published_at'];
 
-    protected $allowdOperators = ['eq', 'like', 'gte']; // Allowed operators
+    protected $allowedOperators = ['eq', 'like', 'gte']; // Allowed operators
 }
 ```
 
@@ -97,9 +97,9 @@ class PostFilter extends Filterable
 
 You can enforce strict filtering by enabling **strict mode**, which validates:
 
-- That each filter field is allowed.
-- That each operator is supported.
-- That no unexpected or malicious keys are applied.
+-   That each filter field is allowed.
+-   That each operator is supported.
+-   That no unexpected or malicious keys are applied.
 
 If any validation fails, an exception will be thrown instead of silently ignoring the input.
 
@@ -107,6 +107,6 @@ If any validation fails, an exception will be thrown instead of silently ignorin
 
 ### 🌿 Best Practices
 
-- Always define `allowed fields` and `allowed operators` in your filter class.
-- Use request validation or sanitizers to clean filter input before applying to query.
-- Avoid exposing sensitive fields via filters unless explicitly allowed.
+-   Always define `allowed fields` and `allowed operators` in your filter class.
+-   Use request validation or sanitizers to clean filter input before applying to query.
+-   Avoid exposing sensitive fields via filters unless explicitly allowed.

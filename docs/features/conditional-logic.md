@@ -91,7 +91,7 @@ $filter = Filterable::create()
 ```php
 $filter = Filterable::create()
     ->when(config('features.relaxed_filtering'), fn ($f) => $f->permissive())
-    ->unless(config('features.allow_all_ops'), fn ($f) => $f->allowdOperators(['=', '!=', 'like']));
+    ->unless(config('features.allow_all_ops'), fn ($f) => $f->allowedOperators(['=', '!=', 'like']));
 ```
 
 ## Behavior

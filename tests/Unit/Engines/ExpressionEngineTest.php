@@ -140,7 +140,7 @@ class ExpressionEngineTest extends TestCase
     $this->assertThrows(function () use ($request) {
       Filterable::withRequest($request)
         ->setAllowedFields(['status'])
-        ->allowdOperators(['eq'])
+        ->allowedOperators(['eq'])
         ->useEngine(Expression::class)
         ->apply(Post::query());
     }, InvalidOperatorException::class);
@@ -157,7 +157,7 @@ class ExpressionEngineTest extends TestCase
 
     $filterable = Filterable::withRequest($request)
       ->setAllowedFields(['status'])
-      ->allowdOperators(['eq'])
+      ->allowedOperators(['eq'])
       ->useEngine('expression')
       ->apply(Post::query());
 
@@ -177,7 +177,7 @@ class ExpressionEngineTest extends TestCase
     $this->assertThrows(function () use ($request) {
       Filterable::withRequest($request)
         ->setAllowedFields(['status'])
-        ->allowdOperators(['eq'])
+        ->allowedOperators(['eq'])
         ->useEngine(Expression::class)
         ->strict()
         ->apply(Post::query());
