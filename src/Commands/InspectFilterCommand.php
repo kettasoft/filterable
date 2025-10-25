@@ -44,17 +44,12 @@ class InspectFilterCommand extends Command
         $filterInput = $this->argument('filter');
         $filterClass = $this->resolveFilterClass($filterInput);
 
-        if (!$filterClass || !class_exists($filterClass)) {
-            $this->error("Filter class [$filterInput] not found.");
+        if (!$filterClass || !class_exists($filterClass) || !is_subclass_of($filterClass, Filterable::class)) {
+            $this->error(sprintf("Filter class [%s] not found or is not a subclass of Kettasoft\Filterable\Filterable.", $filterClass));
             return Command::FAILURE;
         }
 
         $instance = new $filterClass();
-
-        if (!is_subclass_of($instance, Filterable::class)) {
-            $this->error("$filterClass is not a subclass of Filterable.");
-            return Command::FAILURE;
-        }
 
         $this->info("🔍 Inspecting: $filterClass");
         $this->line('');
