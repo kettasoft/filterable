@@ -4,6 +4,7 @@ namespace Kettasoft\Filterable\Providers;
 
 use Illuminate\Http\Request;
 use InvalidArgumentException;
+use Kettasoft\Filterable\Commands\FilterableDiscoverCommand;
 use Kettasoft\Filterable\Filterable;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Contracts\Foundation\Application;
@@ -199,7 +200,7 @@ class FilterableServiceProvider extends ServiceProvider
             if (!isset(static::PROFILER_DRIVERS[$driver])) {
                 throw new InvalidArgumentException(
                     "Unsupported profiler storage driver [{$driver}]. " .
-                    "Supported drivers are: " . implode(', ', array_keys(static::PROFILER_DRIVERS))
+                        "Supported drivers are: " . implode(', ', array_keys(static::PROFILER_DRIVERS))
                 );
             }
 
@@ -226,7 +227,8 @@ class FilterableServiceProvider extends ServiceProvider
         $this->commands([
             MakeFilterCommand::class,
             ListFiltersCommand::class,
-            InspectFilterCommand::class
+            InspectFilterCommand::class,
+            FilterableDiscoverCommand::class
         ]);
     }
 
