@@ -8,9 +8,11 @@ use Kettasoft\Filterable\Engines\Foundation\Attributes\AttributeRegistry;
 use Kettasoft\Filterable\Support\Payload;
 use Illuminate\Support\Traits\ForwardsCalls;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
-use Kettasoft\Filterable\Support\ConditionNormalizer;
 use Kettasoft\Filterable\Engines\Foundation\Attributes\AttributeContext;
 use Kettasoft\Filterable\Engines\Foundation\Attributes\AttributePipeline;
+use Kettasoft\Filterable\Engines\Foundation\Clause;
+use Kettasoft\Filterable\Engines\Foundation\ClauseFactory;
+use Kettasoft\Filterable\Engines\Foundation\Parsers\Dissector;
 
 class Invokeable extends Engine
 {
@@ -38,15 +40,20 @@ class Invokeable extends Engine
     $this->builder = $builder;
 
     foreach ($this->context->getFilterAttributes() as $filter) {
-      $value = $this->context->getRequest()->get($filter);
 
-      if (($this->context->hasIgnoredEmptyValues() || config('filterable.engines.invokable.ignore_empty_values')) && !$value) {
+      $dissector = Dissector::parse($this->context->getRequest()->get($filter), $this->defaultOperator());
+
+      $payload = new Payload($filter, $dissector->operator, $this->sanitizeValue($filter, $dissector->value), $dissector->value);
+
+      $clause = (new ClauseFactory($this))->make($payload);
+
+      if (($this->context->hasIgnoredEmptyValues() || config('filterable.engines.invokable.ignore_empty_values')) && !$clause->value) {
         continue;
       }
 
       $method = $this->getMethodName($filter);
 
-      $this->initializeFilters($filter, $method, $value);
+      $this->initializeFilters($filter, $method, $clause->getPayload());
     }
 
     return $this->builder;
@@ -54,22 +61,16 @@ class Invokeable extends Engine
 
   /**
    * Initialize the filter methods and resolve value.
+   * @param string $key
    * @param string $method
-   * @param mixed $value
+   * @param Payload $payload
    * @return void
    */
-  protected function initializeFilters(string $key, string $method, mixed $value): void
+  protected function initializeFilters(string $key, string $method, Payload $payload): void
   {
-    $clause = ConditionNormalizer::normalize($value, '=');
-
-    $operator = $clause['operator'];
-    $val = $clause['value'];
-
     if (! method_exists($this->context, $method)) {
       return;
     }
-
-    $payload = new Payload($key, $operator, $this->sanitizeValue($key, $val), $val);
 
     $attrContext = new AttributeContext(
       $this->builder,
