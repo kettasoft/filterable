@@ -2,6 +2,7 @@
 
 namespace Kettasoft\Filterable\Tests\Feature\Commands;
 
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use Kettasoft\Filterable\Support\Stub;
@@ -46,7 +47,7 @@ class MakeFilterCommandTest extends TestCase
       "name" => $filename
     ]);
 
-    $this->assertEquals(1, $result);
+    $this->assertEquals(Command::SUCCESS, $result);
     $this->assertTrue(File::exists(app_path('Http/Filters') . "/$filename.php"));
   }
 
@@ -63,7 +64,7 @@ class MakeFilterCommandTest extends TestCase
       '--filters' => 'methods'
     ]);
 
-    $this->assertEquals(1, $result);
+    $this->assertEquals(Command::SUCCESS, $result);
     $this->assertTrue(File::exists(app_path('Http/Filters') . "/$filename.php"));
   }
 }
