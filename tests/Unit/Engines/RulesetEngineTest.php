@@ -48,7 +48,7 @@ class RulesetEngineTest extends TestCase
   {
     $request = Request::create('/posts?status=pending');
 
-    $filter = Filterable::withRequest($request)->setAllowedFields(['status'])->useEngin(Ruleset::class)->apply(Post::query());
+    $filter = Filterable::withRequest($request)->setAllowedFields(['status'])->useEngine(Ruleset::class)->apply(Post::query());
 
     $this->assertEquals(15, $filter->count());
   }
@@ -66,7 +66,7 @@ class RulesetEngineTest extends TestCase
     $this->assertThrows(function () use ($request) {
       Filterable::withRequest($request)
         ->setAllowedFields([])
-        ->useEngin(Ruleset::class)
+        ->useEngine(Ruleset::class)
         ->apply(Post::query());
     }, NotAllowedFieldException::class);
   }
@@ -86,7 +86,7 @@ class RulesetEngineTest extends TestCase
       Filterable::withRequest($request)
         ->strict()
         ->setAllowedFields([])
-        ->useEngin(Ruleset::class)
+        ->useEngine(Ruleset::class)
         ->apply(Post::query());
     }, NotAllowedFieldException::class);
   }
@@ -104,7 +104,7 @@ class RulesetEngineTest extends TestCase
     $filterable = Filterable::withRequest($request)
       ->permissive()
       ->setAllowedFields([])
-      ->useEngin(Ruleset::class)
+      ->useEngine(Ruleset::class)
       ->apply(Post::query());
 
     $this->assertEquals(45, $filterable->count());
@@ -121,8 +121,8 @@ class RulesetEngineTest extends TestCase
     $this->assertThrows(function () use ($request) {
       Filterable::withRequest($request)
         ->setAllowedFields(['status'])
-        ->allowdOperators(['eq'])
-        ->useEngin(Ruleset::class)
+        ->allowedOperators(['eq'])
+        ->useEngine(Ruleset::class)
         ->apply(Post::query());
     }, InvalidOperatorException::class);
   }
@@ -138,8 +138,8 @@ class RulesetEngineTest extends TestCase
 
     $filterable = Filterable::withRequest($request)
       ->setAllowedFields(['status'])
-      ->allowdOperators(['eq'])
-      ->useEngin(Ruleset::class)
+      ->allowedOperators(['eq'])
+      ->useEngine(Ruleset::class)
       ->apply(Post::query());
 
     $this->assertEquals(15, $filterable->count());
@@ -157,8 +157,8 @@ class RulesetEngineTest extends TestCase
     $this->assertThrows(function () use ($request) {
       Filterable::withRequest($request)
         ->setAllowedFields(['status'])
-        ->allowdOperators(['eq'])
-        ->useEngin(Ruleset::class)
+        ->allowedOperators(['eq'])
+        ->useEngine(Ruleset::class)
         ->strict()
         ->apply(Post::query());
     }, InvalidOperatorException::class);
@@ -180,7 +180,7 @@ class RulesetEngineTest extends TestCase
 
     $filter = Filterable::withRequest($request)
       ->setAllowedFields(['status'])
-      ->useEngin(Ruleset::class)
+      ->useEngine(Ruleset::class)
       ->strict()
       ->apply(Post::query());
 
@@ -193,7 +193,7 @@ class RulesetEngineTest extends TestCase
 
     $filter = Filterable::withRequest($request)
       ->setAllowedFields(['status'])
-      ->useEngin(Ruleset::class)
+      ->useEngine(Ruleset::class)
       ->setSanitizers([
         'status' => fn($value) => strtolower($value)
       ])

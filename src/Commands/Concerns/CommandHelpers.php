@@ -71,7 +71,7 @@ trait CommandHelpers
      */
     protected function getEngine($filter): string
     {
-        return method_exists($filter, 'getEngin') ? class_basename($filter->getEngin()) : '-';
+        return method_exists($filter, 'getEngine') ? class_basename($filter->getEngine()) : '-';
     }
 
     /**

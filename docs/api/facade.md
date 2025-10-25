@@ -60,7 +60,7 @@ Filterable::create()->setModel(User::class);
 Filterable::create()->strict();
 
 // Set allowed operators
-Filterable::create()->allowdOperators(['=', '!=', 'like', 'in']);
+Filterable::create()->allowedOperators(['=', '!=', 'like', 'in']);
 ```
 
 ### Data and Request Management
@@ -134,7 +134,7 @@ Filterable::create()->withoutSanitizers();
 
 ```php
 // Use specific engine
-Filterable::create()->useEngin('expression'); // or 'tree', 'ruleset', etc.
+Filterable::create()->useEngine('expression'); // or 'tree', 'ruleset', etc.
 
 // Enable header-driven mode
 Filterable::create()->withHeaderDrivenMode([
@@ -183,7 +183,7 @@ The facade provides access to all public methods of the Filterable class, organi
 
 -   `setAllowedFields()` - Define allowed fields for filtering
 -   `getAllowedFields()` - Get allowed fields
--   `allowdOperators()` - Set allowed operators
+-   `allowedOperators()` - Set allowed operators
 -   `getAllowedOperators()` - Get allowed operators
 
 ### Mode Configuration
@@ -216,7 +216,7 @@ class UserController extends Controller
         $users = Filterable::create()
             ->setModel(User::class)
             ->setAllowedFields(['name', 'email', 'created_at'])
-            ->allowdOperators(['=', '!=', 'like', 'in', 'between'])
+            ->allowedOperators(['=', '!=', 'like', 'in', 'between'])
             ->strict()
             ->ignoreEmptyValues()
             ->when($request->user()->isAdmin(), function ($filterable) {

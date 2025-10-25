@@ -83,7 +83,7 @@ After registration, you can use your custom engine in several ways:
 ```php
 use Kettasoft\Filterable\Facades\Filterable;
 
-Filterable::useEngin('custom')->apply($query);
+Filterable::useEngine('custom')->apply($query);
 ```
 
 2. In a filter class:

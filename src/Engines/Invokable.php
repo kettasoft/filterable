@@ -14,7 +14,7 @@ use Kettasoft\Filterable\Engines\Foundation\Clause;
 use Kettasoft\Filterable\Engines\Foundation\ClauseFactory;
 use Kettasoft\Filterable\Engines\Foundation\Parsers\Dissector;
 
-class Invokeable extends Engine
+class Invokable extends Engine
 {
   use ForwardsCalls;
 

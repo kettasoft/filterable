@@ -17,7 +17,7 @@ class FilterableToSqlTest extends TestCase
   {
     $request = Request::create('/posts?status=pending');
     $filterable = filterable($request)->setAllowedFields(['status'])
-      ->useEngin(Ruleset::class);
+      ->useEngine(Ruleset::class);
 
     $this->assertTrue(is_string($filterable->toSql(Post::query())));
   }

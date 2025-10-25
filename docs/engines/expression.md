@@ -14,21 +14,21 @@ GET /posts?filter[status]=pending&filter[author.profile.name][like]=kettasoft
 
 This will:
 
-- Filter posts where `status` is `pending`
-- AND where the related author's profile `name` contains `kettasoft`
+-   Filter posts where `status` is `pending`
+-   AND where the related author's profile `name` contains `kettasoft`
 
 ---
 
 ## 🛠️ How It Works
 
-- Filters are parsed from the request's `filter` key.
-- Each filter can be a:
+-   Filters are parsed from the request's `filter` key.
+-   Each filter can be a:
 
-  - Simple key-value pair (e.g., `filter[status]=active`)
-  - Operator-based pair (e.g., `filter[name][like]=kettasoft`)
-  - Nested relation filter (e.g., `filter[author.profile.name]=ahmed`)
+    -   Simple key-value pair (e.g., `filter[status]=active`)
+    -   Operator-based pair (e.g., `filter[name][like]=kettasoft`)
+    -   Nested relation filter (e.g., `filter[author.profile.name]=ahmed`)
 
-- The engine determines the filter structure and applies the corresponding query constraints.
+-   The engine determines the filter structure and applies the corresponding query constraints.
 
 ---
 
@@ -45,12 +45,12 @@ This default is configurable in the engine settings.
 
 ## ✅ Supported Features
 
-- ✅ Flat and nested filters
-- ✅ Dot notation for relationships (e.g., `author.profile.name`)
-- ✅ Customizable default operator
-- ✅ Whitelisting of allowed fields & relations
-- ✅ Works well with eager loading and relationship validation
-- ✅ Prevents filtering on undefined fields (optional strict mode)
+-   ✅ Flat and nested filters
+-   ✅ Dot notation for relationships (e.g., `author.profile.name`)
+-   ✅ Customizable default operator
+-   ✅ Whitelisting of allowed fields & relations
+-   ✅ Works well with eager loading and relationship validation
+-   ✅ Prevents filtering on undefined fields (optional strict mode)
 
 ---
 
@@ -60,7 +60,7 @@ To avoid unauthorized or unintended access, you can configure the engine to only
 
 ```php
 Filterable::create()->useEngine('expression')
-  ->allowdFields(['status'])
+  ->allowedFields(['status'])
   ->allowRelations([
     'author.profile' => ['name'] // specific fields in this relation
   ])->paginate()
@@ -80,8 +80,8 @@ Post::filter($filters, ExpressionEngine::class)->get();
 
 ## 🧠 Internal Logic (Simplified)
 
-- Parse the `filter` array recursively.
-- Detect relationships via dot notation.
-- Resolve the relation path and apply `whereHas` queries for related models.
-- Build appropriate SQL queries via the Eloquent builder.
-- Use the defined or default operator.
+-   Parse the `filter` array recursively.
+-   Detect relationships via dot notation.
+-   Resolve the relation path and apply `whereHas` queries for related models.
+-   Build appropriate SQL queries via the Eloquent builder.
+-   Use the defined or default operator.

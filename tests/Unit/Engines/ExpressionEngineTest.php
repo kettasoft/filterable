@@ -49,7 +49,7 @@ class ExpressionEngineTest extends TestCase
     $request = Request::create('/posts?filter[status][eq]=pending');
 
     $filter = Filterable::withRequest($request)
-      ->useEngin('expression')
+      ->useEngine('expression')
       ->setAllowedFields(['status'])
       ->apply(Post::query());
 
@@ -67,7 +67,7 @@ class ExpressionEngineTest extends TestCase
     $this->assertThrows(function () use ($request) {
       Filterable::withRequest($request)
         ->setAllowedFields([])
-        ->useEngin('expression')
+        ->useEngine('expression')
         ->apply(Post::query());
     }, NotAllowedFieldException::class);
   }
@@ -87,7 +87,7 @@ class ExpressionEngineTest extends TestCase
       Filterable::withRequest($request)
         ->strict()
         ->setAllowedFields([])
-        ->useEngin(Expression::class)
+        ->useEngine(Expression::class)
         ->apply(Post::query());
     }, NotAllowedFieldException::class);
   }
@@ -105,7 +105,7 @@ class ExpressionEngineTest extends TestCase
     $filterable = Filterable::withRequest($request)
       ->permissive()
       ->setAllowedFields([])
-      ->useEngin(Expression::class)
+      ->useEngine(Expression::class)
       ->apply(Post::query());
 
     $this->assertEquals(31, $filterable->count());
@@ -123,7 +123,7 @@ class ExpressionEngineTest extends TestCase
       ->setRelations([
         'tags'
       ])
-      ->useEngin('expression')
+      ->useEngine('expression')
       ->apply(Post::query());
 
     $this->assertEquals(1, $filter->count());
@@ -140,8 +140,8 @@ class ExpressionEngineTest extends TestCase
     $this->assertThrows(function () use ($request) {
       Filterable::withRequest($request)
         ->setAllowedFields(['status'])
-        ->allowdOperators(['eq'])
-        ->useEngin(Expression::class)
+        ->allowedOperators(['eq'])
+        ->useEngine(Expression::class)
         ->apply(Post::query());
     }, InvalidOperatorException::class);
   }
@@ -157,8 +157,8 @@ class ExpressionEngineTest extends TestCase
 
     $filterable = Filterable::withRequest($request)
       ->setAllowedFields(['status'])
-      ->allowdOperators(['eq'])
-      ->useEngin('expression')
+      ->allowedOperators(['eq'])
+      ->useEngine('expression')
       ->apply(Post::query());
 
     $this->assertEquals(15, $filterable->count());
@@ -177,8 +177,8 @@ class ExpressionEngineTest extends TestCase
     $this->assertThrows(function () use ($request) {
       Filterable::withRequest($request)
         ->setAllowedFields(['status'])
-        ->allowdOperators(['eq'])
-        ->useEngin(Expression::class)
+        ->allowedOperators(['eq'])
+        ->useEngine(Expression::class)
         ->strict()
         ->apply(Post::query());
     }, InvalidOperatorException::class);
@@ -200,7 +200,7 @@ class ExpressionEngineTest extends TestCase
 
     $filter = Filterable::withRequest($request)
       ->setAllowedFields(['status'])
-      ->useEngin(Expression::class)
+      ->useEngine(Expression::class)
       ->strict()
       ->apply(Post::query());
 
@@ -217,7 +217,7 @@ class ExpressionEngineTest extends TestCase
 
     $filter = Filterable::withRequest($request)
       ->setAllowedFields(['status'])
-      ->useEngin(Expression::class)
+      ->useEngine(Expression::class)
       ->setSanitizers([
         'status' => fn($value) => strtolower($value)
       ])
