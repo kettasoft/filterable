@@ -2,9 +2,10 @@
 
 namespace Kettasoft\Filterable\Commands;
 
+use Illuminate\Support\Str;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Config;
 use Kettasoft\Filterable\Support\Stub;
 
 class MakeFilterCommand extends Command
@@ -51,12 +52,18 @@ class MakeFilterCommand extends Command
 
     // Split filters correctly
     $keys = str_contains($keys, ',')
-      ? array_map('trim', explode(',', strtolower($keys)))
-      : [strtolower($keys)];
+      ? array_map('trim', explode(',', Str::camel($keys)))
+      : [Str::camel($keys)];
 
     // Generate methods stubs
     $methods = [];
     foreach ($keys as $key) {
+      // Reject invalid names (like containing symbols or starting with number)
+      if (!preg_match('/^[a-zA-Z_][a-zA-Z0-9_]*$/', $key)) {
+        $this->error("⚠️  Invalid method name: '$key'");
+        return Command::FAILURE;
+      }
+
       $methods[] = Stub::create('method.stub', ['NAME' => $key])->render();
     }
 
