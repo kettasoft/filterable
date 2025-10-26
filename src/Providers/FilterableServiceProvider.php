@@ -199,14 +199,14 @@ class FilterableServiceProvider extends ServiceProvider
         $this->app->bind(ProfilerStorageContract::class, function (Application $app): ProfilerStorageContract {
             $driver = config('filterable.profiler.store', 'database');
 
-            if (!isset(static::PROFILER_DRIVERS[$driver])) {
+            if (!isset(self::PROFILER_DRIVERS[$driver])) {
                 throw new InvalidArgumentException(
                     "Unsupported profiler storage driver [{$driver}]. " .
-                        "Supported drivers are: " . implode(', ', array_keys(static::PROFILER_DRIVERS))
+                        "Supported drivers are: " . implode(', ', array_keys(self::PROFILER_DRIVERS))
                 );
             }
 
-            $storageClass = static::PROFILER_DRIVERS[$driver];
+            $storageClass = self::PROFILER_DRIVERS[$driver];
 
             return $app->make($storageClass);
         });
