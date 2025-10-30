@@ -13,6 +13,7 @@ use Kettasoft\Filterable\Engines\Foundation\Attributes\AttributePipeline;
 use Kettasoft\Filterable\Engines\Foundation\Clause;
 use Kettasoft\Filterable\Engines\Foundation\ClauseFactory;
 use Kettasoft\Filterable\Engines\Foundation\Parsers\Dissector;
+use Kettasoft\Filterable\Filterable;
 
 class Invokable extends Engine
 {
@@ -55,6 +56,11 @@ class Invokable extends Engine
       }
 
       $method = $this->getMethodName($filter);
+
+      // Check for method name conflicts with Filterable core methods.
+      if (method_exists(Filterable::class, $method)) {
+        throw new \RuntimeException(sprintf("Filter method [%s] conflicts with core Filterable method.", [$method]));
+      }
 
       $this->initializeFilters($filter, $method, $clause->getPayload());
     }
@@ -110,16 +116,31 @@ class Invokable extends Engine
     return config('filterable.engines.invokable.allowed_fields', []);
   }
 
+  /**
+   * Get allowed operators to filtering.
+   * 
+   * @return array
+   */
   public function getOperatorsFromConfig(): array
   {
     return config('filterable.engines.invokable.allowed_operators', []);
   }
 
+  /**
+   * Check if filter has strict mode.
+   * 
+   * @return bool
+   */
   public function isStrictFromConfig(): bool
   {
     return config('filterable.engines.invokable.strict', true);
   }
 
+  /**
+   * Check if empty values are ignored from config.
+   * 
+   * @return bool
+   */
   public function isIgnoredEmptyValuesFromConfig(): bool
   {
     return config('filterable.engines.invokable.ignore_empty_values', false);
