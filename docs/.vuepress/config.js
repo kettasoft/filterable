@@ -8,6 +8,8 @@ export default defineUserConfig({
     title: "Filterable",
     description: "Kettasoft Filterable - Powerful Eloquent Filtering Package",
 
+    head: [["link", { rel: "icon", href: "favicon.ico" }]],
+
     plugins: [
         {
             name: "@vuepress/plugin-search",
@@ -16,12 +18,12 @@ export default defineUserConfig({
 
     theme: defaultTheme({
         repo: "https://github.com/kettasoft/filterable",
-        // logo: "/docs/logo.png",
+        logo: "/images/logo.png",
 
         colorModeSwitch: true,
+        colorMode: "dark",
         sidebarDepth: 3,
         logoAlt: null,
-        logo: null,
         selectLanguageText: "ar",
         selectLanguageName: "ar",
         lastUpdated: true,
