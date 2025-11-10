@@ -1,0 +1,182 @@
+:root {
+    --vp-c-accent: #ff2d20;
+    --vp-c-accent-bg: #ff4e3c;
+    --vp-c-accent-hover: #ff5e4c;
+    --vp-c-accent-text: var(--vp-c-white);
+    --vp-c-accent-soft: rgba(255, 45, 32, 0.1);
+
+    --vp-c-bg: #ffffff;
+    --vp-c-bg-alt: #f8f8f8;
+    --vp-c-bg-elv: #ffffff;
+
+    --vp-c-text: #1f2937;
+    --vp-c-text-mute: rgba(31, 41, 55, 0.78);
+    --vp-c-text-subtle: rgba(31, 41, 55, 0.56);
+
+    --vp-c-divider: #e5e7eb;
+    --vp-c-border: #d1d5db;
+    --vp-c-border-hard: #9ca3af;
+    --vp-c-shadow: rgba(0, 0, 0, 0.15);
+
+    --vp-c-control: rgba(142, 150, 170, 0.1);
+    --vp-c-control-hover: rgba(142, 150, 170, 0.16);
+    --vp-c-control-disabled: #eaeaea;
+
+    --vp-navbar-c-bg: var(--vp-c-bg);
+    --vp-sidebar-c-bg: var(--vp-c-bg);
+
+    /* Badges */
+    --badge-c-tip-text: #10b981;
+    --badge-c-tip-bg: rgba(16, 185, 129, 0.14);
+    --badge-c-warning-text: #f59e0b;
+    --badge-c-warning-bg: rgba(245, 158, 11, 0.14);
+    --badge-c-danger-text: #ef4444;
+    --badge-c-danger-bg: rgba(239, 68, 68, 0.14);
+    --badge-c-important-text: #8b5cf6;
+    --badge-c-important-bg: rgba(139, 92, 246, 0.14);
+    --badge-c-info-text: #3b82f6;
+    --badge-c-info-bg: rgba(59, 130, 246, 0.14);
+    --badge-c-note-text: #6b7280;
+    --badge-c-note-bg: rgba(107, 114, 128, 0.14);
+
+    /* Code tabs */
+    --vp-c-code-tab-title: rgb(255 255 255 / 90%);
+    --vp-c-code-tab-bg: var(--vp-c-bg-alt);
+    --vp-c-code-tab-active: var(--vp-c-accent);
+}
+
+[data-theme="dark"] {
+    --vp-c-accent: #ff4e3c;
+    --vp-c-accent-bg: #ffe5e3;
+    --vp-c-accent-hover: #ff6f55;
+    --vp-c-accent-text: var(--vp-c-white);
+    --vp-c-accent-soft: rgba(255, 45, 32, 0.2);
+    --vp-c-gutter: #374151;
+    --vp-c-bg: #0f172a;
+    --vp-c-bg-alt: #1e293b;
+    --vp-c-bg-elv: #111827;
+    --vp-c-white: #ffffff;
+    --vp-c-text: #f3f4f6;
+    --vp-c-text-mute: rgba(243, 244, 246, 0.78);
+    --vp-c-text-subtle: rgba(243, 244, 246, 0.56);
+    --vp-c-divider: #374151;
+    --vp-c-border: #4b5563;
+    --vp-c-border-hard: #6b7280;
+    --vp-c-shadow: rgba(0 0 0 0.4);
+    --vp-c-control: rgba(142, 150, 170, 0.1);
+    --vp-c-control-hover: rgba(142, 150, 170, 0.16);
+    --vp-c-control-disabled: #2c2c2c;
+
+    --vp-navbar-c-bg: var(--vp-c-bg);
+    --vp-sidebar-c-bg: var(--vp-c-bg);
+
+    /* Badges */
+    --badge-c-tip-text: #10b981;
+    --badge-c-tip-bg: rgba(16, 185, 129, 0.25);
+    --badge-c-warning-text: #f59e0b;
+    --badge-c-warning-bg: rgba(245, 158, 11, 0.25);
+    --badge-c-danger-text: #ef4444;
+    --badge-c-danger-bg: rgba(239, 68, 68, 0.25);
+    --badge-c-important-text: #8b5cf6;
+    --badge-c-important-bg: rgba(139, 92, 246, 0.25);
+    --badge-c-info-text: #3b82f6;
+    --badge-c-info-bg: rgba(59, 130, 246, 0.25);
+    --badge-c-note-text: #6b7280;
+    --badge-c-note-bg: rgba(107, 114, 128, 0.25);
+
+    /* Code tabs */
+    --vp-c-code-tab-title: rgb(255 255 255 / 90%);
+    --vp-c-code-tab-bg: var(--vp-c-bg-elv);
+    --vp-c-code-tab-active: var(--vp-c-accent);
+
+    --code-c-bg: rgb(19, 19, 31);
+}
+
+a {
+    color: var(--vp-c-accent);
+    text-decoration: none;
+    transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+a.vp-hero-action-button {
+    border-radius: 0.375em;
+    transition: all 0.3s;
+}
+
+a.vp-hero-action-button.primary {
+    background-color: var(--vp-c-accent) !important;
+    border: none !important;
+    padding: 0.75em 1.5em;
+    box-shadow: 0 4px 6px rgba(255, 45, 32, 0.1);
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+a.vp-hero-action-button.primary:hover {
+    background-color: var(--vp-c-accent-hover) !important;
+    box-shadow: 0 6px 8px rgba(255, 45, 32, 0.2);
+}
+
+a.vp-hero-action-button.secondary:hover {
+    // background-color: var(--vp-c-accent);
+    color: var(--vp-c-white);
+    border-color: var(--vp-c-accent-hover);
+    background-color: var(--vp-c-accent);
+    box-shadow: 0 6px 8px rgba(255, 45, 32, 0.2);
+}
+
+// Tokens
+/* ==============================
+   Dracula Theme Code Tokens
+   ============================== */
+html.dark {
+    /* Background color */
+    --vp-c-bg: #282a36;
+    --vp-c-bg-alt: #44475a;
+    --vp-c-text: #f8f8f2;
+}
+
+/* Tokens */
+// .token.keyword {
+//     color: #ffcb8b;
+//     font-weight: bold;
+// }
+
+.token.class-name {
+    color: #a9c77d;
+}
+
+.token.class-name-definition,
+.token.class-name.type-declaration,
+.token.class-name.static-context {
+    color: #ffcb6b;
+}
+
+.token.variable {
+    color: #f8f8f2;
+}
+
+.token.keyword {
+    color: #c792ea;
+    font-weight: bold;
+}
+
+.token.function {
+    color: #82aaff;
+}
+
+.token.string {
+    color: #f1fa8c;
+}
+
+.token.number {
+    color: #bd93f9;
+}
+
+.token.comment {
+    color: #6272a4;
+    font-style: italic;
+}
+
+.token.operator {
+    color: #8be9fd;
+}
