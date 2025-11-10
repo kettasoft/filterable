@@ -20,6 +20,8 @@
   },
   "dependencies": {
     "@vuepress/plugin-active-header-links": "^2.0.0-rc.55",
-    "execa": "^9.4.1"
+    "execa": "^9.4.1",
+    "tsparticles": "^2.12.0",
+    "vue3-particles": "^2.12.0"
   }
 }
