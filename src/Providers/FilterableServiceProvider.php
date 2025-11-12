@@ -11,9 +11,11 @@ use Kettasoft\Filterable\Commands\MakeFilterCommand;
 use Kettasoft\Filterable\Commands\TestFilterCommand;
 use Kettasoft\Filterable\Commands\ListFiltersCommand;
 use Kettasoft\Filterable\Commands\InspectFilterCommand;
-use Kettasoft\Filterable\Commands\FilterableDiscoverCommand;
 use Kettasoft\Filterable\Commands\SetupFilterableCommand;
+use Kettasoft\Filterable\Commands\FilterableDiscoverCommand;
 use Kettasoft\Filterable\Foundation\Events\FilterableEventManager;
+use Kettasoft\Filterable\Foundation\Caching\FilterableCacheManager;
+use Kettasoft\Filterable\Foundation\Caching\CacheInvalidationObserver;
 use Kettasoft\Filterable\Foundation\Profiler\Storage\FileProfilerStorage;
 use Kettasoft\Filterable\Foundation\Profiler\Storage\DatabaseProfilerStorage;
 use Kettasoft\Filterable\Foundation\Profiler\Contracts\ProfilerStorageContract;
@@ -79,6 +81,7 @@ class FilterableServiceProvider extends ServiceProvider
     {
         $this->publishAssets();
         $this->registerCommands();
+        $this->registerCacheInvalidationObservers();
         $this->bootExtensions();
     }
 
@@ -96,6 +99,7 @@ class FilterableServiceProvider extends ServiceProvider
         $this->mergeConfiguration();
         $this->registerCoreBindings();
         $this->registerEventManager();
+        $this->registerCacheManager();
         $this->registerProfilerStorage();
         $this->registerExtensions();
     }
@@ -186,6 +190,25 @@ class FilterableServiceProvider extends ServiceProvider
     }
 
     /**
+     * Register the FilterableCacheManager as a singleton.
+     * 
+     * This ensures that only one instance of the cache manager exists
+     * throughout the application lifecycle, providing consistent caching
+     * behavior across all filterable instances.
+     *
+     * @return void
+     */
+    protected function registerCacheManager(): void
+    {
+        $this->app->singleton(FilterableCacheManager::class, function (Application $app): FilterableCacheManager {
+            return FilterableCacheManager::getInstance();
+        });
+
+        // Register alias for easy access
+        $this->app->alias(FilterableCacheManager::class, 'filterable.cache');
+    }
+
+    /**
      * Register profiler storage implementations.
      * 
      * Uses a factory pattern to create storage instances based on
@@ -210,6 +233,18 @@ class FilterableServiceProvider extends ServiceProvider
 
             return $app->make($storageClass);
         });
+    }
+
+    /**
+     * Register cache invalidation observers for auto-invalidation.
+     * 
+     * Sets up automatic cache invalidation when configured models change.
+     *
+     * @return void
+     */
+    protected function registerCacheInvalidationObservers(): void
+    {
+        CacheInvalidationObserver::register();
     }
 
     /**
