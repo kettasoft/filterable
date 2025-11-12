@@ -307,7 +307,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable
 
       $builder = $this->initQueryBuilderInstance($builder);
 
-      $this->builder = $builder;
+      $this->builder = $this->initially($builder);
 
       $builder = Executer::execute($this->engine, $builder);
 
@@ -324,7 +324,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable
         return $builder;
       }
 
-      $invoker = new Invoker($builder);
+      $invoker = new Invoker($this->finally($builder));
 
       // Pass caching settings to invoker
       if ($this->isCachingEnabled()) {
@@ -352,6 +352,30 @@ class Filterable implements FilterableContext, Authorizable, Validatable
         'filterable' => $this,
       ]);
     }
+  }
+
+  /**
+   * Finalize the query builder after all filters have been applied.
+   *
+   * @param Builder $builder
+   * @return Builder
+   */
+  protected function finally(Builder $builder): Builder
+  {
+    // Custom finalization logic can be added here
+    return $builder;
+  }
+
+  /**
+   * Initial processing of the query builder before applying filters.
+   *
+   * @param Builder $builder
+   * @return Builder
+   */
+  protected function initially(Builder $builder): Builder
+  {
+    // Custom initial logic can be added here
+    return $builder;
   }
 
   /**
