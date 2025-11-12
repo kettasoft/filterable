@@ -16,4 +16,26 @@ class $$CLASS$$ extends Filterable
     protected $filters = [$$FILTER_KEYS$$];
 
     $$METHODS$$
+
+    /**
+     * Initial processing of the query builder before applying filters.
+     *
+     * @param Builder $builder
+     * @return Builder
+     */
+    protected function initially(Builder $builder): Builder
+    {
+        return $builder;
+    }
+
+    /**
+     * Finalize the query builder after all filters have been applied.
+     *
+     * @param Builder $builder
+     * @return Builder
+     */
+    protected function finally(Builder $builder): Builder
+    {
+        return $builder;
+    }
 }

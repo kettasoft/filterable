@@ -96,6 +96,10 @@ export default defineUserConfig({
                 collapsible: true,
                 children: [
                     {
+                        text: "Lifecycle Hooks",
+                        link: "features/lifecycle-hooks",
+                    },
+                    {
                         text: "Header-Driven Filter Mode",
                         link: "features/header-driven-filter-mode",
                     },
