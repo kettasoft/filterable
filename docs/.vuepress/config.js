@@ -43,6 +43,10 @@ export default defineUserConfig({
                     "/cli/inspect.md",
                 ],
             },
+            {
+                text: "Advanced",
+                children: ["/caching/overview"],
+            },
         ],
         sidebar: [
             {
@@ -136,7 +140,7 @@ export default defineUserConfig({
                 ],
             },
             {
-                text: "API",
+                text: "API Reference",
                 collapsible: true,
                 children: [
                     {
@@ -154,6 +158,48 @@ export default defineUserConfig({
                     {
                         text: "Sorter",
                         link: "api/sorter",
+                    },
+                ],
+            },
+            {
+                text: "Caching",
+                collapsible: true,
+                children: [
+                    {
+                        text: "Overview",
+                        link: "caching/overview",
+                    },
+                    {
+                        text: "Getting Started",
+                        link: "caching/getting-started",
+                    },
+                    {
+                        text: "Strategies",
+                        link: "caching/strategies",
+                    },
+                    {
+                        text: "Auto Invalidation",
+                        link: "caching/auto-invalidation",
+                    },
+                    {
+                        text: "Cache Profiles",
+                        link: "caching/profiles",
+                    },
+                    {
+                        text: "Scoping Cache",
+                        link: "caching/scoping",
+                    },
+                    {
+                        text: "Monitoring Cached Items",
+                        link: "caching/monitoring",
+                    },
+                    {
+                        text: "API Reference",
+                        link: "caching/api-reference",
+                    },
+                    {
+                        text: "Examples",
+                        link: "caching/examples",
                     },
                 ],
             },
