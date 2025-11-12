@@ -17,11 +17,13 @@ public function cache(DateTimeInterface|int|null $ttl = null): self
 ```
 
 **Parameters:**
-- `$ttl` - Time to live in seconds or DateTimeInterface instance
+
+-   `$ttl` - Time to live in seconds or DateTimeInterface instance
 
 **Returns:** Self for method chaining
 
 **Example:**
+
 ```php
 Post::filter()->cache(3600)->get();
 Post::filter()->cache(now()->addHour())->get();
@@ -38,6 +40,7 @@ public function remember(DateTimeInterface|int|null $ttl = null): self
 ```
 
 **Example:**
+
 ```php
 Post::filter()->remember(1800)->get();
 ```
@@ -55,6 +58,7 @@ public function cacheForever(): self
 **Returns:** Self for method chaining
 
 **Example:**
+
 ```php
 Category::filter()->cacheForever()->get();
 ```
@@ -70,11 +74,13 @@ public function cacheTags(array $tags): self
 ```
 
 **Parameters:**
-- `$tags` - Array of tag strings
+
+-   `$tags` - Array of tag strings
 
 **Returns:** Self for method chaining
 
 **Example:**
+
 ```php
 Post::filter()
     ->cache(3600)
@@ -97,11 +103,13 @@ public function scopeByUser(int|string|null $userId = null): self
 ```
 
 **Parameters:**
-- `$userId` - User ID (defaults to `auth()->id()`)
+
+-   `$userId` - User ID (defaults to `auth()->id()`)
 
 **Returns:** Self for method chaining
 
 **Example:**
+
 ```php
 // Automatic user ID
 Post::filter()
@@ -127,11 +135,13 @@ public function scopeByTenant(int|string $tenantId): self
 ```
 
 **Parameters:**
-- `$tenantId` - Tenant identifier
+
+-   `$tenantId` - Tenant identifier
 
 **Returns:** Self for method chaining
 
 **Example:**
+
 ```php
 Post::filter()
     ->cache(3600)
@@ -150,12 +160,14 @@ public function scopeBy(string $key, mixed $value): self
 ```
 
 **Parameters:**
-- `$key` - Scope key name
-- `$value` - Scope value
+
+-   `$key` - Scope key name
+-   `$value` - Scope value
 
 **Returns:** Self for method chaining
 
 **Example:**
+
 ```php
 Post::filter()
     ->cache(3600)
@@ -175,11 +187,13 @@ public function withScopes(array $scopes): self
 ```
 
 **Parameters:**
-- `$scopes` - Associative array of scope key-value pairs
+
+-   `$scopes` - Associative array of scope key-value pairs
 
 **Returns:** Self for method chaining
 
 **Example:**
+
 ```php
 Post::filter()
     ->cache(3600)
@@ -202,11 +216,13 @@ public function cacheProfile(string $profile): self
 ```
 
 **Parameters:**
-- `$profile` - Profile name from config
+
+-   `$profile` - Profile name from config
 
 **Returns:** Self for method chaining
 
 **Example:**
+
 ```php
 // Uses settings from config/filterable.php profiles
 Post::filter()
@@ -225,12 +241,14 @@ public function cacheWhen(bool|callable $condition, DateTimeInterface|int|null $
 ```
 
 **Parameters:**
-- `$condition` - Boolean or callable returning boolean
-- `$ttl` - Optional TTL override
+
+-   `$condition` - Boolean or callable returning boolean
+-   `$ttl` - Optional TTL override
 
 **Returns:** Self for method chaining
 
 **Example:**
+
 ```php
 // Boolean condition
 Post::filter()
@@ -254,12 +272,14 @@ public function cacheUnless(bool|callable $condition, DateTimeInterface|int|null
 ```
 
 **Parameters:**
-- `$condition` - Boolean or callable returning boolean
-- `$ttl` - Optional TTL override
+
+-   `$condition` - Boolean or callable returning boolean
+-   `$ttl` - Optional TTL override
 
 **Returns:** Self for method chaining
 
 **Example:**
+
 ```php
 Post::filter()
     ->cacheUnless(request()->has('refresh'), 3600)
@@ -279,6 +299,7 @@ public function flushCache(): bool
 **Returns:** True if cache was flushed
 
 **Example:**
+
 ```php
 $filter = new PostFilter();
 $filter->flushCache(); // Flushes all PostFilter caches
@@ -295,11 +316,13 @@ public function flushCacheByTags(?array $tags = null): bool
 ```
 
 **Parameters:**
-- `$tags` - Array of tags (defaults to instance tags)
+
+-   `$tags` - Array of tags (defaults to instance tags)
 
 **Returns:** True if cache was flushed
 
 **Example:**
+
 ```php
 $filter = new PostFilter();
 $filter->flushCacheByTags(['posts', 'content']);
@@ -316,11 +339,13 @@ public static function flushCacheByTagsStatic(array $tags): bool
 ```
 
 **Parameters:**
-- `$tags` - Array of tags to flush
+
+-   `$tags` - Array of tags to flush
 
 **Returns:** True if cache was flushed
 
 **Example:**
+
 ```php
 Post::flushCacheByTagsStatic(['posts']);
 PostFilter::flushCacheByTagsStatic(['posts', 'content']);
@@ -339,6 +364,7 @@ public function isCachingEnabled(): bool
 **Returns:** True if caching is enabled
 
 **Example:**
+
 ```php
 $filter = Post::filter()->cache(3600);
 if ($filter->isCachingEnabled()) {
@@ -371,10 +397,11 @@ public function getCacheTags(): array
 **Returns:** Array of cache tags (includes auto-generated class tag)
 
 **Example:**
+
 ```php
 $filter = Post::filter()
     ->cacheTags(['posts', 'content']);
-    
+
 $tags = $filter->getCacheTags();
 // ['filterable:post_filter', 'posts', 'content']
 ```
@@ -418,6 +445,7 @@ public static function getInstance(): FilterableCacheManager
 ```
 
 **Example:**
+
 ```php
 $manager = \Kettasoft\Filterable\Caching\FilterableCacheManager::getInstance();
 ```
@@ -433,9 +461,10 @@ public function put(string $key, mixed $value, DateTimeInterface|int|null $ttl =
 ```
 
 **Parameters:**
-- `$key` - Cache key
-- `$value` - Value to cache
-- `$ttl` - Time to live
+
+-   `$key` - Cache key
+-   `$value` - Value to cache
+-   `$ttl` - Time to live
 
 **Returns:** True if successful
 
@@ -450,9 +479,10 @@ public function remember(string $key, DateTimeInterface|int|null $ttl, callable 
 ```
 
 **Parameters:**
-- `$key` - Cache key
-- `$ttl` - Time to live
-- `$callback` - Callback to execute if cache miss
+
+-   `$key` - Cache key
+-   `$ttl` - Time to live
+-   `$callback` - Callback to execute if cache miss
 
 **Returns:** Cached or computed value
 
@@ -487,8 +517,9 @@ public function get(string $key, $default = null): mixed
 ```
 
 **Parameters:**
-- `$key` - Cache key
-- `$default` - Default value if not found
+
+-   `$key` - Cache key
+-   `$default` - Default value if not found
 
 **Returns:** Cached value or default
 
@@ -523,7 +554,8 @@ public function flushByTags(array $tags): bool
 ```
 
 **Parameters:**
-- `$tags` - Array of tags
+
+-   `$tags` - Array of tags
 
 **Returns:** True if successful
 
@@ -605,11 +637,12 @@ public function generate(
 ```
 
 **Parameters:**
-- `$filterClass` - Filter class name
-- `$filters` - Applied filters
-- `$providedData` - Provided data
-- `$scopes` - Cache scopes
-- `$query` - Optional query builder
+
+-   `$filterClass` - Filter class name
+-   `$filters` - Applied filters
+-   `$providedData` - Provided data
+-   `$scopes` - Cache scopes
+-   `$query` - Optional query builder
 
 **Returns:** Generated cache key
 
@@ -655,19 +688,19 @@ return [
     'cache' => [
         // Global enable/disable
         'enabled' => env('FILTERABLE_CACHE_ENABLED', true),
-        
+
         // Cache driver (null = use default)
         'driver' => env('FILTERABLE_CACHE_DRIVER', null),
-        
+
         // Default TTL in seconds
         'default_ttl' => env('FILTERABLE_CACHE_TTL', 3600),
-        
+
         // Cache key prefix
         'prefix' => env('FILTERABLE_CACHE_PREFIX', 'filterable'),
-        
+
         // Cache version (increment to bust all caches)
         'version' => env('FILTERABLE_CACHE_VERSION', 'v1'),
-        
+
         // Cache profiles
         'profiles' => [
             'profile_name' => [
@@ -675,7 +708,7 @@ return [
                 'tags' => ['tag1', 'tag2'],
             ],
         ],
-        
+
         // Auto-invalidation
         'auto_invalidate' => [
             'enabled' => env('FILTERABLE_AUTO_INVALIDATE', false),
@@ -683,7 +716,7 @@ return [
                 App\Models\Post::class => ['posts', 'content'],
             ],
         ],
-        
+
         // Cache tracking
         'tracking' => [
             'enabled' => env('FILTERABLE_CACHE_TRACKING', false),
@@ -720,7 +753,8 @@ FILTERABLE_CACHE_LOG_CHANNEL=daily
 ```
 
 ::: tip Next Steps
-- [Getting started guide →](./getting-started.md)
-- [Caching strategies →](./strategies.md)
-- [Examples →](./examples.md)
-:::
+
+-   [Getting started guide →](./getting-started.md)
+-   [Caching strategies →](./strategies.md)
+-   [Examples →](./examples.md)
+    :::

@@ -41,9 +41,10 @@ Category::filter()->flushCache();
 ```
 
 **Best for:**
-- Static or rarely changing data (categories, settings)
-- Reference data
-- Configuration lists
+
+-   Static or rarely changing data (categories, settings)
+-   Reference data
+-   Configuration lists
 
 ## Conditional Caching
 
@@ -69,9 +70,10 @@ $posts = Post::filter()
 ```
 
 **Best for:**
-- Different caching behavior for different user types
-- Development vs production environments
-- Dynamic cache decisions based on request context
+
+-   Different caching behavior for different user types
+-   Development vs production environments
+-   Dynamic cache decisions based on request context
 
 ## Tagged Caching
 
@@ -97,9 +99,10 @@ Cache tags require Redis or Memcached. File and database cache drivers don't sup
 :::
 
 **Best for:**
-- Grouping related caches
-- Bulk cache invalidation
-- Auto-invalidation setup
+
+-   Grouping related caches
+-   Bulk cache invalidation
+-   Auto-invalidation setup
 
 ## Scoped Caching
 
@@ -158,10 +161,11 @@ $posts = Post::filter()
 ```
 
 **Best for:**
-- Multi-tenant applications
-- User-specific data
-- Organization/department isolation
-- Regional data separation
+
+-   Multi-tenant applications
+-   User-specific data
+-   Organization/department isolation
+-   Regional data separation
 
 ## Profile-Based Caching
 
@@ -203,9 +207,10 @@ $report = Report::filter()
 ```
 
 **Best for:**
-- Consistent caching across similar features
-- DRY principle (Don't Repeat Yourself)
-- Team collaboration with standard patterns
+
+-   Consistent caching across similar features
+-   DRY principle (Don't Repeat Yourself)
+-   Team collaboration with standard patterns
 
 ## Method-Specific Caching
 
@@ -265,7 +270,7 @@ class WarmFilterCachesJob
         Post::filter(['status' => 'published'])
             ->cache(3600)
             ->get();
-            
+
         Category::filter()
             ->cacheForever()
             ->get();
@@ -368,7 +373,7 @@ class PostController
             ->scopeByUser()
             ->cacheTags(['posts'])
             ->paginate($request->get('per_page', 15));
-            
+
         return view('posts.index', compact('posts'));
     }
 }
@@ -389,7 +394,7 @@ class DashboardController
                 ->cache(300)
                 ->sum('total'),
         ];
-        
+
         return view('dashboard', compact('stats'));
     }
 }
@@ -408,14 +413,15 @@ class ApiPostController
             ->cacheUnless($request->has('no_cache'))
             ->cacheTags(['api', 'posts'])
             ->paginate();
-            
+
         return response()->json($posts);
     }
 }
 ```
 
 ::: tip Next Steps
-- [Cache scoping details →](./scoping.md)
-- [Auto-invalidation setup →](./auto-invalidation.md)
-- [API reference →](../api/caching.md)
-:::
+
+-   [Cache scoping details →](./scoping.md)
+-   [Auto-invalidation setup →](./auto-invalidation.md)
+-   [API reference →](../api/caching.md)
+    :::

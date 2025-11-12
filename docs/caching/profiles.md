@@ -10,10 +10,10 @@ Cache profiles eliminate the need to repeatedly configure the same caching setti
 
 ### Benefits
 
-- **Consistency**: Ensure the same caching strategy is used across your application
-- **Maintainability**: Update caching behavior in one place
-- **Simplicity**: Clean, readable code without repetitive configuration
-- **Environment-specific**: Different profiles for development, staging, and production
+-   **Consistency**: Ensure the same caching strategy is used across your application
+-   **Maintainability**: Update caching behavior in one place
+-   **Simplicity**: Clean, readable code without repetitive configuration
+-   **Environment-specific**: Different profiles for development, staging, and production
 
 ## Basic Usage
 
@@ -30,12 +30,12 @@ return [
                 'ttl' => 300, // 5 minutes
                 'tags' => ['quick-cache'],
             ],
-            
+
             'standard' => [
                 'ttl' => 3600, // 1 hour
                 'tags' => ['standard-cache'],
             ],
-            
+
             'long_term' => [
                 'ttl' => 86400, // 24 hours
                 'tags' => ['long-term-cache'],
@@ -82,12 +82,12 @@ Each profile can contain the following settings:
 
 ### Configuration Options
 
-| Option | Type | Description |
-|--------|------|-------------|
-| `ttl` | int\|null | Cache duration in seconds (null = forever) |
-| `tags` | array | Cache tags for organization |
-| `scopes` | array | Scopes to automatically apply |
-| `enabled` | bool | Whether this profile is active |
+| Option    | Type      | Description                                |
+| --------- | --------- | ------------------------------------------ |
+| `ttl`     | int\|null | Cache duration in seconds (null = forever) |
+| `tags`    | array     | Cache tags for organization                |
+| `scopes`  | array     | Scopes to automatically apply              |
+| `enabled` | bool      | Whether this profile is active             |
 
 ## Common Profile Examples
 
@@ -243,13 +243,13 @@ Create base profiles and extend them:
         'ttl' => 3600,
         'tags' => ['base'],
     ],
-    
+
     // Extended profiles
     'posts' => [
         'ttl' => 3600,
         'tags' => ['base', 'posts'],
     ],
-    
+
     'products' => [
         'ttl' => 3600,
         'tags' => ['base', 'products'],
@@ -268,14 +268,14 @@ class PostFilter extends Filterable
         if ($this->filters['category'] === 'news') {
             return 'quick';  // News changes frequently
         }
-        
+
         if ($this->filters['type'] === 'report') {
             return 'heavy_reports';
         }
-        
+
         return 'standard';
     }
-    
+
     public function apply(array $filters = []): Builder
     {
         return parent::apply($filters)
@@ -287,7 +287,7 @@ class PostFilter extends Filterable
 ### Conditional Profiles
 
 ```php
-$profile = auth()->user()->isPremium() 
+$profile = auth()->user()->isPremium()
     ? 'premium_cache'  // Better caching for premium users
     : 'standard';
 
@@ -325,12 +325,12 @@ $posts = Post::filter()
         'ttl' => 1800,  // 30 minutes
         'tags' => ['posts', 'listings'],
     ],
-    
+
     'post_detail' => [
         'ttl' => 3600,  // 1 hour
         'tags' => ['posts', 'details'],
     ],
-    
+
     'author_posts' => [
         'ttl' => 1800,
         'tags' => ['posts', 'authors'],
@@ -349,7 +349,7 @@ class PostController
             ->cacheProfile('posts_list')
             ->get();
     }
-    
+
     public function show($id)
     {
         return Post::filter()
@@ -357,7 +357,7 @@ class PostController
             ->apply(['id' => $id])
             ->first();
     }
-    
+
     public function authorPosts($authorId)
     {
         return Post::filter()
@@ -377,17 +377,17 @@ class PostController
         'ttl' => 7200,  // 2 hours
         'tags' => ['products', 'catalog'],
     ],
-    
+
     'product_search' => [
         'ttl' => 600,  // 10 minutes
         'tags' => ['products', 'search'],
     ],
-    
+
     'inventory_check' => [
         'ttl' => 60,  // 1 minute
         'tags' => ['inventory'],
     ],
-    
+
     'pricing' => [
         'ttl' => 300,  // 5 minutes
         'tags' => ['pricing', 'products'],
@@ -406,13 +406,13 @@ class PostController
         'tags' => ['tenants'],
         'scopes' => ['tenant'],
     ],
-    
+
     'user_dashboard' => [
         'ttl' => 600,
         'tags' => ['dashboards', 'users'],
         'scopes' => ['user', 'tenant'],
     ],
-    
+
     'tenant_reports' => [
         'ttl' => 10800,  // 3 hours
         'tags' => ['reports', 'tenants'],
@@ -486,7 +486,7 @@ class BaseFilter extends Filterable
         'ttl' => 300,
         'tags' => ['quick'],
     ],
-    
+
     // Standard cache for typical queries (listings, searches)
     'standard' => [
         'ttl' => 3600,
@@ -587,7 +587,8 @@ Log::info('Testing profile performance', [
 ```
 
 ::: tip Next Steps
-- [Getting Started Guide →](./getting-started.md)
-- [Caching Strategies →](./strategies.md)
-- [API Reference →](./api-reference.md)
-:::
+
+-   [Getting Started Guide →](./getting-started.md)
+-   [Caching Strategies →](./strategies.md)
+-   [API Reference →](./api-reference.md)
+    :::

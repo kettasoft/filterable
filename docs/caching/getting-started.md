@@ -40,13 +40,14 @@ $query = Post::filter()->cache(3600)->where('status', 'active'); // Returns quer
 
 The system automatically generates unique, deterministic cache keys based on:
 
-- Filter class name
-- Applied filters
-- Provided data
-- Cache scopes (user, tenant, custom)
-- Terminal method and arguments
+-   Filter class name
+-   Applied filters
+-   Provided data
+-   Cache scopes (user, tenant, custom)
+-   Terminal method and arguments
 
 Example cache key:
+
 ```
 filterable:post_filter:a1b2c3d4:e5f6g7h8:v1:get:abc123
 ```
@@ -78,32 +79,35 @@ FILTERABLE_CACHE_VERSION=v1
 ## When to Use Caching
 
 **✅ Good Use Cases:**
-- Frequently accessed data that changes infrequently
-- Heavy reports and analytics queries
-- Dashboard widgets with complex filters
-- Public-facing filtered lists
-- Search results with stable criteria
+
+-   Frequently accessed data that changes infrequently
+-   Heavy reports and analytics queries
+-   Dashboard widgets with complex filters
+-   Public-facing filtered lists
+-   Search results with stable criteria
 
 **❌ Avoid Caching For:**
-- Real-time data that must be always fresh
-- User-specific data without proper scoping
-- One-time queries
-- Simple queries that are already fast
+
+-   Real-time data that must be always fresh
+-   User-specific data without proper scoping
+-   One-time queries
+-   Simple queries that are already fast
 
 ## Performance Impact
 
 Typical performance gains:
 
-| Scenario | Without Cache | With Cache | Improvement |
-|----------|--------------|------------|-------------|
-| Complex filters (5+ conditions) | 250ms | 2ms | **125x faster** |
-| Joins with aggregations | 500ms | 2ms | **250x faster** |
-| Paginated results | 150ms | 2ms | **75x faster** |
-| Simple filters | 50ms | 2ms | **25x faster** |
+| Scenario                        | Without Cache | With Cache | Improvement     |
+| ------------------------------- | ------------- | ---------- | --------------- |
+| Complex filters (5+ conditions) | 250ms         | 2ms        | **125x faster** |
+| Joins with aggregations         | 500ms         | 2ms        | **250x faster** |
+| Paginated results               | 150ms         | 2ms        | **75x faster**  |
+| Simple filters                  | 50ms          | 2ms        | **25x faster**  |
 
 ::: tip Next Steps
-- [Advanced caching strategies →](./strategies.md)
-- [Cache scoping and multi-tenancy →](./scoping.md)
-- [Auto-invalidation setup →](./auto-invalidation.md)
-- [Cache profiles →](./profiles.md)
-:::
+
+-   [Advanced caching strategies →](./strategies.md)
+-   [Cache scoping and multi-tenancy →](./scoping.md)
+-   [Auto-invalidation setup →](./auto-invalidation.md)
+-   [Cache profiles →](./profiles.md)
+    :::

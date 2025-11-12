@@ -10,10 +10,10 @@ Without scoping, cached results might be shared across different users or tenant
 
 ### Benefits
 
-- **Data Isolation**: Keep user and tenant data separate
-- **Precise Invalidation**: Clear cache for specific users/tenants only
-- **Multi-tenancy Support**: Essential for SaaS applications
-- **Security**: Prevent data leaks between contexts
+-   **Data Isolation**: Keep user and tenant data separate
+-   **Precise Invalidation**: Clear cache for specific users/tenants only
+-   **Multi-tenancy Support**: Essential for SaaS applications
+-   **Security**: Prevent data leaks between contexts
 
 ## User Scoping
 
@@ -31,7 +31,7 @@ $posts = Post::filter()
     ->get();
 
 // Each user gets their own cached result
-// Cache keys: 
+// Cache keys:
 // - filterable:post_filter:user:1:...
 // - filterable:post_filter:user:2:...
 ```
@@ -51,6 +51,7 @@ $posts = Post::filter()
 ### Use Cases
 
 **Personalized Feeds**
+
 ```php
 class FeedController
 {
@@ -67,6 +68,7 @@ class FeedController
 ```
 
 **User Dashboards**
+
 ```php
 class DashboardController
 {
@@ -76,13 +78,14 @@ class DashboardController
             ->cache(600)
             ->scopeByUser()
             ->get();
-            
+
         return view('dashboard', compact('stats'));
     }
 }
 ```
 
 **User Preferences**
+
 ```php
 // Cache user-specific filtered results
 $products = Product::filter()
@@ -143,6 +146,7 @@ $data = Model::filter()
 ### Use Cases
 
 **Tenant Dashboards**
+
 ```php
 class TenantDashboardController
 {
@@ -152,13 +156,14 @@ class TenantDashboardController
             ->cache(600)
             ->scopeByTenant(tenant()->id)
             ->get();
-            
+
         return view('tenant.dashboard', compact('metrics'));
     }
 }
 ```
 
 **Tenant Reports**
+
 ```php
 // Each tenant has their own cached reports
 $report = SalesReport::filter()
@@ -169,6 +174,7 @@ $report = SalesReport::filter()
 ```
 
 **Tenant Settings**
+
 ```php
 // Cache tenant-specific configuration
 $settings = Setting::filter()
@@ -235,6 +241,7 @@ $filters = Request::filter()
 ### Use Cases
 
 **Multi-Level Organizations**
+
 ```php
 class OrganizationController
 {
@@ -250,6 +257,7 @@ class OrganizationController
 ```
 
 **Geographic Segmentation**
+
 ```php
 // Different cache for each region
 $products = Product::filter()
@@ -261,6 +269,7 @@ $products = Product::filter()
 ```
 
 **Temporal Scoping**
+
 ```php
 // Different cache for different time periods
 $analytics = Analytics::filter()
@@ -335,7 +344,7 @@ class ApplyCacheScopes
         app(FilterableCacheManager::class)
             ->addScope('tenant', tenant()->id)
             ->addScope('user', auth()->id());
-            
+
         return $next($request);
     }
 }
@@ -355,7 +364,7 @@ Route::middleware(['auth', 'tenant', ApplyCacheScopes::class])
 abstract class TenantScopedFilter extends Filterable
 {
     use HasFilterableCache;
-    
+
     protected function applyCache(int $ttl = 3600)
     {
         return $this->cache($ttl)
@@ -450,7 +459,7 @@ class SaaSDataController
             ->scopeBy('subscription_tier', auth()->user()->tier)
             ->get();
     }
-    
+
     public function organizationData($orgId)
     {
         return OrganizationData::filter()
@@ -490,7 +499,7 @@ class ProductController
     {
         $region = request()->header('X-Region', 'US');
         $currency = request()->header('X-Currency', 'USD');
-        
+
         return Product::filter()
             ->cache(3600)
             ->scopeBy('region', $region)
@@ -512,30 +521,30 @@ class SmartScopeFilter extends Filterable
     protected function resolveScopes(): array
     {
         $scopes = [];
-        
+
         if (auth()->check()) {
             $scopes['user'] = auth()->id();
         }
-        
+
         if (tenant()) {
             $scopes['tenant'] = tenant()->id;
         }
-        
+
         if (session()->has('organization')) {
             $scopes['organization'] = session('organization');
         }
-        
+
         return $scopes;
     }
-    
+
     public function apply(array $filters = []): Builder
     {
         $query = parent::apply($filters)->cache(3600);
-        
+
         foreach ($this->resolveScopes() as $key => $value) {
             $query->scopeBy($key, $value);
         }
-        
+
         return $query;
     }
 }
@@ -548,22 +557,22 @@ class SmartScopeFilter extends Filterable
 abstract class ScopedFilter extends Filterable
 {
     protected array $defaultScopes = [];
-    
+
     protected function getScopes(): array
     {
         return array_merge($this->defaultScopes, [
             'environment' => app()->environment(),
         ]);
     }
-    
+
     protected function applyScopedCache(int $ttl = 3600)
     {
         $cache = $this->cache($ttl);
-        
+
         foreach ($this->getScopes() as $key => $value) {
             $cache->scopeBy($key, $value);
         }
-        
+
         return $cache;
     }
 }
@@ -624,12 +633,12 @@ $personalData = UserData::filter()
 ```php
 /**
  * ProductFilter
- * 
+ *
  * Cache Scoping:
  * - tenant: Current tenant ID
  * - region: Geographic region
  * - currency: Currency code
- * 
+ *
  * Example cache key:
  * filterable:product_filter:tenant:acme:region:US:currency:USD:...
  */
@@ -695,7 +704,8 @@ Log::debug('Cache scope applied', [
 ```
 
 ::: tip Next Steps
-- [Getting Started →](./getting-started.md)
-- [Auto-invalidation →](./auto-invalidation.md)
-- [Cache Profiles →](./profiles.md)
-:::
+
+-   [Getting Started →](./getting-started.md)
+-   [Auto-invalidation →](./auto-invalidation.md)
+-   [Cache Profiles →](./profiles.md)
+    :::

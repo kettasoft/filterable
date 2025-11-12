@@ -55,7 +55,7 @@ class PostController extends Controller
             ->cacheTags(['posts', 'listings'])
             ->apply($request->all())
             ->paginate(15);
-            
+
         return view('posts.index', compact('posts'));
     }
 }
@@ -71,7 +71,7 @@ public function show($slug)
         ->cacheTags(['posts', 'details'])
         ->apply(['slug' => $slug])
         ->firstOrFail();
-        
+
     return view('posts.show', compact('post'));
 }
 ```
@@ -82,7 +82,7 @@ public function show($slug)
 public function author($username)
 {
     $author = User::where('username', $username)->firstOrFail();
-    
+
     $posts = Post::filter()
         ->cache(1800)
         ->cacheTags(['posts', 'authors'])
@@ -90,7 +90,7 @@ public function author($username)
         ->apply(['status' => 'published'])
         ->orderBy('published_at', 'desc')
         ->get();
-        
+
     return view('authors.show', compact('author', 'posts'));
 }
 ```
@@ -101,7 +101,7 @@ public function author($username)
 public function category($slug)
 {
     $category = Category::where('slug', $slug)->firstOrFail();
-    
+
     $posts = Post::filter()
         ->cache(1800)
         ->cacheTags(['posts', 'categories', "category:{$category->id}"])
@@ -110,7 +110,7 @@ public function category($slug)
             'status' => 'published',
         ])
         ->paginate(15);
-        
+
     return view('categories.show', compact('category', 'posts'));
 }
 ```
@@ -121,7 +121,7 @@ public function category($slug)
 public function search(Request $request)
 {
     $query = $request->input('q');
-    
+
     $results = Post::filter()
         ->cache(600)  // 10 minutes
         ->cacheTags(['posts', 'search'])
@@ -131,7 +131,7 @@ public function search(Request $request)
             'status' => 'published',
         ])
         ->paginate(20);
-        
+
     return view('search', compact('results', 'query'));
 }
 ```
@@ -170,7 +170,7 @@ class ProductController extends Controller
                 'in_stock',
             ]))
             ->paginate(24);
-            
+
         return view('products.catalog', compact('products'));
     }
 }
@@ -182,7 +182,7 @@ class ProductController extends Controller
 public function search(Request $request)
 {
     $query = $request->input('q');
-    
+
     $products = Product::filter()
         ->cache(600)  // 10 minutes
         ->cacheTags(['products', 'search'])
@@ -191,7 +191,7 @@ public function search(Request $request)
             'available' => true,
         ])
         ->paginate(24);
-        
+
     return view('products.search', compact('products', 'query'));
 }
 ```
@@ -206,7 +206,7 @@ public function show($slug)
         ->cacheTags(['products', 'details'])
         ->apply(['slug' => $slug, 'available' => true])
         ->firstOrFail();
-        
+
     // Related products
     $related = Product::filter()
         ->cache(7200)  // 2 hours
@@ -218,7 +218,7 @@ public function show($slug)
         ])
         ->limit(8)
         ->get();
-        
+
     return view('products.show', compact('product', 'related'));
 }
 ```
@@ -229,7 +229,7 @@ public function show($slug)
 public function cartRecommendations()
 {
     $cartItems = auth()->user()->cart->items;
-    
+
     $recommendations = Product::filter()
         ->cache(1800)
         ->cacheTags(['products', 'recommendations'])
@@ -240,7 +240,7 @@ public function cartRecommendations()
         ])
         ->limit(10)
         ->get();
-        
+
     return view('cart.recommendations', compact('recommendations'));
 }
 ```
@@ -251,7 +251,7 @@ public function cartRecommendations()
 public function catalog(Request $request)
 {
     $user = auth()->user();
-    
+
     $products = Product::filter()
         ->cache(1800)
         ->cacheTags(['products', 'catalog'])
@@ -259,7 +259,7 @@ public function catalog(Request $request)
         ->scopeBy('customer_group', $user->customer_group_id)
         ->apply($request->all())
         ->paginate(24);
-        
+
     return view('products.catalog', compact('products'));
 }
 ```
@@ -281,7 +281,7 @@ class DashboardController extends Controller
                 'period' => 'last_30_days',
             ])
             ->get();
-            
+
         $recentActivity = Activity::filter()
             ->cache(300)  // 5 minutes
             ->cacheTags(['activity'])
@@ -290,7 +290,7 @@ class DashboardController extends Controller
             ->latest()
             ->limit(20)
             ->get();
-            
+
         return view('dashboard', compact('metrics', 'recentActivity'));
     }
 }
@@ -307,7 +307,7 @@ public function users(Request $request)
         ->scopeByTenant(tenant()->id)
         ->apply($request->only(['role', 'status', 'search']))
         ->paginate(50);
-        
+
     return view('users.index', compact('users'));
 }
 ```
@@ -326,7 +326,7 @@ public function salesReport(Request $request)
             'group_by',
         ]))
         ->get();
-        
+
     return view('reports.sales', compact('report'));
 }
 ```
@@ -344,7 +344,7 @@ public function organizationDepartmentData($orgId, $deptId)
         ->scopeBy('department', $deptId)
         ->apply(request()->all())
         ->get();
-        
+
     return view('data.show', compact('data'));
 }
 ```
@@ -364,7 +364,7 @@ class ApiController extends Controller
             ->scopeBy('api_version', 'v1')
             ->apply($request->only(['category', 'tag', 'author']))
             ->paginate(20);
-            
+
         return response()->json($posts);
     }
 }
@@ -381,7 +381,7 @@ public function userPosts(Request $request)
         ->scopeByUser()
         ->apply($request->all())
         ->paginate(20);
-        
+
     return response()->json($posts);
 }
 ```
@@ -392,13 +392,13 @@ public function userPosts(Request $request)
 public function heavyQuery(Request $request)
 {
     $cacheKey = "api:heavy:{$request->user()->id}:" . md5(json_encode($request->all()));
-    
+
     $result = Cache::remember($cacheKey, 300, function () use ($request) {
         return ComplexQuery::filter()
             ->apply($request->all())
             ->get();
     });
-    
+
     return response()->json($result);
 }
 ```
@@ -417,7 +417,7 @@ public function liveDashboard()
         ->scopeByUser()
         ->apply(['period' => 'realtime'])
         ->get();
-        
+
     return view('dashboard.live', compact('liveMetrics'));
 }
 ```
@@ -435,7 +435,7 @@ public function notifications()
         ->latest()
         ->limit(50)
         ->get();
-        
+
     return response()->json($notifications);
 }
 ```
@@ -455,7 +455,7 @@ class TenantDataController extends Controller
             ->scopeByTenant(tenant()->id)  // Isolate by tenant
             ->apply($request->all())
             ->get();
-            
+
         return view('data.index', compact('data'));
     }
 }
@@ -475,7 +475,7 @@ public function adminDashboard()
             'aggregate' => true,
         ])
         ->get();
-        
+
     return view('admin.dashboard', compact('aggregatedData'));
 }
 ```
@@ -493,15 +493,15 @@ public function complexQuery(Request $request)
         ->cacheTags(['base'])
         ->apply($request->only(['category', 'type']))
         ->get();
-        
+
     // Layer 2: Cache aggregated results
     $cacheKey = 'aggregated:' . md5($baseData->pluck('id')->join(','));
-    
+
     $result = Cache::remember($cacheKey, 3600, function () use ($baseData) {
         return $baseData->groupBy('type')
             ->map(fn($items) => $items->count());
     });
-    
+
     return response()->json($result);
 }
 ```
@@ -513,18 +513,18 @@ public function complexQuery(Request $request)
 class CacheWarmerCommand extends Command
 {
     protected $signature = 'cache:warm';
-    
+
     public function handle()
     {
         $this->info('Warming popular queries...');
-        
+
         // Warm product catalog
         Product::filter()
             ->cache(3600)
             ->cacheTags(['products', 'catalog'])
             ->apply(['featured' => true])
             ->get();
-            
+
         // Warm blog posts
         Post::filter()
             ->cache(3600)
@@ -532,7 +532,7 @@ class CacheWarmerCommand extends Command
             ->apply(['status' => 'published'])
             ->limit(100)
             ->get();
-            
+
         $this->info('Cache warmed successfully!');
     }
 }
@@ -562,7 +562,7 @@ public function progressiveCatalog(Request $request)
             ->apply($request->all())
             ->paginate(24);
     }
-    
+
     // Longer cache for subsequent pages
     return Product::filter()
         ->cache(7200)  // 2 hours
@@ -586,7 +586,7 @@ public function reliableQuery(Request $request)
         Log::error('Cache failed, falling back to direct query', [
             'error' => $e->getMessage(),
         ]);
-        
+
         // Fallback to non-cached query
         return Model::filter()
             ->apply($request->all())
@@ -606,17 +606,17 @@ class CachedQueryTest extends TestCase
     public function test_query_is_cached()
     {
         Post::factory()->count(10)->create();
-        
+
         // First call - cache miss
         DB::enableQueryLog();
         $posts1 = Post::filter()->cache(3600)->get();
         $queries1 = count(DB::getQueryLog());
-        
+
         // Second call - cache hit
         DB::flushQueryLog();
         $posts2 = Post::filter()->cache(3600)->get();
         $queries2 = count(DB::getQueryLog());
-        
+
         $this->assertEquals($posts1->count(), $posts2->count());
         $this->assertGreaterThan($queries2, $queries1);
         $this->assertEquals(0, $queries2);  // No queries on cache hit
@@ -630,22 +630,22 @@ class CachedQueryTest extends TestCase
 public function test_cache_invalidates_on_model_update()
 {
     $post = Post::factory()->create();
-    
+
     // Cache the query
     $cached = Post::filter()
         ->cache(3600)
         ->cacheTags(['posts'])
         ->first();
-        
+
     // Update the model
     $post->update(['title' => 'Updated Title']);
-    
+
     // Query again
     $refreshed = Post::filter()
         ->cache(3600)
         ->cacheTags(['posts'])
         ->first();
-        
+
     $this->assertEquals('Updated Title', $refreshed->title);
 }
 ```
@@ -659,13 +659,13 @@ public function optimizedQuery(Request $request)
 {
     // Only cache simple queries
     $isCacheable = !$request->has('complex_filter');
-    
+
     $query = Model::filter();
-    
+
     if ($isCacheable) {
         $query->cache(3600)->cacheTags(['simple']);
     }
-    
+
     return $query->apply($request->all())->get();
 }
 ```
@@ -686,7 +686,8 @@ public function batchData(array $ids)
 ```
 
 ::: tip Next Steps
-- [Getting Started →](./getting-started.md)
-- [Caching Strategies →](./strategies.md)
-- [API Reference →](./api-reference.md)
-:::
+
+-   [Getting Started →](./getting-started.md)
+-   [Caching Strategies →](./strategies.md)
+-   [API Reference →](./api-reference.md)
+    :::

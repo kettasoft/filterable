@@ -49,10 +49,10 @@ Define which cache tags should be flushed when each model changes:
 'models' => [
     // When Post model changes, flush 'posts' and 'content' tags
     App\Models\Post::class => ['posts', 'content'],
-    
+
     // When User model changes, flush 'users' tag
     App\Models\User::class => ['users'],
-    
+
     // When Category changes, flush both 'categories' and 'posts'
     // (because posts might be filtered by category)
     App\Models\Category::class => ['categories', 'posts'],
@@ -101,13 +101,13 @@ $post->delete();
 
 The system automatically handles these Eloquent events:
 
-| Event | Description |
-|-------|-------------|
-| `created` | Model is created |
-| `updated` | Model is updated |
-| `deleted` | Model is soft or hard deleted |
-| `restored` | Model is restored from soft delete |
-| `forceDeleted` | Model is permanently deleted |
+| Event          | Description                        |
+| -------------- | ---------------------------------- |
+| `created`      | Model is created                   |
+| `updated`      | Model is updated                   |
+| `deleted`      | Model is soft or hard deleted      |
+| `restored`     | Model is restored from soft delete |
+| `forceDeleted` | Model is permanently deleted       |
 
 ## Advanced Patterns
 
@@ -125,7 +125,7 @@ When one model affects multiple cache types:
         'homepage',
         'feeds',
     ],
-    
+
     // Category changes affect posts and navigation
     App\Models\Category::class => [
         'categories',
@@ -146,7 +146,7 @@ Flush caches when related models change:
         'comments',
         'posts', // Because post.comments_count might change
     ],
-    
+
     // Tag changes affect posts
     App\Models\Tag::class => [
         'tags',
@@ -279,24 +279,24 @@ class CacheInvalidationTest extends TestCase
     public function it_invalidates_cache_when_post_is_updated()
     {
         $post = Post::factory()->create();
-        
+
         // Cache some data
         $cached = Post::filter()
             ->cache(3600)
             ->cacheTags(['posts'])
             ->get();
-            
+
         $this->assertCount(1, $cached);
-        
+
         // Update the post (should trigger invalidation)
         $post->update(['title' => 'Updated']);
-        
+
         // Cache should be cleared, fresh data retrieved
         $fresh = Post::filter()
             ->cache(3600)
             ->cacheTags(['posts'])
             ->get();
-            
+
         $this->assertEquals('Updated', $fresh->first()->title);
     }
 }
@@ -312,16 +312,16 @@ class CacheInvalidationTest extends TestCase
     'models' => [
         // Posts
         App\Models\Post::class => ['posts', 'blog', 'feed'],
-        
+
         // Comments invalidate posts too
         App\Models\Comment::class => ['comments', 'posts'],
-        
+
         // Categories affect post listings
         App\Models\Category::class => ['categories', 'posts'],
-        
+
         // Tags affect post filtering
         App\Models\Tag::class => ['tags', 'posts'],
-        
+
         // Authors affect post author pages
         App\Models\User::class => ['users', 'authors'],
     ],
@@ -336,16 +336,16 @@ class CacheInvalidationTest extends TestCase
     'models' => [
         // Products
         App\Models\Product::class => ['products', 'catalog'],
-        
+
         // Categories affect product listings
         App\Models\Category::class => ['categories', 'products'],
-        
+
         // Inventory changes affect availability
         App\Models\Inventory::class => ['inventory', 'products'],
-        
+
         // Prices affect product displays
         App\Models\Price::class => ['prices', 'products'],
-        
+
         // Reviews affect product ratings
         App\Models\Review::class => ['reviews', 'products'],
     ],
@@ -360,10 +360,10 @@ class CacheInvalidationTest extends TestCase
     'models' => [
         // Tenant-level resources
         App\Models\Tenant::class => ['tenants'],
-        
+
         // User changes within tenant
         App\Models\User::class => ['users'],
-        
+
         // Tenant-specific data
         App\Models\Project::class => ['projects'],
         App\Models\Task::class => ['tasks', 'projects'],
@@ -383,74 +383,84 @@ $projects = Project::filter()
 ### Cache Not Invalidating
 
 1. **Check if auto-invalidation is enabled:**
-   ```php
-   config('filterable.cache.auto_invalidate.enabled')
-   ```
+
+    ```php
+    config('filterable.cache.auto_invalidate.enabled')
+    ```
 
 2. **Verify model is in config:**
-   ```php
-   // Make sure model class is correctly namespaced
-   App\Models\Post::class => ['posts']
-   ```
+
+    ```php
+    // Make sure model class is correctly namespaced
+    App\Models\Post::class => ['posts']
+    ```
 
 3. **Check cache driver supports tags:**
-   ```bash
-   # Tags require Redis or Memcached
-   php artisan config:show cache.default
-   ```
+
+    ```bash
+    # Tags require Redis or Memcached
+    php artisan config:show cache.default
+    ```
 
 4. **Enable tracking to see logs:**
-   ```php
-   'tracking' => ['enabled' => true]
-   ```
+    ```php
+    'tracking' => ['enabled' => true]
+    ```
 
 ### Observer Not Firing
 
 1. **Clear config cache:**
-   ```bash
-   php artisan config:clear
-   ```
+
+    ```bash
+    php artisan config:clear
+    ```
 
 2. **Verify observer is registered:**
-   ```bash
-   php artisan route:list | grep CacheInvalidationObserver
-   ```
+
+    ```bash
+    php artisan route:list | grep CacheInvalidationObserver
+    ```
 
 3. **Check model events are firing:**
-   ```php
-   Post::observe(new class {
-       public function updated($post) {
-           logger('Post updated: ' . $post->id);
-       }
-   });
-   ```
+    ```php
+    Post::observe(new class {
+        public function updated($post) {
+            logger('Post updated: ' . $post->id);
+        }
+    });
+    ```
 
 ## Best Practices
 
 1. **✅ Use hierarchical tags:**
-   ```php
-   ['posts', 'posts:published', 'content']
-   ```
+
+    ```php
+    ['posts', 'posts:published', 'content']
+    ```
 
 2. **✅ Keep model mappings simple:**
-   - 2-4 tags per model is ideal
-   - Avoid over-granular tags
+
+    - 2-4 tags per model is ideal
+    - Avoid over-granular tags
 
 3. **✅ Test invalidation:**
-   - Write tests for critical cache flows
-   - Monitor logs in production
+
+    - Write tests for critical cache flows
+    - Monitor logs in production
 
 4. **✅ Document tag usage:**
-   - Maintain a tag registry
-   - Document which features use which tags
+
+    - Maintain a tag registry
+    - Document which features use which tags
 
 5. **❌ Avoid:**
-   - Too many tags (performance overhead)
-   - Missing required tags (stale caches)
-   - Circular dependencies (redundant flushes)
+    - Too many tags (performance overhead)
+    - Missing required tags (stale caches)
+    - Circular dependencies (redundant flushes)
 
 ::: tip Next Steps
-- [Cache profiles →](./profiles.md)
-- [Monitoring and debugging →](./monitoring.md)
-- [API reference →](../api/caching.md)
-:::
+
+-   [Cache profiles →](./profiles.md)
+-   [Monitoring and debugging →](./monitoring.md)
+-   [API reference →](../api/caching.md)
+    :::
