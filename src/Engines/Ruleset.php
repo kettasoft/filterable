@@ -43,6 +43,8 @@ class Ruleset extends Engine
       if (! $clause->validated) continue;
 
       Applier::apply(new ClauseApplier($clause), $builder);
+
+      $this->commit($field, $clause);
     }
 
     return $builder;

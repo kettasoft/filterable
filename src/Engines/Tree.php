@@ -68,6 +68,8 @@ class Tree extends Engine
       } else {
         Applier::apply(new ClauseApplier($clause), $builder);
       }
+
+      $this->commit($node->field, $clause);
     }
 
     return $builder;

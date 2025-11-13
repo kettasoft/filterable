@@ -49,6 +49,8 @@ class Expression extends Engine
         continue; // skip disallowed field
       }
 
+      $this->commit($field, $clause);
+
       return Applier::apply(new ClauseApplier($clause), $builder);
     }
 
