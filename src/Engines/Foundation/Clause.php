@@ -42,7 +42,7 @@ class Clause implements Arrayable, Jsonable
    * 
    * @param Payload $payload
    */
-  public function __construct(protected Payload $payload)
+  public function __construct(Payload $payload)
   {
     $this->field = $payload->field;
     $this->operator = $payload->operator;
