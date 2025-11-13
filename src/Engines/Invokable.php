@@ -62,7 +62,9 @@ class Invokable extends Engine
         throw new \RuntimeException(sprintf("Filter method [%s] conflicts with core Filterable method.", [$method]));
       }
 
-      $this->initializeFilters($filter, $method, $clause->getPayload());
+      $this->initializeFilters($filter, $method, $payload);
+
+      $this->commit($method, $clause);
     }
 
     return $this->builder;
