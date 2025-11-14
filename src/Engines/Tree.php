@@ -77,36 +77,12 @@ class Tree extends Engine
   }
 
   /**
-   * Get allowed fields to filtering.
-   * @return array
-   */
-  protected function getAllowedFieldsFromConfig(): array
-  {
-    return config('filterable.engines.tree.allowed_fields', []);
-  }
-
-  /**
    * Default operator for use.
    * @return mixed|\Illuminate\Config\Repository
    */
   public function defaultOperator()
   {
     return config('filterable.engines.tree.default_operator', null);
-  }
-
-  public function getOperatorsFromConfig(): array
-  {
-    return config('filterable.engines.tree.allowed_operators', []);
-  }
-
-  public function isStrictFromConfig(): bool
-  {
-    return config('filterable.engines.tree.strict', true);
-  }
-
-  public function isIgnoredEmptyValuesFromConfig(): bool
-  {
-    return config('filterable.engines.tree.ignore_empty_values', false);
   }
 
   /**
