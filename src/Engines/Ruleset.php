@@ -5,12 +5,10 @@ namespace Kettasoft\Filterable\Engines;
 use Illuminate\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Support\Payload;
 use Kettasoft\Filterable\Traits\FieldNormalizer;
-use Kettasoft\Filterable\Engines\Foundation\Clause;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
 use Kettasoft\Filterable\Engines\Foundation\ClauseApplier;
 use Kettasoft\Filterable\Engines\Foundation\ClauseFactory;
 use Kettasoft\Filterable\Engines\Foundation\Appliers\Applier;
-use Kettasoft\Filterable\Exceptions\NotAllowedFieldException;
 use Kettasoft\Filterable\Engines\Foundation\Parsers\Dissector;
 
 class Ruleset extends Engine
