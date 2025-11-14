@@ -3,17 +3,16 @@
 namespace Kettasoft\Filterable\Engines;
 
 use Illuminate\Support\Str;
+use Kettasoft\Filterable\Filterable;
 use Illuminate\Database\Eloquent\Builder;
-use Kettasoft\Filterable\Engines\Foundation\Attributes\AttributeRegistry;
 use Kettasoft\Filterable\Support\Payload;
 use Illuminate\Support\Traits\ForwardsCalls;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
-use Kettasoft\Filterable\Engines\Foundation\Attributes\AttributeContext;
-use Kettasoft\Filterable\Engines\Foundation\Attributes\AttributePipeline;
-use Kettasoft\Filterable\Engines\Foundation\Clause;
 use Kettasoft\Filterable\Engines\Foundation\ClauseFactory;
 use Kettasoft\Filterable\Engines\Foundation\Parsers\Dissector;
-use Kettasoft\Filterable\Filterable;
+use Kettasoft\Filterable\Engines\Foundation\Attributes\AttributeContext;
+use Kettasoft\Filterable\Engines\Foundation\Attributes\AttributePipeline;
+use Kettasoft\Filterable\Engines\Foundation\Attributes\AttributeRegistry;
 
 class Invokable extends Engine
 {
