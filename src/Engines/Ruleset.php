@@ -69,30 +69,6 @@ class Ruleset extends Engine
   }
 
   /**
-   * Get allowed fields to filtering.
-   * @return array
-   */
-  protected function getAllowedFieldsFromConfig(): array
-  {
-    return config('filterable.engines.ruleset.allowed_fields', []);
-  }
-
-  public function getOperatorsFromConfig(): array
-  {
-    return config('filterable.engines.ruleset.allowed_operators', []);
-  }
-
-  public function isStrictFromConfig(): bool
-  {
-    return config('filterable.engines.ruleset.strict', true);
-  }
-
-  protected function isIgnoredEmptyValuesFromConfig(): bool
-  {
-    return config('filterable.engines.ruleset.ignore_empty_values', false);
-  }
-
-  /**
    * Get engine name.
    * @return string
    */
