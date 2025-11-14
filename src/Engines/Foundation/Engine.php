@@ -17,15 +17,9 @@ abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Stricta
 {
   /**
    * Create Engine instance.
-   * @param \Kettasoft\Filterable\Contracts\FilterableContext $context
+   * @param Filterable $context
    */
-  public function __construct(protected FilterableContext $context)
-  {
-    $resources = $this->context->getResources()
-      ->setOperators($this->allowedOperators());
-
-    $resources->operators->setDefault($this->defaultOperator());
-  }
+  public function __construct(protected Filterable $context) {}
 
   /**
    * Get engine name.
