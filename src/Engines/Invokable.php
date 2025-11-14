@@ -110,45 +110,6 @@ class Invokable extends Engine
   }
 
   /**
-   * Get allowed fields to filtering.
-   * @return array
-   */
-  protected function getAllowedFieldsFromConfig(): array
-  {
-    return config('filterable.engines.invokable.allowed_fields', []);
-  }
-
-  /**
-   * Get allowed operators to filtering.
-   * 
-   * @return array
-   */
-  public function getOperatorsFromConfig(): array
-  {
-    return config('filterable.engines.invokable.allowed_operators', []);
-  }
-
-  /**
-   * Check if filter has strict mode.
-   * 
-   * @return bool
-   */
-  public function isStrictFromConfig(): bool
-  {
-    return config('filterable.engines.invokable.strict', true);
-  }
-
-  /**
-   * Check if empty values are ignored from config.
-   * 
-   * @return bool
-   */
-  public function isIgnoredEmptyValuesFromConfig(): bool
-  {
-    return config('filterable.engines.invokable.ignore_empty_values', false);
-  }
-
-  /**
    * Get engine default operator.
    * @return string
    */
