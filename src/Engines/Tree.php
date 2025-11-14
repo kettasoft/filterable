@@ -94,15 +94,6 @@ class Tree extends Engine
   }
 
   /**
-   * Get all operators.
-   * @return array
-   */
-  public function operators(): array
-  {
-    return config('filterable.engines.tree.allowed_operators', []);
-  }
-
-  /**
    * Default operator for use.
    * @return mixed|\Illuminate\Config\Repository
    */
