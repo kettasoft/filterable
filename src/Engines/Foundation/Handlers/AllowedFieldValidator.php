@@ -3,7 +3,7 @@
 namespace Kettasoft\Filterable\Engines\Foundation\Handlers;
 
 use Kettasoft\Filterable\Engines\Foundation\Engine;
-use Kettasoft\Filterable\Exceptions\NotAllowedFieldException;
+use Kettasoft\Filterable\Engines\Exceptions\NotAllowedFieldException;
 
 /**
  * Validate if field is allowed to apply filtering.

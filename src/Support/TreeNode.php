@@ -2,7 +2,7 @@
 
 namespace Kettasoft\Filterable\Support;
 
-use Kettasoft\Filterable\Exceptions\InvalidDataFormatException;
+use Kettasoft\Filterable\Engines\Exceptions\InvalidDataFormatException;
 
 /**
  * TreeNode represents a filter node in a logical tree.

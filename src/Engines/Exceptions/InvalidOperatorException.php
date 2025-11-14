@@ -1,6 +1,6 @@
 <?php
 
-namespace Kettasoft\Filterable\Exceptions;
+namespace Kettasoft\Filterable\Engines\Exceptions;
 
 class InvalidOperatorException extends \InvalidArgumentException
 {

@@ -12,9 +12,9 @@ use Kettasoft\Filterable\Tests\Models\Tag;
 use Kettasoft\Filterable\Tests\Models\Post;
 use Symfony\Component\HttpFoundation\InputBag;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Kettasoft\Filterable\Exceptions\InvalidOperatorException;
-use Kettasoft\Filterable\Exceptions\NotAllowedFieldException;
-use Kettasoft\Filterable\Exceptions\InvalidDataFormatException;
+use Kettasoft\Filterable\Engines\Exceptions\InvalidOperatorException;
+use Kettasoft\Filterable\Engines\Exceptions\NotAllowedFieldException;
+use Kettasoft\Filterable\Engines\Exceptions\InvalidDataFormatException;
 
 class TreeEngineTest extends TestCase
 {

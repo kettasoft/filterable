@@ -9,8 +9,8 @@ use Kettasoft\Filterable\Tests\Models\Tag;
 use Kettasoft\Filterable\Tests\Models\Post;
 use Kettasoft\Filterable\Engines\Expression;
 use Symfony\Component\HttpFoundation\InputBag;
-use Kettasoft\Filterable\Exceptions\InvalidOperatorException;
-use Kettasoft\Filterable\Exceptions\NotAllowedFieldException;
+use Kettasoft\Filterable\Engines\Exceptions\InvalidOperatorException;
+use Kettasoft\Filterable\Engines\Exceptions\NotAllowedFieldException;
 
 class ExpressionEngineTest extends TestCase
 {

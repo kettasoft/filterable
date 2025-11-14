@@ -4,8 +4,8 @@ namespace Kettasoft\Filterable\Engines\Foundation;
 
 use Kettasoft\Filterable\Engines\Foundation\Enums\Operators;
 use Kettasoft\Filterable\Support\Payload;
-use Kettasoft\Filterable\Exceptions\InvalidOperatorException;
-use Kettasoft\Filterable\Exceptions\NotAllowedFieldException;
+use Kettasoft\Filterable\Engines\Exceptions\InvalidOperatorException;
+use Kettasoft\Filterable\Engines\Exceptions\NotAllowedFieldException;
 
 /**
  * Class ClauseFactory
