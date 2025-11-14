@@ -9,10 +9,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Foundation\Invoker;
+use Kettasoft\Filterable\Contracts\Commitable;
 use Kettasoft\Filterable\Foundation\Resources;
 use Kettasoft\Filterable\Contracts\Validatable;
 use Kettasoft\Filterable\Contracts\Authorizable;
 use Kettasoft\Filterable\Sanitization\Sanitizer;
+use Kettasoft\Filterable\Engines\Foundation\Clause;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
 use Kettasoft\Filterable\Foundation\Sorting\Sorter;
 use Kettasoft\Filterable\Contracts\FilterableContext;
@@ -21,15 +23,15 @@ use Kettasoft\Filterable\Foundation\Contracts\Sortable;
 use Kettasoft\Filterable\Foundation\FilterableSettings;
 use Kettasoft\Filterable\Exceptions\MissingBuilderException;
 use Kettasoft\Filterable\Engines\Foundation\Executors\Executer;
+use Kettasoft\Filterable\Foundation\Contracts\FilterableProfile;
 use Kettasoft\Filterable\Foundation\Contracts\Sorting\Invokable;
+use Kettasoft\Filterable\Foundation\Events\Contracts\EventManager;
 use Kettasoft\Filterable\Foundation\Events\FilterableEventManager;
 use Kettasoft\Filterable\HttpIntegration\HeaderDrivenEngineSelector;
 use Kettasoft\Filterable\Foundation\Contracts\ShouldReturnQueryBuilder;
 use Kettasoft\Filterable\Exceptions\RequestSourceIsNotSupportedException;
-use Kettasoft\Filterable\Foundation\Contracts\FilterableProfile;
-use Kettasoft\Filterable\Foundation\Events\Contracts\EventManager;
 
-class Filterable implements FilterableContext, Authorizable, Validatable
+class Filterable implements FilterableContext, Authorizable, Validatable, Commitable
 {
   use Traits\InteractsWithFilterKey,
     Traits\InteractsWithMethodMentoring,
@@ -155,6 +157,12 @@ class Filterable implements FilterableContext, Authorizable, Validatable
   protected static EventManager $eventManager;
 
   /**
+   * Applied clauses.
+   * @var array
+   */
+  protected $applied = [];
+
+  /**
    * Create a new Filterable instance.
    * @param Request|null $request
    */
@@ -255,6 +263,34 @@ class Filterable implements FilterableContext, Authorizable, Validatable
     }
 
     return $this;
+  }
+
+  /**
+   * Commit clause.
+   * 
+   * @param string $key
+   * @param Clause $clause
+   * @return bool
+   */
+  public function commit(string $key, Clause $clause): bool
+  {
+    $this->applied[$key] = $clause;
+    return true;
+  }
+
+  /**
+   * Get applied clauses.
+   * 
+   * @param string $key
+   * @return array|Clause|null
+   */
+  public function applied($key = null)
+  {
+    if (!$key) {
+      return $this->applied;
+    }
+
+    return $this->applied[$key] ?? null;
   }
 
   /**

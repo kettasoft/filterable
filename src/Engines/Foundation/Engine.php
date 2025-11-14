@@ -110,4 +110,15 @@ abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Stricta
 
     return $sanitizer->handle($filed, $value);
   }
+
+  /**
+   * Commit applied clauses.
+   * @param string $key
+   * @param Clause $clause
+   * @return bool
+   */
+  final protected function commit(string $key, Clause $clause): bool
+  {
+    return $this->context->commit($key, $clause);
+  }
 }
