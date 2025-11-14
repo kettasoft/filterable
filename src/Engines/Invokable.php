@@ -3,17 +3,16 @@
 namespace Kettasoft\Filterable\Engines;
 
 use Illuminate\Support\Str;
+use Kettasoft\Filterable\Filterable;
 use Illuminate\Database\Eloquent\Builder;
-use Kettasoft\Filterable\Engines\Foundation\Attributes\AttributeRegistry;
 use Kettasoft\Filterable\Support\Payload;
 use Illuminate\Support\Traits\ForwardsCalls;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
-use Kettasoft\Filterable\Engines\Foundation\Attributes\AttributeContext;
-use Kettasoft\Filterable\Engines\Foundation\Attributes\AttributePipeline;
-use Kettasoft\Filterable\Engines\Foundation\Clause;
 use Kettasoft\Filterable\Engines\Foundation\ClauseFactory;
 use Kettasoft\Filterable\Engines\Foundation\Parsers\Dissector;
-use Kettasoft\Filterable\Filterable;
+use Kettasoft\Filterable\Engines\Foundation\Attributes\AttributeContext;
+use Kettasoft\Filterable\Engines\Foundation\Attributes\AttributePipeline;
+use Kettasoft\Filterable\Engines\Foundation\Attributes\AttributeRegistry;
 
 class Invokable extends Engine
 {
@@ -107,45 +106,6 @@ class Invokable extends Engine
     }
 
     return $this->context->getRequest()->has($filter) ? Str::camel($filter) : 'default' . Str::studly($filter);
-  }
-
-  /**
-   * Get allowed fields to filtering.
-   * @return array
-   */
-  protected function getAllowedFieldsFromConfig(): array
-  {
-    return config('filterable.engines.invokable.allowed_fields', []);
-  }
-
-  /**
-   * Get allowed operators to filtering.
-   * 
-   * @return array
-   */
-  public function getOperatorsFromConfig(): array
-  {
-    return config('filterable.engines.invokable.allowed_operators', []);
-  }
-
-  /**
-   * Check if filter has strict mode.
-   * 
-   * @return bool
-   */
-  public function isStrictFromConfig(): bool
-  {
-    return config('filterable.engines.invokable.strict', true);
-  }
-
-  /**
-   * Check if empty values are ignored from config.
-   * 
-   * @return bool
-   */
-  public function isIgnoredEmptyValuesFromConfig(): bool
-  {
-    return config('filterable.engines.invokable.ignore_empty_values', false);
   }
 
   /**

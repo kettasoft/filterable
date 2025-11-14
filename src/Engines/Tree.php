@@ -6,18 +6,10 @@ use Illuminate\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Support\Payload;
 use Kettasoft\Filterable\Support\TreeNode;
 use Kettasoft\Filterable\Traits\FieldNormalizer;
-use Kettasoft\Filterable\Engines\Foundation\Clause;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
-use Kettasoft\Filterable\Support\RelationPathParser;
-use Kettasoft\Filterable\Support\AllowedFieldChecker;
 use Kettasoft\Filterable\Engines\Foundation\ClauseApplier;
 use Kettasoft\Filterable\Engines\Foundation\ClauseFactory;
-use Kettasoft\Filterable\Support\TreeBasedRelationsResolver;
 use Kettasoft\Filterable\Engines\Foundation\Appliers\Applier;
-use Kettasoft\Filterable\Engines\Contracts\TreeFilterableContext;
-use Kettasoft\Filterable\Engines\Contracts\HasAllowedFieldChecker;
-use Kettasoft\Filterable\Support\TreeBasedSignelConditionResolver;
-use Kettasoft\Filterable\Engines\Contracts\HasInteractsWithOperators;
 
 class Tree extends Engine
 {
@@ -41,6 +33,12 @@ class Tree extends Engine
     return $this->applyNode($builder, TreeNode::parse($data));
   }
 
+  /**
+   * Apply tree node to the query builder.
+   * @param \Illuminate\Database\Eloquent\Builder $builder
+   * @param \Kettasoft\Filterable\Support\TreeNode $node
+   * @return Builder
+   */
   private function applyNode(Builder $builder, TreeNode $node)
   {
     if ($node->isGroup()) {
@@ -85,45 +83,12 @@ class Tree extends Engine
   }
 
   /**
-   * Get allowed fields to filtering.
-   * @return array
-   */
-  protected function getAllowedFieldsFromConfig(): array
-  {
-    return config('filterable.engines.tree.allowed_fields', []);
-  }
-
-  /**
-   * Get all operators.
-   * @return array
-   */
-  public function operators(): array
-  {
-    return config('filterable.engines.tree.allowed_operators', []);
-  }
-
-  /**
    * Default operator for use.
    * @return mixed|\Illuminate\Config\Repository
    */
   public function defaultOperator()
   {
     return config('filterable.engines.tree.default_operator', null);
-  }
-
-  public function getOperatorsFromConfig(): array
-  {
-    return config('filterable.engines.tree.allowed_operators', []);
-  }
-
-  public function isStrictFromConfig(): bool
-  {
-    return config('filterable.engines.tree.strict', true);
-  }
-
-  public function isIgnoredEmptyValuesFromConfig(): bool
-  {
-    return config('filterable.engines.tree.ignore_empty_values', false);
   }
 
   /**

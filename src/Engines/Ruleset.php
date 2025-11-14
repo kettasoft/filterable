@@ -5,12 +5,10 @@ namespace Kettasoft\Filterable\Engines;
 use Illuminate\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Support\Payload;
 use Kettasoft\Filterable\Traits\FieldNormalizer;
-use Kettasoft\Filterable\Engines\Foundation\Clause;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
 use Kettasoft\Filterable\Engines\Foundation\ClauseApplier;
 use Kettasoft\Filterable\Engines\Foundation\ClauseFactory;
 use Kettasoft\Filterable\Engines\Foundation\Appliers\Applier;
-use Kettasoft\Filterable\Exceptions\NotAllowedFieldException;
 use Kettasoft\Filterable\Engines\Foundation\Parsers\Dissector;
 
 class Ruleset extends Engine
@@ -66,30 +64,6 @@ class Ruleset extends Engine
   public function defaultOperator(): string
   {
     return config('filterable.engines.ruleset.default_operator', 'eq');
-  }
-
-  /**
-   * Get allowed fields to filtering.
-   * @return array
-   */
-  protected function getAllowedFieldsFromConfig(): array
-  {
-    return config('filterable.engines.ruleset.allowed_fields', []);
-  }
-
-  public function getOperatorsFromConfig(): array
-  {
-    return config('filterable.engines.ruleset.allowed_operators', []);
-  }
-
-  public function isStrictFromConfig(): bool
-  {
-    return config('filterable.engines.ruleset.strict', true);
-  }
-
-  protected function isIgnoredEmptyValuesFromConfig(): bool
-  {
-    return config('filterable.engines.ruleset.ignore_empty_values', false);
   }
 
   /**

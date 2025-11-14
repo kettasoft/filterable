@@ -17,15 +17,15 @@ abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Stricta
 {
   /**
    * Create Engine instance.
-   * @param \Kettasoft\Filterable\Contracts\FilterableContext $context
+   * @param Filterable $context
    */
-  public function __construct(protected FilterableContext $context)
-  {
-    $resources = $this->context->getResources()
-      ->setOperators($this->allowedOperators());
+  public function __construct(protected Filterable $context) {}
 
-    $resources->operators->setDefault($this->defaultOperator());
-  }
+  /**
+   * Get engine name.
+   * @return string
+   */
+  abstract public function getEngineName(): string;
 
   /**
    * Apply filters to the query.
@@ -35,16 +35,40 @@ abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Stricta
   abstract public function execute(Builder $builder);
 
   /**
+   * Get allowed fields to filtering.
+   * @return array
+   */
+  protected function getAllowedFieldsFromConfig(): array
+  {
+    return config("filterable.engines.{$this->getEngineName()}.allowed_fields", []);
+  }
+
+  /**
+   * Check if empty values are ignored from engine config.
+   * @return bool
+   */
+  protected function isIgnoredEmptyValuesFromConfig(): bool
+  {
+    return config("filterable.engines.{$this->getEngineName()}.ignore_empty_values", false);
+  }
+
+  /**
+   * Get allowed operators to filtering.
+   * @return array
+   */
+  public function getOperatorsFromConfig(): array
+  {
+    return config("filterable.engines.{$this->getEngineName()}.allowed_operators", []);
+  }
+
+  /**
    * Check if the strict mode is enable in an engine config.
    * @return bool
    */
-  abstract protected function isStrictFromConfig(): bool;
-
-  abstract protected function getAllowedFieldsFromConfig(): array;
-
-  abstract protected function isIgnoredEmptyValuesFromConfig(): bool;
-
-  abstract public function getEngineName(): string;
+  protected function isStrictFromConfig(): bool
+  {
+    return config("filterable.engines.{$this->getEngineName()}.strict", false);
+  }
 
   public function isIgnoredEmptyValues(): bool
   {
