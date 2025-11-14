@@ -6,18 +6,10 @@ use Illuminate\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Support\Payload;
 use Kettasoft\Filterable\Support\TreeNode;
 use Kettasoft\Filterable\Traits\FieldNormalizer;
-use Kettasoft\Filterable\Engines\Foundation\Clause;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
-use Kettasoft\Filterable\Support\RelationPathParser;
-use Kettasoft\Filterable\Support\AllowedFieldChecker;
 use Kettasoft\Filterable\Engines\Foundation\ClauseApplier;
 use Kettasoft\Filterable\Engines\Foundation\ClauseFactory;
-use Kettasoft\Filterable\Support\TreeBasedRelationsResolver;
 use Kettasoft\Filterable\Engines\Foundation\Appliers\Applier;
-use Kettasoft\Filterable\Engines\Contracts\TreeFilterableContext;
-use Kettasoft\Filterable\Engines\Contracts\HasAllowedFieldChecker;
-use Kettasoft\Filterable\Support\TreeBasedSignelConditionResolver;
-use Kettasoft\Filterable\Engines\Contracts\HasInteractsWithOperators;
 
 class Tree extends Engine
 {
