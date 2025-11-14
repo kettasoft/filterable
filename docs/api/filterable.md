@@ -269,6 +269,14 @@ Return the strict flag (`true`/`false`) or `null` when not explicitly set.
 
 ---
 
+### States & Clauses
+
+#### `applied($key): mixed`
+
+Get applied claueses.
+
+---
+
 ### Flow Control
 
 #### `when(bool $condition, callable $callback): static`
