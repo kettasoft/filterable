@@ -33,6 +33,12 @@ class Tree extends Engine
     return $this->applyNode($builder, TreeNode::parse($data));
   }
 
+  /**
+   * Apply tree node to the query builder.
+   * @param \Illuminate\Database\Eloquent\Builder $builder
+   * @param \Kettasoft\Filterable\Support\TreeNode $node
+   * @return Builder
+   */
   private function applyNode(Builder $builder, TreeNode $node)
   {
     if ($node->isGroup()) {
