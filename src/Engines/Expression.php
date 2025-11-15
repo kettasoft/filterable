@@ -2,8 +2,8 @@
 
 namespace Kettasoft\Filterable\Engines;
 
+use Illuminate\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Support\Payload;
-use Illuminate\Contracts\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
 use Kettasoft\Filterable\Support\ConditionNormalizer;
 use Kettasoft\Filterable\Support\ValidateTableColumns;
@@ -22,10 +22,10 @@ class Expression extends Engine
 
   /**
    * Apply filters to the query.
-   * @param \Illuminate\Contracts\Database\Eloquent\Builder $builder
+   * @param \Illuminate\Database\Eloquent\Builder $builder
    * @return Builder
    */
-  public function execute(Builder $builder)
+  public function handle(Builder $builder): Builder
   {
     $filters = $this->context->getData();
 
@@ -46,7 +46,7 @@ class Expression extends Engine
 
       $this->commit($field, $clause);
 
-      return Applier::apply(new ClauseApplier($clause), $builder);
+      Applier::apply(new ClauseApplier($clause), $builder);
     }
 
     return $builder;
