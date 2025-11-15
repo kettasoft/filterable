@@ -2,6 +2,8 @@
 
 namespace Kettasoft\Filterable\Engines\Foundation\Enums;
 
+use Kettasoft\Filterable\Engines\Exceptions\InvalidOperatorException;
+
 enum Operators: string
 {
   case EQUALS = '=';
@@ -37,7 +39,7 @@ enum Operators: string
       'not_in' => self::NOT_IN->value,
       'is_null' => self::IS_NULL->value,
       'is_not_null' => self::IS_NOT_NULL->value,
-      default => throw new \Kettasoft\Filterable\Exceptions\InvalidOperatorException($operator),
+      default => throw new InvalidOperatorException($operator),
     };
   }
 }
