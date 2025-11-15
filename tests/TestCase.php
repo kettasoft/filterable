@@ -5,6 +5,7 @@ namespace Kettasoft\Filterable\Tests;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 use Kettasoft\Filterable\Tests\Database\Migrations\CreateTagsTable;
 use Kettasoft\Filterable\Tests\Database\Migrations\CreatePostsTable;
+use Kettasoft\Filterable\Tests\Database\Migrations\CreateUsersTable;
 
 class TestCase extends BaseTestCase
 {
@@ -35,7 +36,8 @@ class TestCase extends BaseTestCase
   {
     $migrations = [
       CreatePostsTable::class,
-      CreateTagsTable::class
+      CreateTagsTable::class,
+      CreateUsersTable::class
     ];
 
     foreach ($migrations as $migration) {
