@@ -2,7 +2,9 @@
 
 namespace Kettasoft\Filterable\Engines\Exceptions;
 
-class InvalidDataFormatException extends SkipExecution
+use Kettasoft\Filterable\Exceptions\StrictnessException;
+
+class InvalidDataFormatException extends StrictnessException
 {
   public function __construct()
   {
