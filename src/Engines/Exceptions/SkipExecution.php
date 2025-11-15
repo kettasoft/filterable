@@ -5,7 +5,7 @@ namespace Kettasoft\Filterable\Engines\Exceptions;
 use Exception;
 use Kettasoft\Filterable\Engines\Foundation\Clause;
 
-abstract class SkipExecution extends Exception
+class SkipExecution extends Exception
 {
     /**
      * SkipExecution constructor.
