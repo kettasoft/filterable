@@ -32,12 +32,6 @@ class Clause implements Arrayable, Jsonable
   public readonly string|null $value;
 
   /**
-   * Check if the clause is validated.
-   * @var bool
-   */
-  public bool $validated = false;
-
-  /**
    * Clause constructor.
    * 
    * @param Payload $payload
@@ -66,12 +60,6 @@ class Clause implements Arrayable, Jsonable
   public function isRelational(): bool
   {
     return is_string($this->field) && str_contains($this->field, '.');
-  }
-
-  public function setStatus(bool $status)
-  {
-    $this->validated = $status;
-    return $this;
   }
 
   /**
