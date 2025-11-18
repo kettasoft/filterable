@@ -243,6 +243,88 @@ class Payload implements \Stringable, Arrayable, Jsonable
   }
 
   /**
+   * Perform multiple is* checks on the payload.
+   *
+   * Example: $payload->is('isJson', 'isNotEmpty')
+   *
+   * @param mixed ...$checks
+   * @return bool
+   *
+   * @throws \InvalidArgumentException if any of the check methods do not exist.
+   */
+  public function is(...$checks): bool
+  {
+    foreach ($checks as $check) {
+      $negate = false;
+
+      // If there is a ! at the beginning, negate the result
+      if (str_starts_with($check, '!')) {
+        $negate = true;
+        $check = substr($check, 1); // Remove the '!' for method name
+      }
+
+      $method = 'is' . ucfirst($check);
+
+      if (!method_exists($this, $method)) {
+        throw new \InvalidArgumentException("Method $method does not exist");
+      }
+
+      $result = $this->$method();
+
+      if ($negate) {
+        $result = !$result;
+      }
+
+      if (!$result) {
+        return false; // Any check failed, return false immediately
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * Perform multiple is* checks on the payload, returning true if any pass.
+   *
+   * Example: $payload->isAny('isJson', 'isNotEmpty')
+   *
+   * @param mixed ...$checks
+   * @return bool
+   *
+   * @throws \InvalidArgumentException if any of the check methods do not exist.
+   */
+  public function isAny(...$checks): bool
+  {
+    foreach ($checks as $check) {
+      $negate = false;
+
+      // If there is a ! at the beginning, negate the result
+      if (str_starts_with($check, '!')) {
+        $negate = true;
+        $check = substr($check, 1); // Remove the '!' for method name
+      }
+
+      $method = 'is' . ucfirst($check);
+
+      if (!method_exists($this, $method)) {
+        throw new \InvalidArgumentException("Method $method does not exist");
+      }
+
+      $result = $this->$method();
+
+      if ($negate) {
+        $result = !$result;
+      }
+
+      if ($result) {
+        return true; // Any check passed, return true immediately
+      }
+    }
+
+    return false;
+  }
+
+  /**
    * Return a new Payload instance with the given value.
    *
    * @param mixed $value

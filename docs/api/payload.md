@@ -130,6 +130,48 @@ if ($payload->notIn('banned', 'deleted')) {
 
 ---
 
+### `is(...$checks): bool`
+
+Run multiple `is*` checks and return **true only if all of them pass**.
+Supports negation using `!` at the start of the check.
+
+```php
+if ($payload->is('!empty', 'string')) {
+    // value is not empty AND is a string
+}
+
+if ($payload->is('!null', 'numeric')) {
+    // value is NOT null AND is numeric
+}
+```
+
+You can also reference existing `is*` methods implicitly:
+
+`'notEmpty'` → `isNotEmpty()`
+`'json'` → `isJson()`
+`'!empty'` → negated `isEmpty()`
+
+---
+
+### `isAny(...$checks): bool`
+
+Run multiple `is*` checks and return **true if any one of them passes**.
+Also supports negation with `!`.
+
+```php
+if ($payload->isAny('json', 'array')) {
+    // value is json OR array
+}
+
+if ($payload->isAny('!empty', 'true')) {
+    // value is not empty OR equals true
+}
+```
+
+Same rules apply for automatic method mapping and negation.
+
+---
+
 ### `isBoolean(): bool`
 
 Check if the value can be interpreted as boolean.  
