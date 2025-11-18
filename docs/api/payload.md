@@ -336,6 +336,18 @@ $payload->isFalse();
 
 ---
 
+### `regex(string $pattern): bool`
+
+Check if the value matches the given regular expression pattern.
+
+```php
+if ($payload->regex('/^[a-z0-9]+$/i')) {
+    // value contains only alphanumeric characters
+}
+```
+
+---
+
 ### `asArray(): array`
 
 If the value is a valid JSON string representing an array/object, it will be decoded into an array.

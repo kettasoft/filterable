@@ -225,6 +225,21 @@ class Payload implements \Stringable, Arrayable, Jsonable
   }
 
   /**
+   * Check if the payload value matches the given regex pattern.
+   * 
+   * @param string $pattern
+   * @return bool
+   */
+  public function regex(string $pattern): bool
+  {
+    if (! $this->isString()) {
+      return false;
+    }
+
+    return preg_match($pattern, $this->value) === 1;
+  }
+
+  /**
    * Get the payload value as a boolean.
    *
    * Returns `true` or `false` if the value can be interpreted as a boolean
