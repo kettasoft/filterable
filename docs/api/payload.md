@@ -172,6 +172,18 @@ Same rules apply for automatic method mapping and negation.
 
 ---
 
+### `isEmptyString(): bool`
+
+Check if the payload is an empty string.
+
+```php
+if ($payload->isEmptyString()) {
+    // skip filter
+}
+```
+
+---
+
 ### `isBoolean(): bool`
 
 Check if the value can be interpreted as boolean.  

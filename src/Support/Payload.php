@@ -94,6 +94,16 @@ class Payload implements \Stringable, Arrayable, Jsonable
   }
 
   /**
+   * Check if the payload is an empty string.
+   *
+   * @return bool
+   */
+  public function isEmptyString(): bool
+  {
+    return is_string($this->value) && trim($this->value) === '';
+  }
+
+  /**
    * Check if the payload is not empty.
    *
    * @return bool
