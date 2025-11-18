@@ -242,6 +242,16 @@ class Payload implements \Stringable, Arrayable, Jsonable
   }
 
   /**
+   * Check if the payload value is a valid timestamp.
+   * 
+   * @return bool
+   */
+  public function isTimestamp(): bool
+  {
+    return $this->isNumeric() && (int) $this->value > 0;
+  }
+
+  /**
    * Check if the payload value matches the given regex pattern.
    * 
    * @param string $pattern

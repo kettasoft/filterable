@@ -380,6 +380,18 @@ if ($payload->isDate()) {
 
 ---
 
+### `isTimestamp(): bool`
+
+Check if the value is a valid timestamp.
+
+```php
+if ($payload->isTimestamp()) {
+    // value is a valid timestamp
+}
+```
+
+---
+
 ### `asArray(): array`
 
 If the value is a valid JSON string representing an array/object, it will be decoded into an array.
