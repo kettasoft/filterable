@@ -268,6 +268,26 @@ $payload->asInt(); // 42
 
 ---
 
+### `explode(string $delimiter = ","): array`
+
+Split the value into an array using the given delimiter.
+
+```php
+$payload->explode(); // ['one', 'two', 'three']
+```
+
+---
+
+### `split(string $delimiter = ","): array`
+
+Alias for `explode()` method.
+
+```php
+$payload->split(); // ['one', 'two', 'three']
+```
+
+---
+
 ### `raw(): mixed`
 
 Get the original unmodified value.

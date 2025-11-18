@@ -470,6 +470,35 @@ class Payload implements \Stringable, Arrayable, Jsonable
   }
 
   /**
+   * Explode the payload value into an array using the given delimiter.
+   *
+   * If the value is a string, it will be split by the delimiter.
+   * If the value is already an array, it will be returned as is.
+   *
+   * @param string $delimiter
+   * @return array
+   */
+  public function explode(string $delimiter = ','): array
+  {
+    if ($this->isString()) {
+      return explode($delimiter, $this->value);
+    }
+
+    return (array) $this->value;
+  }
+
+  /**
+   * Alias for explode method.
+   *
+   * @param string $delimiter
+   * @return array
+   */
+  public function split(string $delimiter = ','): array
+  {
+    return $this->explode($delimiter);
+  }
+
+  /**
    * Wrap the value with a given prefix and suffix.
    *
    * @param string $prefix
