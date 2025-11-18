@@ -403,6 +403,16 @@ $payload->asArray();
 
 ---
 
+### `asCarbon(): Carbon|null`
+
+Get the payload value as a Carbon instance.
+
+```php
+$payload->asCarbon();
+```
+
+---
+
 ### `toArray(): array`
 
 Get the instance as an array

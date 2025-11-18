@@ -2,10 +2,11 @@
 
 namespace Kettasoft\Filterable\Support;
 
-use Illuminate\Contracts\Support\Jsonable;
-use Illuminate\Contracts\Support\Arrayable;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
+use Illuminate\Contracts\Support\Jsonable;
+use Illuminate\Contracts\Support\Arrayable;
 
 /**
  * @template TKey of array-key
@@ -249,6 +250,24 @@ class Payload implements \Stringable, Arrayable, Jsonable
   public function isTimestamp(): bool
   {
     return $this->isNumeric() && (int) $this->value > 0;
+  }
+
+  /**
+   * Get the payload value as a Carbon instance.
+   * 
+   * @return Carbon|null
+   */
+  public function asCarbon(): Carbon|null
+  {
+    if ($this->isTimestamp()) {
+      return Carbon::createFromTimestamp((int) $this->value);
+    }
+
+    if ($this->isDate()) {
+      return Carbon::parse($this->value);
+    }
+
+    return null;
   }
 
   /**
