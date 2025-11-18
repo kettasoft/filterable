@@ -2,6 +2,9 @@
 
 namespace Kettasoft\Filterable\Support;
 
+use Carbon\Carbon;
+use Illuminate\Support\Str;
+use Illuminate\Support\Traits\Macroable;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Contracts\Support\Arrayable;
 
@@ -11,6 +14,8 @@ use Illuminate\Contracts\Support\Arrayable;
  */
 class Payload implements \Stringable, Arrayable, Jsonable
 {
+  use Macroable;
+
   /**
    * Request field.
    * @var string
@@ -91,6 +96,26 @@ class Payload implements \Stringable, Arrayable, Jsonable
   public function isEmpty(): bool
   {
     return empty($this->value);
+  }
+
+  /**
+   * Check if the payload is an empty string.
+   *
+   * @return bool
+   */
+  public function isEmptyString(): bool
+  {
+    return is_string($this->value) && trim($this->value) === '';
+  }
+
+  /**
+   * Check if the payload is not null or empty.
+   *
+   * @return bool
+   */
+  public function isNotNullOrEmpty(): bool
+  {
+    return !$this->isNull() && !$this->isEmpty() && !$this->isEmptyString();
   }
 
   /**
@@ -204,6 +229,63 @@ class Payload implements \Stringable, Arrayable, Jsonable
   }
 
   /**
+   * Check if the payload value is a valid date.
+   * 
+   * @return bool
+   */
+  public function isDate(): bool
+  {
+    if (! $this->isString()) {
+      return false;
+    }
+
+    return strtotime($this->value) !== false;
+  }
+
+  /**
+   * Check if the payload value is a valid timestamp.
+   * 
+   * @return bool
+   */
+  public function isTimestamp(): bool
+  {
+    return $this->isNumeric() && (int) $this->value > 0;
+  }
+
+  /**
+   * Get the payload value as a Carbon instance.
+   * 
+   * @return Carbon|null
+   */
+  public function asCarbon(): Carbon|null
+  {
+    if ($this->isTimestamp()) {
+      return Carbon::createFromTimestamp((int) $this->value);
+    }
+
+    if ($this->isDate()) {
+      return Carbon::parse($this->value);
+    }
+
+    return null;
+  }
+
+  /**
+   * Check if the payload value matches the given regex pattern.
+   * 
+   * @param string $pattern
+   * @return bool
+   */
+  public function regex(string $pattern): bool
+  {
+    if (! $this->isString()) {
+      return false;
+    }
+
+    return preg_match($pattern, $this->value) === 1;
+  }
+
+  /**
    * Get the payload value as a boolean.
    *
    * Returns `true` or `false` if the value can be interpreted as a boolean
@@ -214,6 +296,128 @@ class Payload implements \Stringable, Arrayable, Jsonable
   public function asBoolean(): ?bool
   {
     return $this->isBoolean() ? filter_var($this->value, FILTER_VALIDATE_BOOLEAN) : null;
+  }
+
+  /**
+
+   * Convert the payload value to a slug.
+   * 
+   * @param string $operator
+   * @return string
+   */
+  public function asSlug(string $operator = '-'): string
+  {
+    $value = (string) $this->value;
+
+    return Str::slug($value, $operator);
+  }
+
+  /**
+   * Check if the payload value is in the given haystack.
+   *
+   * @param mixed ...$haystack
+   * @return bool
+   */
+  public function in(...$haystack): bool
+  {
+    if (count($haystack) === 1 && is_array($haystack[0])) {
+      $haystack = $haystack[0];
+    }
+
+    return in_array($this->value, (array) $haystack, true);
+  }
+
+  /**
+   * Check if the payload value is not in the given haystack.
+   *
+   * @param mixed ...$haystack
+   * @return bool
+   */
+  public function notIn(...$haystack): bool
+  {
+    return !$this->in(...$haystack);
+  }
+
+  /**
+   * Perform multiple is* checks on the payload.
+   *
+   * Example: $payload->is('isJson', 'isNotEmpty')
+   *
+   * @param mixed ...$checks
+   * @return bool
+   *
+   * @throws \InvalidArgumentException if any of the check methods do not exist.
+   */
+  public function is(...$checks): bool
+  {
+    foreach ($checks as $check) {
+      $negate = false;
+
+      // If there is a ! at the beginning, negate the result
+      if (str_starts_with($check, '!')) {
+        $negate = true;
+        $check = substr($check, 1); // Remove the '!' for method name
+      }
+
+      $method = 'is' . ucfirst($check);
+
+      if (!method_exists($this, $method)) {
+        throw new \InvalidArgumentException("Method $method does not exist");
+      }
+
+      $result = $this->$method();
+
+      if ($negate) {
+        $result = !$result;
+      }
+
+      if (!$result) {
+        return false; // Any check failed, return false immediately
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * Perform multiple is* checks on the payload, returning true if any pass.
+   *
+   * Example: $payload->isAny('isJson', 'isNotEmpty')
+   *
+   * @param mixed ...$checks
+   * @return bool
+   *
+   * @throws \InvalidArgumentException if any of the check methods do not exist.
+   */
+  public function isAny(...$checks): bool
+  {
+    foreach ($checks as $check) {
+      $negate = false;
+
+      // If there is a ! at the beginning, negate the result
+      if (str_starts_with($check, '!')) {
+        $negate = true;
+        $check = substr($check, 1); // Remove the '!' for method name
+      }
+
+      $method = 'is' . ucfirst($check);
+
+      if (!method_exists($this, $method)) {
+        throw new \InvalidArgumentException("Method $method does not exist");
+      }
+
+      $result = $this->$method();
+
+      if ($negate) {
+        $result = !$result;
+      }
+
+      if ($result) {
+        return true; // Any check passed, return true immediately
+      }
+    }
+
+    return false;
   }
 
   /**
@@ -296,6 +500,35 @@ class Payload implements \Stringable, Arrayable, Jsonable
   public function asInt(): ?int
   {
     return $this->isNumeric() ? (int) $this->value : null;
+  }
+
+  /**
+   * Explode the payload value into an array using the given delimiter.
+   *
+   * If the value is a string, it will be split by the delimiter.
+   * If the value is already an array, it will be returned as is.
+   *
+   * @param string $delimiter
+   * @return array
+   */
+  public function explode(string $delimiter = ','): array
+  {
+    if ($this->isString()) {
+      return explode($delimiter, $this->value);
+    }
+
+    return (array) $this->value;
+  }
+
+  /**
+   * Alias for explode method.
+   *
+   * @param string $delimiter
+   * @return array
+   */
+  public function split(string $delimiter = ','): array
+  {
+    return $this->explode($delimiter);
   }
 
   /**

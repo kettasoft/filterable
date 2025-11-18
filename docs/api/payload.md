@@ -105,6 +105,110 @@ if ($payload->isNull()) {
 
 ---
 
+### `in(...$haystack): bool`
+
+Check if the payload value exists inside the given list.
+Supports both a flat list of values or a single array.
+
+```php
+if ($payload->in('active', 'pending', 'archived')) {
+    // apply filter
+}
+```
+
+---
+
+### `notIn(...$haystack): bool`
+
+Check if the payload value does _not_ exist in the given list.
+
+```php
+if ($payload->notIn('banned', 'deleted')) {
+    // only include safe records
+}
+```
+
+---
+
+### `is(...$checks): bool`
+
+Run multiple `is*` checks and return **true only if all of them pass**.
+Supports negation using `!` at the start of the check.
+
+```php
+if ($payload->is('!empty', 'string')) {
+    // value is not empty AND is a string
+}
+
+if ($payload->is('!null', 'numeric')) {
+    // value is NOT null AND is numeric
+}
+```
+
+You can also reference existing `is*` methods implicitly:
+
+`'notEmpty'` → `isNotEmpty()`
+`'json'` → `isJson()`
+`'!empty'` → negated `isEmpty()`
+
+---
+
+### `isAny(...$checks): bool`
+
+Run multiple `is*` checks and return **true if any one of them passes**.
+Also supports negation with `!`.
+
+```php
+if ($payload->isAny('json', 'array')) {
+    // value is json OR array
+}
+
+if ($payload->isAny('!empty', 'true')) {
+    // value is not empty OR equals true
+}
+```
+
+Same rules apply for automatic method mapping and negation.
+
+---
+
+### `isEmptyString(): bool`
+
+Check if the payload is an empty string.
+
+```php
+if ($payload->isEmptyString()) {
+    // skip filter
+}
+```
+
+---
+
+### `isNotNullOrEmpty(): bool`
+
+Check if the payload is neither null nor empty.
+
+```php
+if ($payload->isNotNullOrEmpty()) {
+    // apply filter
+}
+```
+
+---
+
+### `isBoolean(): bool`
+
+Check if the value can be interpreted as boolean.  
+Supports `"true"`, `"false"`, `"1"`, `"0"`, `"yes"`, `"no"`.
+
+```php
+if ($payload->isBoolean()) {
+    $this->builder->where('is_active', $payload->asBoolean());
+}
+```
+
+---
+
 ### `isJson(): bool`
 
 Check if the payload is a valid JSON string.
@@ -124,6 +228,17 @@ Supports `"true"`, `"false"`, `"1"`, `"0"`, `"yes"`, `"no"`.
 
 ```php
 $payload->asBoolean(); // true or false
+```
+
+---
+
+### `asSlug(string $operator = "-"): string`
+
+Convert the payload value to a slug.
+
+```php
+$payload->asSlug(); // "my-sample-value"
+$payload->asSlug("_"); // "my_sample_value"
 ```
 
 ---
@@ -149,6 +264,26 @@ Cast value to integer.
 
 ```php
 $payload->asInt(); // 42
+```
+
+---
+
+### `explode(string $delimiter = ","): array`
+
+Split the value into an array using the given delimiter.
+
+```php
+$payload->explode(); // ['one', 'two', 'three']
+```
+
+---
+
+### `split(string $delimiter = ","): array`
+
+Alias for `explode()` method.
+
+```php
+$payload->split(); // ['one', 'two', 'three']
 ```
 
 ---
@@ -221,6 +356,42 @@ $payload->isFalse();
 
 ---
 
+### `regex(string $pattern): bool`
+
+Check if the value matches the given regular expression pattern.
+
+```php
+if ($payload->regex('/^[a-z0-9]+$/i')) {
+    // value contains only alphanumeric characters
+}
+```
+
+---
+
+### `isDate(): bool`
+
+Check if the value is a valid date string.
+
+```php
+if ($payload->isDate()) {
+    $this->builder->whereDate('created_at', $payload->value);
+}
+```
+
+---
+
+### `isTimestamp(): bool`
+
+Check if the value is a valid timestamp.
+
+```php
+if ($payload->isTimestamp()) {
+    // value is a valid timestamp
+}
+```
+
+---
+
 ### `asArray(): array`
 
 If the value is a valid JSON string representing an array/object, it will be decoded into an array.
@@ -228,6 +399,16 @@ If the value is already an array, it will be returned directly. Otherwise return
 
 ```php
 $payload->asArray();
+```
+
+---
+
+### `asCarbon(): Carbon|null`
+
+Get the payload value as a Carbon instance.
+
+```php
+$payload->asCarbon();
 ```
 
 ---
