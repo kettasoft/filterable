@@ -232,6 +232,17 @@ $payload->asBoolean(); // true or false
 
 ---
 
+### `asSlug(string $operator = "-"): string`
+
+Convert the payload value to a slug.
+
+```php
+$payload->asSlug(); // "my-sample-value"
+$payload->asSlug("_"); // "my_sample_value"
+```
+
+---
+
 ### `asLike(string $side = "both"): string`
 
 Wrap the value with `%` for SQL `LIKE` queries.

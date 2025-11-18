@@ -4,6 +4,7 @@ namespace Kettasoft\Filterable\Support;
 
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Str;
 
 /**
  * @template TKey of array-key
@@ -234,6 +235,19 @@ class Payload implements \Stringable, Arrayable, Jsonable
   public function asBoolean(): ?bool
   {
     return $this->isBoolean() ? filter_var($this->value, FILTER_VALIDATE_BOOLEAN) : null;
+  }
+
+  /**
+   * Convert the payload value to a slug.
+   * 
+   * @param string $operator
+   * @return string
+   */
+  public function asSlug(string $operator = '-'): string
+  {
+    $value = (string) $this->value;
+
+    return Str::slug($value, $operator);
   }
 
   /**
