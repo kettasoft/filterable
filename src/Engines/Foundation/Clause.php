@@ -29,7 +29,7 @@ class Clause implements Arrayable, Jsonable
    * Original value.
    * @var string
    */
-  public readonly string|null $value;
+  public readonly mixed $value;
 
   /**
    * Clause constructor.
