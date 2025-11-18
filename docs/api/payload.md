@@ -105,6 +105,44 @@ if ($payload->isNull()) {
 
 ---
 
+### `in(...$haystack): bool`
+
+Check if the payload value exists inside the given list.
+Supports both a flat list of values or a single array.
+
+```php
+if ($payload->in('active', 'pending', 'archived')) {
+    // apply filter
+}
+```
+
+---
+
+### `notIn(...$haystack): bool`
+
+Check if the payload value does _not_ exist in the given list.
+
+```php
+if ($payload->notIn('banned', 'deleted')) {
+    // only include safe records
+}
+```
+
+---
+
+### `isBoolean(): bool`
+
+Check if the value can be interpreted as boolean.  
+Supports `"true"`, `"false"`, `"1"`, `"0"`, `"yes"`, `"no"`.
+
+```php
+if ($payload->isBoolean()) {
+    $this->builder->where('is_active', $payload->asBoolean());
+}
+```
+
+---
+
 ### `isJson(): bool`
 
 Check if the payload is a valid JSON string.

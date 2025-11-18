@@ -217,6 +217,32 @@ class Payload implements \Stringable, Arrayable, Jsonable
   }
 
   /**
+   * Check if the payload value is in the given haystack.
+   *
+   * @param mixed ...$haystack
+   * @return bool
+   */
+  public function in(...$haystack): bool
+  {
+    if (count($haystack) === 1 && is_array($haystack[0])) {
+      $haystack = $haystack[0];
+    }
+
+    return in_array($this->value, (array) $haystack, true);
+  }
+
+  /**
+   * Check if the payload value is not in the given haystack.
+   *
+   * @param mixed ...$haystack
+   * @return bool
+   */
+  public function notIn(...$haystack): bool
+  {
+    return !$this->in(...$haystack);
+  }
+
+  /**
    * Return a new Payload instance with the given value.
    *
    * @param mixed $value
