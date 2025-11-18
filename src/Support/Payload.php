@@ -299,6 +299,7 @@ class Payload implements \Stringable, Arrayable, Jsonable
   }
 
   /**
+
    * Convert the payload value to a slug.
    * 
    * @param string $operator
