@@ -59,7 +59,7 @@ class EngineManagerTest extends TestCase
   {
     $engine = new class(new Filterable()) extends Engine {
 
-      public function handle(Builder $builder): Builder
+      public function execute(Builder $builder): Builder
       {
         return $builder;
       }
