@@ -184,6 +184,18 @@ if ($payload->isEmptyString()) {
 
 ---
 
+### `isNotNullOrEmpty(): bool`
+
+Check if the payload is neither null nor empty.
+
+```php
+if ($payload->isNotNullOrEmpty()) {
+    // apply filter
+}
+```
+
+---
+
 ### `isBoolean(): bool`
 
 Check if the value can be interpreted as boolean.  

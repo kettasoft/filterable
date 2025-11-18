@@ -104,6 +104,16 @@ class Payload implements \Stringable, Arrayable, Jsonable
   }
 
   /**
+   * Check if the payload is not null or empty.
+   *
+   * @return bool
+   */
+  public function isNotNullOrEmpty(): bool
+  {
+    return !$this->isNull() && !$this->isEmpty() && !$this->isEmptyString();
+  }
+
+  /**
    * Check if the payload is not empty.
    *
    * @return bool
