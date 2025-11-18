@@ -5,6 +5,7 @@ namespace Kettasoft\Filterable\Support;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Str;
+use Illuminate\Support\Traits\Macroable;
 
 /**
  * @template TKey of array-key
@@ -12,6 +13,8 @@ use Illuminate\Support\Str;
  */
 class Payload implements \Stringable, Arrayable, Jsonable
 {
+  use Macroable;
+
   /**
    * Request field.
    * @var string
