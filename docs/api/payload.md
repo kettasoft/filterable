@@ -348,6 +348,18 @@ if ($payload->regex('/^[a-z0-9]+$/i')) {
 
 ---
 
+### `isDate(): bool`
+
+Check if the value is a valid date string.
+
+```php
+if ($payload->isDate()) {
+    $this->builder->whereDate('created_at', $payload->value);
+}
+```
+
+---
+
 ### `asArray(): array`
 
 If the value is a valid JSON string representing an array/object, it will be decoded into an array.

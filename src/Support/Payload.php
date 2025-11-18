@@ -225,6 +225,20 @@ class Payload implements \Stringable, Arrayable, Jsonable
   }
 
   /**
+   * Check if the payload value is a valid date.
+   * 
+   * @return bool
+   */
+  public function isDate(): bool
+  {
+    if (! $this->isString()) {
+      return false;
+    }
+
+    return strtotime($this->value) !== false;
+  }
+
+  /**
    * Check if the payload value matches the given regex pattern.
    * 
    * @param string $pattern
