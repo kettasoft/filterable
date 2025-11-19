@@ -30,23 +30,20 @@ class Expression extends Engine
     $filters = $this->context->getData();
 
     foreach ($filters as $field => $condition) {
+      $this->attempt(function () use ($builder, $field, $condition) {
 
-      // Normalize the condition to [ operator => value ].
-      $condition = ConditionNormalizer::normalize($condition, $this->defaultOperator());
+        // Normalize the condition to [ operator => value ].
+        $condition = ConditionNormalizer::normalize($condition, $this->defaultOperator());
 
-      $dissector = Dissector::parse($condition, $this->defaultOperator());
+        $dissector = Dissector::parse($condition, $this->defaultOperator());
 
-      $clause = (new ClauseFactory($this))->make(
-        new Payload($field, $dissector->operator, $this->sanitizeValue($field, $dissector->value), $dissector->value)
-      );
+        $clause = (new ClauseFactory($this))->make(
+          new Payload($field, $dissector->operator, $this->sanitizeValue($field, $dissector->value), $dissector->value)
+        );
 
-      if (! $clause->validated) {
-        continue; // skip disallowed field
-      }
-
-      $this->commit($field, $clause);
-
-      Applier::apply(new ClauseApplier($clause), $builder);
+        Applier::apply(new ClauseApplier($clause), $builder);
+        return $this->commit($field, $clause);
+      });
     }
 
     return $builder;

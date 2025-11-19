@@ -31,18 +31,17 @@ class Ruleset extends Engine
     $data = $this->context->getData();
 
     foreach ($data as $field => $dissector) {
+      $this->attempt(function () use ($builder, $dissector, $field): bool {
+        $dissector = Dissector::parse($dissector, $this->defaultOperator());
 
-      $dissector = Dissector::parse($dissector, $this->defaultOperator());
+        $clause = (new ClauseFactory($this))->make(
+          new Payload($field, $dissector->operator, $this->sanitizeValue($field, $dissector->value), $dissector->value)
+        );
 
-      $clause = (new ClauseFactory($this))->make(
-        new Payload($field, $dissector->operator, $this->sanitizeValue($field, $dissector->value), $dissector->value)
-      );
+        Applier::apply(new ClauseApplier($clause), $builder);
 
-      if (! $clause->validated) continue;
-
-      Applier::apply(new ClauseApplier($clause), $builder);
-
-      $this->commit($field, $clause);
+        return $this->commit($field, $clause);
+      });
     }
 
     return $builder;
