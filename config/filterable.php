@@ -880,6 +880,18 @@ return [
     'exceptions' => [
         /*
         |--------------------------------------------------------------------------
+        | Exception Handler
+        |--------------------------------------------------------------------------
+        |
+        | The class responsible for handling exceptions during filtering.
+        | You can implement your own handler by adhering to the
+        | Filterable\Contracts\ExceptionHandler interface.
+        |
+        */
+        'handler' => Kettasoft\Filterable\Exceptions\Handlers\DefaultHandler::class,
+
+        /*
+        |--------------------------------------------------------------------------
         | Strict Mode
         |--------------------------------------------------------------------------
         |
