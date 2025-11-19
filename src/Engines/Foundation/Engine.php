@@ -36,6 +36,21 @@ abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Stricta
   abstract public function execute(Builder $builder);
 
   /**
+   * Attempt to execute the given callback, handling exceptions.
+   *
+   * @param \Closure $callback
+   * @return bool
+   */
+  final protected function attempt(\Closure $callback): bool
+  {
+    try {
+      return $callback->call($this);
+    } catch (\Throwable $e) {
+      return $this->context->getExceptionHandler()->handle($e, $this);
+    }
+  }
+
+  /**
    * @inheritDoc
    */
   public function skip(string $message, mixed $clause = null): never
