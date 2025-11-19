@@ -60,7 +60,6 @@ class ClauseFactory
     $field = $payload->field;
     // allow wildcard * as "all fields allowed"
     $isWildcardAllowed = ($this->engine->getAllowedFields()[0] ?? false) === '*';
-
     if (!(in_array($field, $this->engine->getAllowedFields(), true) || $this->isRelational($field) || $isWildcardAllowed)) {
       throw new NotAllowedFieldException($field);
     }
