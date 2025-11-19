@@ -33,23 +33,7 @@ abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Stricta
    * @param \Illuminate\Database\Eloquent\Builder $builder
    * @return Builder
    */
-  abstract public function handle(Builder $builder): Builder;
-
-  /**
-   * Apply filters to the query.
-   * @param \Illuminate\Database\Eloquent\Builder $builder
-   * @return Builder
-   */
-  final public function execute(Builder $builder)
-  {
-    try {
-      $this->handle($builder);
-
-      return $builder;
-    } catch (\Throwable $e) {
-      throw $e;
-    }
-  }
+  abstract public function execute(Builder $builder);
 
   /**
    * @inheritDoc
