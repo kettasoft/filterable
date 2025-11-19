@@ -20,6 +20,10 @@ class CreatePostsTable extends Migration
       $table->string('title');
       $table->text('content')->nullable();
       $table->enum('status', ['active', 'pending', 'stopped']);
+      $table->integer('views')->default(0);
+      $table->boolean('is_featured')->default(false);
+      $table->text('description')->nullable();
+      $table->json('tags')->nullable();
       $table->timestamps();
     });
   }

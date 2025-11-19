@@ -5,7 +5,7 @@ namespace Kettasoft\Filterable\Engines\Foundation;
 use Illuminate\Support\Arr;
 use Kettasoft\Filterable\Foundation\Bags\OperatorBag;
 use Kettasoft\Filterable\Engines\Foundation\Enums\Operators;
-use Kettasoft\Filterable\Exceptions\InvalidOperatorException;
+use Kettasoft\Filterable\Engines\Exceptions\InvalidOperatorException;
 use Kettasoft\Filterable\Engines\Contracts\HasInteractsWithOperators;
 use Kettasoft\Filterable\Engines\Contracts\OperatorDefinitionContract;
 

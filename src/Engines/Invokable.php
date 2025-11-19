@@ -43,27 +43,24 @@ class Invokable extends Engine
     $this->context->setAllowedFields($this->context->getFilterAttributes());
 
     foreach ($this->context->getFilterAttributes() as $filter) {
+      $this->attempt(function () use ($filter) {
+        $dissector = Dissector::parse($this->context->getRequest()->get($filter), $this->defaultOperator());
 
-      $dissector = Dissector::parse($this->context->getRequest()->get($filter), $this->defaultOperator());
+        $payload = new Payload($filter, $dissector->operator, $this->sanitizeValue($filter, $dissector->value), $dissector->value);
 
-      $payload = new Payload($filter, $dissector->operator, $this->sanitizeValue($filter, $dissector->value), $dissector->value);
+        $clause = (new ClauseFactory($this))->make($payload);
 
-      $clause = (new ClauseFactory($this))->make($payload);
+        $method = $this->getMethodName($filter);
 
-      if (($this->context->hasIgnoredEmptyValues() || config('filterable.engines.invokable.ignore_empty_values')) && !$clause->value) {
-        continue;
-      }
+        // Check for method name conflicts with Filterable core methods.
+        if (method_exists(Filterable::class, $method)) {
+          throw new \RuntimeException(sprintf("Filter method [%s] conflicts with core Filterable method.", [$method]));
+        }
 
-      $method = $this->getMethodName($filter);
+        $this->applyFilterMethod($filter, $method, $payload);
 
-      // Check for method name conflicts with Filterable core methods.
-      if (method_exists(Filterable::class, $method)) {
-        throw new \RuntimeException(sprintf("Filter method [%s] conflicts with core Filterable method.", [$method]));
-      }
-
-      $this->initializeFilters($filter, $method, $payload);
-
-      $this->commit($method, $clause);
+        $this->commit($method, $clause);
+      });
     }
 
     return $this->builder;
@@ -76,7 +73,7 @@ class Invokable extends Engine
    * @param Payload $payload
    * @return void
    */
-  protected function initializeFilters(string $key, string $method, Payload $payload): void
+  protected function applyFilterMethod(string $key, string $method, Payload $payload): void
   {
     if (! method_exists($this->context, $method)) {
       return;

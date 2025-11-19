@@ -29,13 +29,7 @@ class Clause implements Arrayable, Jsonable
    * Original value.
    * @var string
    */
-  public readonly string|null $value;
-
-  /**
-   * Check if the clause is validated.
-   * @var bool
-   */
-  public bool $validated = false;
+  public readonly mixed $value;
 
   /**
    * Clause constructor.
@@ -66,12 +60,6 @@ class Clause implements Arrayable, Jsonable
   public function isRelational(): bool
   {
     return is_string($this->field) && str_contains($this->field, '.');
-  }
-
-  public function setStatus(bool $status)
-  {
-    $this->validated = $status;
-    return $this;
   }
 
   /**

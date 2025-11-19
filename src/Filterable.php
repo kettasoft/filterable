@@ -29,6 +29,7 @@ use Kettasoft\Filterable\Foundation\Events\Contracts\EventManager;
 use Kettasoft\Filterable\Foundation\Events\FilterableEventManager;
 use Kettasoft\Filterable\HttpIntegration\HeaderDrivenEngineSelector;
 use Kettasoft\Filterable\Foundation\Contracts\ShouldReturnQueryBuilder;
+use Kettasoft\Filterable\Exceptions\Contracts\ExceptionHandlerInterface;
 use Kettasoft\Filterable\Exceptions\RequestSourceIsNotSupportedException;
 
 class Filterable implements FilterableContext, Authorizable, Validatable, Commitable
@@ -955,6 +956,21 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
     }
 
     return $this->request->{$source}($key);
+  }
+
+  /**
+   * Get exception handler instance.
+   * 
+   * @return ExceptionHandlerInterface
+   */
+  public function getExceptionHandler(): ExceptionHandlerInterface
+  {
+    $config = config('filterable.exceptions');
+    $engineOverrides = config("filterable.engines.{$this->engine->getEngineName()}.exceptions", []);
+
+    $merged = array_merge($config, $engineOverrides);
+
+    return app($merged['handler']);
   }
 
   /**

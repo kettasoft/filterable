@@ -2,8 +2,8 @@
 
 namespace Kettasoft\Filterable\Engines;
 
+use Illuminate\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Support\Payload;
-use Illuminate\Contracts\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
 use Kettasoft\Filterable\Support\ConditionNormalizer;
 use Kettasoft\Filterable\Support\ValidateTableColumns;
@@ -22,31 +22,28 @@ class Expression extends Engine
 
   /**
    * Apply filters to the query.
-   * @param \Illuminate\Contracts\Database\Eloquent\Builder $builder
+   * @param \Illuminate\Database\Eloquent\Builder $builder
    * @return Builder
    */
-  public function execute(Builder $builder)
+  public function execute(Builder $builder): Builder
   {
     $filters = $this->context->getData();
 
     foreach ($filters as $field => $condition) {
+      $this->attempt(function () use ($builder, $field, $condition) {
 
-      // Normalize the condition to [ operator => value ].
-      $condition = ConditionNormalizer::normalize($condition, $this->defaultOperator());
+        // Normalize the condition to [ operator => value ].
+        $condition = ConditionNormalizer::normalize($condition, $this->defaultOperator());
 
-      $dissector = Dissector::parse($condition, $this->defaultOperator());
+        $dissector = Dissector::parse($condition, $this->defaultOperator());
 
-      $clause = (new ClauseFactory($this))->make(
-        new Payload($field, $dissector->operator, $this->sanitizeValue($field, $dissector->value), $dissector->value)
-      );
+        $clause = (new ClauseFactory($this))->make(
+          new Payload($field, $dissector->operator, $this->sanitizeValue($field, $dissector->value), $dissector->value)
+        );
 
-      if (! $clause->validated) {
-        continue; // skip disallowed field
-      }
-
-      $this->commit($field, $clause);
-
-      return Applier::apply(new ClauseApplier($clause), $builder);
+        Applier::apply(new ClauseApplier($clause), $builder);
+        return $this->commit($field, $clause);
+      });
     }
 
     return $builder;

@@ -861,4 +861,44 @@ return [
             'log_channel' => env('FILTERABLE_CACHE_LOG_CHANNEL', 'daily'),
         ],
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Exception Handling
+    |--------------------------------------------------------------------------
+    |
+    | Define how Filterable handles exceptions thrown during filtering.
+    | You can choose from built-in handlers or implement your own.
+    |
+    | Supported options:
+    | - handler: The class responsible for handling exceptions.
+    | - strict: When true, exceptions will always be thrown instead of skipped.
+    | - log_exceptions: Whether to log unhandled or skipped exceptions.
+    | - report: A closure or class name to customize how exceptions are reported.
+    |
+    */
+    'exceptions' => [
+        /*
+        |--------------------------------------------------------------------------
+        | Exception Handler
+        |--------------------------------------------------------------------------
+        |
+        | The class responsible for handling exceptions during filtering.
+        | You can implement your own handler by adhering to the
+        | Filterable\Contracts\ExceptionHandler interface.
+        |
+        */
+        'handler' => Kettasoft\Filterable\Exceptions\Handlers\DefaultHandler::class,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Strict Mode
+        |--------------------------------------------------------------------------
+        |
+        | When enabled, exceptions will always be thrown instead of skipped.
+        | This overrides per-engine strict settings.
+        |
+        */
+        'strict' => env('FILTERABLE_EXCEPTION_STRICT', false),
+    ]
 ];

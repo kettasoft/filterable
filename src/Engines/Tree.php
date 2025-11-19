@@ -26,7 +26,7 @@ class Tree extends Engine
    * @param \Illuminate\Database\Eloquent\Builder $builder
    * @return Builder
    */
-  public function execute(Builder $builder)
+  public function execute(Builder $builder): Builder
   {
     $data = $this->context->getData();
 
@@ -42,12 +42,14 @@ class Tree extends Engine
   private function applyNode(Builder $builder, TreeNode $node)
   {
     if ($node->isGroup()) {
-      $builder->where(function (Builder $q) use ($node) {
+      $builder->where(function (Builder $query) use ($node) {
         foreach ($node->children as $child) {
-          $method = strtolower($child->logical) === 'and' ? 'where' : 'orWhere';
+          $this->attempt(function () use ($child, $query) {
+            $method = strtolower($child->logical) === 'and' ? 'where' : 'orWhere';
 
-          $q->{$method}(function ($sub) use ($child) {
-            $this->applyNode($sub, $child);
+            $query->{$method}(function ($sub) use ($child) {
+              $this->applyNode($sub, $child);
+            });
           });
         }
       });
@@ -56,10 +58,6 @@ class Tree extends Engine
       $clause = (new ClauseFactory($this))->make(
         new Payload($node->field, $node->operator ?? $this->defaultOperator(), $this->sanitizeValue($node->field, $node->value), $node->value)
       );
-
-      if (! $clause->validated) {
-        return $builder; // skip disallowed field
-      }
 
       if ($clause->isRelational()) {
         $clause->relation($this->getResources()->relations)->resolve($builder, $clause);

@@ -2,18 +2,19 @@
 
 namespace Kettasoft\Filterable\Engines\Foundation;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
-use Kettasoft\Filterable\Contracts\FilterableContext;
-use Kettasoft\Filterable\Engines\Contracts\Executable;
-use Kettasoft\Filterable\Engines\Contracts\HasAllowedFieldChecker;
-use Kettasoft\Filterable\Engines\Contracts\HasFieldMap;
-use Kettasoft\Filterable\Engines\Contracts\HasInteractsWithOperators;
-use Kettasoft\Filterable\Engines\Contracts\Strictable;
 use Kettasoft\Filterable\Filterable;
+use Illuminate\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Foundation\Resources;
+use Kettasoft\Filterable\Engines\Contracts\Skippable;
+use Kettasoft\Filterable\Engines\Contracts\Executable;
+use Kettasoft\Filterable\Engines\Contracts\Strictable;
+use Kettasoft\Filterable\Engines\Contracts\HasFieldMap;
+use Kettasoft\Filterable\Engines\Exceptions\SkipExecution;
+use Kettasoft\Filterable\Engines\Contracts\HasAllowedFieldChecker;
+use Kettasoft\Filterable\Engines\Contracts\HasInteractsWithOperators;
 
-abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Strictable, Executable, HasAllowedFieldChecker
+abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Strictable, Executable, HasAllowedFieldChecker, Skippable
 {
   /**
    * Create Engine instance.
@@ -33,6 +34,29 @@ abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Stricta
    * @return Builder
    */
   abstract public function execute(Builder $builder);
+
+  /**
+   * Attempt to execute the given callback, handling exceptions.
+   *
+   * @param \Closure $callback
+   * @return bool
+   */
+  final protected function attempt(\Closure $callback): bool
+  {
+    try {
+      return $callback->call($this);
+    } catch (\Throwable $e) {
+      return $this->context->getExceptionHandler()->handle($e, $this);
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function skip(string $message, mixed $clause = null): never
+  {
+    throw new SkipExecution($message, $clause);
+  }
 
   /**
    * Get allowed fields to filtering.

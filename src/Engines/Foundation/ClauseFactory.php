@@ -2,10 +2,11 @@
 
 namespace Kettasoft\Filterable\Engines\Foundation;
 
-use Kettasoft\Filterable\Engines\Foundation\Enums\Operators;
 use Kettasoft\Filterable\Support\Payload;
-use Kettasoft\Filterable\Exceptions\InvalidOperatorException;
-use Kettasoft\Filterable\Exceptions\NotAllowedFieldException;
+use Kettasoft\Filterable\Engines\Foundation\Enums\Operators;
+use Kettasoft\Filterable\Engines\Exceptions\InvalidOperatorException;
+use Kettasoft\Filterable\Engines\Exceptions\NotAllowedFieldException;
+use Kettasoft\Filterable\Engines\Exceptions\NotAllowedEmptyValueException;
 
 /**
  * Class ClauseFactory
@@ -35,44 +36,35 @@ class ClauseFactory
    */
   public function make(Payload $payload): Clause
   {
-    $valid = true;
-
-    $valid = $this->validateField($payload) && $valid;
-    $valid = $this->validateOperator($payload) && $valid;
-    $valid = $this->validateValue($payload) && $valid;
+    $this->validateField($payload);
+    $this->validateOperator($payload);
+    $this->validateValue($payload);
 
     $resolvedField    = $this->resolveField($payload);
     $resolvedOperator = $this->resolveOperator($payload);
     $payload->setField($resolvedField)->setOperator($resolvedOperator);
 
-    return (new Clause($payload))
-      ->setStatus($valid);
+    return (new Clause($payload));
   }
 
   /**
    * Validate the payload field against allowed fields and relations.
    *
    * @param  Payload  $payload
-   * @return bool
+   * @return void
    *
    * @throws NotAllowedFieldException
    */
-  protected function validateField(Payload $payload): bool
+  protected function validateField(Payload $payload): void
   {
     $field = $payload->field;
-
-    if (in_array($field, $this->engine->getAllowedFields(), true) || $this->isRelational($field)) {
-      return true;
-    }
-
     // allow wildcard * as "all fields allowed"
     $isWildcardAllowed = ($this->engine->getAllowedFields()[0] ?? false) === '*';
-
-    if ($this->engine->isStrict() && !$isWildcardAllowed) {
+    if (!(in_array($field, $this->engine->getAllowedFields(), true) || $this->isRelational($field) || $isWildcardAllowed)) {
       throw new NotAllowedFieldException($field);
     }
 
-    return $isWildcardAllowed;
+    return;
   }
 
   /**
@@ -86,12 +78,8 @@ class ClauseFactory
   protected function validateOperator(Payload $payload): bool
   {
     $operator = $payload->operator;
+    if (! array_key_exists($operator, $this->engine->allowedOperators()) && $this->engine->isStrict()) {
 
-    if (array_key_exists($operator, $this->engine->allowedOperators())) {
-      return true;
-    }
-
-    if ($this->engine->isStrict()) {
       throw new InvalidOperatorException($operator);
     }
 
@@ -102,19 +90,17 @@ class ClauseFactory
    * Validate that the payload value is not empty when ignoredEmptyValues is enabled.
    *
    * @param  Payload  $payload
-   * @return bool
+   * @return void
    *
-   * @throws \InvalidArgumentException
+   * @throws NotAllowedEmptyValueException
    */
-  protected function validateValue(Payload $payload): bool
+  protected function validateValue(Payload $payload): void
   {
     if ($this->engine->isIgnoredEmptyValues() && $payload->isEmpty()) {
-      if ($this->engine->isStrict()) {
-        throw new \InvalidArgumentException("Empty values are not allowed.");
-      }
-      return false;
+      throw new NotAllowedEmptyValueException("Empty values are not allowed.");
     }
-    return true;
+
+    return;
   }
 
   /* -----------------------------------------------------------------

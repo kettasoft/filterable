@@ -13,7 +13,13 @@ class Post extends Model
 {
   use HasFactory, HasFilterable;
 
-  protected $fillable = ['title', 'status', 'content'];
+  protected $fillable = ['title', 'status', 'content', 'views', 'is_featured', 'description', 'tags'];
+
+  protected $casts = [
+    'is_featured' => 'boolean',
+    'views' => 'integer',
+    'tags' => 'array',
+  ];
 
   public function tags(): HasMany
   {

@@ -2,7 +2,7 @@
 
 namespace Kettasoft\Filterable\Support;
 
-use Kettasoft\Filterable\Exceptions\NotAllowedFieldException;
+use Kettasoft\Filterable\Engines\Exceptions\NotAllowedFieldException;
 use Kettasoft\Filterable\Filterable;
 
 class TreeBasedRelationsResolver

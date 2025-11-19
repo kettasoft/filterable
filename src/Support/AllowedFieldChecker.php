@@ -3,7 +3,7 @@
 namespace Kettasoft\Filterable\Support;
 
 use Kettasoft\Filterable\Engines\Contracts\HasAllowedFieldChecker;
-use Kettasoft\Filterable\Exceptions\NotAllowedFieldException;
+use Kettasoft\Filterable\Engines\Exceptions\NotAllowedFieldException;
 
 class AllowedFieldChecker
 {

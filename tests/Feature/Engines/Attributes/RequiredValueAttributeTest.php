@@ -3,12 +3,13 @@
 namespace Kettasoft\Filterable\Tests\Feature\Engines\Attributes;
 
 use Kettasoft\Filterable\Tests\TestCase;
+use Kettasoft\Filterable\Exceptions\StrictnessException;
 
 class RequiredValueAttributeTest extends TestCase
 {
   public function test_required_value_attribute_throws_exception_when_value_missing()
   {
-    $this->expectException(\InvalidArgumentException::class);
+    $this->expectException(StrictnessException::class);
     $this->expectExceptionMessage("The parameter 'status' is required.");
 
     request()->merge([
@@ -50,7 +51,7 @@ class RequiredValueAttributeTest extends TestCase
 
   public function test_required_value_attribute_throws_exception_when_value_missing_with_custom_message()
   {
-    $this->expectException(\InvalidArgumentException::class);
+    $this->expectException(StrictnessException::class);
     $this->expectExceptionMessage("The 'status' parameter is mandatory.");
 
     request()->merge([

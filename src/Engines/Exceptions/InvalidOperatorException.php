@@ -1,8 +1,8 @@
 <?php
 
-namespace Kettasoft\Filterable\Exceptions;
+namespace Kettasoft\Filterable\Engines\Exceptions;
 
-class InvalidOperatorException extends \InvalidArgumentException
+class InvalidOperatorException extends SkipExecution
 {
   /**
    * InvalidOperatorException constructor.

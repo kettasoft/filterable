@@ -7,8 +7,8 @@ use Kettasoft\Filterable\Filterable;
 use Kettasoft\Filterable\Tests\TestCase;
 use Kettasoft\Filterable\Engines\Ruleset;
 use Kettasoft\Filterable\Tests\Models\Post;
-use Kettasoft\Filterable\Exceptions\InvalidOperatorException;
-use Kettasoft\Filterable\Exceptions\NotAllowedFieldException;
+use Kettasoft\Filterable\Engines\Exceptions\InvalidOperatorException;
+use Kettasoft\Filterable\Engines\Exceptions\NotAllowedFieldException;
 use Symfony\Component\HttpFoundation\InputBag;
 
 class RulesetEngineTest extends TestCase

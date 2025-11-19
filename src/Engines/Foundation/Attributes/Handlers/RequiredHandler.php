@@ -6,6 +6,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Kettasoft\Filterable\Engines\Foundation\Attributes\AttributeContext;
 use Kettasoft\Filterable\Engines\Foundation\Attributes\Annotations\Required;
 use Kettasoft\Filterable\Engines\Foundation\Attributes\Handlers\Contracts\AttributeHandlerInterface;
+use Kettasoft\Filterable\Exceptions\StrictnessException;
 
 class RequiredHandler implements AttributeHandlerInterface
 {
@@ -22,7 +23,7 @@ class RequiredHandler implements AttributeHandlerInterface
     $payload = $context->payload;
 
     if ($payload && ($payload->isEmpty() || $payload->isNull())) {
-      throw new \InvalidArgumentException(sprintf($attribute->message, $context->state['key']));
+      throw new StrictnessException(sprintf($attribute->message, $context->state['key']));
     }
   }
 }

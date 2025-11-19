@@ -234,6 +234,10 @@ export default defineUserConfig({
                 ],
             },
             {
+                text: "Exceptions",
+                link: "exceptions",
+            },
+            {
                 text: "Event System",
                 link: "events",
             },

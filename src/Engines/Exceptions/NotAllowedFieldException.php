@@ -1,8 +1,8 @@
 <?php
 
-namespace Kettasoft\Filterable\Exceptions;
+namespace Kettasoft\Filterable\Engines\Exceptions;
 
-class NotAllowedFieldException extends \InvalidArgumentException
+class NotAllowedFieldException extends SkipExecution
 {
   /**
    * NotAllowedFieldException constructor.
