@@ -7,13 +7,13 @@ use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Facades\App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Traits\Macroable;
-use Illuminate\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Foundation\Invoker;
 use Kettasoft\Filterable\Contracts\Commitable;
 use Kettasoft\Filterable\Foundation\Resources;
 use Kettasoft\Filterable\Contracts\Validatable;
 use Kettasoft\Filterable\Contracts\Authorizable;
 use Kettasoft\Filterable\Sanitization\Sanitizer;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Engines\Foundation\Clause;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
 use Kettasoft\Filterable\Foundation\Sorting\Sorter;
@@ -493,7 +493,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
 
   /**
    * Alias name for @apply method.
-   * @param \Illuminate\Database\Eloquent\Builder|null $builder
+   * @param \Illuminate\Contracts\Database\Eloquent\Builder|null $builder
    * @return Invoker|Builder
    */
   public function filter(Builder|null $builder = null): Invoker|Builder
@@ -514,7 +514,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
 
   /**
    * Initialize query builder instance.
-   * @param \Illuminate\Database\Eloquent\Builder|null $builder
+   * @param \Illuminate\Contracts\Database\Eloquent\Builder|null $builder
    * @throws \Kettasoft\Filterable\Exceptions\MissingBuilderException
    */
   private function initQueryBuilderInstance(Builder|null $builder = null)
@@ -614,7 +614,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
   /**
    * Allow the query to pass through a custom pipeline of pipes (callables).
    *
-   * @param array<callable(\Illuminate\Database\Eloquent\Builder, static): \Illuminate\Database\Eloquent\Builder> $pipes
+   * @param array<callable(\Illuminate\Contracts\Database\Eloquent\Builder, static): \Illuminate\Contracts\Database\Eloquent\Builder> $pipes
    * @return static
    * @link https://kettasoft.github.io/filterable/features/through
    */
@@ -933,7 +933,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
 
   /**
    * Get the SQL representation of the filtered query.
-   * @param \Illuminate\Database\Eloquent\Builder|null $builder
+   * @param \Illuminate\Contracts\Database\Eloquent\Builder|null $builder
    * @param mixed $withBindings
    * @return string
    */

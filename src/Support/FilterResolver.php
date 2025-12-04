@@ -4,7 +4,7 @@ namespace Kettasoft\Filterable\Support;
 
 use Illuminate\Support\Facades\App;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Support\Traits\ForwardsCalls;
 use Kettasoft\Filterable\Contracts\FilterableContext;
 use Kettasoft\Filterable\Exceptions\FilterIsNotDefinedException;
@@ -29,7 +29,7 @@ class FilterResolver
 
   /**
    * Create FilterRegisterator instance.
-   * @param \Illuminate\Database\Eloquent\Builder $builder
+   * @param \Illuminate\Contracts\Database\Eloquent\Builder $builder
    * @param mixed $filter
    */
   public function __construct(Builder $builder, $filter = null)

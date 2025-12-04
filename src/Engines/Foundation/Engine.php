@@ -4,7 +4,7 @@ namespace Kettasoft\Filterable\Engines\Foundation;
 
 use Illuminate\Support\Arr;
 use Kettasoft\Filterable\Filterable;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Foundation\Resources;
 use Kettasoft\Filterable\Engines\Contracts\Skippable;
 use Kettasoft\Filterable\Engines\Contracts\Executable;
@@ -30,7 +30,7 @@ abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Stricta
 
   /**
    * Apply filters to the query.
-   * @param \Illuminate\Database\Eloquent\Builder $builder
+   * @param \Illuminate\Contracts\Database\Eloquent\Builder $builder
    * @return Builder
    */
   abstract public function execute(Builder $builder);

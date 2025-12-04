@@ -4,7 +4,7 @@ namespace Kettasoft\Filterable\Commands;
 
 use ReflectionClass;
 use Illuminate\Console\Command;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Eloquent\Model;

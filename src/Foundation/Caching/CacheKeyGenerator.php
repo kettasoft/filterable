@@ -2,7 +2,7 @@
 
 namespace Kettasoft\Filterable\Foundation\Caching;
 
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
 /**

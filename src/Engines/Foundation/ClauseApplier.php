@@ -2,7 +2,7 @@
 
 namespace Kettasoft\Filterable\Engines\Foundation;
 
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Engines\Contracts\Appliable;
 
 class ClauseApplier implements Appliable
@@ -15,8 +15,8 @@ class ClauseApplier implements Appliable
 
   /**
    * Apply a Clause to the query builder.
-   * @param \Illuminate\Database\Eloquent\Builder $builder
-   * @return \Illuminate\Database\Eloquent\Builder
+   * @param \Illuminate\Contracts\Database\Eloquent\Builder $builder
+   * @return \Illuminate\Contracts\Database\Eloquent\Builder
    */
   public function apply(Builder $builder): Builder
   {
@@ -33,7 +33,7 @@ class ClauseApplier implements Appliable
 
   /**
    * Apply a direct (non-relational) clause to the query.
-   * @param \Illuminate\Database\Eloquent\Builder $builder
+   * @param \Illuminate\Contracts\Database\Eloquent\Builder $builder
    * @return Builder
    */
   protected function applyDirect(Builder $builder)
@@ -43,7 +43,7 @@ class ClauseApplier implements Appliable
 
   /**
    * Apply a relational clause to the query.
-   * @param \Illuminate\Database\Eloquent\Builder $builder
+   * @param \Illuminate\Contracts\Database\Eloquent\Builder $builder
    * @return Builder
    */
   protected function applyRelational(Builder $builder)

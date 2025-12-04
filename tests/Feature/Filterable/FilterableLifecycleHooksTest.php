@@ -4,8 +4,8 @@ namespace Kettasoft\Filterable\Tests\Feature\Filterable;
 
 use Kettasoft\Filterable\Filterable;
 use Kettasoft\Filterable\Tests\TestCase;
-use Illuminate\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Tests\Models\Post;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class FilterableLifecycleHooksTest extends TestCase
 {

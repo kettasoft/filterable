@@ -2,14 +2,14 @@
 
 namespace Kettasoft\Filterable\Foundation\Contracts;
 
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 
 interface Sortable
 {
   /**
    * Apply sorting to the query.
    * 
-   * @param \Illuminate\Database\Eloquent\Builder $query
+   * @param \Illuminate\Contracts\Database\Eloquent\Builder $query
    * @return Builder
    */
   public function apply(Builder $query): Builder;

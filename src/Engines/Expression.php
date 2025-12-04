@@ -2,7 +2,7 @@
 
 namespace Kettasoft\Filterable\Engines;
 
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Support\Payload;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
 use Kettasoft\Filterable\Support\ConditionNormalizer;
@@ -22,7 +22,7 @@ class Expression extends Engine
 
   /**
    * Apply filters to the query.
-   * @param \Illuminate\Database\Eloquent\Builder $builder
+   * @param \Illuminate\Contracts\Database\Eloquent\Builder $builder
    * @return Builder
    */
   public function execute(Builder $builder): Builder

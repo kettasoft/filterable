@@ -2,7 +2,7 @@
 
 namespace Kettasoft\Filterable\Engines;
 
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Support\Payload;
 use Kettasoft\Filterable\Support\TreeNode;
 use Kettasoft\Filterable\Traits\FieldNormalizer;
@@ -23,7 +23,7 @@ class Tree extends Engine
 
   /**
    * Apply filters to the query.
-   * @param \Illuminate\Database\Eloquent\Builder $builder
+   * @param \Illuminate\Contracts\Database\Eloquent\Builder $builder
    * @return Builder
    */
   public function execute(Builder $builder): Builder
@@ -35,7 +35,7 @@ class Tree extends Engine
 
   /**
    * Apply tree node to the query builder.
-   * @param \Illuminate\Database\Eloquent\Builder $builder
+   * @param \Illuminate\Contracts\Database\Eloquent\Builder $builder
    * @param \Kettasoft\Filterable\Support\TreeNode $node
    * @return Builder
    */

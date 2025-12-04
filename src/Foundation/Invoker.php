@@ -11,7 +11,7 @@ use Illuminate\Support\Traits\ForwardsCalls;
 use function Opis\Closure\{serialize, unserialize};
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Kettasoft\Filterable\Foundation\Profiler\Profiler;
-use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Contracts\Database\Eloquent\Builder as EloquentBuilder;
 use Kettasoft\Filterable\Foundation\Contracts\HasDynamicCalls;
 
 use Kettasoft\Filterable\Foundation\Traits\HandleFluentReturn;

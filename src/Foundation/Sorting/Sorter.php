@@ -3,7 +3,7 @@
 namespace Kettasoft\Filterable\Foundation\Sorting;
 
 use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Engines\Contracts\Appliable;
 use Kettasoft\Filterable\Foundation\Contracts\Sortable;
 
@@ -254,7 +254,7 @@ class Sorter implements Appliable, Sortable
   /**
    * Apply sorting to the query.
    * 
-   * @param \Illuminate\Database\Eloquent\Builder $query
+   * @param \Illuminate\Contracts\Database\Eloquent\Builder $query
    * @return Builder
    */
   public function apply(Builder $query): Builder
@@ -298,7 +298,7 @@ class Sorter implements Appliable, Sortable
    * Apply sorting aliases to the query.
    * 
    * @param string $sortInput
-   * @param \Illuminate\Database\Eloquent\Builder $query
+   * @param \Illuminate\Contracts\Database\Eloquent\Builder $query
    * @return void
    */
   protected function applyAliases(array $fields, Builder $query): void
@@ -316,7 +316,7 @@ class Sorter implements Appliable, Sortable
    * Apply default sorting pattern to the query.
    *
    * @param array<int, array{0: string, 1: string}> $pattern
-   * @param \Illuminate\Database\Eloquent\Builder $query
+   * @param \Illuminate\Contracts\Database\Eloquent\Builder $query
    * @return void
    */
   protected function applyDefault(array $pattern, Builder $query): void
