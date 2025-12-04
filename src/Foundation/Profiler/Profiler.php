@@ -3,9 +3,9 @@
 namespace Kettasoft\Filterable\Foundation\Profiler;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Foundation\Application;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Events\QueryExecuted;
-use Illuminate\Foundation\Application;
 use Kettasoft\Filterable\Foundation\Profiler\Events\ProfilerEventDispatcher;
 use Kettasoft\Filterable\Foundation\Profiler\Contracts\ProfilerStorageContract;
 use Kettasoft\Filterable\Foundation\Profiler\Traits\HasProfilerEventDispatcher;

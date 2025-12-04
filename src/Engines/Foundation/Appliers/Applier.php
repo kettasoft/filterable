@@ -2,7 +2,7 @@
 
 namespace Kettasoft\Filterable\Engines\Foundation\Appliers;
 
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Engines\Contracts\Appliable;
 
 abstract class Applier

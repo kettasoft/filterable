@@ -2,7 +2,7 @@
 
 namespace Kettasoft\Filterable\Engines\Contracts;
 
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 
 interface Appliable
 {

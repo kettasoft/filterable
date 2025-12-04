@@ -5,7 +5,7 @@ namespace Kettasoft\Filterable\Tests\Unit\Engines;
 use Kettasoft\Filterable\Filterable;
 use Kettasoft\Filterable\Engines\Tree;
 use Kettasoft\Filterable\Tests\TestCase;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Engines\Ruleset;
 use Kettasoft\Filterable\Engines\Expression;
 use Kettasoft\Filterable\Engines\Invokable;

@@ -3,7 +3,7 @@
 namespace Kettasoft\Filterable\Engines\Foundation;
 
 use Illuminate\Support\Collection;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Contracts\Support\Arrayable;
 use Kettasoft\Filterable\Engines\Foundation\Parsers\Dissector;

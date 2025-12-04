@@ -3,7 +3,7 @@
 namespace Kettasoft\Filterable\Traits;
 
 use Kettasoft\Filterable\Filterable;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Support\FilterResolver;
 use Kettasoft\Filterable\Exceptions\FilterClassNotResolvedException;
 use Kettasoft\Filterable\Foundation\Contracts\QueryBuilderInterface;
@@ -13,16 +13,16 @@ use Kettasoft\Filterable\Foundation\Contracts\QueryBuilderInterface;
  *
  * This is not a typical Laravel Global Scope.
  *
- * @method static \Kettasoft\Filterable\Foundation\Invoker|\Illuminate\Database\Eloquent\Builder filter(\Kettasoft\Filterable\Filterable|string|null $filter = null)
+ * @method static \Kettasoft\Filterable\Foundation\Invoker|\Illuminate\Contracts\Database\Eloquent\Builder filter(\Kettasoft\Filterable\Filterable|string|null $filter = null)
  * @mixin \Illuminate\Database\Eloquent\Model
  */
 trait HasFilterable
 {
   /**
    * Apply all relevant thread filters.
-   * @param \Illuminate\Database\Eloquent\Builder $query
+   * @param \Illuminate\Contracts\Database\Eloquent\Builder $query
    * @param \Kettasoft\Filterable\Filterable|string|null $filter
-   * @return \Illuminate\Database\Eloquent\Builder
+   * @return \Illuminate\Contracts\Database\Eloquent\Builder
    */
   public function scopeFilter(Builder $query, Filterable|string|array|null $filter = null): QueryBuilderInterface
   {

@@ -4,13 +4,13 @@ namespace Kettasoft\Filterable\Support;
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class ValidateTableColumns
 {
   /**
    * Check if column name is exist in specific table.
-   * @param \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Builder $instance
+   * @param \Illuminate\Database\Eloquent\Model|\Illuminate\Contracts\Database\Eloquent\Builder $instance
    * @param string $column
    * @return bool
    */

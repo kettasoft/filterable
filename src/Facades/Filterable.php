@@ -27,8 +27,8 @@ use Illuminate\Support\Facades\Facade;
  * Core Filtering Methods:
  * @method static \Kettasoft\Filterable\Foundation\Resources getResources() Get Resources instance.
  * @method static \Kettasoft\Filterable\Foundation\FilterableSettings settings() Get FilterableSettings instance.
- * @method static \Kettasoft\Filterable\Foundation\Invoker|\Illuminate\Database\Eloquent\Builder apply(\Illuminate\Database\Eloquent\Builder|null $builder = null) Apply all filters.
- * @method static \Kettasoft\Filterable\Foundation\Invoker|\Illuminate\Database\Eloquent\Builder filter(\Illuminate\Database\Eloquent\Builder|null $builder = null) Alias name for apply method.
+ * @method static \Kettasoft\Filterable\Foundation\Invoker|\Illuminate\Contracts\Database\Eloquent\Builder apply(\Illuminate\Contracts\Database\Eloquent\Builder|null $builder = null) Apply all filters.
+ * @method static \Kettasoft\Filterable\Foundation\Invoker|\Illuminate\Contracts\Database\Eloquent\Builder filter(\Illuminate\Contracts\Database\Eloquent\Builder|null $builder = null) Alias name for apply method.
  * @method static \Kettasoft\Filterable\Filterable sorting(callable|string|\Kettasoft\Filterable\Foundation\Contracts\Sorting\Invokable $sorting) Define sorting rules for the current filterable instance.
  * @method static \Kettasoft\Filterable\Filterable shouldReturnQueryBuilder() Should return Query Builder instance when invoke apply.
  * 
@@ -108,11 +108,11 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Kettasoft\Filterable\Filterable setFieldsMap(mixed $fields, bool $override = true) Set fields wrapper.
  * 
  * Builder Management:
- * @method static \Illuminate\Database\Eloquent\Builder getBuilder() Get registered filter builder.
- * @method static \Kettasoft\Filterable\Filterable setBuilder(\Illuminate\Database\Eloquent\Builder $builder) Set a new builder.
+ * @method static \Illuminate\Contracts\Database\Eloquent\Builder getBuilder() Get registered filter builder.
+ * @method static \Kettasoft\Filterable\Filterable setBuilder(\Illuminate\Contracts\Database\Eloquent\Builder $builder) Set a new builder.
  * 
  * SQL Export:
- * @method static string toSql(\Illuminate\Database\Eloquent\Builder|null $builder = null, mixed $withBindings = false) Get the SQL representation of the filtered query.
+ * @method static string toSql(\Illuminate\Contracts\Database\Eloquent\Builder|null $builder = null, mixed $withBindings = false) Get the SQL representation of the filtered query.
  * 
  * @see \Kettasoft\Filterable\Filterable
  */
