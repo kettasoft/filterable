@@ -22,6 +22,7 @@ use Kettasoft\Filterable\Engines\Factory\EngineManager;
 use Kettasoft\Filterable\Foundation\Contracts\Sortable;
 use Kettasoft\Filterable\Foundation\FilterableSettings;
 use Kettasoft\Filterable\Exceptions\MissingBuilderException;
+use Kettasoft\Filterable\Foundation\Traits\HandleFluentReturn;
 use Kettasoft\Filterable\Engines\Foundation\Executors\Executer;
 use Kettasoft\Filterable\Foundation\Contracts\FilterableProfile;
 use Kettasoft\Filterable\Foundation\Contracts\Sorting\Invokable;
@@ -42,6 +43,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
     Traits\HasFilterableEvents,
     Traits\InteractsWithProvidedData,
     Traits\HasFilterableCache,
+    HandleFluentReturn,
     Macroable;
 
   /**
@@ -82,7 +84,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
 
   /**
    * The Builder instance.
-   * @var Builder
+   * @var \Illuminate\Database\Eloquent\Builder
    */
   protected Builder $builder;
 
@@ -176,7 +178,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
 
   /**
    * Initialize core dependencies and fire the initializing event.
-   * 
+   *
    * @return void
    */
   public function boot($request = null)
@@ -190,7 +192,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
 
   /**
    * Prepare engine and internal components.
-   * 
+   *
    * @return void
    */
   public function booting()
@@ -203,7 +205,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
 
   /**
    * Finalize setup and fire the booted event.
-   * 
+   *
    * @return void
    */
   public function booted()
@@ -217,7 +219,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
 
   /**
    * Get request source.
-   * 
+   *
    * @return string
    */
   public function getRequestSource(): string
@@ -227,7 +229,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
 
   /**
    * Apply a filterable profile to the current instance.
-   * 
+   *
    * @param FilterableProfile|string $profile
    * @return static
    */
@@ -268,7 +270,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
 
   /**
    * Commit clause.
-   * 
+   *
    * @param string $key
    * @param Clause $clause
    * @return bool
@@ -281,7 +283,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
 
   /**
    * Get applied clauses.
-   * 
+   *
    * @param string $key
    * @return array|Clause|null
    */
@@ -430,7 +432,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
 
   /**
    * Add a sorting callback for a specific filterable.
-   * 
+   *
    * @param string|array $filterable
    * @param callable $callback
    * @return void
@@ -459,7 +461,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
 
   /**
    * Define sorting rules for the current filterable instance.
-   * 
+   *
    * @param callable $sorting
    * @return static
    */
@@ -899,7 +901,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
   }
 
   /**
-   * Get registered filter builder. 
+   * Get registered filter builder.
    * @return Builder
    */
   public function getBuilder(): Builder
@@ -960,7 +962,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
 
   /**
    * Get exception handler instance.
-   * 
+   *
    * @return ExceptionHandlerInterface
    */
   public function getExceptionHandler(): ExceptionHandlerInterface
@@ -985,5 +987,16 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
     }
 
     return $this->get($property);
+  }
+
+  /**
+   * Handle dynamic method calls to the builder.
+   * @param string $method
+   * @param array $parameters
+   * @return mixed
+   */
+  public function __call($method, $parameters)
+  {
+    return $this->handleFluentReturn($method, $parameters);
   }
 }
