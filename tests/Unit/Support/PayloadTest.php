@@ -17,7 +17,7 @@ class PayloadTest extends TestCase
       field: 'name',
       operator: '=',
       value: 'Filterable',
-      beforeSanitize: '   Filterable   '
+      rawValue: '   Filterable   '
     );
   }
 
@@ -27,7 +27,7 @@ class PayloadTest extends TestCase
     $this->assertEquals('name', $this->payload->field);
     $this->assertEquals('=', $this->payload->operator);
     $this->assertEquals('Filterable', $this->payload->value);
-    $this->assertEquals('   Filterable   ', $this->payload->beforeSanitize);
+    $this->assertEquals('   Filterable   ', $this->payload->rawValue);
   }
 
   public function test_static_create_method()

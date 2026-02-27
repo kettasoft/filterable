@@ -92,7 +92,7 @@ You can access not only the raw value but also the parsed operator (e.g. =, like
 - `field` – the column name
 - `operator` – the parsed operator (from your ruleset or SQL‐expression config)
 - `value` – the sanitized filter value
-- `beforeSanitize` – the original raw input
+- `rawValue` – the original raw input
 
 ## Mapping Request Keys
 
@@ -193,8 +193,7 @@ This ensures that the filter system remains dynamic and flexible whether or not 
 2. $request->only([...]) extracts relevent filters.
 3. Filter class loops over keys.
 4. For each key:
-
-   - if a method named **`$key`** exists and registered in **`$filters`** property, is is executed with the value.
+    - if a method named **`$key`** exists and registered in **`$filters`** property, is is executed with the value.
 
 5. Modified Eloquent query is returned.
 
