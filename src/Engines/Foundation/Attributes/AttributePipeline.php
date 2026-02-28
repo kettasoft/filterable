@@ -2,6 +2,8 @@
 
 namespace Kettasoft\Filterable\Engines\Foundation\Attributes;
 
+use Kettasoft\Filterable\Engines\Foundation\Contracts\Outcome;
+use Kettasoft\Filterable\Engines\Foundation\Execution;
 use Kettasoft\Filterable\Filterable;
 
 class AttributePipeline
@@ -18,14 +20,22 @@ class AttributePipeline
    * Process the attributes for the given target and method.
    *
    * @param object|string $target
-   * @return void
+   * @return \Kettasoft\Filterable\Engines\Foundation\Contracts\Outcome
    */
-  public function process(Filterable $target, string $method): void
+  public function process(Filterable $target, string $method): Outcome
   {
-    $handlers = $this->registry->getHandlersForMethod($target, $method);
+    $execution = new Execution();
 
-    foreach ($handlers as [$handler, $attributeInstance]) {
-      (new $handler)->handle($this->context, $attributeInstance);
+    try {
+      $handlers = $this->registry->getHandlersForMethod($target, $method);
+
+      foreach ($handlers as [$handler, $attributeInstance]) {
+        (new $handler)->handle($this->context, $attributeInstance);
+      }
+    } catch (\Exception $e) {
+      $execution->fail($e);
     }
+
+    return $execution;
   }
 }
