@@ -360,7 +360,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
       ]);
 
       if ($this instanceof ShouldReturnQueryBuilder || $this->shouldReturnQueryBuilder) {
-        return $builder;
+        return $this->finally($builder);
       }
 
       $invoker = new Invoker($this->finally($builder));

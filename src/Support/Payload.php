@@ -38,21 +38,21 @@ class Payload implements \Stringable, Arrayable, Jsonable
    * Value before sanitizing.
    * @var mixed
    */
-  public mixed $beforeSanitize;
+  public mixed $rawValue;
 
   /**
    * Create new Payload instance.
    * @param string $field
    * @param string $operator
    * @param mixed $value
-   * @param mixed $beforeSanitize
+   * @param mixed $rawValue
    */
-  public function __construct(string $field, string $operator, mixed $value, mixed $beforeSanitize)
+  public function __construct(string $field, string $operator, mixed $value, mixed $rawValue)
   {
     $this->field = $field;
     $this->operator = $operator;
     $this->value = $value;
-    $this->beforeSanitize = $beforeSanitize;
+    $this->rawValue = $rawValue;
   }
 
   /**
@@ -60,12 +60,12 @@ class Payload implements \Stringable, Arrayable, Jsonable
    * @param mixed $field
    * @param mixed $operator
    * @param mixed $value
-   * @param mixed $beforeSanitize
+   * @param mixed $rawValue
    * @return Payload
    */
-  public static function create($field, $operator, $value, $beforeSanitize): static
+  public static function create($field, $operator, $value, $rawValue): static
   {
-    return new static($field, $operator, $value, $beforeSanitize);
+    return new static($field, $operator, $value, $rawValue);
   }
 
   /**
@@ -75,7 +75,7 @@ class Payload implements \Stringable, Arrayable, Jsonable
    */
   public function raw(): mixed
   {
-    return $this->beforeSanitize;
+    return $this->rawValue;
   }
 
   /**
@@ -572,7 +572,7 @@ class Payload implements \Stringable, Arrayable, Jsonable
       'field' => $this->field,
       'operator' => $this->operator,
       'value' => $this->value,
-      'beforeSanitize' => $this->beforeSanitize,
+      'rawValue' => $this->rawValue,
     ];
   }
 

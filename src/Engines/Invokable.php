@@ -86,9 +86,14 @@ class Invokable extends Engine
     );
 
     $pipeline = new AttributePipeline(new AttributeRegistry(), $attrContext);
-    $pipeline->process($this->context, $method);
+    $process = $pipeline->process($this->context, $method);
 
-    $this->forwardCallTo($this->context, $method, [$payload]);
+    $process->then(function () use ($method, $payload) {
+      $this->forwardCallTo($this->context, $method, [$payload]);
+    })
+      ->catch(function ($e) {
+        throw $e;
+      });
   }
 
   /**

@@ -25,12 +25,12 @@ class PostFilter extends Filterable
 
 ## Properties
 
-| Property          | Type     | Description                            |
-| ----------------- | -------- | -------------------------------------- |
-| `$field`          | `string` | The field passed from the request.     |
-| `$operator`       | `string` | The operator passed from the request.  |
-| `$value`          | `mixed`  | The raw value passed from the request. |
-| `$beforeSanitize` | `mixed`  | The original value before sanitizing.  |
+| Property    | Type     | Description                            |
+| ----------- | -------- | -------------------------------------- |
+| `$field`    | `string` | The field passed from the request.     |
+| `$operator` | `string` | The operator passed from the request.  |
+| `$value`    | `mixed`  | The raw value passed from the request. |
+| `$rawValue` | `mixed`  | The original value before sanitizing.  |
 
 ---
 
@@ -247,9 +247,9 @@ $payload->asSlug("_"); // "my_sample_value"
 
 Wrap the value with `%` for SQL `LIKE` queries.
 
--   `both` → `%value%`
--   `left` → `%value`
--   `right` → `value%`
+- `both` → `%value%`
+- `left` → `%value`
+- `right` → `value%`
 
 ```php
 $this->builder->where('title', 'like', $payload->asLike());
@@ -293,7 +293,7 @@ $payload->split(); // ['one', 'two', 'three']
 Get the original unmodified value.
 
 ```php
-$payload->raw();  // equivalent to $payload->beforeSanitize
+$payload->raw();  // equivalent to $payload->rawValue
 ```
 
 ---
@@ -472,6 +472,6 @@ protected function meta(Payload $payload)
 
 ## Summary
 
--   `Payload` standardizes how filter values are processed.
--   It provides helper methods (`asLike`, `asBoolean`, `isJson`, etc.).
--   This reduces repetitive code inside filter classes.
+- `Payload` standardizes how filter values are processed.
+- It provides helper methods (`asLike`, `asBoolean`, `isJson`, etc.).
+- This reduces repetitive code inside filter classes.
