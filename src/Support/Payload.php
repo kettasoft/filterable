@@ -532,6 +532,44 @@ class Payload implements \Stringable, Arrayable, Jsonable
   }
 
   /**
+   * Cast the payload value to the given type using the corresponding as* method.
+   *
+   * Supported types: 'boolean', 'array', 'int', 'carbon', 'slug', 'like', 'json'.
+   *
+   * Example: $payload->cast('int'), $payload->cast('boolean')
+   *
+   * @param string $type
+   * @param mixed ...$args Additional arguments to pass to the cast method.
+   * @return mixed
+   *
+   * @throws \InvalidArgumentException if the cast type method does not exist.
+   */
+  public function cast(string $type, mixed ...$args): mixed
+  {
+    $method = 'as' . ucfirst($type);
+
+    if (!method_exists($this, $method)) {
+      throw new \InvalidArgumentException("Cast type [{$type}] is not supported. Method {$method} does not exist.");
+    }
+
+    return $this->$method(...$args);
+  }
+
+  /**
+   * Alias for cast method.
+   *
+   * @param string $type
+   * @param mixed ...$args Additional arguments to pass to the cast method.
+   * @return mixed
+   *
+   * @throws \InvalidArgumentException if the cast type method does not exist.
+   */
+  public function as(string $type, mixed ...$args): mixed
+  {
+    return $this->cast($type, ...$args);
+  }
+
+  /**
    * Wrap the value with a given prefix and suffix.
    *
    * @param string $prefix
