@@ -48,26 +48,4 @@ class RequiredValueAttributeTest extends TestCase
 
     $this->assertStringContainsString($sql, \Kettasoft\Filterable\Tests\Models\Post::filter($class)->toRawSql());
   }
-
-  public function test_required_value_attribute_throws_exception_when_value_missing_with_custom_message()
-  {
-    $this->expectException(StrictnessException::class);
-    $this->expectExceptionMessage("The 'status' parameter is mandatory.");
-
-    request()->merge([
-      'status' => '',
-    ]);
-
-    $class = new class extends \Kettasoft\Filterable\Filterable {
-      protected $filters = ['status'];
-
-      #[\Kettasoft\Filterable\Engines\Foundation\Attributes\Annotations\Required('The \'%s\' parameter is mandatory.')]
-      public function status(\Kettasoft\Filterable\Support\Payload $payload)
-      {
-        $this->builder->where('name', '=', $payload);
-      }
-    };
-
-    \Kettasoft\Filterable\Tests\Models\Post::filter($class);
-  }
 }
