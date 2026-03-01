@@ -9,12 +9,21 @@ use Kettasoft\Filterable\Filterable;
 class AttributePipeline
 {
   /**
+   * The attribute registry instance.
+   * @var AttributeRegistry
+   */
+  protected AttributeRegistry $registry;
+
+  /**
    * Create a new attribute pipeline instance.
    *
    * @param AttributeRegistry $registry
    * @param AttributeContext $context
    */
-  public function __construct(protected AttributeRegistry $registry, protected AttributeContext $context) {}
+  public function __construct(protected AttributeContext $context)
+  {
+    $this->registry = new AttributeRegistry();
+  }
 
   /**
    * Process the attributes for the given target and method.
@@ -27,10 +36,10 @@ class AttributePipeline
     $execution = new Execution();
 
     try {
-      $handlers = $this->registry->getHandlersForMethod($target, $method);
+      $attributes = $this->registry->getHandlersForMethod($target, $method);
 
-      foreach ($handlers as [$handler, $attributeInstance]) {
-        (new $handler)->handle($this->context, $attributeInstance);
+      foreach ($attributes as $attribute) {
+        $attribute->handle($this->context);
       }
     } catch (\Exception $e) {
       $execution->fail($e);
