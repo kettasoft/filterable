@@ -5,6 +5,7 @@ namespace Kettasoft\Filterable\Tests\Models;
 use Illuminate\Database\Eloquent\Model;
 use Kettasoft\Filterable\Tests\Models\Tag;
 use Kettasoft\Filterable\Traits\HasFilterable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Kettasoft\Filterable\Tests\Database\Factories\PostFactory;
@@ -20,6 +21,16 @@ class Post extends Model
     'views' => 'integer',
     'tags' => 'array',
   ];
+
+  public function scopeActive(Builder $query, $value = null): Builder
+  {
+    return $query->where('status', $value ?? 'active');
+  }
+
+  public function scopePopular(Builder $query, $minViews = 100): Builder
+  {
+    return $query->where('views', '>=', $minViews);
+  }
 
   public function tags(): HasMany
   {
