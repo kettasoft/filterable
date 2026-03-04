@@ -23,7 +23,7 @@ class CastAttributeTest extends TestCase
       #[Cast('int')]
       public function views(Payload $payload)
       {
-        $this->builder->where('views', '=', $payload->cast('int'));
+        $this->builder->where('views', '=', $payload->value);
       }
     };
 
@@ -44,7 +44,7 @@ class CastAttributeTest extends TestCase
       #[Cast('boolean')]
       public function isFeatured(Payload $payload)
       {
-        $this->builder->where('is_featured', '=', $payload->cast('boolean'));
+        $this->builder->where('is_featured', '=', $payload->value);
       }
     };
 
@@ -65,7 +65,7 @@ class CastAttributeTest extends TestCase
       #[Cast('boolean')]
       public function isFeatured(Payload $payload)
       {
-        $this->builder->where('is_featured', '=', $payload->cast('boolean'));
+        $this->builder->where('is_featured', '=', $payload->value);
       }
     };
 
@@ -86,8 +86,7 @@ class CastAttributeTest extends TestCase
       #[Cast('array')]
       public function tags(Payload $payload)
       {
-        $casted = $payload->cast('array');
-        $this->builder->whereIn('tags', $casted);
+        $this->builder->whereIn('tags', $payload->value);
       }
     };
 
@@ -113,7 +112,7 @@ class CastAttributeTest extends TestCase
       #[Cast('unsupported')]
       public function status(Payload $payload)
       {
-        $this->builder->where('status', '=', $payload);
+        $this->builder->where('status', '=', $payload->value);
       }
     };
 
@@ -132,7 +131,7 @@ class CastAttributeTest extends TestCase
       #[Cast('int')]
       public function views(Payload $payload)
       {
-        $this->builder->where('views', '>', $payload->cast('int'));
+        $this->builder->where('views', '>', $payload->value);
       }
     };
 
@@ -153,7 +152,7 @@ class CastAttributeTest extends TestCase
       #[Cast('slug')]
       public function title(Payload $payload)
       {
-        $this->builder->where('title', '=', $payload->cast('slug'));
+        $this->builder->where('title', '=', $payload->value);
       }
     };
 
@@ -174,7 +173,7 @@ class CastAttributeTest extends TestCase
       #[Cast('like')]
       public function title(Payload $payload)
       {
-        $this->builder->where('title', 'LIKE', $payload->cast('like'));
+        $this->builder->where('title', 'LIKE', $payload->value);
       }
     };
 
@@ -195,9 +194,8 @@ class CastAttributeTest extends TestCase
       #[Cast('int')]
       public function views(Payload $payload)
       {
-        $casted = $payload->cast('int');
-        if (!is_null($casted)) {
-          $this->builder->where('views', '=', $casted);
+        if (!is_null($payload->value)) {
+          $this->builder->where('views', '=', $payload->value);
         }
       }
     };
