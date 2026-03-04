@@ -565,7 +565,9 @@ class Payload implements \Stringable, Arrayable, Jsonable
       throw new \InvalidArgumentException("Cast type [{$type}] is not supported. Method {$method} does not exist.");
     }
 
-    return $this->$method(...$args);
+    $this->value = $this->$method(...$args);
+
+    return $this->value;
   }
 
   /**
