@@ -75,7 +75,75 @@ export default defineUserConfig({
                 children: [
                     {
                         text: "Invokable",
-                        link: "engines/invokable",
+                        collapsible: true,
+                        children: [
+                            {
+                                text: "Overview",
+                                link: "engines/invokable/",
+                            },
+                            {
+                                text: "Annotations",
+                                collapsible: true,
+                                children: [
+                                    {
+                                        text: "Overview",
+                                        link: "engines/invokable/annotations/",
+                                    },
+                                    {
+                                        text: "Authorize",
+                                        link: "engines/invokable/annotations/authorize",
+                                    },
+                                    {
+                                        text: "SkipIf",
+                                        link: "engines/invokable/annotations/skip-if",
+                                    },
+                                    {
+                                        text: "Trim",
+                                        link: "engines/invokable/annotations/trim",
+                                    },
+                                    {
+                                        text: "Sanitize",
+                                        link: "engines/invokable/annotations/sanitize",
+                                    },
+                                    {
+                                        text: "Cast",
+                                        link: "engines/invokable/annotations/cast",
+                                    },
+                                    {
+                                        text: "DefaultValue",
+                                        link: "engines/invokable/annotations/default-value",
+                                    },
+                                    {
+                                        text: "MapValue",
+                                        link: "engines/invokable/annotations/map-value",
+                                    },
+                                    {
+                                        text: "Explode",
+                                        link: "engines/invokable/annotations/explode",
+                                    },
+                                    {
+                                        text: "Required",
+                                        link: "engines/invokable/annotations/required",
+                                    },
+                                    {
+                                        text: "In",
+                                        link: "engines/invokable/annotations/in",
+                                    },
+                                    {
+                                        text: "Between",
+                                        link: "engines/invokable/annotations/between",
+                                    },
+                                    {
+                                        text: "Regex",
+                                        link: "engines/invokable/annotations/regex",
+                                    },
+                                    {
+                                        text: "Scope",
+                                        link: "engines/invokable/annotations/scope",
+                                    },
+                                ],
+                            },
+                        ],
                     },
                     {
                         text: "Tree",
