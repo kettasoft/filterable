@@ -3,16 +3,15 @@
 namespace Kettasoft\Filterable\Engines\Foundation\Attributes\Annotations;
 
 use Attribute;
-use Kettasoft\Filterable\Exceptions\StrictnessException;
 
 #[Attribute(Attribute::TARGET_METHOD)]
-class Required implements \Kettasoft\Filterable\Engines\Foundation\Attributes\Contracts\MethodAttribute
+class Explode implements \Kettasoft\Filterable\Engines\Foundation\Attributes\Contracts\MethodAttribute
 {
   /**
-   * The error message template. %s will be replaced with the parameter name.
-   * @var string
+   * Constructor for Explode attribute.
+   * @param string $delimiter The delimiter to use for exploding the parameter value.
    */
-  public string $message = "The parameter '%s' is required.";
+  public function __construct(public string $delimiter = ',') {}
 
   /**
    * Get the stage at which this attribute should be applied.
@@ -29,15 +28,12 @@ class Required implements \Kettasoft\Filterable\Engines\Foundation\Attributes\Co
    *
    * @param \Kettasoft\Filterable\Engines\Foundation\Attributes\AttributeContext $context
    * @return void
-   * @throws StrictnessException if the parameter is missing or empty.
    */
   public function handle(\Kettasoft\Filterable\Engines\Foundation\Attributes\AttributeContext $context): void
   {
     /** @var \Kettasoft\Filterable\Support\Payload $payload */
     $payload = $context->payload;
 
-    if ($payload && ($payload->isEmpty() || $payload->isNull())) {
-      throw new StrictnessException(sprintf($this->message, $context->state['key']));
-    }
+    $payload->explode($this->delimiter, true);
   }
 }

@@ -3,16 +3,25 @@
 namespace Kettasoft\Filterable\Engines\Foundation\Attributes\Annotations;
 
 use Attribute;
-use Kettasoft\Filterable\Exceptions\StrictnessException;
 
 #[Attribute(Attribute::TARGET_METHOD)]
-class Required implements \Kettasoft\Filterable\Engines\Foundation\Attributes\Contracts\MethodAttribute
+class In implements \Kettasoft\Filterable\Engines\Foundation\Attributes\Contracts\MethodAttribute
 {
   /**
-   * The error message template. %s will be replaced with the parameter name.
-   * @var string
+   * The allowed values for the parameter.
+   *
+   * @var array
    */
-  public string $message = "The parameter '%s' is required.";
+  protected array $values;
+
+  /**
+   * Constructor for In attribute.
+   * @param array $values The allowed values for the parameter.
+   */
+  public function __construct(...$values)
+  {
+    $this->values = $values;
+  }
 
   /**
    * Get the stage at which this attribute should be applied.
@@ -29,15 +38,16 @@ class Required implements \Kettasoft\Filterable\Engines\Foundation\Attributes\Co
    *
    * @param \Kettasoft\Filterable\Engines\Foundation\Attributes\AttributeContext $context
    * @return void
-   * @throws StrictnessException if the parameter is missing or empty.
    */
   public function handle(\Kettasoft\Filterable\Engines\Foundation\Attributes\AttributeContext $context): void
   {
     /** @var \Kettasoft\Filterable\Support\Payload $payload */
     $payload = $context->payload;
 
-    if ($payload && ($payload->isEmpty() || $payload->isNull())) {
-      throw new StrictnessException(sprintf($this->message, $context->state['key']));
+    if ($payload->notIn($this->values)) {
+      throw new \Kettasoft\Filterable\Engines\Exceptions\SkipExecution(
+        "The value '{$payload->value}' is not in the allowed set: " . implode(', ', $this->values)
+      );
     }
   }
 }

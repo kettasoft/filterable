@@ -6,13 +6,13 @@ use Attribute;
 use Kettasoft\Filterable\Exceptions\StrictnessException;
 
 #[Attribute(Attribute::TARGET_METHOD)]
-class Required implements \Kettasoft\Filterable\Engines\Foundation\Attributes\Contracts\MethodAttribute
+class Cast implements \Kettasoft\Filterable\Engines\Foundation\Attributes\Contracts\MethodAttribute
 {
   /**
-   * The error message template. %s will be replaced with the parameter name.
-   * @var string
+   * Constructor for Cast attribute.
+   * @param string $type The type to which the parameter should be cast.
    */
-  public string $message = "The parameter '%s' is required.";
+  public function __construct(public string $type) {}
 
   /**
    * Get the stage at which this attribute should be applied.
@@ -21,7 +21,7 @@ class Required implements \Kettasoft\Filterable\Engines\Foundation\Attributes\Co
    */
   public static function stage(): int
   {
-    return \Kettasoft\Filterable\Engines\Foundation\Attributes\Enums\Stage::VALIDATE->value;
+    return \Kettasoft\Filterable\Engines\Foundation\Attributes\Enums\Stage::TRANSFORM->value;
   }
 
   /**
@@ -36,8 +36,10 @@ class Required implements \Kettasoft\Filterable\Engines\Foundation\Attributes\Co
     /** @var \Kettasoft\Filterable\Support\Payload $payload */
     $payload = $context->payload;
 
-    if ($payload && ($payload->isEmpty() || $payload->isNull())) {
-      throw new StrictnessException(sprintf($this->message, $context->state['key']));
+    try {
+      $payload->cast($this->type);
+    } catch (\Exception $e) {
+      throw new StrictnessException($e->getMessage());
     }
   }
 }

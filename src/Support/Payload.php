@@ -508,27 +508,80 @@ class Payload implements \Stringable, Arrayable, Jsonable
    * If the value is a string, it will be split by the delimiter.
    * If the value is already an array, it will be returned as is.
    *
-   * @param string $delimiter
+   * @param string $delimiter The delimiter to split the string by.
+   * @param bool $overwrite Whether to replace the original payload value. Defaults to false.
    * @return array
    */
-  public function explode(string $delimiter = ','): array
+  public function explode(string $delimiter = ',', bool $overwrite = false): array
   {
-    if ($this->isString()) {
-      return explode($delimiter, $this->value);
+    if ($this->isArray()) {
+      return (array) $this->value;
     }
 
+    if ($this->isString()) {
+      $exploded = explode($delimiter, $this->value);
+
+      if ($overwrite) {
+        $this->value = $exploded;
+      }
+
+      return $exploded;
+    }
+
+    // If value is neither string nor array, just return it as-is
     return (array) $this->value;
   }
 
   /**
    * Alias for explode method.
    *
-   * @param string $delimiter
+   * @param string $delimiter The delimiter to split the string by.
+   * @param bool $overwrite Whether to replace the original payload value. Defaults to false.
    * @return array
    */
-  public function split(string $delimiter = ','): array
+  public function split(string $delimiter = ',', bool $overwrite = false): array
   {
-    return $this->explode($delimiter);
+    return $this->explode($delimiter, $overwrite);
+  }
+
+  /**
+   * Cast the payload value to the given type using the corresponding as* method.
+   *
+   * Supported types: 'boolean', 'array', 'int', 'carbon', 'slug', 'like', 'json'.
+   *
+   * Example: $payload->cast('int'), $payload->cast('boolean')
+   *
+   * @param string $type
+   * @param mixed ...$args Additional arguments to pass to the cast method.
+   * @return mixed
+   *
+   * @throws \InvalidArgumentException if the cast type method does not exist.
+   */
+  public function cast(string $type, mixed ...$args): mixed
+  {
+    $method = 'as' . ucfirst($type);
+
+    if (!method_exists($this, $method)) {
+      throw new \InvalidArgumentException("Cast type [{$type}] is not supported. Method {$method} does not exist.");
+    }
+
+    $this->value = $this->$method(...$args);
+
+    return $this->value;
+  }
+
+  /**
+   * Alias for cast method.
+   *
+   * @param string $type
+   * @param mixed ...$args Additional arguments to pass to the cast method.
+   * @return mixed
+   *
+   * @throws \InvalidArgumentException if the cast type method does not exist.
+   */
+  public function as(string $type, mixed ...$args): mixed
+  {
+    return $this->cast($type, ...$args);
   }
 
   /**

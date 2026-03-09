@@ -85,7 +85,7 @@ class Invokable extends Engine
       state: ['method' => $method, 'key' => $key]
     );
 
-    $pipeline = new AttributePipeline(new AttributeRegistry(), $attrContext);
+    $pipeline = new AttributePipeline($attrContext);
     $process = $pipeline->process($this->context, $method);
 
     $process->then(function () use ($method, $payload) {
