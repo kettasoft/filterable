@@ -5,6 +5,8 @@ on:
     branches:
       # make sure this is the branch you are using
       - master
+    paths:
+      - "docs/**"
 
 permissions:
   contents: write
