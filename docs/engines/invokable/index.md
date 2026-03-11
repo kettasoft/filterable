@@ -94,12 +94,12 @@ $posts = Post::filter(PostFilter::class)->paginate();
 
 Every filter method receives a `Payload` instance, giving you full access to the parsed request data:
 
-| Property    | Type     | Description                                    |
-| ----------- | -------- | ---------------------------------------------- |
-| `field`     | `string` | The column/filter name                         |
-| `operator`  | `string` | The parsed operator (e.g., `eq`, `like`, `gt`) |
-| `value`     | `mixed`  | The sanitized filter value                     |
-| `rawValue`  | `mixed`  | The original raw input before sanitization     |
+| Property   | Type     | Description                                    |
+| ---------- | -------- | ---------------------------------------------- |
+| `field`    | `string` | The column/filter name                         |
+| `operator` | `string` | The parsed operator (e.g., `eq`, `like`, `gt`) |
+| `value`    | `mixed`  | The sanitized filter value                     |
+| `rawValue` | `mixed`  | The original raw input before sanitization     |
 
 ```php
 protected function price(Payload $payload)
@@ -155,12 +155,12 @@ The Invokable Engine supports **PHP 8 Attributes** (annotations) on filter metho
 
 Attributes are sorted and executed by **stage**:
 
-| Order | Stage         | Purpose                            | Example Attributes                  |
-| ----- | ------------- | ---------------------------------- | ----------------------------------- |
-| 1     | **CONTROL**   | Decide whether to run the filter   | `#[Authorize]`, `#[SkipIf]`        |
-| 2     | **TRANSFORM** | Modify the payload value           | `#[Trim]`, `#[Sanitize]`, `#[Cast]`, `#[MapValue]`, `#[DefaultValue]`, `#[Explode]` |
-| 3     | **VALIDATE**  | Assert correctness of the value    | `#[Required]`, `#[In]`, `#[Between]`, `#[Regex]` |
-| 4     | **BEHAVIOR**  | Affect query behavior              | `#[Scope]`                          |
+| Order | Stage         | Purpose                          | Example Attributes                                                                  |
+| ----- | ------------- | -------------------------------- | ----------------------------------------------------------------------------------- |
+| 1     | **CONTROL**   | Decide whether to run the filter | `#[Authorize]`, `#[SkipIf]`                                                         |
+| 2     | **TRANSFORM** | Modify the payload value         | `#[Trim]`, `#[Sanitize]`, `#[Cast]`, `#[MapValue]`, `#[DefaultValue]`, `#[Explode]` |
+| 3     | **VALIDATE**  | Assert correctness of the value  | `#[Required]`, `#[In]`, `#[Between]`, `#[Regex]`                                    |
+| 4     | **BEHAVIOR**  | Affect query behavior            | `#[Scope]`                                                                          |
 
 ### Example with Attributes
 
@@ -221,14 +221,14 @@ The default operator can be configured per engine:
 
 ## Key Features
 
-| Feature                        | Description                                                    |
-| ------------------------------ | -------------------------------------------------------------- |
-| **Convention over Configuration** | Method names match request keys automatically                  |
-| **Safe Execution**             | Only registered filter keys in `$filters` are processed        |
-| **Attribute Pipeline**         | PHP 8 attributes for validation, transformation, and control   |
-| **Custom Method Mapping**      | `$mentors` property for flexible key-to-method mapping         |
-| **Rich Payload Object**        | Full access to field, operator, value, and raw value           |
-| **Extensible**                 | Add or override filter methods easily                          |
+| Feature                           | Description                                                  |
+| --------------------------------- | ------------------------------------------------------------ |
+| **Convention over Configuration** | Method names match request keys automatically                |
+| **Safe Execution**                | Only registered filter keys in `$filters` are processed      |
+| **Attribute Pipeline**            | PHP 8 attributes for validation, transformation, and control |
+| **Custom Method Mapping**         | `$mentors` property for Flexible key-to-method mapping       |
+| **Rich Payload Object**           | Full access to field, operator, value, and raw value         |
+| **Extensible**                    | Add or override filter methods easily                        |
 
 ---
 

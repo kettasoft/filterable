@@ -212,7 +212,7 @@ return [
         | Invokable Filter Engine
         |--------------------------------------------------------------------------
         |
-        | The Invokable Engine provides a powerful way to dynamically map incomming reuqest parameters to corresponding methods in a filter class.
+        | The Invokable Engine provides a powerful way to dynamically map incomming request parameters to corresponding methods in a filter class.
         |
         */
         'invokable' => [
