@@ -4,13 +4,13 @@ sidebarDepth: 2
 
 # Invokable Engine
 
-The **Invokable Engine** provides a powerful way to dynamically map incomming reuqest parameters to corresponding methods in a filter class. This mechanism enables clean, scalable filtering logic and behavior injection without requiring large **switch** or **if-else** blocks.
+The **Invokable Engine** provides a powerful way to dynamically map incomming request parameters to corresponding methods in a filter class. This mechanism enables clean, scalable filtering logic and behavior injection without requiring large **switch** or **if-else** blocks.
 
 ---
 
 ## Purpose
 
-To automatically execute soecific methods in a filter class based on the incomming request keys, Each key in the request is matched with a method of the same name in the filter class and registered in **`$filters`** property, and the method is executed with the provided value.
+To automatically execute specific methods in a filter class based on the incomming request keys, Each key in the request is matched with a method of the same name in the filter class and registered in **`$filters`** property, and the method is executed with the provided value.
 
 ---
 
@@ -96,7 +96,7 @@ You can access not only the raw value but also the parsed operator (e.g. =, like
 
 ## Mapping Request Keys
 
-By default, the engine attempts to match the reuqest keys directly to metch names in the filter class. However, for mode flexibility and clarity, you can define a custom map that links request keys to specific method names.
+By default, the engine attempts to match the request keys directly to match names in the filter class. However, for mode flexibility and clarity, you can define a custom map that links request keys to specific method names.
 
 This allows you to:
 
@@ -182,15 +182,15 @@ This ensures that the filter system remains dynamic and flexible whether or not 
 
 - **Convention over configuration:** Method names match request keys.
 - **Safe execution:** Only existing methods and registered filter keys in **`$filters`** are called.
-- **Flexable extension:** Add or override logic in the filter class easily.
+- **Flexible extension:** Add or override logic in the filter class easily.
 - **Clean query builder:** Keeps container logic slim and readable.
 
 ---
 
 ### Lifecycle
 
-1. Controller recevies request.
-2. $request->only([...]) extracts relevent filters.
+1. Controller receives request.
+2. $request->only([...]) extracts relevant filters.
 3. Filter class loops over keys.
 4. For each key:
     - if a method named **`$key`** exists and registered in **`$filters`** property, is is executed with the value.

@@ -10,7 +10,7 @@ use Illuminate\Validation\ValidationException;
 class FilterRulesValidationTest extends TestCase
 {
   /**
-   * It validate incomming reuqest before filtering.
+   * It validate incomming request before filtering.
    * @test
    */
   public function it_validate_incomming_reuqest_before_filtering()

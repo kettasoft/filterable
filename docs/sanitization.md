@@ -1,6 +1,6 @@
 # Request Sanitization
 
-Sanitization allows you to clean or transform incomming reuqest data **before** validation or filtering is applied.
+Sanitization allows you to clean or transform incomming request data **before** validation or filtering is applied.
 This feature ensures your filters always work with clean and normalized data.
 
 ## Overview
