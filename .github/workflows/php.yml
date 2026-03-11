@@ -3,8 +3,24 @@ name: Tests
 on:
   push:
     branches: ["master", "develop"]
+    paths:
+      - "src/**"
+      - "tests/**"
+      - "database/**"
+      - "config/**"
+      - "stubs/**"
+      - "composer.json"
+      - "composer.lock"
   pull_request:
     branches: ["master", "develop"]
+    paths:
+      - "src/**"
+      - "tests/**"
+      - "database/**"
+      - "config/**"
+      - "stubs/**"
+      - "composer.json"
+      - "composer.lock"
 
 permissions:
   contents: read
