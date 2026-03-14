@@ -4,55 +4,67 @@ title: Home
 heroImage: /images/logo.png
 tagline: Advanced, Extensible Filtering for Laravel Applications
 actions:
-    - text: Introduction
+    - text: Get Started
       link: /introduction
       type: primary
-    - text: Installation
-      link: installation
+    - text: View on GitHub
+      link: https://github.com/kettasoft/filterable
       type: secondary
 
 features:
-    - title: ⚙️ Multiple Filtering Engines
-      details: Support different filtering strategies like RuleSet, Tree-Based, Dynamic Methods, and SQL Expressions — all pluggable and extensible.
+    - title: ⚙️ Four Filtering Engines
+      details: Invokable, Ruleset, Expression, and Tree — each designed for a different filtering style. Pick the one that fits your use case.
     - title: 🧩 Clean, Decoupled Architecture
       details: Built with SOLID principles in mind. Easily swap or extend engines without touching core logic.
-    - title: 🧼 Customizable Filter Sanitizers
-      details: Apply custom sanitization and validation logic for every input field or filter operator.
-    - title: 🔗 Relation & Nested Filters Support
-      details: Filter through deep nested relationships with controlled access and relation depth to preserve performance and security.
-    - title: 🧠 Intelligent Field Management
-      details: Define allowed fields, nested relations, and control exactly what’s queryable in each context.
-    - title: 🚀 Plug & Play Integration
-      details: Works seamlessly with any Laravel query builder. Minimal setup required to get started.
+    - title: 🚀 Built-in Caching
+      details: Tagged caching, user-scoped, tenant-scoped, auto-invalidation, and cache profiles — all built into the filter pipeline.
+    - title: 🔗 Deep Relation Filtering
+      details: Filter through nested Eloquent relationships using dot notation. Controlled depth and whitelisted fields keep it secure.
+    - title: 🛡️ Authorization & Validation
+      details: Protect filter classes by role or permission. Define validation rules and sanitizers co-located with your filter logic.
+    - title: 🖥️ Powerful CLI
+      details: Generate, discover, list, test, and inspect filter classes directly from the command line.
 
 footer: MIT Licensed | Copyright © 2024-present Kettasoft
 ---
 
-This is the content of home page. Check [Home Page Docs][intro] for more details.
+## Choose Your Engine
 
-[intro]: /introduction
+Each engine is designed for a different filtering style. Pick the one that matches how your frontend sends data.
 
-## 📚 Use Cases
+| Engine         | Best For                   | Example                            |
+| -------------- | -------------------------- | ---------------------------------- |
+| **Invokable**  | Custom logic per field     | `?status=active&title=laravel`     |
+| **Ruleset**    | Operator-based API queries | `?filter[title][like]=laravel`     |
+| **Expression** | Ruleset + nested relations | `?filter[author.name][like]=ahmed` |
+| **Tree**       | Complex AND/OR JSON logic  | `{ "and": [...] }`                 |
 
--   Build complex dashboards with advanced filtering capabilities.
--   Create public APIs with strict control over what fields can be queried.
--   Support admin panels that need custom filtering rules per user role.
--   Handle dynamic filtering for search pages or reports.
-
-## 🔧 Example Use
+## Quick Example
 
 ```php
-Filterable::withRequest($request)
-    ->useEngine('ruleset')
-    ->setAllowedFields(['status', 'title', 'author.name'])
-    ->setRelations(['author'])
-    ->filter(Post::query());
+// 1. Define your filter class
+class PostFilter extends Filterable
+{
+    protected $filters = ['status', 'title'];
+
+    protected function title(Payload $payload)
+    {
+        return $this->builder->where('title', 'like', $payload->asLike('both'));
+    }
+
+    protected function status(Payload $payload)
+    {
+        return $this->builder->where('status', $payload->value);
+    }
+}
+
+// 2. Apply it in your controller
+Post::filter(PostFilter::class)->paginate();
 ```
 
-## 🧪 Tested & Production-Ready
+## Use Cases
 
-Filterable is heavily tested and battle-proven in real-world applications, ensuring stability and reliability even with large datasets and complex filters.
-
-## 💡 Extending the Package
-
-Need a custom engine? Simply extends the `Engine` abstract class and register it — the system is built for extension and customization.
+- REST APIs that need strict control over queryable fields
+- Admin panels with role-based filter access
+- Multi-tenant dashboards with isolated cached results
+- Reporting tools with complex AND/OR filter logic
