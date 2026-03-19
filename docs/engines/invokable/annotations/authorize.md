@@ -1,10 +1,12 @@
 ---
-sidebarDepth: 1
+title: "#[Authorize]"
+description: Gates a filter method behind an authorization check using the #[Authorize] attribute. Pass any Authorizable class to control access. The filter is skipped if authorization fails.
+tags: [annotations, authorization, access-control]
 ---
 
-# #[Authorize]
-
-**Stage:** `CONTROL` (1)
+::: info Stage
+`CONTROL` — runs before the filter method executes.
+:::
 
 Requires authorization before the filter method executes. If authorization fails, the filter is skipped entirely.
 
@@ -56,11 +58,11 @@ class AdminOnly implements Authorizable
 
 ## Behavior
 
-| Scenario                               | Result                                            |
-| -------------------------------------- | ------------------------------------------------- |
-| `authorize()` returns `true`           | Filter method executes normally                   |
-| `authorize()` returns `false`          | Filter is **skipped** (SkipExecution is thrown)    |
-| Class doesn't implement `Authorizable` | `InvalidArgumentException` is thrown              |
+| Scenario                               | Result                                        |
+| -------------------------------------- | --------------------------------------------- |
+| `authorize()` returns `true`           | Filter method executes normally               |
+| `authorize()` returns `false`          | Filter is skipped (`SkipExecution` is thrown) |
+| Class doesn't implement `Authorizable` | `InvalidArgumentException` is thrown          |
 
 ---
 
@@ -75,7 +77,6 @@ class RoleFilter implements Authorizable
     }
 }
 
-// In your filter class:
 #[Authorize(RoleFilter::class)]
 protected function salary(Payload $payload)
 {

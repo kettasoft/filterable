@@ -1,21 +1,24 @@
 ---
+title: "#[Trim]"
+description: Strips whitespace or custom characters from a filter payload using the #[Trim] attribute. Use it in the transform stage to clean string input before validation. Supports trimming both sides, left only, or right only.
+tags: [annotations, transform, whitespace]
 sidebarDepth: 1
 ---
 
-# #[Trim]
+::: info Stage
+`TRANSFORM` — runs after control attributes, modifies the [payload](/api/payload) value before validation and execution.
+:::
 
-**Stage:** `TRANSFORM` (2)
-
-Removes whitespace (or custom characters) from the payload value before the filter method executes.
+Removes whitespace (or custom characters) from the [payload](/api/payload) value before the filter method executes.
 
 ---
 
 ## Parameters
 
-| Parameter     | Type     | Required | Default                 | Description                                    |
-| ------------- | -------- | -------- | ----------------------- | ---------------------------------------------- |
-| `$characters` | `string` | ❌       | `" \t\n\r\0\x0B"`      | Characters to trim                             |
-| `$side`       | `string` | ❌       | `'both'`                | Side to trim: `'both'`, `'left'`, or `'right'` |
+| Parameter     | Type     | Required | Default          | Description                                    |
+| ------------- | -------- | -------- | ---------------- | ---------------------------------------------- |
+| `$characters` | `string` | ❌       | `"\t\n\r\0\x0B"` | Characters to trim                             |
+| `$side`       | `string` | ❌       | `'both'`         | Side to trim: `'both'`, `'left'`, or `'right'` |
 
 ---
 
@@ -71,7 +74,7 @@ protected function slug(Payload $payload)
 
 ## Behavior
 
-| Scenario                  | Result                              |
-| ------------------------- | ----------------------------------- |
-| Value is a string         | Whitespace/characters are trimmed   |
-| Value is not a string     | No modification (silently skipped)  |
+| Scenario              | Result                             |
+| --------------------- | ---------------------------------- |
+| Value is a string     | Whitespace/characters are trimmed  |
+| Value is not a string | No modification (silently skipped) |

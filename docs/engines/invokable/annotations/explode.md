@@ -1,20 +1,23 @@
 ---
+title: "#[Explode]"
+description: Splits a string filter payload into an array using the #[Explode] attribute. Use it before whereIn queries when input arrives as a delimited string like comma-separated values.
+tags: [annotations, transform, array]
 sidebarDepth: 1
 ---
 
-# #[Explode]
+::: info Stage
+`TRANSFORM` — runs after control attributes, modifies the [payload](/api/payload) value before validation and execution.
+:::
 
-**Stage:** `VALIDATE` (3)
-
-Splits a string value into an array using a specified delimiter. The payload value is **overwritten** with the resulting array, making it ready for `whereIn` and similar queries.
+Splits a string value into an array using a specified delimiter. The [payload](/api/payload) value is overwritten with the resulting array, making it ready for `whereIn` and similar queries.
 
 ---
 
 ## Parameters
 
-| Parameter    | Type     | Required | Default | Description                    |
-| ------------ | -------- | -------- | ------- | ------------------------------ |
-| `$delimiter` | `string` | ❌       | `','`   | The delimiter to split by      |
+| Parameter    | Type     | Required | Default | Description               |
+| ------------ | -------- | -------- | ------- | ------------------------- |
+| `$delimiter` | `string` | ❌       | `','`   | The delimiter to split by |
 
 ---
 
@@ -48,10 +51,10 @@ protected function categories(Payload $payload)
 
 ## Behavior
 
-| Scenario                  | Result                                          |
-| ------------------------- | ----------------------------------------------- |
-| Value is a string         | Split into array, payload value is overwritten   |
-| Value is already an array | Returned as-is                                   |
+| Scenario                  | Result                                         |
+| ------------------------- | ---------------------------------------------- |
+| Value is a string         | Split into array, payload value is overwritten |
+| Value is already an array | Returned as-is                                 |
 
 ---
 

@@ -1,58 +1,88 @@
 ---
 home: true
-title: Home
-heroImage: /images/logo.png
-tagline: Advanced, Extensible Filtering for Laravel Applications
-actions:
-    - text: Introduction
-      link: /introduction
-      type: primary
-    - text: Installation
-      link: installation
-      type: secondary
+title: Filterable - Powerful Eloquent Filtering for Laravel
+description: Kettasoft Filterable dynamically maps HTTP request parameters to Eloquent query builder filter methods with zero boilerplate.
+config:
+  # 1. Hero Section
+  - type: hero
+    full: true
+    effect: tint-plate
+    hero:
+      name: Filterable
+      tagline: Powerful Eloquent Filtering
+      text: Dynamically map HTTP request parameters to Eloquent query builder methods with zero boilerplate.
+      actions:
+        - theme: brand
+          text: Get Started →
+          link: /introduction
+        - theme: alt
+          text: GitHub
+          link: https://github.com/kettasoft/filterable
 
-features:
-    - title: ⚙️ Multiple Filtering Engines
-      details: Support different filtering strategies like RuleSet, Tree-Based, Dynamic Methods, and SQL Expressions — all pluggable and extensible.
-    - title: 🧩 Clean, Decoupled Architecture
-      details: Built with SOLID principles in mind. Easily swap or extend engines without touching core logic.
-    - title: 🧼 Customizable Filter Sanitizers
-      details: Apply custom sanitization and validation logic for every input field or filter operator.
-    - title: 🔗 Relation & Nested Filters Support
-      details: Filter through deep nested relationships with controlled access and relation depth to preserve performance and security.
-    - title: 🧠 Intelligent Field Management
-      details: Define allowed fields, nested relations, and control exactly what’s queryable in each context.
-    - title: 🚀 Plug & Play Integration
-      details: Works seamlessly with any Laravel query builder. Minimal setup required to get started.
+  # 2. Features Section
+  - type: features
+    features:
+      - title: Invokable Engine
+        icon: ⚡
+        details: Map request parameters directly to filter methods using PHP attributes and annotations.
+      - title: Tree Engine
+        icon: 🌲
+        details: Build nested, hierarchical filter structures for complex query requirements.
+      - title: Rule-Set Engine
+        icon: 📋
+        details: Define declarative filter rules without writing custom filter classes.
+      - title: Expression Engine
+        icon: 🔤
+        details: Use expressive DSL-like syntax to define filters inline.
+      - title: Lifecycle Hooks
+        icon: 🔄
+        details: Hook into the filtering pipeline with before, after, and conditional callbacks.
+      - title: Caching
+        icon: 🚀
+        details: Built-in caching support with multiple strategies and auto-invalidation.
+      - title: Authorization
+        icon: 🔒
+        details: Control which filters a user is allowed to apply with built-in authorization support.
+      - title: Validation & Sanitization
+        icon: ✅
+        details: Validate and sanitize incoming filter values before they hit your query.
+      - title: CLI Tools
+        icon: 🛠️
+        details: Generate, discover, inspect, and test your filters directly from the command line.
 
-footer: MIT Licensed | Copyright © 2024-present Kettasoft
+  # 3. image-text Section
+  - type: image-text
+    title: Engines
+    description: Choose the engine that fits your use case — or combine them.
+    image: /images/logo.png
+    list:
+      - title: Invokable Engine
+        description: Write filter methods as plain PHP methods, driven by annotations for full control.
+      - title: Tree Engine
+        description: Ideal for nested conditions and grouped query logic.
+      - title: Rule-Set Engine
+        description: Declarative rule-based filtering with no extra classes needed.
+      - title: Expression Engine
+        description: Compact, readable syntax for simple to moderate filter logic.
+
+  # 4. Custom Section - Installation
+  - type: custom
 ---
 
-This is the content of home page. Check [Home Page Docs][intro] for more details.
+## Installation
 
-[intro]: /introduction
+::: code-tabs
+@tab composer
 
-## 📚 Use Cases
-
--   Build complex dashboards with advanced filtering capabilities.
--   Create public APIs with strict control over what fields can be queried.
--   Support admin panels that need custom filtering rules per user role.
--   Handle dynamic filtering for search pages or reports.
-
-## 🔧 Example Use
-
-```php
-Filterable::withRequest($request)
-    ->useEngine('ruleset')
-    ->setAllowedFields(['status', 'title', 'author.name'])
-    ->setRelations(['author'])
-    ->filter(Post::query());
+```bash
+composer require kettasoft/filterable
 ```
 
-## 🧪 Tested & Production-Ready
+@tab with setup
 
-Filterable is heavily tested and battle-proven in real-world applications, ensuring stability and reliability even with large datasets and complex filters.
+```bash
+composer require kettasoft/filterable
+php artisan filterable:setup
+```
 
-## 💡 Extending the Package
-
-Need a custom engine? Simply extends the `Engine` abstract class and register it — the system is built for extension and customization.
+:::

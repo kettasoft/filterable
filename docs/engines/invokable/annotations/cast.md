@@ -1,12 +1,15 @@
 ---
+title: "#[Cast]"
+description: Casts a filter payload to a specific type using the #[Cast] attribute. Use it in the transform stage to convert strings to int, boolean, array, carbon, slug, or like before the filter method runs.
+tags: [annotations, transform, type-casting]
 sidebarDepth: 1
 ---
 
-# #[Cast]
+::: info Stage
+`TRANSFORM` — runs after control attributes, modifies the [payload](/api/payload) value before validation and execution.
+:::
 
-**Stage:** `TRANSFORM` (2)
-
-Casts the payload value to a specific type using the Payload's `as*` methods.
+Casts the [payload](/api/payload) value to a specific type using the Payload's `as*` methods.
 
 ---
 

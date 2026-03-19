@@ -1,6 +1,6 @@
 :root {
-    --vp-c-accent: #ff2d20;
-    --vp-c-accent-bg: #ff4e3c;
+    --vp-c-brand-1: #ff2d20;
+    --vp-c-brand-2: #ff4e3c;
     --vp-c-accent-hover: #ff5e4c;
     --vp-c-accent-text: var(--vp-c-white);
     --vp-c-accent-soft: rgba(255, 45, 32, 0.1);
@@ -43,16 +43,19 @@
     --vp-c-code-tab-title: rgb(255 255 255 / 90%);
     --vp-c-code-tab-bg: var(--vp-c-bg-alt);
     --vp-c-code-tab-active: var(--vp-c-accent);
+
+    scroll-behavior: smooth;
 }
 
 [data-theme="dark"] {
-    --vp-c-accent: #ff4e3c;
+    --vp-c-accent: #ff4f3c9f;
     --vp-c-accent-bg: #ffe5e3;
     --vp-c-accent-hover: #ff6f55;
     --vp-c-accent-text: var(--vp-c-white);
     --vp-c-accent-soft: rgba(255, 45, 32, 0.2);
     --vp-c-gutter: #374151;
     --vp-c-bg: #0f172a;
+    --vp-sidebar-bg-color: #0f172a;
     --vp-c-bg-alt: #1e293b;
     --vp-c-bg-elv: #111827;
     --vp-c-white: #ffffff;
@@ -92,12 +95,6 @@
     --code-c-bg: rgb(19, 19, 31);
 }
 
-a {
-    color: var(--vp-c-accent);
-    text-decoration: none;
-    transition: color 0.2s ease, text-shadow 0.2s ease;
-}
-
 a.vp-hero-action-button {
     border-radius: 0.375em;
     transition: all 0.3s;
@@ -108,7 +105,9 @@ a.vp-hero-action-button.primary {
     border: none !important;
     padding: 0.75em 1.5em;
     box-shadow: 0 4px 6px rgba(255, 45, 32, 0.1);
-    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    transition:
+        background-color 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
 a.vp-hero-action-button.primary:hover {
@@ -117,14 +116,12 @@ a.vp-hero-action-button.primary:hover {
 }
 
 a.vp-hero-action-button.secondary:hover {
-    // background-color: var(--vp-c-accent);
     color: var(--vp-c-white);
     border-color: var(--vp-c-accent-hover);
     background-color: var(--vp-c-accent);
     box-shadow: 0 6px 8px rgba(255, 45, 32, 0.2);
 }
 
-// Tokens
 /* ==============================
    Dracula Theme Code Tokens
    ============================== */
@@ -134,12 +131,6 @@ html.dark {
     --vp-c-bg-alt: #44475a;
     --vp-c-text: #f8f8f2;
 }
-
-/* Tokens */
-// .token.keyword {
-//     color: #ffcb8b;
-//     font-weight: bold;
-// }
 
 .token.class-name {
     color: #a9c77d;

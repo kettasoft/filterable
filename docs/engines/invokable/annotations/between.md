@@ -1,21 +1,23 @@
 ---
-sidebarDepth: 1
+title: "#[Between]"
+description: Validates that a filter payload falls within a numeric range using the #[Between] attribute. Use it on numeric filter methods. Values outside the range or non-numeric values cause the filter to be skipped.
+tags: [annotations, validation, numeric-range]
 ---
 
-# #[Between]
+::: info Stage
+`VALIDATE` — runs after transform attributes, before the filter method executes.
+:::
 
-**Stage:** `VALIDATE` (3)
-
-Validates that the payload value falls within a specified numeric range. If the value is outside the range or not numeric, the filter is **skipped**.
+Validates that the [payload](/api/payload) value falls within a specified numeric range. If the value is outside the range or not numeric, the filter is skipped.
 
 ---
 
 ## Parameters
 
-| Parameter | Type          | Required | Description           |
-| --------- | ------------- | -------- | --------------------- |
-| `$min`    | `float\|int`  | ✅       | Minimum allowed value |
-| `$max`    | `float\|int`  | ✅       | Maximum allowed value |
+| Parameter | Type         | Required | Description           |
+| --------- | ------------ | -------- | --------------------- |
+| `$min`    | `float\|int` | ✅       | Minimum allowed value |
+| `$max`    | `float\|int` | ✅       | Maximum allowed value |
 
 ---
 
@@ -47,14 +49,14 @@ protected function rating(Payload $payload)
 
 ## Behavior
 
-| Scenario                            | Result                               |
-| ----------------------------------- | ------------------------------------ |
-| Value is numeric and within range   | Filter executes normally             |
-| Value is at the minimum boundary    | Filter executes normally (**inclusive**) |
-| Value is at the maximum boundary    | Filter executes normally (**inclusive**) |
-| Value is below the range            | Filter is **skipped**                |
-| Value is above the range            | Filter is **skipped**                |
-| Value is not numeric                | Filter is **skipped**                |
+| Scenario                          | Result                               |
+| --------------------------------- | ------------------------------------ |
+| Value is numeric and within range | Filter executes normally             |
+| Value is at the minimum boundary  | Filter executes normally (inclusive) |
+| Value is at the maximum boundary  | Filter executes normally (inclusive) |
+| Value is below the range          | Filter is skipped                    |
+| Value is above the range          | Filter is skipped                    |
+| Value is not numeric              | Filter is skipped                    |
 
 ---
 

@@ -1,4 +1,11 @@
-# Authorization
+---
+title: Authorization
+description: Learn how to implement authorization in Filterable, ensuring your filters are applied only for authorized users.
+tags:
+  - authorization
+  - filters
+  - security
+---
 
 The filter engine includes a lightweight authorization mechanism that determines whether a filter should be executed or not, based on custom logic defined by the developer.
 
