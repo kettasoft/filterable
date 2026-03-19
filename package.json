@@ -22,6 +22,9 @@
     "gsap": "^3.14.2",
     "ogl": "^1.0.11",
     "postprocessing": "^6.38.3",
-    "three": "^0.183.2"
+    "three": "^0.183.2",
+    "tsparticles": "^3.9.1",
+    "tsparticles-slim": "^2.12.0",
+    "vue3-particles": "^2.12.0"
   }
 }
