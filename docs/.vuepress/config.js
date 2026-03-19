@@ -230,6 +230,38 @@ export default defineUserConfig({
                         },
                     ],
                 },
+                {
+                    text: "Event System",
+                    collapsed: true,
+                    items: [
+                        { text: "Overview", link: "/events/" },
+                        {
+                            text: "Registering Listeners",
+                            link: "/events/registering-listeners",
+                        },
+                        {
+                            text: "Event Payloads",
+                            link: "/events/event-payloads",
+                        },
+                        {
+                            text: "Enabling & Disabling",
+                            link: "/events/enabling-disabling",
+                        },
+                        { text: "Use Cases", link: "/events/use-cases" },
+                        {
+                            text: "Exception Handling",
+                            link: "/events/exception-handling",
+                        },
+                        {
+                            text: "API Reference",
+                            link: "/events/api-reference",
+                        },
+                        {
+                            text: "Best Practices",
+                            link: "/events/best-practices",
+                        },
+                    ],
+                },
 
                 {
                     text: "Execution",
@@ -289,7 +321,6 @@ export default defineUserConfig({
                 },
 
                 { text: "Exceptions", link: "/exceptions" },
-                { text: "Event System", link: "/events" },
                 { text: "Profile Management", link: "/profile-management" },
                 { text: "Profiler", link: "/profiler" },
                 { text: "Sorting", link: "/sorting" },
