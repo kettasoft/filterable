@@ -25,14 +25,14 @@ $users = $invoker->paginate();
 
 ### Key Features
 
--   Engine-agnostic filtering (auto-selected via header or manual)
--   Request-source aware (query, input, json)
--   Built-in authorization and validation pipes
--   Sanitization pipeline (configurable and disable-able)
--   Field whitelisting and operator allow-listing
--   Relation-aware filtering
--   Sorting definition per Filterable class
--   Supports returning Builder directly when needed
+- Engine-agnostic filtering (auto-selected via header or manual)
+- Request-source aware (query, input, json)
+- Built-in authorization and validation pipes
+- Sanitization pipeline (configurable and disable-able)
+- Field whitelisting and operator allow-listing
+- Relation-aware filtering
+- Sorting definition per Filterable class
+- Supports returning Builder directly when needed
 
 ---
 
@@ -186,6 +186,10 @@ Retrieve an input value from the configured source.
 #### `useEngine(Engine|string $engine): static`
 
 Override the engine for this instance. Accepts an engine instance or a supported engine key.
+
+#### `using(Engine|string $engine): static`
+
+Alias for `useEngine()`.
 
 #### `getEngine(): Engine`
 
@@ -360,8 +364,8 @@ Proxy missing properties to the request source via `get($property)` when not pre
 
 ### Exceptions
 
--   `MissingBuilderException` — Thrown when no builder or model is available to initialize the query builder.
--   `RequestSourceIsNotSupportedException` — Thrown when an unsupported request source is used.
+- `MissingBuilderException` — Thrown when no builder or model is available to initialize the query builder.
+- `RequestSourceIsNotSupportedException` — Thrown when an unsupported request source is used.
 
 ---
 
@@ -388,6 +392,6 @@ $posts = Filterable::create()
 
 ### Notes
 
--   The engine can be selected via header using `withHeaderDrivenMode()` or automatically via `HeaderDrivenEngineSelector`.
--   `apply()` returns an `Invoker` by default to encourage fluent terminal operations; use `shouldReturnQueryBuilder()` to work with the raw Builder.
--   Prefer `setAllowedFields()` and `allowedOperators()` to constrain user input and reduce attack surface.
+- The engine can be selected via header using `withHeaderDrivenMode()` or automatically via `HeaderDrivenEngineSelector`.
+- `apply()` returns an `Invoker` by default to encourage fluent terminal operations; use `shouldReturnQueryBuilder()` to work with the raw Builder.
+- Prefer `setAllowedFields()` and `allowedOperators()` to constrain user input and reduce attack surface.
