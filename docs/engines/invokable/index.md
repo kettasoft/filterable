@@ -1,8 +1,8 @@
 ---
-sidebarDepth: 2
+title: Invokable Engine
+description: Learn about the Invokable Engine in Filterable, the default engine for dynamic method mapping in filter classes.
+tags: [engines, invokable, filtering, method mapping]
 ---
-
-# Invokable Engine
 
 The **Invokable Engine** is the default and most commonly used engine in Filterable. It dynamically maps incoming request parameters to corresponding methods in your filter class, enabling clean, scalable filtering logic without large `switch` or `if-else` blocks.
 
@@ -10,7 +10,7 @@ The **Invokable Engine** is the default and most commonly used engine in Filtera
 
 ## Purpose
 
-Automatically execute specific methods in a filter class based on incoming request keys. Each key in the request is matched with a method of the same name (or mapped name) registered in the `$filters` property, and the method is invoked with a rich `Payload` object.
+Automatically execute specific methods in a filter class based on incoming request keys. Each key in the request is matched with a method of the same name (or mapped name) registered in the `$filters` property, and the method is invoked with a rich [`Payload`](/api/payload) object.
 
 ---
 
@@ -38,9 +38,9 @@ Automatically execute specific methods in a filter class based on incoming reque
 
 1. The request is parsed and filter keys are extracted from the `$filters` property.
 2. For each key, the engine parses the value through a **Dissector** to extract the operator and value.
-3. A `Payload` object is created containing `field`, `operator`, `value`, and `rawValue`.
+3. A [`Payload`](/api/payload) object is created containing `field`, `operator`, `value`, and `rawValue`.
 4. The **Attribute Pipeline** runs all PHP attributes (annotations) on the method, sorted by stage.
-5. If the pipeline succeeds, the filter method is invoked with the `Payload`.
+5. If the pipeline succeeds, the filter method is invoked with the [`Payload`](/api/payload).
 6. The resulting clause is committed to the query builder.
 
 ---
@@ -90,9 +90,9 @@ $posts = Post::filter(PostFilter::class)->paginate();
 
 ---
 
-## The Payload Object
+## The [Payload](/api/payload) Object
 
-Every filter method receives a `Payload` instance, giving you full access to the parsed request data:
+Every filter method receives a [`Payload`](/api/payload) instance, giving you full access to the parsed request data:
 
 | Property   | Type     | Description                                    |
 | ---------- | -------- | ---------------------------------------------- |
@@ -254,6 +254,6 @@ The default operator can be configured per engine:
 - **Always register filters** in the `$filters` property — unregistered methods won't execute.
 - **Use attributes** to keep your filter methods focused on query logic, not validation.
 - **Combine multiple attributes** — they execute in stage order, so `#[Trim]` always runs before `#[Required]`.
-- **Type-hint `Payload`** in your filter methods for full IDE support.
+- **Type-hint [`Payload`](/api/payload)** in your filter methods for full IDE support.
 - **Use `$mentors`** to decouple public API parameter names from internal method names.
 - **Validate input** using `#[Required]`, `#[In]`, `#[Between]`, or `#[Regex]` attributes.

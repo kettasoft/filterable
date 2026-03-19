@@ -1,39 +1,61 @@
-# 📦 Installation
+---
+title: Installation Guide
+description: Learn how to install the Filterable Laravel package via Composer,
+    register the service provider, publish config files, and create your first
+    filter class — fully set up in minutes.
+tags: [installation, setup, getting started, requirements]
+---
 
-To install **Filterable**, simply use Composer to add it to your project:
+## Requirements
+
+- PHP **8.+**
+- Laravel **10.x** or higher
+
+## Installation
+
+Install the package via Composer:
 
 ```bash
 composer require kettasoft/filterable
 ```
 
-### **Service Provider Registration**
+## Setup
 
-Add the following line to the **`providers`** array in **`config/app.php`**:
+### Step 1: Register the service provider
+
+> **Note:** Laravel 11+ registers providers automatically via package discovery.
+> Skip this step if you're on Laravel 11+.
+
+Add the service provider to the `providers` array in `config/app.php`:
 
 ```php
 'providers' => [
-
-    ...
-
+    // ...
     Kettasoft\Filterable\Providers\FilterableServiceProvider::class,
-
-];
+],
 ```
 
-### **Publishing Configuration and Stubs**
+### Step 2: Publish configuration and stubs
 
-After installation, you can publish the configuration file and stubs with the following commands:
+Publish the config file:
 
 ```bash
-php artisan vendor:publish --provider="Kettasoft\Filterable\Providers\FilterableServiceProvider" --tag="config"
-php artisan vendor:publish --provider="Kettasoft\Filterable\Providers\FilterableServiceProvider" --tag="stubs"
+php artisan vendor:publish \
+  --provider="Kettasoft\Filterable\Providers\FilterableServiceProvider" \
+  --tag="config"
 ```
 
----
+Publish the stubs:
 
-### **Step 1: Add the `Filterable` Trait to Your Model**
+```bash
+php artisan vendor:publish \
+  --provider="Kettasoft\Filterable\Providers\FilterableServiceProvider" \
+  --tag="stubs"
+```
 
-To enable filtering on your model, you need to include the `Filterable` trait in the model you want to apply filters on.
+### Step 3: Add the `Filterable` trait to your model
+
+Include the `Filterable` trait in any Eloquent model you want to filter:
 
 ```php
 <?php
@@ -46,16 +68,17 @@ class Post extends Model
 }
 ```
 
----
+### Step 4: Create a filter class
 
-### **Step 2: Create a Custom Filter Class**
-
-You can generate a custom filter class for your model by running the artisan command:
+Generate a filter class for your model using the Artisan command:
 
 ```bash
 php artisan kettasoft:make-filter PostFilter --filters=title,status
 ```
 
-This command will generate a filter class where you can define custom filter methods.
+This generates a dedicated filter class where you define your filter methods.
 
 ---
+
+Next, learn how to [define filter methods](/usage/defining-filters)
+and apply them to your queries.

@@ -1,4 +1,10 @@
-# 🧠 How It Works
+---
+title: How It Works
+description: Learn about the core concepts and architecture of Filterable, including its pluggable engine system and how to use different engines for various filtering strategies.
+tags: [how it works, architecture, engines, filtering strategies]
+---
+
+# How It Works
 
 Filterable operates on a pluggable **Engine-based architecture**, giving you full control over how filters are interpreted and applied.
 
@@ -73,27 +79,27 @@ Ideal for complex filters with nested conditions.
 
 ```json
 {
-  "and": [
-    {
-      "field": "status",
-      "operator": "eq",
-      "value": "active"
-    },
-    {
-      "or": [
+    "and": [
         {
-          "field": "title",
-          "operator": "like",
-          "value": "Laravel"
+            "field": "status",
+            "operator": "eq",
+            "value": "active"
         },
         {
-          "field": "author.name",
-          "operator": "eq",
-          "value": "John"
+            "or": [
+                {
+                    "field": "title",
+                    "operator": "like",
+                    "value": "Laravel"
+                },
+                {
+                    "field": "author.name",
+                    "operator": "eq",
+                    "value": "John"
+                }
+            ]
         }
-      ]
-    }
-  ]
+    ]
 }
 ```
 
