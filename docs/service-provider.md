@@ -1,6 +1,13 @@
-# Filterable Service Provider Overview
+---
+title: Service Provider & Customization
+description: Learn how the Filterable service provider works in Laravel,
+    how to publish assets, and how to extend it with custom engines,
+    sanitizers, and event listeners.
+tags: [service provider, customization, laravel, advanced]
+---
 
-This guide demonstrates how to use the `FilterableServiceProvider` in a Laravel application.
+The `FilterableServiceProvider` handles all package bootstrapping — registering
+engines, binding services, and loading config and stubs.
 
 ## Publishing Assets
 
