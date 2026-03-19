@@ -84,6 +84,7 @@ export default defineUserConfig({
                     { text: "Testing", link: "/cli/testing" },
                     { text: "Inspect", link: "/cli/inspect" },
                     { text: "Add Method", link: "/cli/add-method" },
+                    { text: "Lint Filter", link: "/cli/lint" },
                 ],
             },
             {
@@ -319,6 +320,7 @@ export default defineUserConfig({
                         { text: "List Filters", link: "/cli/listing" },
                         { text: "Inspect Filter", link: "/cli/inspect" },
                         { text: "Add Method", link: "/cli/add-method" },
+                        { text: "Lint Filter", link: "/cli/lint" },
                     ],
                 },
 
