@@ -13,6 +13,7 @@ use Kettasoft\Filterable\Commands\ListFiltersCommand;
 use Kettasoft\Filterable\Commands\InspectFilterCommand;
 use Kettasoft\Filterable\Commands\SetupFilterableCommand;
 use Kettasoft\Filterable\Commands\AddMethodCommand;
+use Kettasoft\Filterable\Commands\LintFilterCommand;
 use Kettasoft\Filterable\Commands\FilterableDiscoverCommand;
 use Kettasoft\Filterable\Foundation\Events\FilterableEventManager;
 use Kettasoft\Filterable\Foundation\Caching\FilterableCacheManager;
@@ -265,6 +266,7 @@ class FilterableServiceProvider extends ServiceProvider
         $this->commands([
             MakeFilterCommand::class,
             AddMethodCommand::class,
+            LintFilterCommand::class,
             ListFiltersCommand::class,
             InspectFilterCommand::class,
             FilterableDiscoverCommand::class,
