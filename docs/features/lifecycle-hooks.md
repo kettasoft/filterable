@@ -1,15 +1,27 @@
-# Lifecycle Hooks
+---
+title: Lifecycle Hooks
+description: Use the initially() and finally() hooks in Filterable to run logic
+    before and after filters are applied — ideal for global constraints,
+    default sorting, and query cleanup.
+tags: [lifecycle, hooks, invokable-engine, query-builder]
+---
 
-The `Filterable` base class provides two lifecycle hooks that let you modify the query builder **before** and **after** filters are applied.
+The `Filterable` base class exposes two optional lifecycle hooks that let you
+run logic **before** and **after** the filter pipeline executes.
 
-These hooks are **optional** and can be defined directly inside your filter class.
+## Available Hooks
+
+| Hook          | Runs                       | Common use                |
+| ------------- | -------------------------- | ------------------------- |
+| `initially()` | Before any filter executes | Global constraints, joins |
+| `finally()`   | After all filters finish   | Default ordering, cleanup |
 
 ---
 
-#### **`initially()`**
+## `initially()`
 
-Runs **before any filters are executed**.
-It’s perfect for setting up default query conditions or preparing the builder.
+Invoked before any filter method runs. Use it to apply conditions that should
+always be present regardless of the request.
 
 ```php
 use Kettasoft\Filterable\Filterable;
@@ -19,7 +31,6 @@ class ProductFilter extends Filterable
 {
     protected function initially(Builder $builder): void
     {
-        // Example: Apply a global condition before filtering
         $builder->where('is_active', true);
     }
 }
@@ -27,15 +38,14 @@ class ProductFilter extends Filterable
 
 ---
 
-#### **`finally()`**
+## `finally()`
 
-Runs **after all filters have been processed**.
-It allows you to finalize or clean up your query logic.
+Invoked after all filter methods have executed. Use it to finalize query
+behavior that depends on the full filter state.
 
 ```php
 protected function finally(Builder $builder): void
 {
-    // Example: Apply a default sort order
     if (! $builder->getQuery()->orders) {
         $builder->orderBy('created_at', 'desc');
     }
@@ -44,35 +54,71 @@ protected function finally(Builder $builder): void
 
 ---
 
-#### ⚙️ How It Works
+## How It Works
 
--   `initially()` is invoked **right before** any filter method runs.
--   `finally()` is called **after** all filter methods have finished.
--   Both are **optional** — if not defined, they’re skipped automatically.
--   They share the same `$builder` instance used by the engine, so any change persists through the filtering process.
+Both hooks receive the **same `$builder` instance** used throughout the
+pipeline — any modification persists across the entire filtering process.
 
----
-
-#### 🪄 CLI Integration
-
-When generating a new filter using the Artisan command:
-
-```bash
-php artisan make:filter ProductFilter
+```text
+Request
+  │
+  ▼
+initially()        ← your setup logic
+  │
+  ▼
+Filter methods     ← annotations + method execution
+  │
+  ▼
+finally()          ← your cleanup/finalization logic
+  │
+  ▼
+Modified Query
 ```
 
-Both `initially()` and `finally()` methods are automatically added to the stub file, ready for customization.
+If a hook is not defined in your filter class, it is skipped automatically.
 
 ---
 
-#### 💡 Practical Use Cases
+## Practical Examples
 
--   Use `initially()` to:
+### Multi-tenant scoping
 
-    -   Apply global constraints (`is_active = true`, `tenant_id = currentTenant()`).
-    -   Add necessary joins or eager loads before filters run.
+```php
+protected function initially(Builder $builder): void
+{
+    $builder->where('tenant_id', auth()->user()->tenant_id);
+}
+```
 
--   Use `finally()` to:
+### Default sort with override support
 
-    -   Apply ordering or limits.
-    -   Clean up relations or add post-filter transformations.
+```php
+protected function finally(Builder $builder): void
+{
+    if (! $builder->getQuery()->orders) {
+        $builder->orderBy('created_at', 'desc');
+    }
+}
+```
+
+### Eager loading before filters run
+
+```php
+protected function initially(Builder $builder): void
+{
+    $builder->with(['category', 'tags']);
+}
+```
+
+---
+
+## Artisan Stub
+
+Both hooks are included automatically when generating a filter class:
+
+```bash
+php artisan filterable:make-filter ProductFilter
+```
+
+The generated stub includes empty `initially()` and `finally()` methods
+ready for customization.
