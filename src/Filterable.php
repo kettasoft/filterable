@@ -646,6 +646,16 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
   }
 
   /**
+   * Alias for {@see useEngine()} method.
+   * @param \Kettasoft\Filterable\Engines\Foundation\Engine|string $engine
+   * @return Filterable
+   */
+  public function using(Engine|string $engine): static
+  {
+    return $this->useEngine($engine);
+  }
+
+  /**
    * Get current engine.
    * @return Engine
    */
