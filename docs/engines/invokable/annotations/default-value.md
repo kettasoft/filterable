@@ -1,12 +1,15 @@
 ---
+title: "#[DefaultValue]"
+description: Sets a fallback value on a filter payload using the #[DefaultValue] attribute. Use it when empty or null input should not skip the filter but instead run with a sensible default.
+tags: [annotations, transform, default-value]
 sidebarDepth: 1
 ---
 
-# #[DefaultValue]
+::: info Stage
+`TRANSFORM` — runs after control attributes, modifies the [payload](/api/payload) value before validation and execution.
+:::
 
-**Stage:** `TRANSFORM` (2)
-
-Sets a fallback value when the payload value is empty or null. The filter method still executes, but with the default value instead of the empty input.
+Sets a fallback value when the [payload](/api/payload) value is empty or null. The filter method still executes, but with the default value instead of the empty input.
 
 ---
 
@@ -46,10 +49,10 @@ protected function perPage(Payload $payload)
 
 ## Behavior
 
-| Scenario                       | Result                                    |
-| ------------------------------ | ----------------------------------------- |
-| Value is empty or null         | Payload value is set to the default       |
-| Value is provided (non-empty)  | Default is **not** applied, original kept |
+| Scenario                      | Result                                              |
+| ----------------------------- | --------------------------------------------------- |
+| Value is empty or null        | [Payload](/api/payload) value is set to the default |
+| Value is provided (non-empty) | Default is not applied, original kept               |
 
 ---
 

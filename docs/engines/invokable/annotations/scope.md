@@ -1,20 +1,23 @@
 ---
+title: "#[Scope]"
+description: Automatically applies an Eloquent local scope to the query builder using the #[Scope] attribute. Use it to reuse model scopes directly from a filter method, passing the payload value as the scope argument.
+tags: [annotations, behavior, eloquent-scope]
 sidebarDepth: 1
 ---
 
-# #[Scope]
+::: info Stage
+`BEHAVIOR` — runs after all control, transform, and validate attributes, directly before the filter method executes.
+:::
 
-**Stage:** `BEHAVIOR` (4)
-
-Automatically applies an Eloquent local scope on the query builder, passing the payload value to the scope. This allows you to reuse your model's scope methods directly from filter attributes.
+Automatically applies an Eloquent local scope on the query builder, passing the [payload](/api/payload) value to the scope. This allows you to reuse your model's scope methods directly from filter attributes.
 
 ---
 
 ## Parameters
 
-| Parameter | Type     | Required | Description                                                    |
-| --------- | -------- | -------- | -------------------------------------------------------------- |
-| `$scope`  | `string` | ✅       | The scope name (without the `scope` prefix on the model)       |
+| Parameter | Type     | Required | Description                                              |
+| --------- | -------- | -------- | -------------------------------------------------------- |
+| `$scope`  | `string` | ✅       | The scope name (without the `scope` prefix on the model) |
 
 ---
 
@@ -76,10 +79,10 @@ protected function minViews(Payload $payload)
 
 ## Behavior
 
-| Scenario                          | Result                                                |
-| --------------------------------- | ----------------------------------------------------- |
-| Scope exists on the model         | Scope is applied, then filter method executes         |
-| Scope does **not** exist          | `InvalidArgumentException` (caught by engine pipeline)|
+| Scenario                  | Result                                                 |
+| ------------------------- | ------------------------------------------------------ |
+| Scope exists on the model | Scope is applied, then filter method executes          |
+| Scope does not exist      | `InvalidArgumentException` (caught by engine pipeline) |
 
 ---
 

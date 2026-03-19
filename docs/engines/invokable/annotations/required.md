@@ -1,12 +1,15 @@
 ---
+title: "#[Required]"
+description: Enforces that a filter payload is present and non-empty using the #[Required] attribute. Unlike other validation annotations, it throws a StrictnessException instead of silently skipping the filter.
+tags: [annotations, validation, required]
 sidebarDepth: 1
 ---
 
-# #[Required]
+::: info Stage
+`VALIDATE` — runs after transform attributes, before the filter method executes.
+:::
 
-**Stage:** `VALIDATE` (3)
-
-Ensures the payload value is present and not empty. If the value is missing or empty, a `StrictnessException` is thrown, which **propagates up** rather than silently skipping.
+Ensures the [payload](/api/payload) value is present and not empty. If the value is missing or empty, a `StrictnessException` is thrown, which propagates up rather than silently skipping.
 
 ---
 
@@ -44,11 +47,11 @@ The parameter name (`status`) is taken from the filter key in the request.
 
 ## Behavior
 
-| Scenario                   | Result                                              |
-| -------------------------- | --------------------------------------------------- |
-| Value is provided          | Filter executes normally                            |
-| Value is empty (`''`)      | `StrictnessException` is thrown                     |
-| Value is null              | `StrictnessException` is thrown                     |
+| Scenario              | Result                          |
+| --------------------- | ------------------------------- |
+| Value is provided     | Filter executes normally        |
+| Value is empty (`''`) | `StrictnessException` is thrown |
+| Value is null         | `StrictnessException` is thrown |
 
 ::: warning
 Unlike other validation attributes (like `#[In]` or `#[Between]`) which **skip** the filter silently, `#[Required]` throws a `StrictnessException` that propagates to the caller.

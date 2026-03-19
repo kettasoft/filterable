@@ -1,21 +1,24 @@
 ---
+title: "#[Regex]"
+description: Validates a filter payload against a regular expression using the #[Regex] attribute. Use it to enforce format constraints like slugs, emails, or product codes. Non-matching values cause the filter to be skipped.
+tags: [annotations, validation, regex]
 sidebarDepth: 1
 ---
 
-# #[Regex]
+::: info Stage
+`VALIDATE` — runs after transform attributes, before the filter method executes.
+:::
 
-**Stage:** `VALIDATE` (3)
-
-Validates that the payload value matches a given regular expression pattern. If it doesn't match, the filter is **skipped**.
+Validates that the [payload](/api/payload) value matches a given regular expression pattern. If it doesn't match, the filter is skipped.
 
 ---
 
 ## Parameters
 
-| Parameter  | Type     | Required | Default | Description                                   |
-| ---------- | -------- | -------- | ------- | --------------------------------------------- |
-| `$pattern` | `string` | ✅       | —       | The regex pattern to match against             |
-| `$message` | `string` | ❌       | `''`    | Custom error message when validation fails     |
+| Parameter  | Type     | Required | Default | Description                                |
+| ---------- | -------- | -------- | ------- | ------------------------------------------ |
+| `$pattern` | `string` | ✅       | —       | The regex pattern to match against         |
+| `$message` | `string` | ❌       | `''`    | Custom error message when validation fails |
 
 ---
 
@@ -77,11 +80,11 @@ protected function productCode(Payload $payload)
 
 ## Behavior
 
-| Scenario                        | Result                               |
-| ------------------------------- | ------------------------------------ |
-| Value matches the pattern       | Filter executes normally             |
-| Value does **not** match        | Filter is **skipped**                |
-| Value is not a string           | Filter is **skipped**                |
+| Scenario                  | Result                   |
+| ------------------------- | ------------------------ |
+| Value matches the pattern | Filter executes normally |
+| Value does not match      | Filter is skipped        |
+| Value is not a string     | Filter is skipped        |
 
 ---
 

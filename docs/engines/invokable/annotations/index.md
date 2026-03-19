@@ -1,4 +1,7 @@
 ---
+title: Annotations
+description: Reference for all PHP 8 attribute annotations in the Invokable Engine. Covers control, transform, validate, and behavior stages with execution order and usage examples.
+tags: [invokable-engine, php-attributes, annotations, filter-pipeline]
 sidebarDepth: 2
 ---
 
@@ -29,12 +32,12 @@ protected function status(Payload $payload)
 
 Attributes are **sorted by stage** before execution, regardless of the order you declare them. This ensures a predictable pipeline:
 
-| Order | Stage         | Value | Purpose                          | Description                              |
-| ----- | ------------- | ----- | -------------------------------- | ---------------------------------------- |
-| 1     | **CONTROL**   | `1`   | Gate / Skip                      | Decide whether the filter should run     |
-| 2     | **TRANSFORM** | `2`   | Modify Payload                   | Clean, convert, or map the input value   |
-| 3     | **VALIDATE**  | `3`   | Assert Correctness               | Verify the value meets constraints       |
-| 4     | **BEHAVIOR**  | `4`   | Affect Query                     | Modify query behavior directly           |
+| Order | Stage         | Value | Purpose                        | Description                            |
+| ----- | ------------- | ----- | ------------------------------ | -------------------------------------- |
+| 1     | **CONTROL**   | `1`   | Gate / Skip                    | Decide whether the filter should run   |
+| 2     | **TRANSFORM** | `2`   | Modify [Payload](/api/payload) | Clean, convert, or map the input value |
+| 3     | **VALIDATE**  | `3`   | Assert Correctness             | Verify the value meets constraints     |
+| 4     | **BEHAVIOR**  | `4`   | Affect Query                   | Modify query behavior directly         |
 
 ### Pipeline Flow
 
@@ -75,36 +78,36 @@ Incoming Payload
 
 ### Control Stage
 
-| Attribute                          | Description                                             |
-| ---------------------------------- | ------------------------------------------------------- |
-| [`#[Authorize]`](./authorize.md)   | Require authorization before running the filter         |
-| [`#[SkipIf]`](./skip-if.md)       | Skip the filter based on a Payload condition            |
+| Attribute                        | Description                                                  |
+| -------------------------------- | ------------------------------------------------------------ |
+| [`#[Authorize]`](./authorize.md) | Require authorization before running the filter              |
+| [`#[SkipIf]`](./skip-if.md)      | Skip the filter based on a [Payload](/api/payload) condition |
 
 ### Transform Stage
 
-| Attribute                              | Description                                          |
-| -------------------------------------- | ---------------------------------------------------- |
-| [`#[Trim]`](./trim.md)                | Remove whitespace from string values                 |
-| [`#[Sanitize]`](./sanitize.md)        | Apply sanitization rules (lowercase, strip_tags, etc.) |
-| [`#[Cast]`](./cast.md)                | Cast the value to a specific type                    |
-| [`#[MapValue]`](./map-value.md)       | Map input values to different values                 |
-| [`#[DefaultValue]`](./default-value.md)| Set a fallback value when input is empty             |
-| [`#[Explode]`](./explode.md)          | Split a string value into an array                   |
+| Attribute                               | Description                                            |
+| --------------------------------------- | ------------------------------------------------------ |
+| [`#[Trim]`](./trim.md)                  | Remove whitespace from string values                   |
+| [`#[Sanitize]`](./sanitize.md)          | Apply sanitization rules (lowercase, strip_tags, etc.) |
+| [`#[Cast]`](./cast.md)                  | Cast the value to a specific type                      |
+| [`#[MapValue]`](./map-value.md)         | Map input values to different values                   |
+| [`#[DefaultValue]`](./default-value.md) | Set a fallback value when input is empty               |
+| [`#[Explode]`](./explode.md)            | Split a string value into an array                     |
 
 ### Validate Stage
 
-| Attribute                          | Description                                             |
-| ---------------------------------- | ------------------------------------------------------- |
-| [`#[Required]`](./required.md)     | Ensure the value is present and not empty               |
-| [`#[In]`](./in.md)                | Validate the value is in an allowed set                 |
-| [`#[Between]`](./between.md)      | Validate the value is within a numeric range            |
-| [`#[Regex]`](./regex.md)          | Validate the value matches a regex pattern              |
+| Attribute                      | Description                                  |
+| ------------------------------ | -------------------------------------------- |
+| [`#[Required]`](./required.md) | Ensure the value is present and not empty    |
+| [`#[In]`](./in.md)             | Validate the value is in an allowed set      |
+| [`#[Between]`](./between.md)   | Validate the value is within a numeric range |
+| [`#[Regex]`](./regex.md)       | Validate the value matches a regex pattern   |
 
 ### Behavior Stage
 
-| Attribute                      | Description                                                 |
-| ------------------------------ | ----------------------------------------------------------- |
-| [`#[Scope]`](./scope.md)      | Auto-apply an Eloquent scope with the payload value         |
+| Attribute                | Description                                                         |
+| ------------------------ | ------------------------------------------------------------------- |
+| [`#[Scope]`](./scope.md) | Auto-apply an Eloquent scope with the [payload](/api/payload) value |
 
 ---
 
@@ -196,11 +199,11 @@ protected function search(Payload $payload)
 
 The `AttributeContext` object passed to each annotation's `handle()` method contains:
 
-| Property   | Type    | Description                                       |
-| ---------- | ------- | ------------------------------------------------- |
-| `query`    | `mixed` | The Eloquent query builder instance               |
-| `payload`  | `mixed` | The `Payload` object with the filter value        |
-| `state`    | `array` | Shared state array (`method`, `key`, custom data) |
+| Property  | Type    | Description                                       |
+| --------- | ------- | ------------------------------------------------- |
+| `query`   | `mixed` | The Eloquent query builder instance               |
+| `payload` | `mixed` | The `Payload` object with the filter value        |
+| `state`   | `array` | Shared state array (`method`, `key`, custom data) |
 
 You can read and write to `state` for inter-attribute communication:
 
