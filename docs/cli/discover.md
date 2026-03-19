@@ -1,8 +1,15 @@
 ---
-sidebarDepth: 1
+title: Discover Filters
+description: Use filterable:discover to scan Eloquent models, detect filterable columns, suggest database indexes, and analyze data distribution for better performance.
+tags:
+    - cli
+    - discover
+    - artisan
+    - eloquent
+    - database-indexes
 ---
 
-# Discover Command
+## **Purpose**
 
 The `filterable:discover` command automatically analyzes your Eloquent models to discover searchable columns, suggest indexes.
 
@@ -14,10 +21,10 @@ php artisan filterable:discover Post
 
 This will scan the `Post` model and display:
 
--   Searchable columns (text-based fields)
--   Filterable columns (foreign keys, status fields, etc.)
--   Relationships with other models
--   Current indexing status
+- Searchable columns (text-based fields)
+- Filterable columns (foreign keys, status fields, etc.)
+- Relationships with other models
+- Current indexing status
 
 ## Options
 
@@ -154,9 +161,9 @@ php artisan filterable:discover Post --suggest-indexes
 
 **Discovered Columns:**
 
--   **Searchable:** title, content, excerpt, slug
--   **Filterable:** status, category_id, user_id, is_featured
--   **Relationships:** user (BelongsTo), category (BelongsTo), comments (HasMany), tags (BelongsToMany)
+- **Searchable:** title, content, excerpt, slug
+- **Filterable:** status, category_id, user_id, is_featured
+- **Relationships:** user (BelongsTo), category (BelongsTo), comments (HasMany), tags (BelongsToMany)
 
 ### Example 2: E-commerce Product Model
 
@@ -166,9 +173,9 @@ php artisan filterable:discover Product --analyze-data --suggest-indexes
 
 **Discovered Columns:**
 
--   **Searchable:** name, description, sku
--   **Filterable:** category_id, brand_id, status, in_stock
--   **Relationships:** category, brand, variants, reviews
+- **Searchable:** name, description, sku
+- **Filterable:** category_id, brand_id, status, in_stock
+- **Relationships:** category, brand, variants, reviews
 
 **Analysis:**
 
@@ -195,9 +202,9 @@ php artisan filterable:discover User
 
 **Discovered Columns:**
 
--   **Searchable:** name, email, username
--   **Filterable:** role, status, email_verified_at
--   **Relationships:** posts, comments, profile
+- **Searchable:** name, email, username
+- **Filterable:** role, status, email_verified_at
+- **Relationships:** posts, comments, profile
 
 ## Index Recommendations
 
@@ -282,9 +289,9 @@ php artisan filterable:discover Post --connection=mysql
 
 **Possible reasons:**
 
--   Table doesn't exist
--   Model's `$table` property is incorrect
--   Database connection is misconfigured
+- Table doesn't exist
+- Model's `$table` property is incorrect
+- Database connection is misconfigured
 
 **Solution:**
 
@@ -298,9 +305,9 @@ php artisan tinker
 
 **Common causes:**
 
--   Insufficient database permissions
--   Index already exists
--   Column type not supported for FULLTEXT
+- Insufficient database permissions
+- Index already exists
+- Column type not supported for FULLTEXT
 
 **Solution:**
 

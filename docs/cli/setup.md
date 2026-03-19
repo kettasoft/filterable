@@ -1,6 +1,14 @@
-# Setting Up Filterable
+---
+title: Setup Filterable
+description: Learn how to initialize the Filterable package using the filterable:setup command. Publish config and create the filters directory in one step.
+tags:
+    - cli
+    - setup
+    - artisan
+    - installation
+---
 
-### **Purpose**
+## **Purpose**
 
 The `filterable:setup` command initializes the **Filterable** package in your application.
 It publishes the package’s configuration file and ensures that the required directory structure (for filters) exists.
@@ -74,13 +82,13 @@ php artisan filterable:make PostFilter --filters=test
 
 ### **Notes**
 
--   Use the `--force` flag if you want to **re-publish** the configuration file and overwrite existing settings.
--   The command automatically detects whether the `app/Http/Filters` directory already exists.
+- Use the `--force` flag if you want to **re-publish** the configuration file and overwrite existing settings.
+- The command automatically detects whether the `app/Http/Filters` directory already exists.
 
 ---
 
 ### **When to Use**
 
--   Right after installing the `kettasoft/filterable` package.
--   When upgrading to a version that changes configuration defaults.
--   When resetting your configuration to a clean state.
+- Right after installing the `kettasoft/filterable` package.
+- When upgrading to a version that changes configuration defaults.
+- When resetting your configuration to a clean state.

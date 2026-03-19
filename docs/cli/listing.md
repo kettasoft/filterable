@@ -1,6 +1,14 @@
-# Listing All Filters
+---
+title: List Filters
+description: List all registered Filterable classes in your project with filterable:list. Quickly audit filter models, fields, allowed operators, and engine types.
+tags:
+    - cli
+    - list
+    - artisan
+    - audit
+---
 
-### **Purpose**
+## **Purpose**
 
 The `filterable:list` command scans your project for all **Filterable classes** (typically inside `app/Http/Filters`) and displays a concise overview of their configuration — including model association, allowed fields, allowed operators, and engine type.
 
@@ -32,26 +40,26 @@ php artisan filterable:list
 
 ### **Features**
 
--   Scans and lists all **Filterable** classes automatically.
--   Displays each filter’s **model**, **fields**, **operators**, and **engine**.
--   Helps quickly identify inconsistencies between filters.
--   Color-friendly tabular display that works well in any terminal.
+- Scans and lists all **Filterable** classes automatically.
+- Displays each filter’s **model**, **fields**, **operators**, and **engine**.
+- Helps quickly identify inconsistencies between filters.
+- Color-friendly tabular display that works well in any terminal.
 
 ---
 
 ### **When to Use**
 
--   To get an overview of all filters available in the application.
--   Before publishing or deploying, to verify that all filters are properly configured.
--   During debugging, to check for missing or incorrect field/operator setups.
+- To get an overview of all filters available in the application.
+- Before publishing or deploying, to verify that all filters are properly configured.
+- During debugging, to check for missing or incorrect field/operator setups.
 
 ---
 
 ### **Behavior**
 
--   Looks for classes inside the default `app/Http/Filters` directory (you can extend this logic in `CommandHelpers` if needed).
--   Only lists classes that extend `Kettasoft\Filterable\Filterable`.
--   If no filters are found, it displays:
+- Looks for classes inside the default `app/Http/Filters` directory (you can extend this logic in `CommandHelpers` if needed).
+- Only lists classes that extend `Kettasoft\Filterable\Filterable`.
+- If no filters are found, it displays:
 
     ```
     No filterable classes found.
@@ -72,7 +80,6 @@ Then, confirm that your new filter appears in the list.
 
 ### **Notes**
 
--   Works great in combination with:
-
-    -   `filterable:inspect` → for detailed inspection of a single filter.
-    -   `filterable:setup` → to ensure configuration and directories exist before listing.
+- Works great in combination with:
+    - `filterable:inspect` → for detailed inspection of a single filter.
+    - `filterable:setup` → to ensure configuration and directories exist before listing.

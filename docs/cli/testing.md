@@ -1,6 +1,15 @@
-# Testing Filters
+---
+title: Test Filter
+description: Test and debug any Filterable class from the CLI using filterable:test. Simulate filter inputs, apply them to a model, and preview the generated SQL query.
+tags:
+    - cli
+    - testing
+    - artisan
+    - debugging
+    - sql
+---
 
-### **Purpose**
+## **Purpose**
 
 The `filterable:test` command allows you to test and debug filter classes directly from the command line.
 It applies the specified filter on a given model and displays the resulting SQL query, helping you verify that your filters behave as expected.
