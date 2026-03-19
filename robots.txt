@@ -1,0 +1,3 @@
+Sitemap: https://kettasoft.github.io/filterable/sitemap.xml
+User-agent:*
+Disallow:
