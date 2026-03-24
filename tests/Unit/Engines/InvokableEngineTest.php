@@ -32,9 +32,8 @@ class InvokableEngineTest extends TestCase
 
   /**
    * It can filter with basic class filter.
-   * @test
    */
-  public function it_can_test_method_mapping_filter()
+  public function test_it_can_test_method_mapping_filter()
   {
     request()->merge([
       'status' => 'pending'
@@ -59,9 +58,8 @@ class InvokableEngineTest extends TestCase
 
   /**
    * It can filter with basic class filter.
-   * @test
    */
-  public function it_filter_with_ignored_null_or_empty_values()
+  public function test_it_filter_with_ignored_null_or_empty_values()
   {
     request()->merge([
       'status' => ''
@@ -90,9 +88,8 @@ class InvokableEngineTest extends TestCase
 
   /**
    * It can filter with field and operator.
-   * @test
    */
-  public function it_can_filter_with_field_and_operator()
+  public function test_it_can_filter_with_field_and_operator()
   {
     request()->merge([
       'status' => [
@@ -115,10 +112,7 @@ class InvokableEngineTest extends TestCase
     $this->assertEquals(5, $posts);
   }
 
-  /**
-   * @test
-   */
-  public function it_can_filter_with_multiple_filters()
+  public function test_it_can_filter_with_multiple_filters()
   {
     Post::factory()->create([
       'status' => 'active',
@@ -156,10 +150,7 @@ class InvokableEngineTest extends TestCase
     $this->assertEquals('Laravel Tutorial', $posts->first()->title);
   }
 
-  /**
-   * @test
-   */
-  public function it_can_filter_with_multiple_filters_and_operators()
+  public function test_it_can_filter_with_multiple_filters_and_operators()
   {
     // Clear setUp data for this specific test
     Post::truncate();
@@ -213,10 +204,7 @@ class InvokableEngineTest extends TestCase
     $this->assertTrue($posts->every(fn($post) => $post->status === 'active' && $post->views > 75));
   }
 
-  /**
-   * @test
-   */
-  public function it_can_filter_with_like_operator()
+  public function test_it_can_filter_with_like_operator()
   {
     Post::truncate();
 
@@ -246,10 +234,7 @@ class InvokableEngineTest extends TestCase
     $this->assertTrue($posts->every(fn($post) => str_contains($post->title, 'Laravel')));
   }
 
-  /**
-   * @test
-   */
-  public function it_can_filter_with_in_operator()
+  public function test_it_can_filter_with_in_operator()
   {
     Post::truncate();
 
@@ -279,10 +264,7 @@ class InvokableEngineTest extends TestCase
     $this->assertTrue($posts->every(fn($post) => in_array($post->status, ['active', 'stopped'])));
   }
 
-  /**
-   * @test
-   */
-  public function it_can_filter_with_between_operator()
+  public function test_it_can_filter_with_between_operator()
   {
     Post::truncate();
 
@@ -313,10 +295,7 @@ class InvokableEngineTest extends TestCase
     $this->assertTrue($posts->every(fn($post) => $post->views >= 40 && $post->views <= 110));
   }
 
-  /**
-   * @test
-   */
-  public function it_can_filter_with_null_operator()
+  public function test_it_can_filter_with_null_operator()
   {
     Post::truncate();
 
@@ -350,10 +329,7 @@ class InvokableEngineTest extends TestCase
     $this->assertTrue($posts->every(fn($post) => is_null($post->description)));
   }
 
-  /**
-   * @test
-   */
-  public function it_can_handle_camel_case_filter_methods()
+  public function test_it_can_handle_camel_case_filter_methods()
   {
     Post::truncate();
 
@@ -379,10 +355,7 @@ class InvokableEngineTest extends TestCase
     $this->assertTrue($posts->first()->is_featured);
   }
 
-  /**
-   * @test
-   */
-  public function it_can_use_method_mentors_mapping()
+  public function test_it_can_use_method_mentors_mapping()
   {
     Post::truncate();
 
@@ -411,10 +384,7 @@ class InvokableEngineTest extends TestCase
     $this->assertEquals('active', $posts->first()->status);
   }
 
-  /**
-   * @test
-   */
-  public function it_can_handle_complex_nested_requests()
+  public function test_it_can_handle_complex_nested_requests()
   {
     Post::truncate();
 
@@ -476,10 +446,7 @@ class InvokableEngineTest extends TestCase
     $this->assertEquals('Laravel', $posts->first()->title);
   }
 
-  /**
-   * @test
-   */
-  public function it_can_apply_sanitization_to_filters()
+  public function test_it_can_apply_sanitization_to_filters()
   {
     Post::truncate();
 
@@ -507,10 +474,7 @@ class InvokableEngineTest extends TestCase
     $this->assertEquals('Laravel', $posts->first()->title);
   }
 
-  /**
-   * @test
-   */
-  public function it_ignores_empty_values_when_configured()
+  public function test_it_ignores_empty_values_when_configured()
   {
     Post::truncate();
 
@@ -538,10 +502,7 @@ class InvokableEngineTest extends TestCase
     $this->assertGreaterThanOrEqual(2, $posts->count());
   }
 
-  /**
-   * @test
-   */
-  public function it_can_chain_multiple_where_conditions_in_single_filter()
+  public function test_it_can_chain_multiple_where_conditions_in_single_filter()
   {
     Post::factory()->create(['status' => 'active', 'views' => 100]);
     Post::factory()->create(['status' => 'active', 'views' => 50]);
@@ -573,10 +534,7 @@ class InvokableEngineTest extends TestCase
     $this->assertEquals(100, $posts->first()->views);
   }
 
-  /**
-   * @test
-   */
-  public function it_can_use_or_where_conditions()
+  public function test_it_can_use_or_where_conditions()
   {
     Post::truncate();
 
@@ -607,10 +565,7 @@ class InvokableEngineTest extends TestCase
     $this->assertTrue($posts->every(fn($post) => in_array($post->status, ['active', 'pending'])));
   }
 
-  /**
-   * @test
-   */
-  public function it_can_handle_boolean_filters()
+  public function test_it_can_handle_boolean_filters()
   {
     Post::truncate();
 
@@ -644,10 +599,7 @@ class InvokableEngineTest extends TestCase
     $this->assertEquals('active', $posts->first()->status);
   }
 
-  /**
-   * @test
-   */
-  public function it_can_handle_date_range_filters()
+  public function test_it_can_handle_date_range_filters()
   {
     Post::factory()->create(['created_at' => now()->subDays(5)]);
     Post::factory()->create(['created_at' => now()->subDays(3)]);
@@ -677,10 +629,7 @@ class InvokableEngineTest extends TestCase
     $this->assertCount(1, $posts);
   }
 
-  /**
-   * @test
-   */
-  public function it_can_handle_json_payload_values()
+  public function test_it_can_handle_json_payload_values()
   {
     Post::truncate();
 
@@ -709,10 +658,7 @@ class InvokableEngineTest extends TestCase
     $this->assertCount(1, $posts);
   }
 
-  /**
-   * @test
-   */
-  public function it_returns_all_records_when_no_filters_applied()
+  public function test_it_returns_all_records_when_no_filters_applied()
   {
     Post::truncate();
     Post::factory()->count(5)->create();
@@ -733,10 +679,7 @@ class InvokableEngineTest extends TestCase
     $this->assertCount(5, $posts);
   }
 
-  /**
-   * @test
-   */
-  public function it_can_use_payload_helper_methods()
+  public function test_it_can_use_payload_helper_methods()
   {
     Post::factory()->create(['title' => 'Laravel Tutorial']);
     Post::factory()->create(['title' => 'PHP Guide']);
@@ -761,10 +704,7 @@ class InvokableEngineTest extends TestCase
     $this->assertStringContainsString('Laravel', $posts->first()->title);
   }
 
-  /**
-   * @test
-   */
-  public function it_can_handle_numeric_string_filters()
+  public function test_it_can_handle_numeric_string_filters()
   {
     Post::truncate();
     Post::factory()->create(['views' => 100]);
@@ -790,10 +730,7 @@ class InvokableEngineTest extends TestCase
     $this->assertEquals(100, $posts->first()->views);
   }
 
-  /**
-   * @test
-   */
-  public function it_can_filter_with_array_values()
+  public function test_it_can_filter_with_array_values()
   {
     Post::truncate();
 
@@ -823,10 +760,7 @@ class InvokableEngineTest extends TestCase
     $this->assertCount(2, $posts);
   }
 
-  /**
-   * @test
-   */
-  public function it_properly_handles_payload_operators()
+  public function test_it_properly_handles_payload_operators()
   {
     Post::truncate();
 
@@ -870,10 +804,7 @@ class InvokableEngineTest extends TestCase
     }
   }
 
-  /**
-   * @test
-   */
-  public function it_can_access_raw_payload_value()
+  public function test_it_can_access_raw_payload_value()
   {
     Post::truncate();
 
@@ -905,10 +836,7 @@ class InvokableEngineTest extends TestCase
     $this->assertCount(1, $posts);
   }
 
-  /**
-   * @test
-   */
-  public function it_can_combine_multiple_filter_patterns()
+  public function test_it_can_combine_multiple_filter_patterns()
   {
     Post::truncate();
 

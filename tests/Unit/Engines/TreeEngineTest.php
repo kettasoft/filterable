@@ -64,9 +64,8 @@ class TreeEngineTest extends TestCase
   }
 
   /**
-   * @test
    */
-  public function it_use_tree__engine_with_simple_filtering()
+  public function test_it_use_tree__engine_with_simple_filtering()
   {
     $filter = Filterable::create($this->request)
       ->setAllowedFields(['*'])
@@ -76,9 +75,8 @@ class TreeEngineTest extends TestCase
   }
 
   /**
-   * @test
    */
-  public function it_use_tree_engine_with_force_set_data()
+  public function test_it_use_tree_engine_with_force_set_data()
   {
     $filter = Filterable::create()
       ->setData($this->request->json()->all())
@@ -89,9 +87,8 @@ class TreeEngineTest extends TestCase
   }
 
   /**
-   * @test
    */
-  public function it_use_tree_based_engin_with_field_mapping()
+  public function test_it_use_tree_based_engin_with_field_mapping()
   {
     $filter = Filterable::create($this->request)
       ->setFieldsMap(['filter_by_status' => 'status'])
@@ -103,9 +100,8 @@ class TreeEngineTest extends TestCase
 
   /**
    * It filter with tree based engin and enable strict mode option.
-   * @test
    */
-  public function it_make_filter_with_tree_engine_and_enable_strict_mode_globally()
+  public function test_it_make_filter_with_tree_engine_and_enable_strict_mode_globally()
   {
     Config::set('filterable.engines.tree.options.strict', true);
 
@@ -125,9 +121,8 @@ class TreeEngineTest extends TestCase
 
   /**
    * It filter with tree based engin and enable strict mode option.
-   * @test
    */
-  public function it_make_filter_with_tree_engine_and_enable_strict_mode_locally()
+  public function test_it_make_filter_with_tree_engine_and_enable_strict_mode_locally()
   {
 
     Config::set('filterable.engines.tree.strict', false);
@@ -150,9 +145,8 @@ class TreeEngineTest extends TestCase
 
   /**
    * It filter with tree based engin and enable strict mode option.
-   * @test
    */
-  public function it_can_filter_with_allowed_operators_only()
+  public function test_it_can_filter_with_allowed_operators_only()
   {
     $data = [
       "filter" => [
@@ -175,9 +169,8 @@ class TreeEngineTest extends TestCase
 
   /**
    * It filter with tree based engin and enable strict mode option.
-   * @test
    */
-  public function it_cant_filtering_with_not_allowed_operator()
+  public function test_it_cant_filtering_with_not_allowed_operator()
   {
     $data = [
       "filter" => [
@@ -210,9 +203,8 @@ class TreeEngineTest extends TestCase
 
   /**
    * It filter with tree based engin and enable strict mode option.
-   * @test
    */
-  public function it_can_use_default_operator_when_receved_operator_is_not_allowed_with_permissive_option()
+  public function test_it_can_use_default_operator_when_receved_operator_is_not_allowed_with_permissive_option()
   {
     $data = [
       "filter" => [
@@ -235,9 +227,8 @@ class TreeEngineTest extends TestCase
 
   /**
    * It filter with tree based engin and enable strict mode option.
-   * @test
    */
-  public function it_can_use_default_operator_when_receved_operator_is_null_with_permissive_option()
+  public function test_it_can_use_default_operator_when_receved_operator_is_null_with_permissive_option()
   {
     $data = [
       "filter" => [
@@ -259,9 +250,8 @@ class TreeEngineTest extends TestCase
 
   /**
    * It filter with tree based engin and enable strict mode option.
-   * @test
    */
-  public function it_throw_error_when_data_is_incorrectly()
+  public function test_it_throw_error_when_data_is_incorrectly()
   {
     $data = [
       "filter" => [
@@ -283,10 +273,8 @@ class TreeEngineTest extends TestCase
 
   /**
    * It filter with tree based engin and enable strict mode option.
-   * @test
    */
-  #[Test]
-  public function it_filter_with_tree_based_engin_relations_and_allowed_specific_relation_path()
+  public function test_it_filter_with_tree_based_engin_relations_and_allowed_specific_relation_path()
   {
     $data = [
       "filter" => [
@@ -313,9 +301,8 @@ class TreeEngineTest extends TestCase
 
   /**
    * It filter with tree based engin and enable strict mode option.
-   * @test
    */
-  public function it_can_filter_with_or_and_logical_operator()
+  public function test_it_can_filter_with_or_and_logical_operator()
   {
     $data = [
       "filter" => [
@@ -337,7 +324,7 @@ class TreeEngineTest extends TestCase
     $this->assertEquals(45, $filter->count());
   }
 
-  public function test_it_sanitize_value_before_applying_to_query()
+  public function test_test_it_sanitize_value_before_applying_to_query()
   {
     $data = [
       "filter" => [

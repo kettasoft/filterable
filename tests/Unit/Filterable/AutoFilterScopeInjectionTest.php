@@ -17,9 +17,8 @@ class AutoFilterScopeInjectionTest extends TestCase
 
   /**
    * It test filter scope is available without trait.
-   * @test
    */
-  public function ittest_filter_scope_is_available_without_trait()
+  public function test_it_can_filter_scope_is_available_without_trait()
   {
     $this->assertInstanceOf(Builder::class, $this->model()->filter(Filterable::create()));
   }

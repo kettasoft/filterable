@@ -22,8 +22,8 @@ class FilterableCacheTest extends TestCase
         app(FilterableCacheManager::class)->resetInstance(); // Reset singleton
     }
 
-    /** @test */
-    public function it_can_get_singleton_instance()
+
+    public function test_it_can_get_singleton_instance()
     {
         $manager1 = app(FilterableCacheManager::class)->getInstance();
         $manager2 = app(FilterableCacheManager::class)->getInstance();
@@ -31,8 +31,8 @@ class FilterableCacheTest extends TestCase
         $this->assertSame($manager1, $manager2);
     }
 
-    /** @test */
-    public function it_can_cache_and_retrieve_values()
+
+    public function test_it_can_cache_and_retrieve_values()
     {
         $manager = app(FilterableCacheManager::class)->getInstance();
 
@@ -42,8 +42,8 @@ class FilterableCacheTest extends TestCase
         $this->assertEquals('test_value', $manager->get('test_key'));
     }
 
-    /** @test */
-    public function it_can_remember_values()
+
+    public function test_it_can_remember_values()
     {
         $manager = app(FilterableCacheManager::class)->getInstance();
         $callCount = 0;
@@ -63,8 +63,8 @@ class FilterableCacheTest extends TestCase
         $this->assertEquals(1, $callCount, 'Callback should only be called once');
     }
 
-    /** @test */
-    public function it_can_cache_forever()
+
+    public function test_it_can_cache_forever()
     {
         $manager = app(FilterableCacheManager::class)->getInstance();
 
@@ -74,8 +74,8 @@ class FilterableCacheTest extends TestCase
         $this->assertEquals('forever_value', $manager->get('forever_key'));
     }
 
-    /** @test */
-    public function it_can_forget_cached_values()
+
+    public function test_it_can_forget_cached_values()
     {
         $manager = app(FilterableCacheManager::class)->getInstance();
 
@@ -86,8 +86,8 @@ class FilterableCacheTest extends TestCase
         $this->assertFalse($manager->has('forget_key'));
     }
 
-    /** @test */
-    public function it_can_generate_cache_keys_with_scopes()
+
+    public function test_it_can_generate_cache_keys_with_scopes()
     {
         $manager = app(FilterableCacheManager::class)->getInstance();
 
@@ -101,8 +101,8 @@ class FilterableCacheTest extends TestCase
         $this->assertStringContainsString('user:123', $key);
     }
 
-    /** @test */
-    public function it_respects_enabled_disabled_state()
+
+    public function test_it_respects_enabled_disabled_state()
     {
         $manager = app(FilterableCacheManager::class)->getInstance();
 
@@ -117,8 +117,8 @@ class FilterableCacheTest extends TestCase
         $this->assertTrue($manager->isEnabled());
     }
 
-    /** @test */
-    public function cache_key_generator_creates_deterministic_keys()
+
+    public function test_cache_key_generator_creates_deterministic_keys()
     {
         $generator = new CacheKeyGenerator();
 
@@ -128,8 +128,8 @@ class FilterableCacheTest extends TestCase
         $this->assertEquals($key1, $key2, 'Keys should be deterministic');
     }
 
-    /** @test */
-    public function cache_key_generator_creates_different_keys_for_different_data()
+
+    public function test_cache_key_generator_creates_different_keys_for_different_data()
     {
         $generator = new CacheKeyGenerator();
 
@@ -139,8 +139,8 @@ class FilterableCacheTest extends TestCase
         $this->assertNotEquals($key1, $key2, 'Different data should produce different keys');
     }
 
-    /** @test */
-    public function cache_key_generator_includes_provided_data()
+
+    public function test_cache_key_generator_includes_provided_data()
     {
         $generator = new CacheKeyGenerator();
 
@@ -150,8 +150,8 @@ class FilterableCacheTest extends TestCase
         $this->assertNotEquals($key1, $key2, 'Different provided data should produce different keys');
     }
 
-    /** @test */
-    public function cache_key_generator_supports_user_scoping()
+
+    public function test_cache_key_generator_supports_user_scoping()
     {
         $generator = new CacheKeyGenerator();
 
@@ -161,8 +161,8 @@ class FilterableCacheTest extends TestCase
         $this->assertNotEquals($key1, $key2, 'Different users should produce different keys');
     }
 
-    /** @test */
-    public function cache_key_generator_supports_tenant_scoping()
+
+    public function test_cache_key_generator_supports_tenant_scoping()
     {
         $generator = new CacheKeyGenerator();
 
@@ -172,8 +172,8 @@ class FilterableCacheTest extends TestCase
         $this->assertNotEquals($key1, $key2, 'Different tenants should produce different keys');
     }
 
-    /** @test */
-    public function cache_key_generator_normalizes_class_names()
+
+    public function test_cache_key_generator_normalizes_class_names()
     {
         $generator = new CacheKeyGenerator();
 
@@ -183,8 +183,8 @@ class FilterableCacheTest extends TestCase
         $this->assertStringNotContainsString('App\\Filters\\', $key);
     }
 
-    /** @test */
-    public function it_caches_filterable_results_on_first_execution()
+
+    public function test_it_caches_filterable_results_on_first_execution()
     {
         // Create a simple test filter
         $filter = new class extends \Kettasoft\Filterable\Filterable {
@@ -207,8 +207,8 @@ class FilterableCacheTest extends TestCase
         $this->assertEquals('Test Post', $results->first()->title);
     }
 
-    /** @test */
-    public function it_retrieves_cached_results_on_second_execution()
+
+    public function test_it_retrieves_cached_results_on_second_execution()
     {
         // Create test filter
         $filterClass = new class extends \Kettasoft\Filterable\Filterable {
@@ -251,8 +251,8 @@ class FilterableCacheTest extends TestCase
         $this->assertEquals(2, Post::count());
     }
 
-    /** @test */
-    public function it_executes_query_when_caching_is_disabled()
+
+    public function test_it_executes_query_when_caching_is_disabled()
     {
         $filter = new class extends \Kettasoft\Filterable\Filterable {
             protected $filters = [];
@@ -280,8 +280,8 @@ class FilterableCacheTest extends TestCase
         $this->assertCount(2, $results2, 'Without caching, should see all posts');
     }
 
-    /** @test */
-    public function it_creates_different_cache_for_different_terminal_methods()
+
+    public function test_it_creates_different_cache_for_different_terminal_methods()
     {
         $filterClass = new class extends \Kettasoft\Filterable\Filterable {
             protected $filters = [];
@@ -318,8 +318,8 @@ class FilterableCacheTest extends TestCase
         $this->assertEquals('Post 1', $firstPost->title);
     }
 
-    /** @test */
-    public function it_caches_with_user_scope()
+
+    public function test_it_caches_with_user_scope()
     {
         $filterClass = new class extends \Kettasoft\Filterable\Filterable {
             protected $filters = [];
@@ -360,8 +360,8 @@ class FilterableCacheTest extends TestCase
         $this->assertCount(2, $results2, 'Different user scope should not use cached results');
     }
 
-    /** @test */
-    public function it_can_flush_cached_results()
+
+    public function test_it_can_flush_cached_results()
     {
         $filterClass = new class extends \Kettasoft\Filterable\Filterable {
             protected $filters = [];
@@ -401,8 +401,8 @@ class FilterableCacheTest extends TestCase
         $this->assertCount(2, $results2, 'After flushing cache, should see fresh data');
     }
 
-    /** @test */
-    public function it_caches_paginated_results()
+
+    public function test_it_caches_paginated_results()
     {
         $filterClass = new class extends \Kettasoft\Filterable\Filterable {
             protected $filters = [];
@@ -445,8 +445,8 @@ class FilterableCacheTest extends TestCase
         $this->assertEquals(25, $page1Again->total(), 'Cached pagination should show original total');
     }
 
-    /** @test */
-    public function it_uses_cache_tags_correctly()
+
+    public function test_it_uses_cache_tags_correctly()
     {
         $filterClass = new class extends \Kettasoft\Filterable\Filterable {
             protected $filters = [];
@@ -493,8 +493,8 @@ class FilterableCacheTest extends TestCase
         $this->assertCount(2, $results2, 'After flushing by tags, should see fresh data');
     }
 
-    /** @test */
-    public function it_respects_cache_when_condition()
+
+    public function test_it_respects_cache_when_condition()
     {
         $filterClass = new class extends \Kettasoft\Filterable\Filterable {
             protected $filters = [];

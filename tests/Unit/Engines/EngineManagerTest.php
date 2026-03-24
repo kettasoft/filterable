@@ -16,9 +16,8 @@ class EngineManagerTest extends TestCase
 {
   /**
    * It can create ruleset engine from engine manager.
-   * @test
    */
-  public function it_can_create_ruleset_engine_from_engine_manager()
+  public function test_it_can_create_ruleset_engine_from_engine_manager()
   {
     $engine = EngineManager::generate('ruleset', new Filterable());
 
@@ -26,9 +25,8 @@ class EngineManagerTest extends TestCase
   }
   /**
    * It can create ruleset engine from engine manager.
-   * @test
    */
-  public function it_can_create_tree_engine_from_engine_manager()
+  public function test_it_can_create_tree_engine_from_engine_manager()
   {
     $engine = EngineManager::generate('tree', new Filterable());
 
@@ -36,9 +34,8 @@ class EngineManagerTest extends TestCase
   }
   /**
    * It can create expression engine from engine manager.
-   * @test
    */
-  public function it_can_create_expression_engine_from_engine_manager()
+  public function test_it_can_create_expression_engine_from_engine_manager()
   {
     $engine = EngineManager::generate('expression', new Filterable());
 
@@ -46,9 +43,8 @@ class EngineManagerTest extends TestCase
   }
   /**
    * It can create ruleset engine from engine manager.
-   * @test
    */
-  public function it_can_create_invokeablke_engine_from_engine_manager()
+  public function test_it_can_create_invokeablke_engine_from_engine_manager()
   {
     $engine = EngineManager::generate('invokable', new Filterable());
 

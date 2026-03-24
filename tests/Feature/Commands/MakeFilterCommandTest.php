@@ -37,9 +37,8 @@ class MakeFilterCommandTest extends TestCase
 
   /**
    * It creates basic filter file.
-   * @test
    */
-  public function it_creates_basic_filter_file()
+  public function test_it_creates_basic_filter_file()
   {
     $filename = 'UserFilter';
 
@@ -53,9 +52,8 @@ class MakeFilterCommandTest extends TestCase
 
   /**
    * It creates filter with methods file
-   * @test
    */
-  public function it_creates_filter_with_methods_file()
+  public function test_it_creates_filter_with_methods_file()
   {
     $filename = 'UserFilter';
 

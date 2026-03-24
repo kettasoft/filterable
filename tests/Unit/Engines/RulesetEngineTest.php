@@ -42,9 +42,8 @@ class RulesetEngineTest extends TestCase
 
   /**
    * It applies basic ruleset filters correctly.
-   * @test
    */
-  public function it_applies_basic_ruleset_filters_correctly()
+  public function test_it_applies_basic_ruleset_filters_correctly()
   {
     $request = Request::create('/posts?status=pending');
 
@@ -55,9 +54,8 @@ class RulesetEngineTest extends TestCase
 
   /**
    * It throw exception when enable engine strict mode with not allowed fields.
-   * @test
    */
-  public function it_throw_exception_when_enable_engine_strict_mode_globally_when_has_not_allowed_fields()
+  public function test_it_throw_exception_when_enable_engine_strict_mode_globally_when_has_not_allowed_fields()
   {
     config()->set('filterable.engines.ruleset.strict', true);
 
@@ -73,9 +71,8 @@ class RulesetEngineTest extends TestCase
 
   /**
    * It throw exception when enable engine strict mode with not allowed fields.
-   * @test
    */
-  public function it_throw_exception_when_enable_engine_strict_mode_locally_when_has_not_allowed_fields()
+  public function test_it_throw_exception_when_enable_engine_strict_mode_locally_when_has_not_allowed_fields()
   {
     // Disable strict mode globally
     config()->set('filterable.engines.ruleset.strict', false);
@@ -93,9 +90,8 @@ class RulesetEngineTest extends TestCase
 
   /**
    * It can permissive mode locally.
-   * @test
    */
-  public function it_can_use_permissive_mode_locally()
+  public function test_it_can_use_permissive_mode_locally()
   {
     config()->set('filterable.engines.ruleset.strict', true);
 
@@ -112,9 +108,8 @@ class RulesetEngineTest extends TestCase
 
   /**
    * It applies basic ruleset filters correctly.
-   * @test
    */
-  public function it_cant_filtering_with_not_allowed_operators()
+  public function test_it_cant_filtering_with_not_allowed_operators()
   {
     $request = Request::create('/posts?status=like:pending');
 
@@ -129,9 +124,8 @@ class RulesetEngineTest extends TestCase
 
   /**
    * It can use default operator when invalid receved operator
-   * @test
    */
-  public function it_can_use_default_operator_when_invalid_receved_operator()
+  public function test_it_can_use_default_operator_when_invalid_receved_operator()
   {
     config()->set('filterable.engines.ruleset.strict', false);
     $request = Request::create('/posts?status=like:pending');
@@ -147,9 +141,8 @@ class RulesetEngineTest extends TestCase
 
   /**
    * It cant use default operator when enabled strict mode.
-   * @test
    */
-  public function it_cant_use_default_operator_when_enabled_strict_mode()
+  public function test_it_cant_use_default_operator_when_enabled_strict_mode()
   {
     config()->set('filterable.engines.ruleset.strict', false);
     $request = Request::create('/posts?status=like:pending');
@@ -166,9 +159,8 @@ class RulesetEngineTest extends TestCase
 
   /**
    * It can sent json data to filtering operate.
-   * @test
    */
-  public function it_can_sent_json_data_to_filtering_operate()
+  public function test_it_can_sent_json_data_to_filtering_operate()
   {
     config()->set('filterable.engines.ruleset.strict', false);
 

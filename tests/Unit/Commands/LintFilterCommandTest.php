@@ -33,12 +33,11 @@ class LintFilterCommandTest extends TestCase
     return $fqcn;
   }
 
-    // ──────────────────────────────────────────────────────────────────────────
-    // Tests
-    // ──────────────────────────────────────────────────────────────────────────
+  // ──────────────────────────────────────────────────────────────────────────
+  // Tests
+  // ──────────────────────────────────────────────────────────────────────────
 
-  /** @test */
-  public function it_passes_a_clean_filter_with_no_issues(): void
+  public function test_it_passes_a_clean_filter_with_no_issues(): void
   {
     $fqcn = $this->declareFilter('CleanFilter', <<<'PHP'
             use Kettasoft\Filterable\Filterable;
@@ -53,8 +52,7 @@ class LintFilterCommandTest extends TestCase
       ->assertSuccessful();
   }
 
-  /** @test */
-  public function it_reports_l002_when_filters_array_is_empty(): void
+  public function test_it_reports_l002_when_filters_array_is_empty(): void
   {
     $fqcn = $this->declareFilter('EmptyFiltersFilter', <<<'PHP'
             use Kettasoft\Filterable\Filterable;
@@ -68,8 +66,7 @@ class LintFilterCommandTest extends TestCase
       ->expectsOutputToContain('L002');
   }
 
-  /** @test */
-  public function it_reports_l003_when_filter_key_has_no_method(): void
+  public function test_it_reports_l003_when_filter_key_has_no_method(): void
   {
     $fqcn = $this->declareFilter('OrphanKeyFilter', <<<'PHP'
             use Kettasoft\Filterable\Filterable;
@@ -83,8 +80,7 @@ class LintFilterCommandTest extends TestCase
       ->expectsOutputToContain('L003');
   }
 
-  /** @test */
-  public function it_reports_l004_when_payload_method_is_not_in_filters(): void
+  public function test_it_reports_l004_when_payload_method_is_not_in_filters(): void
   {
     $fqcn = $this->declareFilter('UnlistedMethodFilter', <<<'PHP'
             use Kettasoft\Filterable\Filterable;
@@ -100,8 +96,7 @@ class LintFilterCommandTest extends TestCase
       ->expectsOutputToContain('L004');
   }
 
-  /** @test */
-  public function it_reports_l005_when_cast_type_class_does_not_exist(): void
+  public function test_it_reports_l005_when_cast_type_class_does_not_exist(): void
   {
     $fqcn = $this->declareFilter('BadCastFilter', <<<'PHP'
             use Kettasoft\Filterable\Filterable;
@@ -119,8 +114,7 @@ class LintFilterCommandTest extends TestCase
       ->expectsOutputToContain('L005');
   }
 
-  /** @test */
-  public function it_does_not_report_l005_for_builtin_cast_types(): void
+  public function test_it_does_not_report_l005_for_builtin_cast_types(): void
   {
     $fqcn = $this->declareFilter('BuiltinCastFilter', <<<'PHP'
             use Kettasoft\Filterable\Filterable;
@@ -137,8 +131,7 @@ class LintFilterCommandTest extends TestCase
       ->assertSuccessful();
   }
 
-  /** @test */
-  public function it_reports_l005_when_authorize_class_does_not_implement_authorizable(): void
+  public function test_it_reports_l005_when_authorize_class_does_not_implement_authorizable(): void
   {
     // Declare a class that does NOT implement Authorizable
     if (!class_exists('Kettasoft\\Filterable\\Tests\\LintFixtures\\NotAnAuthorizer')) {
@@ -161,8 +154,7 @@ class LintFilterCommandTest extends TestCase
       ->expectsOutputToContain('L005');
   }
 
-  /** @test */
-  public function it_reports_l007_when_annotation_is_on_unlisted_method(): void
+  public function test_it_reports_l007_when_annotation_is_on_unlisted_method(): void
   {
     $fqcn = $this->declareFilter('AnnotationUnlistedFilter', <<<'PHP'
             use Kettasoft\Filterable\Filterable;
@@ -180,8 +172,7 @@ class LintFilterCommandTest extends TestCase
       ->expectsOutputToContain('L007');
   }
 
-  /** @test */
-  public function it_reports_l008_when_validation_rule_key_not_in_filters(): void
+  public function test_it_reports_l008_when_validation_rule_key_not_in_filters(): void
   {
     $fqcn = $this->declareFilter('OrphanRuleFilter', <<<'PHP'
             use Kettasoft\Filterable\Filterable;
@@ -199,23 +190,20 @@ class LintFilterCommandTest extends TestCase
       ->expectsOutputToContain('L008');
   }
 
-  /** @test */
-  public function it_fails_when_filter_class_cannot_be_resolved(): void
+  public function test_it_fails_when_filter_class_cannot_be_resolved(): void
   {
     $this->artisan('filterable:lint', ['filter' => 'CompletelyNonExistentXyz'])
       ->assertFailed();
   }
 
-  /** @test */
-  public function it_passes_without_argument_when_no_filters_exist(): void
+  public function test_it_passes_without_argument_when_no_filters_exist(): void
   {
     // getFilters() scans app/Http/Filters — returns [] in test env
     $this->artisan('filterable:lint')
       ->assertSuccessful();
   }
 
-  /** @test */
-  public function strict_mode_fails_on_warnings(): void
+  public function test_strict_mode_fails_on_warnings(): void
   {
     $fqcn = $this->declareFilter('StrictEmptyFilter', <<<'PHP'
             use Kettasoft\Filterable\Filterable;
@@ -235,8 +223,7 @@ class LintFilterCommandTest extends TestCase
     ])->assertFailed();
   }
 
-  /** @test */
-  public function it_lints_multiple_classes_when_no_argument_given(): void
+  public function test_it_lints_multiple_classes_when_no_argument_given(): void
   {
     // Declare two filters so getFilters() can find them (requires app_path setup)
     // In the test environment getFilters() returns [] from the empty app/Http/Filters,
@@ -250,9 +237,8 @@ class LintFilterCommandTest extends TestCase
    * Fix 1 — snake_case key in $filters resolves to camelCase method name.
    * 'user_id' → 'userId', so userId() should be a valid filter method.
    *
-   * @test
    */
-  public function it_passes_when_snake_case_key_maps_to_camel_case_method(): void
+  public function test_it_passes_when_snake_case_key_maps_to_camel_case_method(): void
   {
     $fqcn = $this->declareFilter('SnakeCaseKeyFilter', <<<'PHP'
             use Kettasoft\Filterable\Filterable;
@@ -270,9 +256,8 @@ class LintFilterCommandTest extends TestCase
   /**
    * Fix 1 (negative) — snake_case key whose camelCase method is missing → L003.
    *
-   * @test
    */
-  public function it_reports_l003_when_snake_case_key_has_no_camel_case_method(): void
+  public function test_it_reports_l003_when_snake_case_key_has_no_camel_case_method(): void
   {
     $fqcn = $this->declareFilter('MissingCamelFilter', <<<'PHP'
             use Kettasoft\Filterable\Filterable;
@@ -291,9 +276,8 @@ class LintFilterCommandTest extends TestCase
    * Fix 1 — L004 should NOT fire for a method that is reachable via snake_case key.
    * i.e. method 'userId' is reachable from key 'user_id', so no L004.
    *
-   * @test
    */
-  public function it_does_not_report_l004_for_method_reachable_via_snake_case_key(): void
+  public function test_it_does_not_report_l004_for_method_reachable_via_snake_case_key(): void
   {
     $fqcn = $this->declareFilter('SnakeCaseL004Filter', <<<'PHP'
             use Kettasoft\Filterable\Filterable;
@@ -314,9 +298,8 @@ class LintFilterCommandTest extends TestCase
   /**
    * Fix 2 — L003 fires when the method exists but has no Payload parameter.
    *
-   * @test
    */
-  public function it_reports_l003_when_method_exists_but_has_no_payload_param(): void
+  public function test_it_reports_l003_when_method_exists_but_has_no_payload_param(): void
   {
     $fqcn = $this->declareFilter('NoPayloadParamFilter', <<<'PHP'
             use Kettasoft\Filterable\Filterable;
@@ -334,9 +317,8 @@ class LintFilterCommandTest extends TestCase
   /**
    * Fix 2 — L003 fires when the method's first param is not typed as Payload.
    *
-   * @test
    */
-  public function it_reports_l003_when_method_first_param_is_wrong_type(): void
+  public function test_it_reports_l003_when_method_first_param_is_wrong_type(): void
   {
     $fqcn = $this->declareFilter('WrongParamTypeFilter', <<<'PHP'
             use Kettasoft\Filterable\Filterable;
@@ -354,9 +336,8 @@ class LintFilterCommandTest extends TestCase
   /**
    * Fix 3 — Constructor exception is caught and reported as L001 without crashing.
    *
-   * @test
    */
-  public function it_reports_l001_when_class_constructor_throws(): void
+  public function test_it_reports_l001_when_class_constructor_throws(): void
   {
     $fqcn = $this->declareFilter('ThrowingFilter', <<<'PHP'
             use Kettasoft\Filterable\Filterable;
@@ -376,9 +357,8 @@ class LintFilterCommandTest extends TestCase
    * L011 — method is named after the raw key instead of its camelCase equivalent.
    * e.g. key 'user_id' but method is 'user_id()' instead of 'userId()'.
    *
-   * @test
    */
-  public function it_reports_l011_when_method_uses_raw_key_name_instead_of_camel_case(): void
+  public function test_it_reports_l011_when_method_uses_raw_key_name_instead_of_camel_case(): void
   {
     $fqcn = $this->declareFilter('RawKeyMethodFilter', <<<'PHP'
             use Kettasoft\Filterable\Filterable;
@@ -398,9 +378,8 @@ class LintFilterCommandTest extends TestCase
    * L011 should NOT fire when key and method name are already identical (no transformation needed).
    * e.g. key 'status' → method 'status()' is correct.
    *
-   * @test
    */
-  public function it_does_not_report_l011_when_key_needs_no_camel_case_transformation(): void
+  public function test_it_does_not_report_l011_when_key_needs_no_camel_case_transformation(): void
   {
     $fqcn = $this->declareFilter('SimpleKeyFilter', <<<'PHP'
             use Kettasoft\Filterable\Filterable;

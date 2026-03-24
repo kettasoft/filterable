@@ -33,8 +33,7 @@ class FilterableEventSystemTest extends TestCase
         parent::tearDown();
     }
 
-    /** @test */
-    public function it_fires_initializing_event_when_filter_is_created()
+    public function test_it_fires_initializing_event_when_filter_is_created()
     {
         $eventFired = false;
 
@@ -48,8 +47,7 @@ class FilterableEventSystemTest extends TestCase
         $this->assertTrue($eventFired, 'filterable.initializing event should be fired');
     }
 
-    /** @test */
-    public function it_fires_resolved_event_after_initialization()
+    public function test_it_fires_resolved_event_after_initialization()
     {
         $eventFired = false;
 
@@ -65,8 +63,7 @@ class FilterableEventSystemTest extends TestCase
         $this->assertTrue($eventFired, 'filterable.resolved event should be fired');
     }
 
-    /** @test */
-    public function it_fires_applied_event_when_filters_are_applied_successfully()
+    public function test_it_fires_applied_event_when_filters_are_applied_successfully()
     {
         $eventFired = false;
 
@@ -80,8 +77,7 @@ class FilterableEventSystemTest extends TestCase
         $this->assertTrue($eventFired, 'filterable.applied event should be fired');
     }
 
-    /** @test */
-    public function it_fires_finished_event_at_the_end_of_filtering()
+    public function test_it_fires_finished_event_at_the_end_of_filtering()
     {
         $eventFired = false;
 
@@ -94,8 +90,7 @@ class FilterableEventSystemTest extends TestCase
         $this->assertTrue($eventFired, 'filterable.finished event should be fired');
     }
 
-    /** @test */
-    public function it_fires_failed_event_when_exception_occurs()
+    public function test_it_fires_failed_event_when_exception_occurs()
     {
         $eventFired = false;
         $exceptionCaught = false;
@@ -116,8 +111,7 @@ class FilterableEventSystemTest extends TestCase
         $this->assertTrue($exceptionCaught, 'Exception should be propagated after event');
     }
 
-    /** @test */
-    public function it_fires_finished_event_even_when_exception_occurs()
+    public function test_it_fires_finished_event_even_when_exception_occurs()
     {
         $finishedFired = false;
 
@@ -134,8 +128,7 @@ class FilterableEventSystemTest extends TestCase
         $this->assertTrue($finishedFired, 'filterable.finished should fire even on failure');
     }
 
-    /** @test */
-    public function it_calls_observer_for_specific_filter_class()
+    public function test_it_calls_observer_for_specific_filter_class()
     {
         $observerCalled = false;
 
@@ -150,8 +143,7 @@ class FilterableEventSystemTest extends TestCase
         $this->assertTrue($observerCalled, 'Observer should be called for PostFilter');
     }
 
-    /** @test */
-    public function it_does_not_call_observer_for_different_filter_class()
+    public function test_it_does_not_call_observer_for_different_filter_class()
     {
         $observerCalled = false;
 
@@ -167,8 +159,7 @@ class FilterableEventSystemTest extends TestCase
         $this->assertCount(1, $observers);
     }
 
-    /** @test */
-    public function it_allows_multiple_listeners_for_same_event()
+    public function test_it_allows_multiple_listeners_for_same_event()
     {
         $firstCalled = false;
         $secondCalled = false;
@@ -187,8 +178,7 @@ class FilterableEventSystemTest extends TestCase
         $this->assertTrue($secondCalled, 'Second listener should be called');
     }
 
-    /** @test */
-    public function it_handles_listener_exceptions_gracefully()
+    public function test_it_handles_listener_exceptions_gracefully()
     {
         $secondListenerCalled = false;
 
@@ -209,8 +199,7 @@ class FilterableEventSystemTest extends TestCase
         $this->assertTrue($secondListenerCalled, 'Other listeners should still execute');
     }
 
-    /** @test */
-    public function it_can_flush_all_listeners()
+    public function test_it_can_flush_all_listeners()
     {
         Filterable::on('filterable.applied', fn($filterable) => null);
         Filterable::observe(PostFilter::class, fn() => null);
@@ -224,8 +213,7 @@ class FilterableEventSystemTest extends TestCase
         $this->assertCount(0, Filterable::getObservers(PostFilter::class));
     }
 
-    /** @test */
-    public function it_can_disable_events_for_specific_instance()
+    public function test_it_can_disable_events_for_specific_instance()
     {
         $eventFired = false;
 
@@ -241,8 +229,7 @@ class FilterableEventSystemTest extends TestCase
         $this->assertFalse($eventFired, 'Events should be disabled for this instance');
     }
 
-    /** @test */
-    public function it_can_enable_events_for_specific_instance()
+    public function test_it_can_enable_events_for_specific_instance()
     {
         // Disable globally
         config(['filterable.events.enabled' => false]);
@@ -261,8 +248,7 @@ class FilterableEventSystemTest extends TestCase
         $this->assertTrue($eventFired, 'Events should be enabled for this instance');
     }
 
-    /** @test */
-    public function it_respects_global_events_disabled_configuration()
+    public function test_it_respects_global_events_disabled_configuration()
     {
         config(['filterable.events.enabled' => false]);
 
@@ -277,8 +263,7 @@ class FilterableEventSystemTest extends TestCase
         $this->assertFalse($eventFired, 'Events should be disabled globally');
     }
 
-    /** @test */
-    public function it_can_retrieve_registered_listeners()
+    public function test_it_can_retrieve_registered_listeners()
     {
         $callback1 = fn($filterable) => null;
         $callback2 = fn($filterable) => null;
@@ -293,8 +278,7 @@ class FilterableEventSystemTest extends TestCase
         $this->assertContains($callback2, $listeners);
     }
 
-    /** @test */
-    public function it_can_retrieve_registered_observers()
+    public function test_it_can_retrieve_registered_observers()
     {
         $callback1 = fn() => null;
         $callback2 = fn() => null;
@@ -309,8 +293,7 @@ class FilterableEventSystemTest extends TestCase
         $this->assertContains($callback2, $observers);
     }
 
-    /** @test */
-    public function it_fires_events_in_correct_order()
+    public function test_it_fires_events_in_correct_order()
     {
         $events = [];
 
@@ -340,8 +323,7 @@ class FilterableEventSystemTest extends TestCase
         );
     }
 
-    /** @test */
-    public function observer_receives_correct_event_names()
+    public function test_observer_receives_correct_event_names()
     {
         $receivedEvents = [];
 

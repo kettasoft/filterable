@@ -11,9 +11,8 @@ class FilterableToSqlTest extends TestCase
 {
   /**
    * It can generate sql string.
-   * @test
    */
-  public function it_can_generate_sql_string()
+  public function test_it_can_generate_sql_string()
   {
     $request = Request::create('/posts?status=pending');
     $filterable = filterable($request)->setAllowedFields(['status'])

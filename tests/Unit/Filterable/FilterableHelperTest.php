@@ -9,10 +9,9 @@ use Kettasoft\Filterable\Tests\TestCase;
 class FilterableHelperTest extends TestCase
 {
   /**
-   * It can creates filterable instance.
-   * @test
+   * It can create filterable instance.
    */
-  public function it_can_creates_filterable_instance()
+  public function test_it_can_create_filterable_instance()
   {
     $query = Post::query();
     $input = ['status' => 'pending'];

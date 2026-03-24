@@ -123,20 +123,18 @@ PHP;
     return file_get_contents($this->tmpFile);
   }
 
-    // ──────────────────────────────────────────────────────────────────────────
-    // Tests
-    // ──────────────────────────────────────────────────────────────────────────
+  // ──────────────────────────────────────────────────────────────────────────
+  // Tests
+  // ──────────────────────────────────────────────────────────────────────────
 
-  /** @test */
-  public function it_requires_the_name_option(): void
+  public function test_it_requires_the_name_option(): void
   {
     $this->artisan('filterable:add-method', [
       'filter' => $this->filterClass,
     ])->assertFailed();
   }
 
-  /** @test */
-  public function it_fails_when_name_is_empty(): void
+  public function test_it_fails_when_name_is_empty(): void
   {
     $this->artisan('filterable:add-method', [
       'filter'   => $this->filterClass,
@@ -144,8 +142,7 @@ PHP;
     ])->assertFailed();
   }
 
-  /** @test */
-  public function it_fails_for_invalid_method_name(): void
+  public function test_it_fails_for_invalid_method_name(): void
   {
     $this->artisan('filterable:add-method', [
       'filter' => $this->filterClass,
@@ -158,8 +155,7 @@ PHP;
     ])->assertFailed();
   }
 
-  /** @test */
-  public function it_fails_when_filter_class_is_not_found(): void
+  public function test_it_fails_when_filter_class_is_not_found(): void
   {
     $this->artisan('filterable:add-method', [
       'filter' => 'NonExistentFilter',
@@ -167,8 +163,7 @@ PHP;
     ])->assertFailed();
   }
 
-  /** @test */
-  public function it_adds_a_new_method_at_the_end_of_the_class(): void
+  public function test_it_adds_a_new_method_at_the_end_of_the_class(): void
   {
     $this->artisan('filterable:add-method', [
       'filter' => $this->filterClass,
@@ -180,8 +175,7 @@ PHP;
     $this->assertStringContainsString('function isActive(', $content);
   }
 
-  /** @test */
-  public function it_inserts_after_a_specified_existing_method(): void
+  public function test_it_inserts_after_a_specified_existing_method(): void
   {
     $this->artisan('filterable:add-method', [
       'filter'  => $this->filterClass,
@@ -199,8 +193,7 @@ PHP;
     $this->assertLessThan($posTitle, $posCategory, 'category should be inserted before title');
   }
 
-  /** @test */
-  public function it_fails_when_after_method_does_not_exist(): void
+  public function test_it_fails_when_after_method_does_not_exist(): void
   {
     $this->artisan('filterable:add-method', [
       'filter'  => $this->filterClass,
@@ -212,8 +205,7 @@ PHP;
     $this->assertStringNotContainsString('function newMethod(', $this->content());
   }
 
-  /** @test */
-  public function it_does_not_duplicate_an_existing_method(): void
+  public function test_it_does_not_duplicate_an_existing_method(): void
   {
     $this->artisan('filterable:add-method', [
       'filter' => $this->filterClass,
@@ -225,8 +217,7 @@ PHP;
     $this->assertSame(1, $count);
   }
 
-  /** @test */
-  public function it_adds_method_name_to_filters_array(): void
+  public function test_it_adds_method_name_to_filters_array(): void
   {
     $this->artisan('filterable:add-method', [
       'filter' => $this->filterClass,
@@ -236,8 +227,7 @@ PHP;
     $this->assertStringContainsString("'publishedAt'", $this->content());
   }
 
-  /** @test */
-  public function it_does_not_duplicate_key_in_filters_array(): void
+  public function test_it_does_not_duplicate_key_in_filters_array(): void
   {
     $this->artisan('filterable:add-method', [
       'filter' => $this->filterClass,
@@ -254,8 +244,7 @@ PHP;
     $this->assertSame(1, $count, "'status' should not be duplicated in the \$filters array");
   }
 
-  /** @test */
-  public function generated_method_uses_correct_stub_placeholder(): void
+  public function test_generated_method_uses_correct_stub_placeholder(): void
   {
     $this->artisan('filterable:add-method', [
       'filter' => $this->filterClass,
@@ -269,8 +258,7 @@ PHP;
     $this->assertStringContainsString('function sortBy(Payload $payload)', $content);
   }
 
-  /** @test */
-  public function it_inserts_new_method_before_last_closing_brace_when_no_after(): void
+  public function test_it_inserts_new_method_before_last_closing_brace_when_no_after(): void
   {
     $this->artisan('filterable:add-method', [
       'filter' => $this->filterClass,

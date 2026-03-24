@@ -11,9 +11,8 @@ class FilterRulesValidationTest extends TestCase
 {
   /**
    * It validate incomming request before filtering.
-   * @test
    */
-  public function it_validate_incomming_reuqest_before_filtering()
+  public function test_it_validate_incomming_reuqest_before_filtering()
   {
     $class = new class extends Filterable
     {

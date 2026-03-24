@@ -11,8 +11,7 @@ class FilterableRuntimeFiltersTest extends TestCase
   //  withoutFilters()
   // ─────────────────────────────────────────────────────────────
 
-  /** @test */
-  public function it_removes_a_single_filter_key_at_runtime()
+  public function test_it_removes_a_single_filter_key_at_runtime()
   {
     $filter = filterable()->when(true, function (Filterable $f) {
       $f->setData(['title' => 'foo', 'status' => 'active', 'views' => 10]);
@@ -28,8 +27,7 @@ class FilterableRuntimeFiltersTest extends TestCase
     $this->assertSame(['title', 'views'], array_values($filter->getFilterAttributes()));
   }
 
-  /** @test */
-  public function it_removes_multiple_filter_keys_at_runtime()
+  public function test_it_removes_multiple_filter_keys_at_runtime()
   {
     $filter = new class extends Filterable {
       protected $filters = ['title', 'status', 'views', 'category'];
@@ -40,8 +38,7 @@ class FilterableRuntimeFiltersTest extends TestCase
     $this->assertSame(['title', 'category'], array_values($filter->getFilterAttributes()));
   }
 
-  /** @test */
-  public function it_does_nothing_when_removing_a_key_that_does_not_exist()
+  public function test_it_does_nothing_when_removing_a_key_that_does_not_exist()
   {
     $filter = new class extends Filterable {
       protected $filters = ['title', 'status'];
@@ -52,8 +49,7 @@ class FilterableRuntimeFiltersTest extends TestCase
     $this->assertSame(['title', 'status'], array_values($filter->getFilterAttributes()));
   }
 
-  /** @test */
-  public function it_results_in_empty_filters_when_all_keys_are_removed()
+  public function test_it_results_in_empty_filters_when_all_keys_are_removed()
   {
     $filter = new class extends Filterable {
       protected $filters = ['title', 'status'];
@@ -64,8 +60,7 @@ class FilterableRuntimeFiltersTest extends TestCase
     $this->assertEmpty($filter->getFilterAttributes());
   }
 
-  /** @test */
-  public function without_filters_returns_the_same_instance_for_chaining()
+  public function test_without_filters_returns_the_same_instance_for_chaining()
   {
     $filter = new class extends Filterable {
       protected $filters = ['title', 'status'];
@@ -80,8 +75,7 @@ class FilterableRuntimeFiltersTest extends TestCase
   //  withFilters()
   // ─────────────────────────────────────────────────────────────
 
-  /** @test */
-  public function it_keeps_only_the_specified_filter_keys()
+  public function test_it_keeps_only_the_specified_filter_keys()
   {
     $filter = new class extends Filterable {
       protected $filters = ['title', 'status', 'views', 'category'];
@@ -92,8 +86,7 @@ class FilterableRuntimeFiltersTest extends TestCase
     $this->assertSame(['title', 'views'], array_values($filter->getFilterAttributes()));
   }
 
-  /** @test */
-  public function it_keeps_a_single_filter_key()
+  public function test_it_keeps_a_single_filter_key()
   {
     $filter = new class extends Filterable {
       protected $filters = ['title', 'status', 'views'];
@@ -104,8 +97,7 @@ class FilterableRuntimeFiltersTest extends TestCase
     $this->assertSame(['status'], array_values($filter->getFilterAttributes()));
   }
 
-  /** @test */
-  public function it_results_in_empty_filters_when_no_keys_match()
+  public function test_it_results_in_empty_filters_when_no_keys_match()
   {
     $filter = new class extends Filterable {
       protected $filters = ['title', 'status'];
@@ -116,8 +108,7 @@ class FilterableRuntimeFiltersTest extends TestCase
     $this->assertEmpty($filter->getFilterAttributes());
   }
 
-  /** @test */
-  public function it_keeps_all_filters_when_all_keys_are_specified()
+  public function test_it_keeps_all_filters_when_all_keys_are_specified()
   {
     $filter = new class extends Filterable {
       protected $filters = ['title', 'status', 'views'];
@@ -128,8 +119,7 @@ class FilterableRuntimeFiltersTest extends TestCase
     $this->assertSame(['title', 'status', 'views'], array_values($filter->getFilterAttributes()));
   }
 
-  /** @test */
-  public function with_filters_returns_the_same_instance_for_chaining()
+  public function test_with_filters_returns_the_same_instance_for_chaining()
   {
     $filter = new class extends Filterable {
       protected $filters = ['title', 'status', 'views'];
@@ -144,8 +134,7 @@ class FilterableRuntimeFiltersTest extends TestCase
   //  withFilters() + withoutFilters() combined
   // ─────────────────────────────────────────────────────────────
 
-  /** @test */
-  public function it_can_chain_with_filters_and_without_filters()
+  public function test_it_can_chain_with_filters_and_without_filters()
   {
     $filter = new class extends Filterable {
       protected $filters = ['title', 'status', 'views', 'category'];
@@ -162,8 +151,7 @@ class FilterableRuntimeFiltersTest extends TestCase
   //  clone()
   // ─────────────────────────────────────────────────────────────
 
-  /** @test */
-  public function it_returns_a_new_instance_on_clone()
+  public function test_it_returns_a_new_instance_on_clone()
   {
     $original = new class extends Filterable {
       protected $filters = ['title', 'status'];
@@ -174,8 +162,7 @@ class FilterableRuntimeFiltersTest extends TestCase
     $this->assertNotSame($original, $cloned);
   }
 
-  /** @test */
-  public function cloned_instance_is_same_class_as_original()
+  public function test_cloned_instance_is_same_class_as_original()
   {
     $original = new class extends Filterable {
       protected $filters = ['title', 'status'];
@@ -186,8 +173,7 @@ class FilterableRuntimeFiltersTest extends TestCase
     $this->assertInstanceOf($original::class, $cloned);
   }
 
-  /** @test */
-  public function mutations_on_clone_do_not_affect_original()
+  public function test_mutations_on_clone_do_not_affect_original()
   {
     $original = new class extends Filterable {
       protected $filters = ['title', 'status', 'views'];
@@ -202,8 +188,7 @@ class FilterableRuntimeFiltersTest extends TestCase
     $this->assertSame(['title'], array_values($cloned->getFilterAttributes()));
   }
 
-  /** @test */
-  public function mutations_on_original_do_not_affect_clone()
+  public function test_mutations_on_original_do_not_affect_clone()
   {
     $original = new class extends Filterable {
       protected $filters = ['title', 'status', 'views'];
@@ -218,8 +203,7 @@ class FilterableRuntimeFiltersTest extends TestCase
     $this->assertSame(['title'], array_values($original->getFilterAttributes()));
   }
 
-  /** @test */
-  public function cloned_instance_preserves_data()
+  public function test_cloned_instance_preserves_data()
   {
     $original = new class extends Filterable {
       protected $filters = ['title', 'status'];
@@ -232,8 +216,7 @@ class FilterableRuntimeFiltersTest extends TestCase
     $this->assertSame($original->getData(), $cloned->getData());
   }
 
-  /** @test */
-  public function clone_data_changes_are_isolated_from_original()
+  public function test_clone_data_changes_are_isolated_from_original()
   {
     $original = new class extends Filterable {
       protected $filters = ['title', 'status'];
@@ -248,8 +231,7 @@ class FilterableRuntimeFiltersTest extends TestCase
     $this->assertSame(['title' => 'World'], $cloned->getData());
   }
 
-  /** @test */
-  public function clone_allowed_fields_are_isolated_from_original()
+  public function test_clone_allowed_fields_are_isolated_from_original()
   {
     $original = new class extends Filterable {
       protected $filters = ['title', 'status'];
@@ -263,8 +245,7 @@ class FilterableRuntimeFiltersTest extends TestCase
     $this->assertSame(['title', 'status'], $cloned->getAllowedFields());
   }
 
-  /** @test */
-  public function it_can_clone_multiple_times_independently()
+  public function test_it_can_clone_multiple_times_independently()
   {
     $base = new class extends Filterable {
       protected $filters = ['title', 'status', 'views'];
@@ -282,8 +263,7 @@ class FilterableRuntimeFiltersTest extends TestCase
     $this->assertSame(['status' => 'published'], $b->getData());
   }
 
-  /** @test */
-  public function clone_can_be_chained_with_without_filters_and_with_filters()
+  public function test_clone_can_be_chained_with_without_filters_and_with_filters()
   {
     $base = new class extends Filterable {
       protected $filters = ['title', 'status', 'views', 'category'];

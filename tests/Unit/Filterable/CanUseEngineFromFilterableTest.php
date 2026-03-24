@@ -13,9 +13,8 @@ class CanUseEngineFromFilterableTest extends TestCase
 {
   /**
    * It can filterable class use ruleset engine instance
-   * @test
    */
-  public function it_can_filterable_class_use_engine_instance()
+  public function test_it_can_filterable_class_use_engine_instance()
   {
     $filterable = Filterable::create()->useEngine('ruleset');
 
@@ -23,9 +22,8 @@ class CanUseEngineFromFilterableTest extends TestCase
   }
   /**
    * It can filterable class use invokable engine instance
-   * @test
    */
-  public function it_can_filterable_class_use_invokable_engine_instance()
+  public function test_it_can_filterable_class_use_invokable_engine_instance()
   {
     $filterable = Filterable::create()->useEngine('invokable');
 
@@ -33,9 +31,8 @@ class CanUseEngineFromFilterableTest extends TestCase
   }
   /**
    * It can filterable class use tree engine instance
-   * @test
    */
-  public function it_can_filterable_class_use_tree_engine_instance()
+  public function test_it_can_filterable_class_use_tree_engine_instance()
   {
     $filterable = Filterable::create()->useEngine('tree');
 
@@ -43,9 +40,8 @@ class CanUseEngineFromFilterableTest extends TestCase
   }
   /**
    * It can filterable class use expression engine instance
-   * @test
    */
-  public function it_can_filterable_class_use_expression_engine_instance()
+  public function test_it_can_filterable_class_use_expression_engine_instance()
   {
     $filterable = Filterable::create()->useEngine('expression');
 

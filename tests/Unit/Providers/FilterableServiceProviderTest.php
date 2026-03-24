@@ -31,8 +31,7 @@ class FilterableServiceProviderTest extends TestCase
         $this->provider = new FilterableServiceProvider($this->app);
     }
 
-    /** @test */
-    public function it_registers_filterable_as_singleton(): void
+    public function test_it_registers_filterable_as_singleton(): void
     {
         $this->provider->register();
 
@@ -45,8 +44,7 @@ class FilterableServiceProviderTest extends TestCase
         $this->assertSame($instance1, $instance2, 'Filterable should be registered as singleton');
     }
 
-    /** @test */
-    public function it_registers_filterable_class_for_dependency_injection(): void
+    public function test_it_registers_filterable_class_for_dependency_injection(): void
     {
         $this->provider->register();
 
@@ -57,8 +55,7 @@ class FilterableServiceProviderTest extends TestCase
         $this->assertInstanceOf(Filterable::class, $instance);
     }
 
-    /** @test */
-    public function it_registers_database_profiler_storage_by_default(): void
+    public function test_it_registers_database_profiler_storage_by_default(): void
     {
         config(['filterable.profiler.store' => 'database']);
 
@@ -69,8 +66,7 @@ class FilterableServiceProviderTest extends TestCase
         $this->assertInstanceOf(DatabaseProfilerStorage::class, $storage);
     }
 
-    /** @test */
-    public function it_registers_file_profiler_storage_when_configured(): void
+    public function test_it_registers_file_profiler_storage_when_configured(): void
     {
         config(['filterable.profiler.store' => 'log']);
 
@@ -81,8 +77,7 @@ class FilterableServiceProviderTest extends TestCase
         $this->assertInstanceOf(FileProfilerStorage::class, $storage);
     }
 
-    /** @test */
-    public function it_throws_exception_for_invalid_profiler_storage_driver(): void
+    public function test_it_throws_exception_for_invalid_profiler_storage_driver(): void
     {
         config(['filterable.profiler.store' => 'invalid_driver']);
 
@@ -94,8 +89,7 @@ class FilterableServiceProviderTest extends TestCase
         $this->app->make(ProfilerStorageContract::class);
     }
 
-    /** @test */
-    public function it_registers_commands_when_running_in_console(): void
+    public function test_it_registers_commands_when_running_in_console(): void
     {
         $app = \Mockery::mock($this->app)->makePartial();
         $app->shouldReceive('runningInConsole')->andReturn(true);
@@ -108,8 +102,7 @@ class FilterableServiceProviderTest extends TestCase
         $this->assertArrayHasKey('filterable:make-filter', $commands);
     }
 
-    /** @test */
-    public function it_provides_expected_services(): void
+    public function test_it_provides_expected_services(): void
     {
         $expectedServices = [
             'filterable',
@@ -124,14 +117,12 @@ class FilterableServiceProviderTest extends TestCase
         $this->assertEquals($expectedServices, $providedServices);
     }
 
-    /** @test */
-    public function it_is_not_deferred(): void
+    public function test_it_is_not_deferred(): void
     {
         $this->assertFalse($this->provider->isDeferred());
     }
 
-    /** @test */
-    public function it_merges_configuration_correctly(): void
+    public function test_it_merges_configuration_correctly(): void
     {
         $this->provider->register();
 
@@ -140,8 +131,7 @@ class FilterableServiceProviderTest extends TestCase
         $this->assertIsArray(config('filterable'));
     }
 
-    /** @test */
-    public function filterable_receives_request_instance(): void
+    public function test_filterable_receives_request_instance(): void
     {
         // Create a real Request instance with empty data
         $request = Request::create('/test', 'GET', []);
@@ -155,10 +145,9 @@ class FilterableServiceProviderTest extends TestCase
         $this->assertSame($request, $filterable->getRequest());
     }
 
-    /** @test */
-    public function extension_hooks_are_called_when_available(): void
+    public function test_extension_hooks_are_called_when_available(): void
     {
-        $provider = new class ($this->app) extends FilterableServiceProvider {
+        $provider = new class($this->app) extends FilterableServiceProvider {
             public bool $customEnginesRegistered = false;
             public bool $customSanitizersRegistered = false;
             public bool $additionalServicesRegistered = false;

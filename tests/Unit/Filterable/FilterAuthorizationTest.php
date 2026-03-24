@@ -11,9 +11,8 @@ class FilterAuthorizationTest extends TestCase
 {
   /**
    * It cant filtering without authorization.
-   * @test
    */
-  public function it_cant_filtering_without_authorization()
+  public function test_it_cant_filtering_without_authorization()
   {
     $class = new class extends Filterable {
       public function authorize(): bool
