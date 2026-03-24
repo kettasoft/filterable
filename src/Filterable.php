@@ -986,6 +986,15 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
   }
 
   /**
+   * Create a clone of the current instance.
+   * @return static
+   */
+  public function clone(): static
+  {
+    return clone $this;
+  }
+
+  /**
    * Dynamically retrieve attributes from the request.
    * @param mixed $property
    * @return mixed
