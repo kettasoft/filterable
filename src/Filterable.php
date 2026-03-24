@@ -586,6 +586,23 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
   }
 
   /**
+   * Create a new Filterable instance bound to the given model, without requiring
+   * the model to use the HasFilterable trait.
+   *
+   * @param \Illuminate\Database\Eloquent\Model|string $model  A model instance or class name.
+   * @param \Illuminate\Http\Request|null $request Optional request override.
+   * @return static
+   * @link https://kettasoft.github.io/filterable/features/for-static-method
+   */
+  public static function for(Model|string $model, Request|null $request = null): static
+  {
+    $instance = static::create($request);
+    $instance->setModel($model);
+
+    return $instance;
+  }
+
+  /**
    * Apply a callback conditionally and return a new modified instance.
    * @param bool $condition
    * @param callable(static): void $callback
