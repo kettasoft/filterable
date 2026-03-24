@@ -683,6 +683,28 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
   }
 
   /**
+   * Remove specific filters from the registered filters list.
+   * @param array $keys
+   * @return static
+   */
+  public function withoutFilters(array $keys): static
+  {
+    $this->filters = array_diff($this->filters, $keys);
+    return $this;
+  }
+
+  /**
+   * Keep only specific filters from the registered filters list.
+   * @param array $keys
+   * @return static
+   */
+  public function withFilters(array $keys): static
+  {
+    $this->filters = array_intersect($this->filters, $keys);
+    return $this;
+  }
+
+  /**
    * Set manual data injection.
    * @param array $data
    * @param bool $override
