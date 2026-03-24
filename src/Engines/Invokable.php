@@ -2,17 +2,17 @@
 
 namespace Kettasoft\Filterable\Engines;
 
-use Illuminate\Support\Str;
-use Kettasoft\Filterable\Filterable;
 use Illuminate\Contracts\Database\Eloquent\Builder;
-use Kettasoft\Filterable\Support\Payload;
+use Illuminate\Support\Str;
 use Illuminate\Support\Traits\ForwardsCalls;
-use Kettasoft\Filterable\Engines\Foundation\Engine;
-use Kettasoft\Filterable\Engines\Foundation\ClauseFactory;
-use Kettasoft\Filterable\Engines\Foundation\Parsers\Dissector;
 use Kettasoft\Filterable\Engines\Foundation\Attributes\AttributeContext;
 use Kettasoft\Filterable\Engines\Foundation\Attributes\AttributePipeline;
-use Kettasoft\Filterable\Engines\Foundation\Attributes\AttributeRegistry;
+use Kettasoft\Filterable\Engines\Foundation\ClauseFactory;
+use Kettasoft\Filterable\Engines\Foundation\Engine;
+use Kettasoft\Filterable\Engines\Foundation\Parsers\Dissector;
+use Kettasoft\Filterable\Exceptions\FilterableMethodConflictException;
+use Kettasoft\Filterable\Filterable;
+use Kettasoft\Filterable\Support\Payload;
 
 class Invokable extends Engine
 {
@@ -52,11 +52,6 @@ class Invokable extends Engine
 
         $method = $this->getMethodName($filter);
 
-        // Check for method name conflicts with Filterable core methods.
-        if (method_exists(Filterable::class, $method)) {
-          throw new \RuntimeException(sprintf("Filter method [%s] conflicts with core Filterable method.", [$method]));
-        }
-
         $this->applyFilterMethod($filter, $method, $payload);
 
         $this->commit($method, $clause);
@@ -75,6 +70,11 @@ class Invokable extends Engine
    */
   protected function applyFilterMethod(string $key, string $method, Payload $payload): void
   {
+    // Check for method name conflicts with Filterable core methods.
+    if (method_exists(Filterable::class, $method)) {
+      throw new FilterableMethodConflictException($method);
+    }
+
     if (! method_exists($this->context, $method)) {
       return;
     }
