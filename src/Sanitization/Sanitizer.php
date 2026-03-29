@@ -5,7 +5,7 @@ namespace Kettasoft\Filterable\Sanitization;
 use Illuminate\Support\Traits\ForwardsCalls;
 use Kettasoft\Filterable\Sanitization\HandlerFactory;
 
-class Sanitizer implements \Countable
+class Sanitizer implements \Countable, \ArrayAccess, \IteratorAggregate
 {
   use ForwardsCalls;
 
@@ -72,5 +72,94 @@ class Sanitizer implements \Countable
   {
     $this->sanitizers = $override ? $sanitizers : array_merge($this->sanitizers, $sanitizers);
     return $this;
+  }
+
+  /**
+   * Determine if a sanitizer exists for the given field.
+   * @param string $field
+   * @return bool
+   */
+  public function has(string $field): bool
+  {
+    return array_key_exists($field, $this->sanitizers);
+  }
+
+  /**
+   * Get the sanitizer resolver for the given field.
+   * @param string $field
+   * @return mixed|null
+   */
+  public function get(string $field): mixed
+  {
+    return $this->sanitizers[$field] ?? null;
+  }
+
+  /**
+   * Remove the sanitizer for the given field.
+   * @param string $field
+   * @return void
+   */
+  public function remove(string $field): void
+  {
+    unset($this->sanitizers[$field]);
+  }
+
+  /**
+   * Clear all registered sanitizers.
+   * @return void
+   */
+  public function clear(): void
+  {
+    $this->sanitizers = [];
+  }
+
+  /**
+   * ArrayAccess: Check if a sanitizer exists for the given field.
+   * @param string $field
+   * @return bool
+   */
+  public function offsetExists($field): bool
+  {
+    return $this->has($field);
+  }
+
+  /**
+   * ArrayAccess: Get the sanitizer resolver for the given field.
+   * @param string $field
+   * @return mixed|null
+   */
+  public function offsetGet($field): mixed
+  {
+    return $this->get($field);
+  }
+
+  /**
+   * ArrayAccess: Set the sanitizer resolver for the given field.
+   * @param string $field
+   * @param mixed $value
+   * @return void
+   */
+  public function offsetSet($field, $value): void
+  {
+    $this->sanitizers[$field] = $value;
+  }
+
+  /**
+   * ArrayAccess: Unset the sanitizer for the given field.
+   * @param string $field
+   * @return void
+   */
+  public function offsetUnset($field): void
+  {
+    $this->remove($field);
+  }
+
+  /**
+   * IteratorAggregate: Get an iterator for the registered sanitizers.
+   * @return \ArrayIterator
+   */
+  public function getIterator(): \ArrayIterator
+  {
+    return new \ArrayIterator($this->sanitizers);
   }
 }
