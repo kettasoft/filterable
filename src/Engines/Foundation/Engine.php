@@ -94,11 +94,19 @@ abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Stricta
     return config("filterable.engines.{$this->getEngineName()}.strict", false);
   }
 
+  /**
+   * Check if empty values are ignored from engine config.
+   * @return bool
+   */
   public function isIgnoredEmptyValues(): bool
   {
     return $this->isIgnoredEmptyValuesFromConfig() || $this->context->hasIgnoredEmptyValues();
   }
 
+  /**
+   * Get allowed fields to filtering.
+   * @return array
+   */
   public function getAllowedFields(): array
   {
     return array_merge($this->getAllowedFieldsFromConfig(), $this->context->getAllowedFields());
