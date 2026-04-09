@@ -9,6 +9,7 @@ use Kettasoft\Filterable\Engines\Foundation\Attributes\AttributeContext;
 use Kettasoft\Filterable\Engines\Foundation\Attributes\AttributePipeline;
 use Kettasoft\Filterable\Engines\Foundation\ClauseFactory;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
+use Kettasoft\Filterable\Engines\Foundation\Hooks\Concerns\HasHooks;
 use Kettasoft\Filterable\Engines\Foundation\Parsers\Dissector;
 use Kettasoft\Filterable\Exceptions\FilterableMethodConflictException;
 use Kettasoft\Filterable\Filterable;
@@ -16,7 +17,8 @@ use Kettasoft\Filterable\Support\Payload;
 
 class Invokable extends Engine
 {
-  use ForwardsCalls;
+  use HasHooks,
+    ForwardsCalls;
 
   /**
    * Engine name.
@@ -52,7 +54,21 @@ class Invokable extends Engine
 
         $method = $this->getMethodName($filter);
 
+        // ── Empty value hook ──────────────────────────────────────────────
+        if (! $payload->isNotNullOrEmpty()) {
+          $this->runEmptyHook($filter, $payload);
+        }
+
+        // ── Field-level before hook ───────────────────────────────────────
+        if (! $this->runBefore($filter, $payload)) {
+          return;
+        }
+
+        // ── Main filter method ────────────────────────────────────────────
         $this->applyFilterMethod($filter, $method, $payload);
+
+        // ── Field-level after hook ────────────────────────────────────────
+        $this->runAfter($filter, $payload);
 
         $this->commit($method, $clause);
       });
@@ -76,6 +92,7 @@ class Invokable extends Engine
     }
 
     if (! method_exists($this->context, $method)) {
+      $this->runSkip($key, $payload);
       return;
     }
 

@@ -261,6 +261,83 @@ return [
                 'notnull' => 'is not null',
                 'between' => 'between',
             ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Lifecycle Hooks
+            |--------------------------------------------------------------------------
+            |
+            | Controls the lifecycle hook system for the Invokable engine.
+            | Hooks allow you to run logic before/after each filter method
+            | without modifying the method itself.
+            |
+            | Note: globally-scoped hooks (initially / finally) already exist
+            | on the base Filterable class and apply across all engines.
+            | The hooks here are specific to individual filter method invocations.
+            |
+            */
+            'hooks' => [
+
+                /*
+                | Master switch. When false, NO hooks will fire regardless of
+                | other settings below.
+                */
+                'enabled' => true,
+
+                /*
+                | Field-level hooks: before{Field}(Payload) / after{Field}(Payload)
+                | These fire before/after a SPECIFIC filter method.
+                | e.g. beforeTitle(Payload $payload), afterStatus(Payload $payload)
+                */
+                'field_hooks' => true,
+
+                /*
+                | Prefixes for hook methods.
+                | These are used to dynamically generate method names for hooks
+                | ------------------------------------------------------
+                | If 'before' is enabled, it will look for "before{Field}(Payload $payload)" before executing the filter method.
+                | If 'after' is enabled, it will look for "after{Field}(Payload $payload)" after executing the filter method.
+                | If 'skip' is enabled, it will look for "onSkip{Field}(Payload $payload)" when a filter key is present but the method does not exist.
+                | -------------------------------------------------------
+                | If 'empty' is enabled, it will look for "onEmpty{Field}()" when a filter value is null or empty string.
+                */
+                'prefix' => [
+                    'before' => 'before',
+                    'after' => 'after',
+                    'skip' => 'onSkip',
+                    'empty' => 'onEmpty',
+                ],
+
+                /*
+                | Naming convention for hook methods.
+                | This controls how the field names are transformed when generating hook method names.
+                | Options:
+                | 'studly' (e.g. "created_at" => "CreatedAt"),
+                | 'camel' (e.g. "created_at" => "createdAt"),
+                | 'snake' (e.g. "created_at" => "created_at")
+                */
+                'naming' => 'camel', // e.g. "created_at" => "createdAt"
+
+                /*
+                | Skip hooks: onSkip{Field}(Payload)
+                | Called when a filter key is in $filters but the method does not exist.
+                | Useful for providing fallback query logic.
+                */
+                'skip_hooks' => true,
+
+                /*
+                | Empty hooks: onEmpty{Field}()
+                | Called when a filter value is null or an empty string.
+                | Only fires when ignore_empty_values is false.
+                */
+                'empty_hooks' => true,
+
+                /*
+                | When a before-hook returns (bool) false and this option is true,
+                | the corresponding filter method is skipped entirely.
+                */
+                'halt_on_false' => true,
+            ],
         ],
 
         /*

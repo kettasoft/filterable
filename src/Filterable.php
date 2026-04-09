@@ -18,6 +18,7 @@ use Kettasoft\Filterable\Engines\Foundation\Clause;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
 use Kettasoft\Filterable\Foundation\Sorting\Sorter;
 use Kettasoft\Filterable\Contracts\FilterableContext;
+use Kettasoft\Filterable\Engines\Exceptions\SkipExecution;
 use Kettasoft\Filterable\Engines\Factory\EngineManager;
 use Kettasoft\Filterable\Foundation\Contracts\Sortable;
 use Kettasoft\Filterable\Foundation\FilterableSettings;
@@ -166,6 +167,12 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
   protected $applied = [];
 
   /**
+   * Skipped payloads.
+   * @var array
+   */
+  protected $skipped = [];
+
+  /**
    * Create a new Filterable instance.
    * @param Request|null $request
    */
@@ -215,6 +222,22 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
       'engine' => $this->engine,
       'data' => $this->data,
     ]);
+  }
+
+  /**
+   * Skip the current filter.
+   * @param string $message
+   * @param mixed $clause
+   * @throws SkipExecution
+   * @return never
+   */
+  public function skip(string $message = 'Filter skipped', mixed $clause = null): void
+  {
+    $this->skipped[] = [
+      'clause' => $clause,
+    ];
+
+    throw new SkipExecution($message, $clause);
   }
 
   /**
@@ -657,7 +680,13 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
    */
   public function useEngine(Engine|string $engine): static
   {
-    $this->engine = EngineManager::generate($engine, $this);
+    $engine = EngineManager::generate($engine, $this);
+
+    if ($engine instanceof Invokable && static::class == self::class) {
+      throw new \Exception();
+    }
+
+    $this->engine = $engine;
 
     return $this;
   }
