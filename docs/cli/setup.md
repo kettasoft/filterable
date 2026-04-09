@@ -57,6 +57,15 @@ When executed, this command will:
     php artisan filterable:make-filter PostFilter --filters=author,title
     ```
 
+   If you need to generate a filter in a custom location, you can override the
+   default target at generation time:
+
+    ```bash
+    php artisan filterable:make-filter PostFilter \
+      --namespace="Modules\\Blog\\App\\Filters" \
+      --path="Modules/Blog/app/Filters"
+    ```
+
 ---
 
 ### **Example Output**
@@ -67,7 +76,7 @@ When executed, this command will:
 📁 Created directory: app/Http/Filters
 
 🎉 Setup complete! You can now create your first filter with:
-php artisan filterable:make PostFilter --filters=test
+php artisan filterable:make-filter PostFilter --filters=test
 ```
 
 ---
@@ -76,6 +85,7 @@ php artisan filterable:make PostFilter --filters=test
 
 -   Use the `--force` flag if you want to **re-publish** the configuration file and overwrite existing settings.
 -   The command automatically detects whether the `app/Http/Filters` directory already exists.
+-   `filterable:make-filter` uses the defaults from `config/filterable.php`, but you can override them per run with `--namespace` and `--path`.
 
 ---
 

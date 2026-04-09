@@ -8,7 +8,9 @@ return [
     | Eloquent Filter Settings
     |--------------------------------------------------------------------------
     |
-    | This is the namespace all you Eloquent Model Filters will reside
+    | This is the default namespace used when generating new filter classes.
+    | You can override it per command with:
+    | php artisan filterable:make-filter UserFilter --namespace="Modules\Blog\App\Filters"
     |
     */
     'namespace' => 'App\\Http\\Filters',
@@ -18,7 +20,9 @@ return [
     | Path of saving new filters
     |--------------------------------------------------------------------------
     |
-    | This is the namespace all you Eloquent Model Filters will reside
+    | This is the default directory used when creating new filter files.
+    | You can override it per command with:
+    | php artisan filterable:make-filter UserFilter --path="Modules/Blog/app/Filters"
     |
     */
     'save_filters_at' => app_path('Http/Filters'),
