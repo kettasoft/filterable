@@ -5,14 +5,15 @@ namespace Kettasoft\Filterable\Commands;
 use Illuminate\Support\Str;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Config;
 use Kettasoft\Filterable\Support\Stub;
 
 class MakeFilterCommand extends Command
 {
-  protected $signature = 'filterable:make-filter 
-                            {name : The filter class name} 
+  protected $signature = 'filterable:make-filter
+                            {name : The filter class name}
                             {--filters= : Comma-separated filter methods (e.g. status,title)}
+                            {--namespace= : Override the generated class namespace}
+                            {--path= : Override the directory where the filter file will be created}
                             {--force : Overwrite existing filter if it exists}';
 
   protected $description = 'Create a new Eloquent filter class';
@@ -20,19 +21,22 @@ class MakeFilterCommand extends Command
   public function handle()
   {
     $name = trim($this->argument('name'));
+    $class = $this->resolveClassName($name);
     $keys = $this->option('filters');
+    $savePath = $this->getFilterSavingPath();
+    $namespace = $this->getFilterNamespace();
+    $filePath = $savePath . "/{$class}.php";
 
     Stub::setBasePath(config('filterable.generator.stubs'));
 
     // Ensure directory exists
-    $savePath = $this->getFilterSavingPath();
     if (!File::exists($savePath)) {
       File::makeDirectory($savePath, 0755, true);
     }
 
     // Prevent overwriting existing files
-    if (File::exists($savePath . "/{$name}.php") && !$this->option('force')) {
-      $this->error("❌ Filter class '{$name}.php' already exists at {$savePath}.");
+    if (File::exists($filePath) && !$this->option('force')) {
+      $this->error("❌ Filter class '{$class}.php' already exists at {$savePath}.");
       $this->warn('Use the --force option to overwrite it.');
       return Command::FAILURE;
     }
@@ -40,13 +44,13 @@ class MakeFilterCommand extends Command
     // If no filters provided → create simple class
     if (!$keys) {
       Stub::create('filter.stub', [
-        'CLASS' => $name,
+        'CLASS' => $class,
         'FILTER_KEYS' => '',
         'METHODS' => '',
-        'NAMESPACE' => Config::get('filterable.filter_namespace', 'App\\Http\\Filters')
-      ])->saveTo($savePath, "{$name}.php");
+        'NAMESPACE' => $namespace,
+      ])->saveTo($savePath, "{$class}.php");
 
-      $this->info("✅ Filter class '{$name}.php' created successfully.");
+      $this->info("✅ Filter class '{$class}.php' created successfully.");
       return Command::SUCCESS;
     }
 
@@ -69,18 +73,71 @@ class MakeFilterCommand extends Command
 
     // Create final filter class
     Stub::create('filter.stub', [
-      'CLASS' => $name,
+      'CLASS' => $class,
       'METHODS' => implode("\n\n", $methods),
       'FILTER_KEYS' => "'" . implode("','", $keys) . "'",
-      'NAMESPACE' => Config::get('filterable.filter_namespace', 'App\\Http\\Filters')
-    ])->saveTo($savePath, "{$name}.php");
+      'NAMESPACE' => $namespace,
+    ])->saveTo($savePath, "{$class}.php");
 
-    $this->info("✅ Filter '{$name}.php' created successfully with methods: " . implode(', ', $keys));
+    $this->info("✅ Filter '{$class}.php' created successfully with methods: " . implode(', ', $keys));
     return Command::SUCCESS;
   }
 
+  /**
+   * Get the filter saving path.
+   *
+   * @return string
+   */
   protected function getFilterSavingPath(): string
   {
-    return config('filterable.save_filters_at', app_path('Http/Filters'));
+    $path = trim((string) $this->option('path'));
+
+    if ($path === '') {
+      return rtrim((string) config('filterable.save_filters_at', app_path('Http/Filters')), '/\\');
+    }
+
+    if ($this->isAbsolutePath($path)) {
+      return rtrim($path, '/\\');
+    }
+
+    return rtrim(base_path($path), '/\\');
+  }
+
+  /**
+   * Get the filter namespace.
+   *
+   * @return string
+   */
+  protected function getFilterNamespace(): string
+  {
+    $namespace = trim((string) $this->option('namespace'));
+
+    if ($namespace === '') {
+      $namespace = (string) config('filterable.namespace', config('filterable.filter_namespace', 'App\\Http\\Filters'));
+    }
+
+    return trim(str_replace('/', '\\', $namespace), '\\');
+  }
+
+  /**
+   * Resolve the class name from the given name.
+   *
+   * @param string $name
+   * @return string
+   */
+  protected function resolveClassName(string $name): string
+  {
+    return Str::of($name)->replace('/', '\\')->afterLast('\\')->toString();
+  }
+
+  /**
+   * Check if the given path is an absolute path.
+   *
+   * @param string $path
+   * @return bool
+   */
+  protected function isAbsolutePath(string $path): bool
+  {
+    return Str::startsWith($path, ['/']) || preg_match('/^[A-Za-z]:[\\\\\\/]/', $path) === 1;
   }
 }
