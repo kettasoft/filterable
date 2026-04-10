@@ -3,7 +3,11 @@
 namespace Kettasoft\Filterable\Sanitization;
 
 use Illuminate\Support\Traits\ForwardsCalls;
-use Kettasoft\Filterable\Sanitization\HandlerFactory;
+use Kettasoft\Filterable\Sanitization\Handlers\ArrayHandler;
+use Kettasoft\Filterable\Sanitization\Handlers\ObjectHandler;
+use Kettasoft\Filterable\Sanitization\Handlers\StringHandler;
+use Kettasoft\Filterable\Sanitization\Handlers\ClosureHandler;
+use Kettasoft\Filterable\Sanitization\Contracts\SanitizeHandler;
 
 class Sanitizer implements \Countable
 {
@@ -25,23 +29,56 @@ class Sanitizer implements \Countable
   }
 
   /**
-   * Handle sanitizers.
+   * Handle sanitizers for a given field value.
+   *
    * @param string $field
-   * @param mixed $value
+   * @param mixed  $value
+   * @return mixed
    */
-  public function handle(string $field, mixed $value)
+  public function handle(string $field, mixed $value): mixed
   {
-    if (empty($field) || !array_key_exists($field, $this->sanitizers)) {
+    if (empty($field) || ! array_key_exists($field, $this->sanitizers)) {
       return $value;
     }
 
     foreach ($this->sanitizers as $key => $resolver) {
       if ($key === $field) {
-        $value = HandlerFactory::handle($value, $resolver);
+        $value = static::apply($value, $resolver);
       }
     }
 
     return $value;
+  }
+
+  /**
+   * Apply a single sanitizer resolver to a value.
+   *
+   * @param mixed $value
+   * @param mixed $sanitizer  string class-name, Closure, array, or Sanitizable object
+   * @throws \RuntimeException
+   * @return mixed
+   */
+  public static function apply(mixed $value, mixed $sanitizer): mixed
+  {
+    return static::makeHandler($sanitizer)->handle($value);
+  }
+
+  /**
+   * Build the appropriate SanitizeHandler for the given sanitizer definition.
+   *
+   * @param mixed $sanitizer
+   * @throws \RuntimeException
+   * @return SanitizeHandler
+   */
+  protected static function makeHandler(mixed $sanitizer): SanitizeHandler
+  {
+    return match (true) {
+      is_string($sanitizer)   => new StringHandler($sanitizer),
+      is_callable($sanitizer) => new ClosureHandler($sanitizer),
+      is_array($sanitizer)    => new ArrayHandler($sanitizer),
+      is_object($sanitizer)   => new ObjectHandler($sanitizer),
+      default                 => throw new \RuntimeException("Handler is not processable"),
+    };
   }
 
   /**
@@ -63,9 +100,10 @@ class Sanitizer implements \Countable
   }
 
   /**
-   * Set sanitizer classes
+   * Set sanitizer classes.
+   *
    * @param array $sanitizers
-   * @param bool $override Override current sanitizers when (true)
+   * @param bool  $override Override current sanitizers when true
    * @return static
    */
   public function setSanitizers(array $sanitizers, bool $override = true): static
