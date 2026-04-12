@@ -2,8 +2,8 @@
 
 namespace Kettasoft\Filterable\Sanitization\Handlers;
 
+use Kettasoft\Filterable\Sanitization\Sanitizer;
 use Kettasoft\Filterable\Sanitization\Contracts\SanitizeHandler;
-use Kettasoft\Filterable\Sanitization\HandlerFactory;
 
 class ArrayHandler implements SanitizeHandler
 {
@@ -26,7 +26,7 @@ class ArrayHandler implements SanitizeHandler
   public function handle(mixed $value): mixed
   {
     foreach ($this->sanitizers as $sanitizer) {
-      $value = HandlerFactory::handle($value, $sanitizer);
+      $value = Sanitizer::apply($value, $sanitizer);
     }
 
     return $value;
