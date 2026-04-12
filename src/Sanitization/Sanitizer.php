@@ -98,20 +98,30 @@ class Sanitizer implements \Countable
   /**
    * Handle sanitizers for a given field value.
    *
+   * Applies sanitizers in two phases:
+   * 1. Global sanitizers (numeric keys) - applied to all fields
+   * 2. Field-specific sanitizers (string keys) - applied to matching fields only
+   *
    * @param string $field
    * @param mixed  $value
    * @return mixed
    */
   public function handle(string $field, mixed $value): mixed
   {
-    if (empty($field) || ! array_key_exists($field, $this->sanitizers)) {
+    if (empty($field)) {
       return $value;
     }
 
+    // Phase 1: Apply global sanitizers (numeric keys)
     foreach ($this->sanitizers as $key => $resolver) {
-      if ($key === $field) {
+      if (is_int($key)) {
         $value = static::apply($value, $resolver);
       }
+    }
+
+    // Phase 2: Apply field-specific sanitizers (string keys)
+    if (array_key_exists($field, $this->sanitizers)) {
+      $value = static::apply($value, $this->sanitizers[$field]);
     }
 
     return $value;
