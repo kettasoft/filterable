@@ -2,6 +2,7 @@
 
 namespace Kettasoft\Filterable\Tests\Unit\Sanitization;
 
+use Kettasoft\Filterable\Sanitization\Defaults\TrimSanitizer;
 use Kettasoft\Filterable\Sanitization\Sanitizer;
 use Kettasoft\Filterable\Tests\TestCase;
 
