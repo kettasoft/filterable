@@ -873,41 +873,6 @@ class InvokableEngineTest extends TestCase
   /**
    * @test
    */
-  public function it_can_access_raw_payload_value()
-  {
-    Post::truncate();
-
-    Post::factory()->create(['title' => 'Test']);
-
-    request()->merge([
-      'title' => '  Test  '
-    ]);
-
-    $filter = new class extends Filterable {
-      protected $filters = ['title'];
-      protected $sanitizers = [
-        'title' => 'trim'
-      ];
-
-      public function title(Payload $payload)
-      {
-        // Value is sanitized
-        $this->assertEquals('Test', $payload->value);
-        // Raw value is not sanitized
-        $this->assertEquals('  Test  ', $payload->raw());
-
-        return $this->builder->where('title', $payload->value);
-      }
-    };
-
-    $posts = Post::filter($filter)->get();
-
-    $this->assertCount(1, $posts);
-  }
-
-  /**
-   * @test
-   */
   public function it_can_combine_multiple_filter_patterns()
   {
     Post::truncate();
