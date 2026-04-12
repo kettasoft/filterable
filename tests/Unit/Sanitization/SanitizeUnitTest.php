@@ -2,7 +2,7 @@
 
 namespace Kettasoft\Filterable\Tests\Unit\Sanitization;
 
-use Kettasoft\Filterable\Sanitization\HandlerFactory;
+use Kettasoft\Filterable\Sanitization\Sanitizer;
 use Kettasoft\Filterable\Tests\TestCase;
 
 class SanitizeUnitTest extends TestCase
@@ -16,7 +16,7 @@ class SanitizeUnitTest extends TestCase
     $value = '    value';
     $resolver = TrimSanitizer::class;
 
-    $afterSanitize = HandlerFactory::handle($value, $resolver);
+    $afterSanitize = Sanitizer::apply($value, $resolver);
 
     $this->assertEquals(trim($value), $afterSanitize);
   }
@@ -32,7 +32,7 @@ class SanitizeUnitTest extends TestCase
       return trim($value);
     };
 
-    $afterSanitize = HandlerFactory::handle($value, $resolver);
+    $afterSanitize = Sanitizer::apply($value, $resolver);
 
     $this->assertEquals(trim($value), $afterSanitize);
   }
@@ -46,7 +46,7 @@ class SanitizeUnitTest extends TestCase
     $value = '    value';
     $resolver = new TrimSanitizer;
 
-    $afterSanitize = HandlerFactory::handle($value, $resolver);
+    $afterSanitize = Sanitizer::apply($value, $resolver);
 
     $this->assertEquals(trim($value), $afterSanitize);
   }
@@ -64,7 +64,7 @@ class SanitizeUnitTest extends TestCase
       new TrimSanitizer
     ];
 
-    $afterSanitize = HandlerFactory::handle($value, $resolvers);
+    $afterSanitize = Sanitizer::apply($value, $resolvers);
 
     $this->assertEquals(strtoupper(trim($value)), $afterSanitize);
   }
