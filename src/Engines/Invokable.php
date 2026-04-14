@@ -2,17 +2,17 @@
 
 namespace Kettasoft\Filterable\Engines;
 
-use Illuminate\Support\Str;
-use Kettasoft\Filterable\Filterable;
 use Illuminate\Contracts\Database\Eloquent\Builder;
-use Kettasoft\Filterable\Support\Payload;
+use Illuminate\Support\Str;
 use Illuminate\Support\Traits\ForwardsCalls;
-use Kettasoft\Filterable\Engines\Foundation\Engine;
-use Kettasoft\Filterable\Engines\Foundation\ClauseFactory;
-use Kettasoft\Filterable\Engines\Foundation\Parsers\Dissector;
 use Kettasoft\Filterable\Engines\Foundation\Attributes\AttributeContext;
 use Kettasoft\Filterable\Engines\Foundation\Attributes\AttributePipeline;
-use Kettasoft\Filterable\Engines\Foundation\Attributes\AttributeRegistry;
+use Kettasoft\Filterable\Engines\Foundation\ClauseFactory;
+use Kettasoft\Filterable\Engines\Foundation\Engine;
+use Kettasoft\Filterable\Engines\Foundation\Parsers\Dissector;
+use Kettasoft\Filterable\Exceptions\FilterableMethodConflictException;
+use Kettasoft\Filterable\Filterable;
+use Kettasoft\Filterable\Support\Payload;
 
 class Invokable extends Engine
 {
@@ -43,19 +43,19 @@ class Invokable extends Engine
     $this->context->setAllowedFields($this->context->getFilterAttributes());
 
     foreach ($this->context->getFilterAttributes() as $filter) {
-      $this->attempt(function () use ($filter) {
+      $method = $this->getMethodName($filter);
+
+      // Check for method name conflicts with Filterable core methods BEFORE attempt.
+      if (method_exists(Filterable::class, $method)) {
+        throw new FilterableMethodConflictException($method);
+      }
+
+      $this->attempt(function () use ($filter, $method) {
         $dissector = Dissector::parse($this->context->getRequest()->get($filter), $this->defaultOperator());
 
         $payload = new Payload($filter, $dissector->operator, $this->sanitizeValue($filter, $dissector->value), $dissector->value);
 
         $clause = (new ClauseFactory($this))->make($payload);
-
-        $method = $this->getMethodName($filter);
-
-        // Check for method name conflicts with Filterable core methods.
-        if (method_exists(Filterable::class, $method)) {
-          throw new \RuntimeException(sprintf("Filter method [%s] conflicts with core Filterable method.", [$method]));
-        }
 
         $this->applyFilterMethod($filter, $method, $payload);
 
