@@ -17,7 +17,6 @@ class AttributePipeline
   /**
    * Create a new attribute pipeline instance.
    *
-   * @param AttributeRegistry $registry
    * @param AttributeContext $context
    */
   public function __construct(protected AttributeContext $context)
