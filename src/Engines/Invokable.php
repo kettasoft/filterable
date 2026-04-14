@@ -79,11 +79,7 @@ class Invokable extends Engine
       return;
     }
 
-    $attrContext = new AttributeContext(
-      $this->builder,
-      $payload,
-      state: ['method' => $method, 'key' => $key]
-    );
+    $attrContext = new AttributeContext($this, $payload);
 
     $pipeline = new AttributePipeline($attrContext);
     $process = $pipeline->process($this->context, $method);
