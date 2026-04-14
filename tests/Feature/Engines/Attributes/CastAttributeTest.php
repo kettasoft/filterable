@@ -218,6 +218,7 @@ class CastAttributeTest extends TestCase
   {
     $payload = Payload::create('views', '=', '42', '42');
     $context = new \Kettasoft\Filterable\Engines\Foundation\Attributes\AttributeContext(
+      engine: $this->createMock(\Kettasoft\Filterable\Engines\Foundation\Engine::class),
       payload: $payload
     );
 
@@ -234,6 +235,7 @@ class CastAttributeTest extends TestCase
 
     $payload = Payload::create('status', '=', 'active', 'active');
     $context = new \Kettasoft\Filterable\Engines\Foundation\Attributes\AttributeContext(
+      engine: $this->createMock(\Kettasoft\Filterable\Engines\Foundation\Engine::class),
       payload: $payload
     );
 

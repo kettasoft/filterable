@@ -32,8 +32,8 @@ class Scope implements \Kettasoft\Filterable\Engines\Foundation\Attributes\Contr
    */
   public function handle(\Kettasoft\Filterable\Engines\Foundation\Attributes\AttributeContext $context): void
   {
-    /** @var \Illuminate\Contracts\Eloquent\Builder $query */
-    $query = $context->query;
+    /** @var \Illuminate\Database\Eloquent\Builder $query */
+    $query = $context->engine->getContext()->getBuilder();
 
     /** @var \Kettasoft\Filterable\Support\Payload $payload */
     $payload = $context->payload;
@@ -47,9 +47,5 @@ class Scope implements \Kettasoft\Filterable\Engines\Foundation\Attributes\Contr
     }
 
     $query->{$scope}($payload->value);
-
-    // Set a flag in context to indicate the scope was applied,
-    // allowing the engine to optionally skip the filter method execution.
-    $context->set('scope_applied', true);
   }
 }

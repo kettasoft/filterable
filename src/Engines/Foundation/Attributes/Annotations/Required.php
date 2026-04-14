@@ -37,7 +37,7 @@ class Required implements \Kettasoft\Filterable\Engines\Foundation\Attributes\Co
     $payload = $context->payload;
 
     if ($payload && ($payload->isEmpty() || $payload->isNull())) {
-      throw new StrictnessException(sprintf($this->message, $context->state['key']));
+      throw new StrictnessException(sprintf($this->message, $payload->field));
     }
   }
 }
