@@ -28,7 +28,7 @@ Automatically execute specific methods in a filter class based on incoming reque
     ├── Create Payload (field, operator, value, rawValue)
     ├── Run Attribute Pipeline (CONTROL → TRANSFORM → VALIDATE → BEHAVIOR)
     ├── Call filter method with Payload
-    └── Commit clause to query
+    └── Commit payload to query
     │
     ▼
 [ Modified Query Builder ]
@@ -41,7 +41,7 @@ Automatically execute specific methods in a filter class based on incoming reque
 3. A [`Payload`](/api/payload) object is created containing `field`, `operator`, `value`, and `rawValue`.
 4. The **Attribute Pipeline** runs all PHP attributes (annotations) on the method, sorted by stage.
 5. If the pipeline succeeds, the filter method is invoked with the [`Payload`](/api/payload).
-6. The resulting clause is committed to the query builder.
+6. The resulting payload is committed to the query builder.
 
 ---
 
@@ -243,7 +243,7 @@ The default operator can be configured per engine:
    b. Payload is created
    c. Attribute Pipeline runs (CONTROL → TRANSFORM → VALIDATE → BEHAVIOR)
    d. If pipeline passes, filter method is called with Payload
-   e. Clause is committed to query
+   e. Payload is committed to query
 5. Modified Eloquent query is returned
 ```
 
