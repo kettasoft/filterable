@@ -3,7 +3,6 @@
 namespace Kettasoft\Filterable\Foundation\Runtime;
 
 use Illuminate\Contracts\Database\Eloquent\Builder;
-use Kettasoft\Filterable\Engines\Foundation\Clause;
 use Kettasoft\Filterable\Support\Payload;
 
 /**
@@ -16,7 +15,7 @@ use Kettasoft\Filterable\Support\Payload;
  * - Non-shareable: Should not be shared between cloned instances
  * 
  * The state includes:
- * - Applied filter clauses (tracking what filters were executed)
+ * - Applied filter payloads (tracking what filters were executed)
  * - Skipped payloads (tracking what filters were ignored and why)
  * - Parsed request data (the actual filter parameters from the request)
  * - Query builder instance (the Eloquent builder being filtered)
@@ -34,12 +33,12 @@ use Kettasoft\Filterable\Support\Payload;
 class Context
 {
   /**
-   * Applied filter clauses.
+   * Applied filter payloads.
    * 
-   * Stores all successfully applied filter clauses keyed by their field names.
+   * Stores all successfully applied filter payloads keyed by their field names.
    * This allows tracking which filters were actually applied to the query.
    * 
-   * @var array<string, Clause>
+   * @var array<string, Payload>
    */
   protected array $applied = [];
 
@@ -86,18 +85,18 @@ class Context
   protected $cacheKeyGenerator = null;
 
   /**
-   * Commit a clause as applied.
+   * Commit a payload as applied.
    * 
-   * Records a filter clause that has been successfully applied to the query.
+   * Records a filter payload that has been successfully applied to the query.
    * This is called by the engine after a filter is executed.
    * 
-   * @param string $key The field name or unique identifier for the clause
-   * @param Clause $clause The clause object representing the applied filter
+   * @param string $key The field name or unique identifier for the payload
+   * @param Payload $payload The payload object representing the applied filter
    * @return void
    */
-  public function commitClause(string $key, Clause $clause): void
+  public function commitPayload(string $key, Payload $payload): void
   {
-    $this->applied[$key] = $clause;
+    $this->applied[$key] = $payload;
   }
 
   /**
@@ -122,12 +121,12 @@ class Context
   }
 
   /**
-   * Get applied clauses.
+   * Get applied payloads.
    * 
-   * Retrieves all applied clauses or a specific clause by key.
+   * Retrieves all applied payloads or a specific payload by key.
    * 
-   * @param string|null $key Optional field name to get a specific clause
-   * @return mixed All clauses if key is null, specific clause otherwise, or null if not found
+   * @param string|null $key Optional field name to get a specific payload
+   * @return mixed All payloads if key is null, specific payload otherwise, or null if not found
    */
   public function getApplied(?string $key = null): mixed
   {

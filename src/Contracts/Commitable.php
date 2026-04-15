@@ -2,7 +2,7 @@
 
 namespace Kettasoft\Filterable\Contracts;
 
-use Kettasoft\Filterable\Engines\Foundation\Clause;
+use Kettasoft\Filterable\Support\Payload;
 
 /**
  * Contract for commitable filters.
@@ -12,10 +12,10 @@ use Kettasoft\Filterable\Engines\Foundation\Clause;
 interface Commitable
 {
     /**
-     * Commit applied clauses.
+     * Commit applied payload.
      * @param string $key
-     * @param Clause $clause
+     * @param Payload $payload
      * @return bool
      */
-    public function commit(string $key, Clause $clause): bool;
+    public function commit(string $key, Payload $payload): bool;
 }

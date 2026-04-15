@@ -269,12 +269,11 @@ Return the strict flag (`true`/`false`) or `null` when not explicitly set.
 
 ---
 
-### States & Clauses
+### States & Payloads
 
 #### `applied($key): mixed`
 
-Get applied claueses.
-
+Get applied payloads. When a filter key is provided, returns the payload for that filter if applied.
 ---
 
 ### Flow Control
