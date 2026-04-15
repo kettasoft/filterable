@@ -10,10 +10,10 @@ interface Skippable
     /**
      * Skip the current execution with a message and optional payload.
      * 
-     * @param string $message The reason for skipping
-     * @param Payload|null $payload The payload being skipped
+     * @param Payload $payload The payload being skipped
+     * @param string|null $message The reason for skipping
      * @throws SkipExecution
      * @return never
      */
-    public function skip(string $message, mixed $payload = null): never;
+    public function skip(Payload $payload, ?string $message = null): never;
 }
