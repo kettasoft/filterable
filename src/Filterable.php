@@ -40,7 +40,7 @@ use Kettasoft\Filterable\Support\Payload;
  * This class serves as the central point for managing filter execution, including:
  * - Handling incoming requests and parsing filter data
  * - Managing the filter engine and its execution
- * - Providing hooks for authorization, validation, and committing applied clauses
+ * - Providing hooks for authorization, validation, and committing applied payloads
  * - Integrating with an event system to allow extensibility at various stages of the filtering process
  * - Supporting sorting and caching mechanisms
  * 
@@ -102,7 +102,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
    * Runtime context for this filterable instance.
    * 
    * Encapsulates all transient state that changes during filter execution:
-   * - Applied filter clauses
+   * - Applied filter payloads
    * - Skipped payloads
    * - Parsed request data
    * - Query builder instance
