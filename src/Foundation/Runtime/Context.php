@@ -100,19 +100,6 @@ class Context
   }
 
   /**
-   * Commit a payload as applied (legacy alias).
-   * 
-   * @deprecated Use commitPayload() instead
-   * @param string $key The field name or unique identifier
-   * @param Payload $payload The payload object
-   * @return void
-   */
-  public function commitClause(string $key, Payload $payload): void
-  {
-    $this->commitPayload($key, $payload);
-  }
-
-  /**
    * Register a skipped payload.
    * 
    * Records information about a filter that was skipped during execution.
