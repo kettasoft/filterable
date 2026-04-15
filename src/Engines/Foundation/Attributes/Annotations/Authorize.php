@@ -38,7 +38,10 @@ class Authorize implements \Kettasoft\Filterable\Engines\Foundation\Attributes\C
     $authorize = new $this->authorize;
 
     if (! $authorize->authorize()) {
-      throw new \Kettasoft\Filterable\Engines\Exceptions\SkipExecution("Authorization failed for class '{$this->authorize}'.");
+      throw new \Kettasoft\Filterable\Engines\Exceptions\SkipExecution(
+        "Authorization failed for class '{$this->authorize}'.",
+        $context->payload
+      );
     }
   }
 }

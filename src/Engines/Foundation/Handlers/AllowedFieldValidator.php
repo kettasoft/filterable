@@ -14,7 +14,7 @@ class AllowedFieldValidator
    * Check if field is allowed to apply filtering.
    * @param \Kettasoft\Filterable\Engines\Contracts\HasAllowedFieldChecker $engine
    * @param mixed $field
-   * @throws \Kettasoft\Filterable\Exceptions\NotAllowedFieldException
+   * @throws \Kettasoft\Filterable\Engines\Exceptions\NotAllowedFieldException
    * @return bool
    */
   final public static function validate(Engine $engine, $field)
@@ -29,11 +29,11 @@ class AllowedFieldValidator
   /**
    * Throw field is not allowed.
    * @param mixed $field
-   * @throws \Kettasoft\Filterable\Exceptions\NotAllowedFieldException
+   * @throws \Kettasoft\Filterable\Engines\Exceptions\NotAllowedFieldException
    * @return never
    */
   protected static function throw($field)
   {
-    throw new NotAllowedFieldException($field);
+    throw new NotAllowedFieldException($field, null);
   }
 }

@@ -46,7 +46,8 @@ class In implements \Kettasoft\Filterable\Engines\Foundation\Attributes\Contract
 
     if ($payload->notIn($this->values)) {
       throw new \Kettasoft\Filterable\Engines\Exceptions\SkipExecution(
-        "The value '{$payload->value}' is not in the allowed set: " . implode(', ', $this->values)
+        "The value '{$payload->value}' is not in the allowed set: " . implode(', ', $this->values),
+        $payload
       );
     }
   }

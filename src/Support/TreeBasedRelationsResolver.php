@@ -40,7 +40,7 @@ class TreeBasedRelationsResolver
     }
 
     if ($this->context->isStrict()) {
-      throw new NotAllowedFieldException($field);
+      throw new NotAllowedFieldException($field, null);
     }
 
     return false;

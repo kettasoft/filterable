@@ -51,11 +51,16 @@ abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Stricta
   }
 
   /**
-   * @inheritDoc
+   * Skip the current filter execution with a message and payload.
+   * 
+   * @param string $message The reason for skipping
+   * @param \Kettasoft\Filterable\Support\Payload|null $payload The payload being skipped
+   * @return never
+   * @throws SkipExecution
    */
-  public function skip(string $message, mixed $clause = null): never
+  public function skip(string $message, mixed $payload = null): never
   {
-    throw new SkipExecution($message, $clause);
+    throw new SkipExecution($message, $payload);
   }
 
   /**

@@ -32,6 +32,7 @@ use Kettasoft\Filterable\HttpIntegration\HeaderDrivenEngineSelector;
 use Kettasoft\Filterable\Foundation\Contracts\ShouldReturnQueryBuilder;
 use Kettasoft\Filterable\Exceptions\Contracts\ExceptionHandlerInterface;
 use Kettasoft\Filterable\Exceptions\RequestSourceIsNotSupportedException;
+use Kettasoft\Filterable\Support\Payload;
 
 class Filterable implements FilterableContext, Authorizable, Validatable, Commitable
 {
@@ -166,6 +167,12 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
   protected $applied = [];
 
   /**
+   * Skipped payloads.
+   * @var array<Payload>
+   */
+  protected array $skipped = [];
+
+  /**
    * Create a new Filterable instance.
    * @param Request|null $request
    */
@@ -275,10 +282,58 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
    * @param Clause $clause
    * @return bool
    */
+  /**
+   * Commit applied clauses.
+   * @param string $key
+   * @param Clause $clause
+   * @return bool
+   */
   public function commit(string $key, Clause $clause): bool
   {
     $this->applied[$key] = $clause;
     return true;
+  }
+
+  /**
+   * Register a skipped payload.
+   * @param Payload $payload
+   * @param string|null $reason Optional reason for skipping
+   * @return bool
+   */
+  public function skip(Payload $payload, ?string $reason = null): bool
+  {
+    $this->skipped[] = [
+      'payload' => $payload,
+      'reason' => $reason,
+      'field' => $payload->field,
+      'value' => $payload->value,
+      'timestamp' => now(),
+    ];
+
+    return true;
+  }
+
+  /**
+   * Get all skipped payloads.
+   * @return array
+   */
+  public function skipped(?string $field = null): array
+  {
+    if ($field === null) {
+      return $this->skipped;
+    }
+
+    return array_filter($this->skipped, fn($item) => $item['field'] === $field);
+  }
+
+  /**
+   * Check if a specific field was skipped.
+   * @param string $field
+   * @return bool
+   */
+  public function hasSkipped(string $field): bool
+  {
+    return !empty($this->skipped($field));
   }
 
   /**
