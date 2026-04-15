@@ -3,27 +3,27 @@
 namespace Kettasoft\Filterable\Engines\Exceptions;
 
 use Exception;
-use Kettasoft\Filterable\Engines\Foundation\Clause;
+use Kettasoft\Filterable\Support\Payload;
 
 class SkipExecution extends Exception
 {
     /**
      * SkipExecution constructor.
      * @param string $message
-     * @param mixed $clause
+     * @param Payload|null $payload
      */
-    public function __construct(string $message, protected mixed $clause = null)
+    public function __construct(string $message, protected ?Payload $payload = null)
     {
         parent::__construct($message);
     }
 
     /**
-     * Get the associated Clause.
-     * @return ?Clause
+     * Get the associated Payload that was skipped.
+     * @return Payload|null
      */
-    public function getClause(): ?Clause
+    public function getPayload(): ?Payload
     {
-        return $this->clause;
+        return $this->payload;
     }
 
     /**

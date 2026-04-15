@@ -11,7 +11,7 @@ class AllowedFieldChecker
    * Check if a field is allowed for filtering.
    * @param \Kettasoft\Filterable\Engines\Contracts\HasAllowedFieldChecker $context
    * @param mixed $field
-   * @throws \Kettasoft\Filterable\Exceptions\NotAllowedFieldException
+   * @throws \Kettasoft\Filterable\Engines\Exceptions\NotAllowedFieldException
    * @return bool
    */
   public static function check(HasAllowedFieldChecker $context, $field): bool
@@ -27,7 +27,7 @@ class AllowedFieldChecker
     }
 
     if ($context->isStrict()) {
-      throw new NotAllowedFieldException($field);
+      throw new NotAllowedFieldException($field, null);
     }
 
     return false;

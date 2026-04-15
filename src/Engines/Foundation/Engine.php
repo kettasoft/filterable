@@ -13,6 +13,7 @@ use Kettasoft\Filterable\Engines\Contracts\HasFieldMap;
 use Kettasoft\Filterable\Engines\Exceptions\SkipExecution;
 use Kettasoft\Filterable\Engines\Contracts\HasAllowedFieldChecker;
 use Kettasoft\Filterable\Engines\Contracts\HasInteractsWithOperators;
+use Kettasoft\Filterable\Support\Payload;
 
 abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Strictable, Executable, HasAllowedFieldChecker, Skippable
 {
@@ -51,11 +52,16 @@ abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Stricta
   }
 
   /**
-   * @inheritDoc
+   * Skip the current filter execution with a message and payload.
+   * 
+   * @param \Kettasoft\Filterable\Support\Payload $payload The payload being skipped
+   * @param string $message The reason for skipping
+   * @return never
+   * @throws SkipExecution
    */
-  public function skip(string $message, mixed $clause = null): never
+  public function skip(Payload $payload, ?string $message = null): never
   {
-    throw new SkipExecution($message, $clause);
+    throw new SkipExecution($message, $payload);
   }
 
   /**

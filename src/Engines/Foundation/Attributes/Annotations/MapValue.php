@@ -63,7 +63,8 @@ class MapValue implements \Kettasoft\Filterable\Engines\Foundation\Attributes\Co
 
     if ($this->strict) {
       throw new \Kettasoft\Filterable\Engines\Exceptions\SkipExecution(
-        "The value '{$key}' is not in the value map: " . implode(', ', array_keys($this->map))
+        "The value '{$key}' is not in the value map: " . implode(', ', array_keys($this->map)),
+        $payload
       );
     }
   }

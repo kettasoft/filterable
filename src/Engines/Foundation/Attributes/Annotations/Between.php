@@ -42,7 +42,8 @@ class Between implements \Kettasoft\Filterable\Engines\Foundation\Attributes\Con
 
     if (! is_numeric($payload->value)) {
       throw new SkipExecution(
-        "The value '{$payload->value}' is not numeric. Expected a value between {$this->min} and {$this->max}."
+        "The value '{$payload->value}' is not numeric. Expected a value between {$this->min} and {$this->max}.",
+        $payload
       );
     }
 
@@ -50,7 +51,8 @@ class Between implements \Kettasoft\Filterable\Engines\Foundation\Attributes\Con
 
     if ($value < $this->min || $value > $this->max) {
       throw new SkipExecution(
-        "The value '{$value}' is not between {$this->min} and {$this->max}."
+        "The value '{$value}' is not between {$this->min} and {$this->max}.",
+        $payload
       );
     }
   }

@@ -61,7 +61,7 @@ class ClauseFactory
     // allow wildcard * as "all fields allowed"
     $isWildcardAllowed = ($this->engine->getAllowedFields()[0] ?? false) === '*';
     if (!(in_array($field, $this->engine->getAllowedFields(), true) || $this->isRelational($field) || $isWildcardAllowed)) {
-      throw new NotAllowedFieldException($field);
+      throw new NotAllowedFieldException($field, $payload);
     }
 
     return;
@@ -97,7 +97,7 @@ class ClauseFactory
   protected function validateValue(Payload $payload): void
   {
     if ($this->engine->isIgnoredEmptyValues() && $payload->isEmpty()) {
-      throw new NotAllowedEmptyValueException("Empty values are not allowed.");
+      throw new NotAllowedEmptyValueException("Empty values are not allowed.", $payload);
     }
 
     return;

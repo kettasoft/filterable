@@ -63,7 +63,8 @@ class SkipIf implements \Kettasoft\Filterable\Engines\Foundation\Attributes\Cont
 
     if ($result) {
       throw new SkipExecution(
-        $this->message ?: "Filter skipped because payload {$this->check} check was true."
+        $this->message ?: "Filter skipped because payload {$this->check} check was true.",
+        $payload
       );
     }
   }
