@@ -147,6 +147,17 @@ abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Stricta
     return $this->context;
   }
 
+  /**
+   * Clone the engine and bind it to another Filterable instance.
+   */
+  final public function cloneForContext(Filterable $context): static
+  {
+    $engine = clone $this;
+    $engine->context = $context;
+
+    return $engine;
+  }
+
   public function getResources(): Resources
   {
     return $this->context->getResources();

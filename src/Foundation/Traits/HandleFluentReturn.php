@@ -18,10 +18,19 @@ trait HandleFluentReturn
   protected function handleFluentReturn($method, $args)
   {
 
-    $result = $this->forwardCallTo($this->builder, $method, $args);
+    $builder = method_exists($this, 'getBuilder')
+      ? $this->getBuilder()
+      : $this->builder;
+
+    $result = $this->forwardCallTo($builder, $method, $args);
 
     if ($result instanceof QueryBuilderInterface) {
-      $this->builder = $result;
+      if (method_exists($this, 'setBuilder')) {
+        $this->setBuilder($result);
+      } else {
+        $this->builder = $result;
+      }
+
       return $this;
     }
 
