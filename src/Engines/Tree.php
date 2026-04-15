@@ -7,8 +7,8 @@ use Kettasoft\Filterable\Support\Payload;
 use Kettasoft\Filterable\Support\TreeNode;
 use Kettasoft\Filterable\Traits\FieldNormalizer;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
-use Kettasoft\Filterable\Engines\Foundation\ClauseApplier;
-use Kettasoft\Filterable\Engines\Foundation\ClauseFactory;
+use Kettasoft\Filterable\Engines\Foundation\PayloadApplier;
+use Kettasoft\Filterable\Engines\Foundation\PayloadFactory;
 use Kettasoft\Filterable\Engines\Foundation\Appliers\Applier;
 
 class Tree extends Engine
@@ -55,20 +55,45 @@ class Tree extends Engine
       });
     } else {
 
-      $clause = (new ClauseFactory($this))->make(
+      $payload = (new PayloadFactory($this))->make(
         new Payload($node->field, $node->operator ?? $this->defaultOperator(), $this->sanitizeValue($node->field, $node->value), $node->value)
       );
 
-      if ($clause->isRelational()) {
-        $clause->relation($this->getResources()->relations)->resolve($builder, $clause);
+      if ($this->isRelational($payload->field)) {
+        $this->applyRelational($builder, $payload);
       } else {
-        Applier::apply(new ClauseApplier($clause), $builder);
+        Applier::apply(new PayloadApplier($payload), $builder);
       }
 
-      $this->commit($node->field, $clause);
+      $this->commit($node->field, $payload);
     }
 
     return $builder;
+  }
+
+  /**
+   * Check if field is relational.
+   * @param string $field
+   * @return bool
+   */
+  protected function isRelational(string $field): bool
+  {
+    return is_string($field) && str_contains($field, '.');
+  }
+
+  /**
+   * Apply a relational payload to the query.
+   * @param \Illuminate\Contracts\Database\Eloquent\Builder $builder
+   * @param Payload $payload
+   * @return Builder
+   */
+  protected function applyRelational(Builder $builder, Payload $payload)
+  {
+    [$relation, $field] = explode('.', $payload->field, 2);
+
+    return $builder->whereHas($relation, function ($query) use ($field, $payload) {
+      $query->where($field, $payload->operator, $payload->value);
+    });
   }
 
   /**

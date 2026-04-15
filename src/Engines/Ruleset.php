@@ -6,8 +6,8 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Support\Payload;
 use Kettasoft\Filterable\Traits\FieldNormalizer;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
-use Kettasoft\Filterable\Engines\Foundation\ClauseApplier;
-use Kettasoft\Filterable\Engines\Foundation\ClauseFactory;
+use Kettasoft\Filterable\Engines\Foundation\PayloadApplier;
+use Kettasoft\Filterable\Engines\Foundation\PayloadFactory;
 use Kettasoft\Filterable\Engines\Foundation\Appliers\Applier;
 use Kettasoft\Filterable\Engines\Foundation\Parsers\Dissector;
 
@@ -34,13 +34,13 @@ class Ruleset extends Engine
       $this->attempt(function () use ($builder, $dissector, $field): bool {
         $dissector = Dissector::parse($dissector, $this->defaultOperator());
 
-        $clause = (new ClauseFactory($this))->make(
+        $payload = (new PayloadFactory($this))->make(
           new Payload($field, $dissector->operator, $this->sanitizeValue($field, $dissector->value), $dissector->value)
         );
 
-        Applier::apply(new ClauseApplier($clause), $builder);
+        Applier::apply(new PayloadApplier($payload), $builder);
 
-        return $this->commit($field, $clause);
+        return $this->commit($field, $payload);
       });
     }
 

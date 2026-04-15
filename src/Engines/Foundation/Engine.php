@@ -166,13 +166,13 @@ abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Stricta
   }
 
   /**
-   * Commit applied clauses.
+   * Commit applied payload.
    * @param string $key
-   * @param Clause $clause
+   * @param Payload $payload
    * @return bool
    */
-  final protected function commit(string $key, Clause $clause): bool
+  final protected function commit(string $key, Payload $payload): bool
   {
-    return $this->context->commit($key, $clause);
+    return $this->context->commit($key, $payload);
   }
 }

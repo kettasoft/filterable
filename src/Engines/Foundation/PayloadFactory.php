@@ -9,32 +9,32 @@ use Kettasoft\Filterable\Engines\Exceptions\NotAllowedFieldException;
 use Kettasoft\Filterable\Engines\Exceptions\NotAllowedEmptyValueException;
 
 /**
- * Class ClauseFactory
+ * Class PayloadFactory
  *
- * Responsible for building {@see Clause} objects from {@see Payload},
+ * Responsible for validating and resolving {@see Payload} objects,
  * including field/operator validation and resolution.
  *
  * @package Kettasoft\Filterable\Engines\Foundation
  */
-class ClauseFactory
+class PayloadFactory
 {
   /**
-   * Create a new ClauseFactory instance.
+   * Create a new PayloadFactory instance.
    * @param \Kettasoft\Filterable\Engines\Foundation\Engine $engine
    */
   public function __construct(protected Engine $engine) {}
 
   /**
-   * Build a Clause from the given Payload.
+   * Validate and resolve a Payload.
    *
    * @param  Payload  $payload
-   * @return Clause
+   * @return Payload
    *
    * @throws NotAllowedFieldException   If the field is not allowed and strict mode is enabled.
    * @throws InvalidOperatorException   If the operator is not allowed and strict mode is enabled.
    * @throws \InvalidArgumentException  If the value is empty and strict mode is enabled.
    */
-  public function make(Payload $payload): Clause
+  public function make(Payload $payload): Payload
   {
     $this->validateField($payload);
     $this->validateOperator($payload);
@@ -44,7 +44,7 @@ class ClauseFactory
     $resolvedOperator = $this->resolveOperator($payload);
     $payload->setField($resolvedField)->setOperator($resolvedOperator);
 
-    return (new Clause($payload));
+    return $payload;
   }
 
   /**

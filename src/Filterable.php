@@ -13,7 +13,6 @@ use Kettasoft\Filterable\Contracts\Commitable;
 use Kettasoft\Filterable\Contracts\FilterableContext;
 use Kettasoft\Filterable\Contracts\Validatable;
 use Kettasoft\Filterable\Engines\Factory\EngineManager;
-use Kettasoft\Filterable\Engines\Foundation\Clause;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
 use Kettasoft\Filterable\Engines\Foundation\Executors\Executer;
 use Kettasoft\Filterable\Exceptions\Contracts\ExceptionHandlerInterface;
@@ -284,18 +283,18 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
   }
 
   /**
-   * Commit applied clauses.
+   * Commit applied payload.
    * 
-   * Records a filter clause that has been successfully applied to the query.
+   * Records a filter payload that has been successfully applied to the query.
    * This is a wrapper method that delegates to the runtime state.
    * 
-   * @param string $key The field name or unique identifier for the clause
-   * @param Clause $clause The clause object representing the applied filter
+   * @param string $key The field name or unique identifier for the payload
+   * @param Payload $payload The payload object representing the applied filter
    * @return bool Always returns true to indicate success
    */
-  public function commit(string $key, Clause $clause): bool
+  public function commit(string $key, Payload $payload): bool
   {
-    $this->context->commitClause($key, $clause);
+    $this->context->commitPayload($key, $payload);
     return true;
   }
 
@@ -344,13 +343,13 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
   }
 
   /**
-   * Get applied clauses.
+   * Get applied payloads.
    * 
-   * Retrieves all applied clauses or a specific clause by key.
+   * Retrieves all applied payloads or a specific payload by key.
    * This is a wrapper method that delegates to the runtime state.
    * 
-   * @param string|null $key Optional field name to get a specific clause
-   * @return array|Clause|null All clauses if key is null, specific clause otherwise, or null if not found
+   * @param string|null $key Optional field name to get a specific payload
+   * @return array|Payload|null All payloads if key is null, specific payload otherwise, or null if not found
    */
   public function applied($key = null)
   {

@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Traits\ForwardsCalls;
 use Kettasoft\Filterable\Engines\Foundation\Attributes\AttributeContext;
 use Kettasoft\Filterable\Engines\Foundation\Attributes\AttributePipeline;
-use Kettasoft\Filterable\Engines\Foundation\ClauseFactory;
+use Kettasoft\Filterable\Engines\Foundation\PayloadFactory;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
 use Kettasoft\Filterable\Engines\Foundation\Parsers\Dissector;
 use Kettasoft\Filterable\Exceptions\FilterableMethodConflictException;
@@ -55,11 +55,11 @@ class Invokable extends Engine
 
         $payload = new Payload($filter, $dissector->operator, $this->sanitizeValue($filter, $dissector->value), $dissector->value);
 
-        $clause = (new ClauseFactory($this))->make($payload);
+        $payload = (new PayloadFactory($this))->make($payload);
 
         $this->applyFilterMethod($filter, $method, $payload);
 
-        $this->commit($method, $clause);
+        $this->commit($method, $payload);
       });
     }
 
