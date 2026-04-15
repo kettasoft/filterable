@@ -18,7 +18,8 @@ class SkipExecution extends Exception
     }
 
     /**
-     * Get the associated payload.
+     * Get the associated payload that was skipped.
+     * @return Payload|null
      */
     public function getPayload(): ?Payload
     {

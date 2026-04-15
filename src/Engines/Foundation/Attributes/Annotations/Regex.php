@@ -42,13 +42,15 @@ class Regex implements \Kettasoft\Filterable\Engines\Foundation\Attributes\Contr
 
     if (! is_string($payload->value)) {
       throw new SkipExecution(
-        $this->message ?: "The value is not a string and cannot be matched against pattern '{$this->pattern}'."
+        $this->message ?: "The value is not a string and cannot be matched against pattern '{$this->pattern}'.",
+        $payload
       );
     }
 
     if (! preg_match($this->pattern, $payload->value)) {
       throw new SkipExecution(
-        $this->message ?: "The value '{$payload->value}' does not match the pattern '{$this->pattern}'."
+        $this->message ?: "The value '{$payload->value}' does not match the pattern '{$this->pattern}'.",
+        $payload
       );
     }
   }
