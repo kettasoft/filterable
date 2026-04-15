@@ -11,24 +11,24 @@ use Kettasoft\Filterable\Tests\TestCase;
 
 class AuthorizeAttributeTest extends TestCase
 {
-  public function test_authorize_attribute_can_make_filter()
-  {
-    request()->merge([
-      'tags' => 'testing',
-    ]);
+    public function test_authorize_attribute_can_make_filter()
+    {
+        request()->merge([
+            'tags' => 'testing',
+        ]);
 
-    $class = new class extends Filterable {
-      protected $filters = ['tags'];
+        $class = new class() extends Filterable {
+            protected $filters = ['tags'];
 
-      #[Authorize(CanMakeFilter::class)]
-      public function tags(Payload $payload)
-      {
-        $this->builder->where('tags', $payload->value);
-      }
-    };
+            #[Authorize(CanMakeFilter::class)]
+            public function tags(Payload $payload)
+            {
+                $this->builder->where('tags', $payload->value);
+            }
+        };
 
-    $sql = Post::filter($class)->toRawSql();
+        $sql = Post::filter($class)->toRawSql();
 
-    $this->assertStringContainsString('where "tags"', $sql);
-  }
+        $this->assertStringContainsString('where "tags"', $sql);
+    }
 }

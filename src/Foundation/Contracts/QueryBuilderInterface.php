@@ -8,4 +8,6 @@ use Illuminate\Contracts\Database\Query\Builder as QueryBuilder;
 /**
  * @mixin \Illuminate\Database\Query\Builder|\Illuminate\Contracts\Database\Eloquent\Builder
  */
-interface QueryBuilderInterface extends EloquentBuilder, QueryBuilder {}
+interface QueryBuilderInterface extends EloquentBuilder, QueryBuilder
+{
+}

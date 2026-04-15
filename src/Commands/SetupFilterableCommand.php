@@ -16,7 +16,7 @@ class SetupFilterableCommand extends Command
 
         // 1. Publish the config
         $this->callSilent('vendor:publish', [
-            '--tag' => 'filterable-config',
+            '--tag'   => 'filterable-config',
             '--force' => $this->option('force'),
         ]);
 

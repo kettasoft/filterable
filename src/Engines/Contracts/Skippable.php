@@ -8,9 +8,12 @@ interface Skippable
 {
     /**
      * Skip the current execution with a message and optional clause.
+     *
      * @param string $message
-     * @param mixed $clause
+     * @param mixed  $clause
+     *
      * @throws SkipExecution
+     *
      * @return never
      */
     public function skip(string $message, mixed $clause = null): never;

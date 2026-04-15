@@ -3,74 +3,80 @@
 namespace Kettasoft\Filterable\Engines;
 
 use Illuminate\Contracts\Database\Eloquent\Builder;
-use Kettasoft\Filterable\Support\Payload;
-use Kettasoft\Filterable\Traits\FieldNormalizer;
-use Kettasoft\Filterable\Engines\Foundation\Engine;
+use Kettasoft\Filterable\Engines\Foundation\Appliers\Applier;
 use Kettasoft\Filterable\Engines\Foundation\ClauseApplier;
 use Kettasoft\Filterable\Engines\Foundation\ClauseFactory;
-use Kettasoft\Filterable\Engines\Foundation\Appliers\Applier;
+use Kettasoft\Filterable\Engines\Foundation\Engine;
 use Kettasoft\Filterable\Engines\Foundation\Parsers\Dissector;
+use Kettasoft\Filterable\Support\Payload;
+use Kettasoft\Filterable\Traits\FieldNormalizer;
 
 class Ruleset extends Engine
 {
-  use FieldNormalizer;
+    use FieldNormalizer;
 
-  /**
-   * Engine name.
-   * @var string
-   */
-  protected $name = 'ruleset';
+    /**
+     * Engine name.
+     *
+     * @var string
+     */
+    protected $name = 'ruleset';
 
-  /**
-   * Apply filters to the query.
-   * @param \Illuminate\Contracts\Database\Eloquent\Builder $builder
-   * @return Builder
-   */
-  public function execute(Builder $builder): Builder
-  {
-    $data = $this->context->getData();
+    /**
+     * Apply filters to the query.
+     *
+     * @param \Illuminate\Contracts\Database\Eloquent\Builder $builder
+     *
+     * @return Builder
+     */
+    public function execute(Builder $builder): Builder
+    {
+        $data = $this->context->getData();
 
-    foreach ($data as $field => $dissector) {
-      $this->attempt(function () use ($builder, $dissector, $field): bool {
-        $dissector = Dissector::parse($dissector, $this->defaultOperator());
+        foreach ($data as $field => $dissector) {
+            $this->attempt(function () use ($builder, $dissector, $field): bool {
+                $dissector = Dissector::parse($dissector, $this->defaultOperator());
 
-        $clause = (new ClauseFactory($this))->make(
-          new Payload($field, $dissector->operator, $this->sanitizeValue($field, $dissector->value), $dissector->value)
-        );
+                $clause = (new ClauseFactory($this))->make(
+                    new Payload($field, $dissector->operator, $this->sanitizeValue($field, $dissector->value), $dissector->value)
+                );
 
-        Applier::apply(new ClauseApplier($clause), $builder);
+                Applier::apply(new ClauseApplier($clause), $builder);
 
-        return $this->commit($field, $clause);
-      });
+                return $this->commit($field, $clause);
+            });
+        }
+
+        return $builder;
     }
 
-    return $builder;
-  }
+    /**
+     * Check if normalize field option is enable in engine.
+     *
+     * @return bool
+     */
+    protected function hasNormalizeFieldCondition(): bool
+    {
+        return config('filterable.engines.ruleset.normalize_keys', false);
+    }
 
-  /**
-   * Check if normalize field option is enable in engine.
-   * @return bool
-   */
-  protected function hasNormalizeFieldCondition(): bool
-  {
-    return config('filterable.engines.ruleset.normalize_keys', false);
-  }
+    /**
+     * Get engine default operator.
+     *
+     * @return string
+     */
+    public function defaultOperator(): string
+    {
+        return config('filterable.engines.ruleset.default_operator', 'eq');
+    }
 
-  /**
-   * Get engine default operator.
-   * @return string
-   */
-  public function defaultOperator(): string
-  {
-    return config('filterable.engines.ruleset.default_operator', 'eq');
-  }
-
-  /**
-   * Get engine name.
-   * @return string
-   */
-  public function getEngineName(): string
-  {
-    return $this->name;
-  }
+    /**
+     * Get engine name.
+     *
+     * @return string
+     */
+    public function getEngineName(): string
+    {
+        return $this->name;
+    }
 }

@@ -9,11 +9,12 @@ namespace Kettasoft\Filterable\Foundation\Profiler\Contracts;
  */
 interface ProfilerStorageContract
 {
-  /**
-   * Store the profiler data.
-   *
-   * @param array $data
-   * @return void
-   */
-  public function store(mixed $data): void;
+    /**
+     * Store the profiler data.
+     *
+     * @param array $data
+     *
+     * @return void
+     */
+    public function store(mixed $data): void;
 }

@@ -2,28 +2,27 @@
 
 namespace Kettasoft\Filterable\Engines\Foundation\Attributes\Handlers;
 
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Kettasoft\Filterable\Engines\Foundation\Attributes\AttributeContext;
 use Kettasoft\Filterable\Engines\Foundation\Attributes\Annotations\Required;
+use Kettasoft\Filterable\Engines\Foundation\Attributes\AttributeContext;
 use Kettasoft\Filterable\Engines\Foundation\Attributes\Handlers\Contracts\AttributeHandlerInterface;
 use Kettasoft\Filterable\Exceptions\StrictnessException;
 
 class RequiredHandler implements AttributeHandlerInterface
 {
-  /**
-   * @inheritDoc
-   */
-  public function handle(AttributeContext $context, object $attribute): void
-  {
-    if (! $attribute instanceof Required) {
-      return;
-    }
+    /**
+     * @inheritDoc
+     */
+    public function handle(AttributeContext $context, object $attribute): void
+    {
+        if (!$attribute instanceof Required) {
+            return;
+        }
 
-    /** @var \Kettasoft\Filterable\Support\Payload $payload */
-    $payload = $context->payload;
+        /** @var \Kettasoft\Filterable\Support\Payload $payload */
+        $payload = $context->payload;
 
-    if ($payload && ($payload->isEmpty() || $payload->isNull())) {
-      throw new StrictnessException(sprintf($attribute->message, $context->state['key']));
+        if ($payload && ($payload->isEmpty() || $payload->isNull())) {
+            throw new StrictnessException(sprintf($attribute->message, $context->state['key']));
+        }
     }
-  }
 }

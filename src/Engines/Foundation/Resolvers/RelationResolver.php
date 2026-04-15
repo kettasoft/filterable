@@ -8,49 +8,50 @@ use Kettasoft\Filterable\Foundation\Bags\RelationBag;
 
 class RelationResolver
 {
-  protected string $relationPath;
-  protected string $field;
+    protected string $relationPath;
+    protected string $field;
 
-  public function __construct(protected RelationBag $bag, protected string $path)
-  {
-    $this->parse($path);
-  }
-
-  public function isAllowed()
-  {
-    if ($this->bag->has($this->relationPath)) {
-      $relation = $this->bag->get($this->relationPath);
-      // dd($relation);
-      return is_array($relation) ? (in_array($this->field, $relation)) : true;
+    public function __construct(protected RelationBag $bag, protected string $path)
+    {
+        $this->parse($path);
     }
 
-    return false;
-  }
+    public function isAllowed()
+    {
+        if ($this->bag->has($this->relationPath)) {
+            $relation = $this->bag->get($this->relationPath);
 
-  protected function parse(string $path)
-  {
-    $segments = explode('.', $this->path);
-    $field = array_pop($segments);
-    $path = implode('.', $segments);
+            // dd($relation);
+            return is_array($relation) ? (in_array($this->field, $relation)) : true;
+        }
 
-    $this->field = $field;
-    $this->relationPath = $path;
-  }
+        return false;
+    }
 
-  public function getRelationPath(): string
-  {
-    return $this->relationPath;
-  }
+    protected function parse(string $path)
+    {
+        $segments = explode('.', $this->path);
+        $field = array_pop($segments);
+        $path = implode('.', $segments);
 
-  public function getField()
-  {
-    return $this->field;
-  }
+        $this->field = $field;
+        $this->relationPath = $path;
+    }
 
-  public function resolve(Builder $builder, Clause $clause)
-  {
-    return $builder->whereHas($this->relationPath, function (Builder $sub) use ($clause): Builder {
-      return $sub->where($this->field, $clause->operator, $clause->value);
-    });
-  }
+    public function getRelationPath(): string
+    {
+        return $this->relationPath;
+    }
+
+    public function getField()
+    {
+        return $this->field;
+    }
+
+    public function resolve(Builder $builder, Clause $clause)
+    {
+        return $builder->whereHas($this->relationPath, function (Builder $sub) use ($clause): Builder {
+            return $sub->where($this->field, $clause->operator, $clause->value);
+        });
+    }
 }

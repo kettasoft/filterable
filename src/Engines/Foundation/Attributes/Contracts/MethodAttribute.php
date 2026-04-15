@@ -9,15 +9,17 @@ use Kettasoft\Filterable\Engines\Foundation\Attributes\AttributeContext;
  */
 interface MethodAttribute
 {
-  /**
-   * Get the stage at which this attribute should be applied.
-   * @return int The stage value.
-   */
-  public static function stage(): int;
+    /**
+     * Get the stage at which this attribute should be applied.
+     *
+     * @return int The stage value.
+     */
+    public static function stage(): int;
 
-  /**
-   * Handle attribute behavior.
-   * @param AttributeContext $context The context of the attribute application.
-   */
-  public function handle(AttributeContext $context): void;
+    /**
+     * Handle attribute behavior.
+     *
+     * @param AttributeContext $context The context of the attribute application.
+     */
+    public function handle(AttributeContext $context): void;
 }

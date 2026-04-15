@@ -7,23 +7,23 @@ namespace Kettasoft\Filterable\Engines\Foundation\Attributes\Enums;
  */
 enum Stage: int
 {
-  /**
-   * Stop / allow execution.
-   */
-  case CONTROL = 1;
+    /**
+     * Stop / allow execution.
+     */
+    case CONTROL = 1;
 
-  /**
-   * Modify payload.
-   */
-  case TRANSFORM = 2;
+    /**
+     * Modify payload.
+     */
+    case TRANSFORM = 2;
 
-  /**
-   * Assert correctness.
-   */
-  case VALIDATE = 3;
+    /**
+     * Assert correctness.
+     */
+    case VALIDATE = 3;
 
-  /**
-   * Affect query behavior.
-   */
-  case BEHAVIOR = 4;
+    /**
+     * Affect query behavior.
+     */
+    case BEHAVIOR = 4;
 }

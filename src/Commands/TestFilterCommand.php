@@ -27,10 +27,11 @@ class TestFilterCommand extends Command
         $filterNamespace = Config::get('filterable.filter_namespace', 'App\\Http\\Filters');
         $filterClass = Str::contains($filterName, '\\')
             ? $filterName
-            : $filterNamespace . '\\' . $filterName;
+            : $filterNamespace.'\\'.$filterName;
 
         if (!class_exists($filterClass)) {
             $this->error("Filter class [$filterClass] not found.");
+
             return Command::FAILURE;
         }
 
@@ -38,16 +39,18 @@ class TestFilterCommand extends Command
 
         // Resolve model
         if (!$modelName) {
-            $this->warn("⚠️  No model provided. Use --model=User");
+            $this->warn('⚠️  No model provided. Use --model=User');
+
             return Command::FAILURE;
         }
 
         $modelClass = Str::contains($modelName, '\\')
             ? $modelName
-            : 'App\\Models\\' . $modelName;
+            : 'App\\Models\\'.$modelName;
 
         if (!class_exists($modelClass)) {
             $this->error("Model class [$modelClass] not found.");
+
             return Command::FAILURE;
         }
 
@@ -59,16 +62,19 @@ class TestFilterCommand extends Command
             $pairs = explode(',', $dataOption);
             foreach ($pairs as $pair) {
                 [$key, $value] = array_pad(explode('=', $pair, 2), 2, null);
-                if ($key) $data[trim($key)] = trim($value);
+                if ($key) {
+                    $data[trim($key)] = trim($value);
+                }
             }
         }
 
         if (empty($data)) {
-            $this->warn("⚠️  No data provided. Use --data=\"status=active,age=30\"");
+            $this->warn('⚠️  No data provided. Use --data="status=active,age=30"');
+
             return Command::FAILURE;
         }
 
-        $this->line("Applied filters:");
+        $this->line('Applied filters:');
         foreach ($data as $key => $value) {
             $this->line("  • <comment>{$key}</comment> = {$value}");
         }
@@ -81,10 +87,11 @@ class TestFilterCommand extends Command
             $filter = $filter->apply();
 
             $this->newLine();
-            $this->info("✅ Query:");
+            $this->info('✅ Query:');
             $this->info($explainOption ? $filter->toRawSql() : $filter->toSql());
         } catch (\Throwable $e) {
-            $this->error("❌ Error applying filter: " . $e->getMessage());
+            $this->error('❌ Error applying filter: '.$e->getMessage());
+
             return Command::FAILURE;
         }
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace Kettasoft\Filterable\Tests\Unit\Filterable;
 
 use Kettasoft\Filterable\Filterable;
@@ -11,7 +12,7 @@ class FilterableTapFeatureTest extends TestCase
         $filterable = Filterable::tap(function (Filterable $filterable) {
             $filterable->setAllowedFields(['name']);
         });
-        
+
         $this->assertInstanceOf(Filterable::class, $filterable);
         $this->assertEquals(['name'], $filterable->getAllowedFields());
     }

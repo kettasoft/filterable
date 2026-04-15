@@ -7,12 +7,10 @@ use Kettasoft\Filterable\Commands\Concerns\CommandHelpers;
 
 /**
  * Command to list all registered Filterable classes and their configurations.
- * 
+ *
  * This command scans the app/Http/Filters directory for classes that extend
  * the Filterable base class and displays their associated models, allowed fields,
  * allowed operators, and engines in a tabular format.
- * 
- * @package Kettasoft\Filterable\Commands
  */
 class ListFiltersCommand extends Command
 {
@@ -43,6 +41,7 @@ class ListFiltersCommand extends Command
 
         if (empty($filters)) {
             $this->warn('No filterable classes found.');
+
             return;
         }
 
@@ -52,11 +51,11 @@ class ListFiltersCommand extends Command
             $instance = new $filterClass();
 
             $rows[] = [
-                'Filter'   => class_basename($filterClass),
-                'Model'    => $this->getModel($instance),
-                'Fields'   => implode(', ', $instance->getAllowedFields() ?? []) ?: 'N/A',
+                'Filter'    => class_basename($filterClass),
+                'Model'     => $this->getModel($instance),
+                'Fields'    => implode(', ', $instance->getAllowedFields() ?? []) ?: 'N/A',
                 'Operators' => implode(', ', $instance->getAllowedOperators() ?? []) ?: 'N/A',
-                'Engine'   => $this->getEngine($instance),
+                'Engine'    => $this->getEngine($instance),
             ];
         }
 

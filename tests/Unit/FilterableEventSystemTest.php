@@ -2,16 +2,16 @@
 
 namespace Tests\Unit;
 
-use Kettasoft\Filterable\Tests\TestCase;
-use Kettasoft\Filterable\Tests\Models\Post;
-use Kettasoft\Filterable\Facades\Filterable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Kettasoft\Filterable\Facades\Filterable;
 use Kettasoft\Filterable\Filterable as BaseFilterable;
 use Kettasoft\Filterable\Tests\Http\Filters\PostFilter;
+use Kettasoft\Filterable\Tests\Models\Post;
+use Kettasoft\Filterable\Tests\TestCase;
 
 /**
- * Test suite for the Filterable Event System
- * 
+ * Test suite for the Filterable Event System.
+ *
  * These tests demonstrate how to test the event system functionality.
  */
 class FilterableEventSystemTest extends TestCase
@@ -24,7 +24,7 @@ class FilterableEventSystemTest extends TestCase
     }
 
     /**
-     * Clean up listeners after each test
+     * Clean up listeners after each test.
      */
     protected function tearDown(): void
     {
@@ -212,8 +212,8 @@ class FilterableEventSystemTest extends TestCase
     /** @test */
     public function it_can_flush_all_listeners()
     {
-        Filterable::on('filterable.applied', fn($filterable) => null);
-        Filterable::observe(PostFilter::class, fn() => null);
+        Filterable::on('filterable.applied', fn ($filterable) => null);
+        Filterable::observe(PostFilter::class, fn () => null);
 
         $this->assertCount(1, Filterable::getListeners('filterable.applied'));
         $this->assertCount(1, Filterable::getObservers(PostFilter::class));
@@ -280,8 +280,8 @@ class FilterableEventSystemTest extends TestCase
     /** @test */
     public function it_can_retrieve_registered_listeners()
     {
-        $callback1 = fn($filterable) => null;
-        $callback2 = fn($filterable) => null;
+        $callback1 = fn ($filterable) => null;
+        $callback2 = fn ($filterable) => null;
 
         Filterable::on('filterable.applied', $callback1);
         Filterable::on('filterable.applied', $callback2);
@@ -296,8 +296,8 @@ class FilterableEventSystemTest extends TestCase
     /** @test */
     public function it_can_retrieve_registered_observers()
     {
-        $callback1 = fn() => null;
-        $callback2 = fn() => null;
+        $callback1 = fn () => null;
+        $callback2 = fn () => null;
 
         Filterable::observe(PostFilter::class, $callback1);
         Filterable::observe(PostFilter::class, $callback2);
@@ -329,7 +329,6 @@ class FilterableEventSystemTest extends TestCase
         Filterable::on('filterable.finished', function ($filterable) use (&$events) {
             $events[] = 'finished';
         });
-
 
         PostFilter::create()->apply(Post::query())->get();
 

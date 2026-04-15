@@ -2,16 +2,16 @@
 
 namespace Kettasoft\Filterable\Tests\Feature\Filterable;
 
-use Kettasoft\Filterable\Filterable;
-use Kettasoft\Filterable\Tests\TestCase;
-use Kettasoft\Filterable\Tests\Models\Post;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Kettasoft\Filterable\Filterable;
+use Kettasoft\Filterable\Tests\Models\Post;
+use Kettasoft\Filterable\Tests\TestCase;
 
 class FilterableLifecycleHooksTest extends TestCase
 {
     public function test_it_can_trigger_before_filtering_hook()
     {
-        $filter = new class extends Filterable {
+        $filter = new class() extends Filterable {
             protected function initially(Builder $builder): Builder
             {
                 return $builder->where('id', '>', 10);
@@ -25,7 +25,7 @@ class FilterableLifecycleHooksTest extends TestCase
 
     public function test_it_can_trigger_after_filtering_hook()
     {
-        $filter = new class extends Filterable {
+        $filter = new class() extends Filterable {
             protected function finally(Builder $builder): Builder
             {
                 return $builder->where('id', '>', 10);
@@ -39,7 +39,7 @@ class FilterableLifecycleHooksTest extends TestCase
 
     public function test_it_can_trigger_initially_with_finally_hook()
     {
-        $filter = new class extends Filterable {
+        $filter = new class() extends Filterable {
             protected function initially(Builder $builder): Builder
             {
                 return $builder->where('id', '>', 10);
@@ -58,8 +58,9 @@ class FilterableLifecycleHooksTest extends TestCase
 
     public function test_it_can_trigger_initially_with_request_filters_and_finally_hook()
     {
-        $filter = new class extends Filterable {
+        $filter = new class() extends Filterable {
             protected $filters = ['title'];
+
             protected function initially(Builder $builder): Builder
             {
                 return $builder->where('id', '>', 10);

@@ -3,7 +3,6 @@
 namespace Kettasoft\Filterable\Tests\Unit\Facades;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use Kettasoft\Filterable\Facades\Filterable;
 use Kettasoft\Filterable\Foundation\FilterableSettings;
 use Kettasoft\Filterable\Foundation\Resources;
@@ -29,7 +28,7 @@ class FilterableFacadeTest extends TestCase
     {
         $request = Request::create('/custom', 'GET');
         $filterable = Filterable::withRequest($request);
-        
+
         $this->assertInstanceOf(\Kettasoft\Filterable\Filterable::class, $filterable);
         $this->assertEquals($request, $filterable->getRequest());
     }
@@ -67,7 +66,7 @@ class FilterableFacadeTest extends TestCase
     {
         $fields = ['name', 'email', 'age'];
         $filterable = Filterable::setAllowedFields($fields);
-        
+
         $this->assertEquals($fields, $filterable->getAllowedFields());
     }
 
@@ -83,7 +82,7 @@ class FilterableFacadeTest extends TestCase
     {
         $data = ['name' => 'John', 'age' => 25];
         $filterable = Filterable::setData($data);
-        
+
         $this->assertEquals($data, $filterable->getData());
     }
 
@@ -92,7 +91,7 @@ class FilterableFacadeTest extends TestCase
     {
         $modelClass = '\Kettasoft\Filterable\Tests\Models\Post';
         $filterable = Filterable::setModel($modelClass);
-        
+
         $this->assertEquals($modelClass, $filterable->getModel());
     }
 
@@ -102,8 +101,9 @@ class FilterableFacadeTest extends TestCase
         $condition = true;
         $called = false;
 
-        $filterable = Filterable::when($condition, function($filter) use (&$called) {
+        $filterable = Filterable::when($condition, function ($filter) use (&$called) {
             $called = true;
+
             return $filter;
         });
 
@@ -115,11 +115,11 @@ class FilterableFacadeTest extends TestCase
     public function it_can_add_and_get_sorting()
     {
         $filterClass = 'TestFilter';
-        $callback = function($query) { return $query; };
-        
+        $callback = function ($query) { return $query; };
+
         Filterable::addSorting($filterClass, $callback);
         $sorting = Filterable::getSorting($filterClass);
-        
+
         $this->assertNotNull($sorting);
     }
 
@@ -128,7 +128,7 @@ class FilterableFacadeTest extends TestCase
     {
         $map = ['display_name' => 'name', 'user_email' => 'email'];
         $filterable = Filterable::setFieldsMap($map);
-        
+
         $this->assertEquals($map, $filterable->getFieldsMap());
     }
 
@@ -136,9 +136,9 @@ class FilterableFacadeTest extends TestCase
     public function it_can_convert_query_to_sql()
     {
         $builder = \Kettasoft\Filterable\Tests\Models\Post::query();
-        
+
         $sql = Filterable::setBuilder($builder)->toSql();
-        
+
         $this->assertEquals('select * from "posts"', strtolower($sql));
     }
 
@@ -147,7 +147,7 @@ class FilterableFacadeTest extends TestCase
     {
         $config = ['header' => 'X-Filter-Engine'];
         $filterable = Filterable::withHeaderDrivenMode($config);
-        
+
         $this->assertInstanceOf(\Kettasoft\Filterable\Filterable::class, $filterable);
     }
 

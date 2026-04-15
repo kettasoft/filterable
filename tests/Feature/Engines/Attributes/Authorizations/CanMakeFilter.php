@@ -7,8 +7,8 @@ use Kettasoft\Filterable\Contracts\Authorizable;
 
 class CanMakeFilter implements Authorizable
 {
-  public function authorize(): bool
-  {
-    return true;
-  }
+    public function authorize(): bool
+    {
+        return true;
+    }
 }

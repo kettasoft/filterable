@@ -8,7 +8,9 @@ interface FilterableProfile
 {
     /**
      * Handle the given filterable context.
+     *
      * @param Filterable $context
+     *
      * @return Filterable
      */
     public function __invoke(Filterable $context): Filterable;

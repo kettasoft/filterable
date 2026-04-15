@@ -9,13 +9,14 @@ trait InteractsWithProvidedData
 {
     /**
      * Provided data storage.
+     *
      * @var array
      */
     protected static $provided = [];
 
     /**
      * Get provided data.
-     * 
+     *
      * @return array
      */
     public static function provides()
@@ -25,8 +26,9 @@ trait InteractsWithProvidedData
 
     /**
      * Provide data to all Filterable instances.
-     * 
+     *
      * @param array $data
+     *
      * @return void
      */
     public static function provide(array $data)
@@ -36,8 +38,9 @@ trait InteractsWithProvidedData
 
     /**
      * Check if provided data exists by key.
-     * 
+     *
      * @param string $key
+     *
      * @return bool
      */
     public function hasProvided(string $key): bool
@@ -47,12 +50,13 @@ trait InteractsWithProvidedData
 
     /**
      * Get provided data by key.
-     * 
+     *
      * @param string $key
-     * @param mixed $default
+     * @param mixed  $default
+     *
      * @return mixed
      */
-    public function provided(string|null $key = null, $default = null)
+    public function provided(?string $key = null, $default = null)
     {
         if ($key === null) {
             return self::$provided;

@@ -9,16 +9,17 @@ use Kettasoft\Filterable\Tests\TestCase;
 
 class FilterableToSqlTest extends TestCase
 {
-  /**
-   * It can generate sql string.
-   * @test
-   */
-  public function it_can_generate_sql_string()
-  {
-    $request = Request::create('/posts?status=pending');
-    $filterable = filterable($request)->setAllowedFields(['status'])
-      ->useEngine(Ruleset::class);
+    /**
+     * It can generate sql string.
+     *
+     * @test
+     */
+    public function it_can_generate_sql_string()
+    {
+        $request = Request::create('/posts?status=pending');
+        $filterable = filterable($request)->setAllowedFields(['status'])
+          ->useEngine(Ruleset::class);
 
-    $this->assertTrue(is_string($filterable->toSql(Post::query())));
-  }
+        $this->assertTrue(is_string($filterable->toSql(Post::query())));
+    }
 }

@@ -7,8 +7,9 @@ interface EventManager
     /**
      * Register a listener for a specific event.
      *
-     * @param  string   $event
-     * @param  callable $listener
+     * @param string   $event
+     * @param callable $listener
+     *
      * @return void
      */
     public function on(string $event, callable $listener): void;
@@ -16,8 +17,9 @@ interface EventManager
     /**
      * Register an observer for a specific filter class.
      *
-     * @param  string   $class
-     * @param  callable $listener
+     * @param string   $class
+     * @param callable $listener
+     *
      * @return void
      */
     public function observe(string $class, callable $listener): void;
@@ -25,14 +27,15 @@ interface EventManager
     /**
      * Dispatch an event with an optional payload.
      *
-     * @param  string $event
-     * @param  mixed  $payload
+     * @param string $event
+     * @param mixed  $payload
+     *
      * @return void
      */
     public function dispatch(string $event, mixed ...$payload): void;
 
     /**
-     * Enable a specific event behavior (e.g. logging, async dispatch, retry, etc.)
+     * Enable a specific event behavior (e.g. logging, async dispatch, retry, etc.).
      *
      * @return self
      */
@@ -55,7 +58,8 @@ interface EventManager
     /**
      * Get all listeners registered for a specific event.
      *
-     * @param  string $event
+     * @param string $event
+     *
      * @return array<int, callable>
      */
     public function getListeners(string $event): array;
@@ -63,7 +67,8 @@ interface EventManager
     /**
      * Get all observers registered for a specific class.
      *
-     * @param  string $class
+     * @param string $class
+     *
      * @return array<int, callable>
      */
     public function getObservers(string $class): array;

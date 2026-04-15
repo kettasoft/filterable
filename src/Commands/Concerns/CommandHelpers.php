@@ -12,6 +12,7 @@ trait CommandHelpers
      *
      * @param string $highlighter
      * @param string $color
+     *
      * @return string
      */
     protected function highlight(string $highlighter, string $color): string
@@ -27,7 +28,9 @@ trait CommandHelpers
     protected function getFilters(): array
     {
         $filtersPath = app_path('Http/Filters');
-        if (!File::isDirectory($filtersPath)) return [];
+        if (!File::isDirectory($filtersPath)) {
+            return [];
+        }
 
         $classes = [];
         foreach (File::allFiles($filtersPath) as $file) {
@@ -36,6 +39,7 @@ trait CommandHelpers
                 $classes[] = $class;
             }
         }
+
         return $classes;
     }
 
@@ -43,23 +47,27 @@ trait CommandHelpers
      * Convert a file path to a fully qualified class name.
      *
      * @param string $path
+     *
      * @return string
      */
     protected function pathToClass($path): string
     {
-        $relative = str_replace([app_path() . '/', '.php'], '', $path);
-        return 'App\\' . str_replace('/', '\\', $relative);
+        $relative = str_replace([app_path().'/', '.php'], '', $path);
+
+        return 'App\\'.str_replace('/', '\\', $relative);
     }
 
     /**
      * Get the model associated with the filter.
      *
      * @param mixed $filter
+     *
      * @return string
      */
     protected function getModel($filter): string
     {
-        $model = class_basename($filter->getModel()) ?: "N/A";
+        $model = class_basename($filter->getModel()) ?: 'N/A';
+
         return method_exists($filter, 'getModel') ? $model : '-';
     }
 
@@ -67,6 +75,7 @@ trait CommandHelpers
      * Get the engine associated with the filter.
      *
      * @param mixed $filter
+     *
      * @return string
      */
     protected function getEngine($filter): string
@@ -78,6 +87,7 @@ trait CommandHelpers
      * Get the provided data keys from the filter.
      *
      * @param mixed $filter
+     *
      * @return array
      */
     protected function getProvidedData($filter): array
@@ -91,21 +101,28 @@ trait CommandHelpers
      * Resolve the Filterable class from input.
      *
      * @param string $input
+     *
      * @return string|null
      */
     protected function resolveFilterClass(string $input): ?string
     {
         // If fully qualified, just return
-        if (class_exists($input)) return $input;
+        if (class_exists($input)) {
+            return $input;
+        }
 
         // Try with App\Filters namespace
         $guessed = "App\\Filters\\{$input}";
-        if (class_exists($guessed)) return $guessed;
+        if (class_exists($guessed)) {
+            return $guessed;
+        }
 
         // Try with configured namespace
         $namespace = config('filterable.namespace', 'App\\Filters');
         $alt = sprintf('%s\\%s', rtrim($namespace, '\\'), $input);
-        if (class_exists($alt)) return $alt;
+        if (class_exists($alt)) {
+            return $alt;
+        }
 
         return null;
     }

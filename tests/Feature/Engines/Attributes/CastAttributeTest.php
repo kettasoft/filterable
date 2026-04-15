@@ -2,242 +2,242 @@
 
 namespace Kettasoft\Filterable\Tests\Feature\Engines\Attributes;
 
+use Kettasoft\Filterable\Engines\Foundation\Attributes\Annotations\Cast;
+use Kettasoft\Filterable\Exceptions\StrictnessException;
 use Kettasoft\Filterable\Filterable;
-use Kettasoft\Filterable\Tests\TestCase;
 use Kettasoft\Filterable\Support\Payload;
 use Kettasoft\Filterable\Tests\Models\Post;
-use Kettasoft\Filterable\Exceptions\StrictnessException;
-use Kettasoft\Filterable\Engines\Foundation\Attributes\Annotations\Cast;
+use Kettasoft\Filterable\Tests\TestCase;
 
 class CastAttributeTest extends TestCase
 {
-  public function test_cast_attribute_casts_value_to_int()
-  {
-    request()->merge([
-      'views' => '42',
-    ]);
+    public function test_cast_attribute_casts_value_to_int()
+    {
+        request()->merge([
+            'views' => '42',
+        ]);
 
-    $class = new class extends Filterable {
-      protected $filters = ['views'];
+        $class = new class() extends Filterable {
+            protected $filters = ['views'];
 
-      #[Cast('int')]
-      public function views(Payload $payload)
-      {
-        $this->builder->where('views', '=', $payload->value);
-      }
-    };
+            #[Cast('int')]
+            public function views(Payload $payload)
+            {
+                $this->builder->where('views', '=', $payload->value);
+            }
+        };
 
-    $sql = Post::filter($class)->toRawSql();
+        $sql = Post::filter($class)->toRawSql();
 
-    $this->assertStringContainsString('where "views" = 42', $sql);
-  }
+        $this->assertStringContainsString('where "views" = 42', $sql);
+    }
 
-  public function test_cast_attribute_casts_value_to_boolean_true()
-  {
-    request()->merge([
-      'is_featured' => 'true',
-    ]);
+    public function test_cast_attribute_casts_value_to_boolean_true()
+    {
+        request()->merge([
+            'is_featured' => 'true',
+        ]);
 
-    $class = new class extends Filterable {
-      protected $filters = ['is_featured'];
+        $class = new class() extends Filterable {
+            protected $filters = ['is_featured'];
 
-      #[Cast('boolean')]
-      public function isFeatured(Payload $payload)
-      {
-        $this->builder->where('is_featured', '=', $payload->value);
-      }
-    };
+            #[Cast('boolean')]
+            public function isFeatured(Payload $payload)
+            {
+                $this->builder->where('is_featured', '=', $payload->value);
+            }
+        };
 
-    $sql = Post::filter($class)->toRawSql();
+        $sql = Post::filter($class)->toRawSql();
 
-    $this->assertStringContainsString('"is_featured" = 1', $sql);
-  }
+        $this->assertStringContainsString('"is_featured" = 1', $sql);
+    }
 
-  public function test_cast_attribute_casts_value_to_boolean_false()
-  {
-    request()->merge([
-      'is_featured' => 'false',
-    ]);
+    public function test_cast_attribute_casts_value_to_boolean_false()
+    {
+        request()->merge([
+            'is_featured' => 'false',
+        ]);
 
-    $class = new class extends Filterable {
-      protected $filters = ['is_featured'];
+        $class = new class() extends Filterable {
+            protected $filters = ['is_featured'];
 
-      #[Cast('boolean')]
-      public function isFeatured(Payload $payload)
-      {
-        $this->builder->where('is_featured', '=', $payload->value);
-      }
-    };
+            #[Cast('boolean')]
+            public function isFeatured(Payload $payload)
+            {
+                $this->builder->where('is_featured', '=', $payload->value);
+            }
+        };
 
-    $sql = Post::filter($class)->toRawSql();
+        $sql = Post::filter($class)->toRawSql();
 
-    $this->assertStringContainsString('"is_featured"', $sql);
-  }
+        $this->assertStringContainsString('"is_featured"', $sql);
+    }
 
-  public function test_cast_attribute_casts_value_to_array_from_json()
-  {
-    request()->merge([
-      'tags' => '["php","laravel"]',
-    ]);
+    public function test_cast_attribute_casts_value_to_array_from_json()
+    {
+        request()->merge([
+            'tags' => '["php","laravel"]',
+        ]);
 
-    $class = new class extends Filterable {
-      protected $filters = ['tags'];
+        $class = new class() extends Filterable {
+            protected $filters = ['tags'];
 
-      #[Cast('array')]
-      public function tags(Payload $payload)
-      {
-        $this->builder->whereIn('tags', $payload->value);
-      }
-    };
+            #[Cast('array')]
+            public function tags(Payload $payload)
+            {
+                $this->builder->whereIn('tags', $payload->value);
+            }
+        };
 
-    $sql = Post::filter($class)->toRawSql();
+        $sql = Post::filter($class)->toRawSql();
 
-    $this->assertStringContainsString('"tags" in', $sql);
-    $this->assertStringContainsString('php', $sql);
-    $this->assertStringContainsString('laravel', $sql);
-  }
+        $this->assertStringContainsString('"tags" in', $sql);
+        $this->assertStringContainsString('php', $sql);
+        $this->assertStringContainsString('laravel', $sql);
+    }
 
-  public function test_cast_attribute_throws_strictness_exception_for_unsupported_type()
-  {
-    $this->expectException(StrictnessException::class);
-    $this->expectExceptionMessage('Cast type [unsupported] is not supported.');
+    public function test_cast_attribute_throws_strictness_exception_for_unsupported_type()
+    {
+        $this->expectException(StrictnessException::class);
+        $this->expectExceptionMessage('Cast type [unsupported] is not supported.');
 
-    request()->merge([
-      'status' => 'active',
-    ]);
+        request()->merge([
+            'status' => 'active',
+        ]);
 
-    $class = new class extends Filterable {
-      protected $filters = ['status'];
+        $class = new class() extends Filterable {
+            protected $filters = ['status'];
 
-      #[Cast('unsupported')]
-      public function status(Payload $payload)
-      {
-        $this->builder->where('status', '=', $payload->value);
-      }
-    };
+            #[Cast('unsupported')]
+            public function status(Payload $payload)
+            {
+                $this->builder->where('status', '=', $payload->value);
+            }
+        };
 
-    Post::filter($class)->toRawSql();
-  }
+        Post::filter($class)->toRawSql();
+    }
 
-  public function test_cast_attribute_does_not_throw_for_valid_cast_type()
-  {
-    request()->merge([
-      'views' => '100',
-    ]);
+    public function test_cast_attribute_does_not_throw_for_valid_cast_type()
+    {
+        request()->merge([
+            'views' => '100',
+        ]);
 
-    $class = new class extends Filterable {
-      protected $filters = ['views'];
+        $class = new class() extends Filterable {
+            protected $filters = ['views'];
 
-      #[Cast('int')]
-      public function views(Payload $payload)
-      {
-        $this->builder->where('views', '>', $payload->value);
-      }
-    };
+            #[Cast('int')]
+            public function views(Payload $payload)
+            {
+                $this->builder->where('views', '>', $payload->value);
+            }
+        };
 
-    $sql = Post::filter($class)->toRawSql();
+        $sql = Post::filter($class)->toRawSql();
 
-    $this->assertStringContainsString('where "views" > 100', $sql);
-  }
+        $this->assertStringContainsString('where "views" > 100', $sql);
+    }
 
-  public function test_cast_attribute_with_slug_type()
-  {
-    request()->merge([
-      'title' => 'Hello World Post',
-    ]);
+    public function test_cast_attribute_with_slug_type()
+    {
+        request()->merge([
+            'title' => 'Hello World Post',
+        ]);
 
-    $class = new class extends Filterable {
-      protected $filters = ['title'];
+        $class = new class() extends Filterable {
+            protected $filters = ['title'];
 
-      #[Cast('slug')]
-      public function title(Payload $payload)
-      {
-        $this->builder->where('title', '=', $payload->value);
-      }
-    };
+            #[Cast('slug')]
+            public function title(Payload $payload)
+            {
+                $this->builder->where('title', '=', $payload->value);
+            }
+        };
 
-    $sql = Post::filter($class)->toRawSql();
+        $sql = Post::filter($class)->toRawSql();
 
-    $this->assertStringContainsString('hello-world-post', $sql);
-  }
+        $this->assertStringContainsString('hello-world-post', $sql);
+    }
 
-  public function test_cast_attribute_with_like_type()
-  {
-    request()->merge([
-      'title' => 'Laravel',
-    ]);
+    public function test_cast_attribute_with_like_type()
+    {
+        request()->merge([
+            'title' => 'Laravel',
+        ]);
 
-    $class = new class extends Filterable {
-      protected $filters = ['title'];
+        $class = new class() extends Filterable {
+            protected $filters = ['title'];
 
-      #[Cast('like')]
-      public function title(Payload $payload)
-      {
-        $this->builder->where('title', 'LIKE', $payload->value);
-      }
-    };
+            #[Cast('like')]
+            public function title(Payload $payload)
+            {
+                $this->builder->where('title', 'LIKE', $payload->value);
+            }
+        };
 
-    $sql = Post::filter($class)->toRawSql();
+        $sql = Post::filter($class)->toRawSql();
 
-    $this->assertStringContainsString('%Laravel%', $sql);
-  }
+        $this->assertStringContainsString('%Laravel%', $sql);
+    }
 
-  public function test_cast_attribute_with_empty_value_for_int_returns_null()
-  {
-    request()->merge([
-      'views' => '',
-    ]);
+    public function test_cast_attribute_with_empty_value_for_int_returns_null()
+    {
+        request()->merge([
+            'views' => '',
+        ]);
 
-    $class = new class extends Filterable {
-      protected $filters = ['views'];
+        $class = new class() extends Filterable {
+            protected $filters = ['views'];
 
-      #[Cast('int')]
-      public function views(Payload $payload)
-      {
-        if (!is_null($payload->value)) {
-          $this->builder->where('views', '=', $payload->value);
-        }
-      }
-    };
+            #[Cast('int')]
+            public function views(Payload $payload)
+            {
+                if (!is_null($payload->value)) {
+                    $this->builder->where('views', '=', $payload->value);
+                }
+            }
+        };
 
-    $sql = Post::filter($class)->toRawSql();
+        $sql = Post::filter($class)->toRawSql();
 
-    // Empty non-numeric value should produce null from asInt(), so no where clause added
-    $this->assertStringNotContainsString('where "views"', $sql);
-  }
+        // Empty non-numeric value should produce null from asInt(), so no where clause added
+        $this->assertStringNotContainsString('where "views"', $sql);
+    }
 
-  public function test_cast_attribute_stage_is_transform()
-  {
-    $this->assertEquals(
-      \Kettasoft\Filterable\Engines\Foundation\Attributes\Enums\Stage::TRANSFORM->value,
-      Cast::stage()
-    );
-  }
+    public function test_cast_attribute_stage_is_transform()
+    {
+        $this->assertEquals(
+            \Kettasoft\Filterable\Engines\Foundation\Attributes\Enums\Stage::TRANSFORM->value,
+            Cast::stage()
+        );
+    }
 
-  public function test_cast_attribute_handle_method_directly()
-  {
-    $payload = Payload::create('views', '=', '42', '42');
-    $context = new \Kettasoft\Filterable\Engines\Foundation\Attributes\AttributeContext(
-      payload: $payload
-    );
+    public function test_cast_attribute_handle_method_directly()
+    {
+        $payload = Payload::create('views', '=', '42', '42');
+        $context = new \Kettasoft\Filterable\Engines\Foundation\Attributes\AttributeContext(
+            payload: $payload
+        );
 
-    $cast = new Cast('int');
-    $cast->handle($context);
+        $cast = new Cast('int');
+        $cast->handle($context);
 
-    // handle doesn't throw, the cast is valid
-    $this->assertTrue(true);
-  }
+        // handle doesn't throw, the cast is valid
+        $this->assertTrue(true);
+    }
 
-  public function test_cast_attribute_handle_throws_for_invalid_type()
-  {
-    $this->expectException(StrictnessException::class);
+    public function test_cast_attribute_handle_throws_for_invalid_type()
+    {
+        $this->expectException(StrictnessException::class);
 
-    $payload = Payload::create('status', '=', 'active', 'active');
-    $context = new \Kettasoft\Filterable\Engines\Foundation\Attributes\AttributeContext(
-      payload: $payload
-    );
+        $payload = Payload::create('status', '=', 'active', 'active');
+        $context = new \Kettasoft\Filterable\Engines\Foundation\Attributes\AttributeContext(
+            payload: $payload
+        );
 
-    $cast = new Cast('nonExistent');
-    $cast->handle($context);
-  }
+        $cast = new Cast('nonExistent');
+        $cast->handle($context);
+    }
 }

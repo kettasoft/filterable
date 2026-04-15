@@ -9,8 +9,9 @@ class SkipExecution extends Exception
 {
     /**
      * SkipExecution constructor.
+     *
      * @param string $message
-     * @param mixed $clause
+     * @param mixed  $clause
      */
     public function __construct(string $message, protected mixed $clause = null)
     {
@@ -19,6 +20,7 @@ class SkipExecution extends Exception
 
     /**
      * Get the associated Clause.
+     *
      * @return ?Clause
      */
     public function getClause(): ?Clause
@@ -28,6 +30,7 @@ class SkipExecution extends Exception
 
     /**
      * Determine if this exception should be reported.
+     *
      * @return bool
      */
     public function shouldReport(): bool

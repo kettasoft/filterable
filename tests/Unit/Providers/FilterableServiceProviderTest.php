@@ -3,21 +3,19 @@
 namespace Tests\Unit\Providers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use InvalidArgumentException;
 use Kettasoft\Filterable\Filterable;
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Artisan;
-use Kettasoft\Filterable\Tests\TestCase;
-use Kettasoft\Filterable\Commands\MakeFilterCommand;
-use Kettasoft\Filterable\Providers\FilterableServiceProvider;
 use Kettasoft\Filterable\Foundation\Events\FilterableEventManager;
-use Kettasoft\Filterable\Foundation\Profiler\Storage\FileProfilerStorage;
-use Kettasoft\Filterable\Foundation\Profiler\Storage\DatabaseProfilerStorage;
 use Kettasoft\Filterable\Foundation\Profiler\Contracts\ProfilerStorageContract;
+use Kettasoft\Filterable\Foundation\Profiler\Storage\DatabaseProfilerStorage;
+use Kettasoft\Filterable\Foundation\Profiler\Storage\FileProfilerStorage;
+use Kettasoft\Filterable\Providers\FilterableServiceProvider;
+use Kettasoft\Filterable\Tests\TestCase;
 
 /**
  * Test suite for FilterableServiceProvider.
- * 
+ *
  * Tests the service provider's registration, configuration merging,
  * binding resolution, and extension hooks.
  */
@@ -158,7 +156,7 @@ class FilterableServiceProviderTest extends TestCase
     /** @test */
     public function extension_hooks_are_called_when_available(): void
     {
-        $provider = new class ($this->app) extends FilterableServiceProvider {
+        $provider = new class($this->app) extends FilterableServiceProvider {
             public bool $customEnginesRegistered = false;
             public bool $customSanitizersRegistered = false;
             public bool $additionalServicesRegistered = false;

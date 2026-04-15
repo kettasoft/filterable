@@ -2,11 +2,11 @@
 
 namespace Kettasoft\Filterable\Traits;
 
-use Kettasoft\Filterable\Filterable;
 use Illuminate\Contracts\Database\Eloquent\Builder;
-use Kettasoft\Filterable\Support\FilterResolver;
 use Kettasoft\Filterable\Exceptions\FilterClassNotResolvedException;
+use Kettasoft\Filterable\Filterable;
 use Kettasoft\Filterable\Foundation\Contracts\QueryBuilderInterface;
+use Kettasoft\Filterable\Support\FilterResolver;
 
 /**
  * Apply filters dynamically to Eloquent Query.
@@ -14,41 +14,45 @@ use Kettasoft\Filterable\Foundation\Contracts\QueryBuilderInterface;
  * This is not a typical Laravel Global Scope.
  *
  * @method static \Kettasoft\Filterable\Foundation\Invoker|\Illuminate\Contracts\Database\Eloquent\Builder filter(\Kettasoft\Filterable\Filterable|string|null $filter = null)
+ *
  * @mixin \Illuminate\Database\Eloquent\Model
  */
 trait HasFilterable
 {
-  /**
-   * Apply all relevant thread filters.
-   * @param \Illuminate\Contracts\Database\Eloquent\Builder $query
-   * @param \Kettasoft\Filterable\Filterable|string|null $filter
-   * @return \Illuminate\Contracts\Database\Eloquent\Builder
-   */
-  public function scopeFilter(Builder $query, Filterable|string|array|null $filter = null): QueryBuilderInterface
-  {
-    return (new FilterResolver($query, $filter))->resolve();
-  }
-
-  /**
-   * Get defined filterable class from model.
-   * @throws \Kettasoft\Filterable\Exceptions\FilterClassNotResolvedException
-   */
-  public function getFilterable()
-  {
-    if (! property_exists($this, 'filterable')) {
-      throw new FilterClassNotResolvedException(get_class($this));
+    /**
+     * Apply all relevant thread filters.
+     *
+     * @param \Illuminate\Contracts\Database\Eloquent\Builder $query
+     * @param \Kettasoft\Filterable\Filterable|string|null    $filter
+     *
+     * @return \Illuminate\Contracts\Database\Eloquent\Builder
+     */
+    public function scopeFilter(Builder $query, Filterable|string|array|null $filter = null): QueryBuilderInterface
+    {
+        return (new FilterResolver($query, $filter))->resolve();
     }
 
-    return $this->filterable;
-  }
+    /**
+     * Get defined filterable class from model.
+     *
+     * @throws \Kettasoft\Filterable\Exceptions\FilterClassNotResolvedException
+     */
+    public function getFilterable()
+    {
+        if (!property_exists($this, 'filterable')) {
+            throw new FilterClassNotResolvedException(get_class($this));
+        }
 
-  /**
-   * Get the number of models to return per page.
-   *
-   * @return int
-   */
-  public function getPerPage()
-  {
-    return config('filterable.paginate_limit') ?? request('perPage', parent::getPerPage());
-  }
+        return $this->filterable;
+    }
+
+    /**
+     * Get the number of models to return per page.
+     *
+     * @return int
+     */
+    public function getPerPage()
+    {
+        return config('filterable.paginate_limit') ?? request('perPage', parent::getPerPage());
+    }
 }

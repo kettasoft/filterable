@@ -21,11 +21,11 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->name,
-            'email' => $this->faker->unique()->safeEmail,
+            'name'       => $this->faker->name,
+            'email'      => $this->faker->unique()->safeEmail,
             'is_blocked' => $this->faker->boolean,
-            'platform' => $this->faker->randomElement(['web', 'ios', 'android']),
-            'password' => bcrypt('password'), // or use Hash::make('password')
+            'platform'   => $this->faker->randomElement(['web', 'ios', 'android']),
+            'password'   => bcrypt('password'), // or use Hash::make('password')
         ];
     }
 }

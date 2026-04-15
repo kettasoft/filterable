@@ -57,9 +57,9 @@ class Stub implements \Stringable
      */
     public function getPath()
     {
-        $path = static::getBasePath() . $this->stub;
+        $path = static::getBasePath().$this->stub;
 
-        return file_exists($path) ? $path : config('filterable.generator.stub') . $this->stub;
+        return file_exists($path) ? $path : config('filterable.generator.stub').$this->stub;
     }
 
     /**
@@ -92,7 +92,7 @@ class Stub implements \Stringable
         $contents = file_get_contents($this->getPath());
 
         foreach ($this->replacements as $search => $replace) {
-            $contents = str_replace('$$' . strtoupper($search) . '$$', $replace, $contents);
+            $contents = str_replace('$$'.strtoupper($search).'$$', $replace, $contents);
         }
 
         return $contents;
@@ -117,7 +117,7 @@ class Stub implements \Stringable
             mkdir($path);
         }
 
-        return file_put_contents($path . '/' . $filename, $this->getContents());
+        return file_put_contents($path.'/'.$filename, $this->getContents());
     }
 
     /**

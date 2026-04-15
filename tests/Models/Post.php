@@ -2,43 +2,43 @@
 
 namespace Kettasoft\Filterable\Tests\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Kettasoft\Filterable\Tests\Models\Tag;
-use Kettasoft\Filterable\Traits\HasFilterable;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Kettasoft\Filterable\Tests\Database\Factories\PostFactory;
+use Kettasoft\Filterable\Traits\HasFilterable;
 
 class Post extends Model
 {
-  use HasFactory, HasFilterable;
+    use HasFactory;
+    use HasFilterable;
 
-  protected $fillable = ['title', 'status', 'content', 'views', 'is_featured', 'description', 'tags'];
+    protected $fillable = ['title', 'status', 'content', 'views', 'is_featured', 'description', 'tags'];
 
-  protected $casts = [
-    'is_featured' => 'boolean',
-    'views' => 'integer',
-    'tags' => 'array',
-  ];
+    protected $casts = [
+        'is_featured' => 'boolean',
+        'views'       => 'integer',
+        'tags'        => 'array',
+    ];
 
-  public function scopeActive(Builder $query, $value = null): Builder
-  {
-    return $query->where('status', $value ?? 'active');
-  }
+    public function scopeActive(Builder $query, $value = null): Builder
+    {
+        return $query->where('status', $value ?? 'active');
+    }
 
-  public function scopePopular(Builder $query, $minViews = 100): Builder
-  {
-    return $query->where('views', '>=', $minViews);
-  }
+    public function scopePopular(Builder $query, $minViews = 100): Builder
+    {
+        return $query->where('views', '>=', $minViews);
+    }
 
-  public function tags(): HasMany
-  {
-    return $this->hasMany(Tag::class);
-  }
+    public function tags(): HasMany
+    {
+        return $this->hasMany(Tag::class);
+    }
 
-  protected static function newFactory(): PostFactory
-  {
-    return PostFactory::new();
-  }
+    protected static function newFactory(): PostFactory
+    {
+        return PostFactory::new();
+    }
 }

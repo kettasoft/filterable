@@ -8,75 +8,74 @@ use Kettasoft\Filterable\Foundation\Caching\CacheKeyGenerator;
 use Kettasoft\Filterable\Foundation\Caching\FilterableCacheManager;
 
 /**
- * HasFilterableCache trait
+ * HasFilterableCache trait.
  *
  * Provides caching capabilities to filterable classes.
  * Allows filters to cache their results with TTL, tags, scopes, and profiles.
- *
- * @package Kettasoft\Filterable\Traits
  */
 trait HasFilterableCache
 {
     /**
-     * Cache TTL for this filter
+     * Cache TTL for this filter.
      *
      * @var DateTimeInterface|int|null
      */
     protected DateTimeInterface|int|null $cacheTtl = null;
 
     /**
-     * Cache tags for this filter
+     * Cache tags for this filter.
      *
      * @var array
      */
     protected array $cacheTags = [];
 
     /**
-     * Cache scopes for this filter
+     * Cache scopes for this filter.
      *
      * @var array
      */
     protected array $cacheScopes = [];
 
     /**
-     * Cache profile name
+     * Cache profile name.
      *
      * @var string|null
      */
     protected ?string $cacheProfile = null;
 
     /**
-     * Whether caching is enabled for this filter instance
+     * Whether caching is enabled for this filter instance.
      *
      * @var bool
      */
     protected bool $cachingEnabled = false;
 
     /**
-     * Whether to cache forever
+     * Whether to cache forever.
      *
      * @var bool
      */
     protected bool $cacheForever = false;
 
     /**
-     * Conditional caching predicate
+     * Conditional caching predicate.
      *
      * @var callable|null
      */
     protected $cacheWhenCallback = null;
 
     /**
-     * Cache key generator instance
+     * Cache key generator instance.
      *
      * @var CacheKeyGenerator|null
      */
     protected ?CacheKeyGenerator $cacheKeyGenerator = null;
 
     /**
-     * Enable caching with optional TTL
+     * Enable caching with optional TTL.
      *
      * @param DateTimeInterface|int|null $ttl Time to live in seconds or DateTimeInterface
+     *
      * @return self
      */
     public function cache(DateTimeInterface|int|null $ttl = null): self
@@ -89,9 +88,10 @@ trait HasFilterableCache
     }
 
     /**
-     * Remember the results with caching
+     * Remember the results with caching.
      *
      * @param DateTimeInterface|int|null $ttl
+     *
      * @return self
      */
     public function remember(DateTimeInterface|int|null $ttl = null): self
@@ -100,7 +100,7 @@ trait HasFilterableCache
     }
 
     /**
-     * Cache results forever
+     * Cache results forever.
      *
      * @return self
      */
@@ -114,21 +114,24 @@ trait HasFilterableCache
     }
 
     /**
-     * Set cache tags
+     * Set cache tags.
      *
      * @param array $tags
+     *
      * @return self
      */
     public function cacheTags(array $tags): self
     {
         $this->cacheTags = $tags;
+
         return $this;
     }
 
     /**
-     * Scope cache by authenticated user
+     * Scope cache by authenticated user.
      *
      * @param int|string|null $userId
+     *
      * @return self
      */
     public function scopeByUser(int|string|null $userId = null): self
@@ -148,46 +151,53 @@ trait HasFilterableCache
     }
 
     /**
-     * Scope cache by tenant
+     * Scope cache by tenant.
      *
      * @param int|string $tenantId
+     *
      * @return self
      */
     public function scopeByTenant(int|string $tenantId): self
     {
         $this->cacheScopes['tenant'] = $tenantId;
+
         return $this;
     }
 
     /**
-     * Add a custom cache scope
+     * Add a custom cache scope.
      *
      * @param string $key
-     * @param mixed $value
+     * @param mixed  $value
+     *
      * @return self
      */
     public function scopeBy(string $key, mixed $value): self
     {
         $this->cacheScopes[$key] = $value;
+
         return $this;
     }
 
     /**
-     * Set multiple cache scopes
+     * Set multiple cache scopes.
      *
      * @param array $scopes
+     *
      * @return self
      */
     public function withScopes(array $scopes): self
     {
         $this->cacheScopes = array_merge($this->cacheScopes, $scopes);
+
         return $this;
     }
 
     /**
-     * Use a cache profile
+     * Use a cache profile.
      *
      * @param string $profile
+     *
      * @return self
      */
     public function cacheProfile(string $profile): self
@@ -212,10 +222,11 @@ trait HasFilterableCache
     }
 
     /**
-     * Cache only when a condition is met
+     * Cache only when a condition is met.
      *
-     * @param bool|callable $condition
+     * @param bool|callable              $condition
      * @param DateTimeInterface|int|null $ttl
+     *
      * @return self
      */
     public function cacheWhen(bool|callable $condition, DateTimeInterface|int|null $ttl = null): self
@@ -230,23 +241,24 @@ trait HasFilterableCache
     }
 
     /**
-     * Cache unless a condition is met
+     * Cache unless a condition is met.
      *
-     * @param bool|callable $condition
+     * @param bool|callable              $condition
      * @param DateTimeInterface|int|null $ttl
+     *
      * @return self
      */
     public function cacheUnless(bool|callable $condition, DateTimeInterface|int|null $ttl = null): self
     {
         if (is_callable($condition)) {
-            return $this->cacheWhen(fn() => !$condition(), $ttl);
+            return $this->cacheWhen(fn () => !$condition(), $ttl);
         }
 
         return $this->cacheWhen(!$condition, $ttl);
     }
 
     /**
-     * Flush all cached results for this filterable
+     * Flush all cached results for this filterable.
      *
      * Flushes cache using the auto-generated class tag, which will clear
      * all cache entries for this filter regardless of the terminal method used.
@@ -256,15 +268,16 @@ trait HasFilterableCache
     public function flushCache(): bool
     {
         // Flush by the auto-generated class tag
-        $classTag = 'filterable:' . Str::slug(class_basename(static::class));
+        $classTag = 'filterable:'.Str::slug(class_basename(static::class));
 
         return $this->flushCacheByTags([$classTag]);
     }
 
     /**
-     * Flush cache by tags
+     * Flush cache by tags.
      *
      * @param array|null $tags
+     *
      * @return bool
      */
     public function flushCacheByTags(?array $tags = null): bool
@@ -276,23 +289,26 @@ trait HasFilterableCache
         }
 
         $manager = app(FilterableCacheManager::class);
+
         return $manager->flushByTags($tags);
     }
 
     /**
-     * Flush cache by tags (static method)
+     * Flush cache by tags (static method).
      *
      * @param array $tags
+     *
      * @return bool
      */
     public static function flushCacheByTagsStatic(array $tags): bool
     {
         $manager = app(FilterableCacheManager::class);
+
         return $manager->flushByTags($tags);
     }
 
     /**
-     * Check if caching is enabled for this instance
+     * Check if caching is enabled for this instance.
      *
      * @return bool
      */
@@ -312,7 +328,7 @@ trait HasFilterableCache
     }
 
     /**
-     * Generate cache key for this filter
+     * Generate cache key for this filter.
      *
      * @return string
      */
@@ -333,7 +349,7 @@ trait HasFilterableCache
     }
 
     /**
-     * Get cache key generator instance
+     * Get cache key generator instance.
      *
      * @return CacheKeyGenerator
      */
@@ -347,9 +363,10 @@ trait HasFilterableCache
     }
 
     /**
-     * Execute with caching if enabled
+     * Execute with caching if enabled.
      *
      * @param callable $callback
+     *
      * @return mixed
      */
     protected function executeWithCache(callable $callback): mixed
@@ -376,7 +393,7 @@ trait HasFilterableCache
     }
 
     /**
-     * Get cache TTL
+     * Get cache TTL.
      *
      * @return DateTimeInterface|int|null
      */
@@ -386,20 +403,20 @@ trait HasFilterableCache
     }
 
     /**
-     * Get cache tags
+     * Get cache tags.
      *
      * @return array
      */
     public function getCacheTags(): array
     {
         // Always include a tag based on the filter class name for easy flushing
-        $classTag = 'filterable:' . Str::slug(class_basename(static::class));
+        $classTag = 'filterable:'.Str::slug(class_basename(static::class));
 
         return array_unique(array_merge([$classTag], $this->cacheTags));
     }
 
     /**
-     * Get cache scopes
+     * Get cache scopes.
      *
      * @return array
      */
@@ -409,7 +426,7 @@ trait HasFilterableCache
     }
 
     /**
-     * Get cache profile
+     * Get cache profile.
      *
      * @return string|null
      */
@@ -419,7 +436,7 @@ trait HasFilterableCache
     }
 
     /**
-     * Reset all cache settings
+     * Reset all cache settings.
      *
      * @return self
      */

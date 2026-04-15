@@ -6,31 +6,29 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
 /**
- * CacheKeyGenerator - Generates deterministic cache keys
+ * CacheKeyGenerator - Generates deterministic cache keys.
  *
  * Creates unique, deterministic cache keys for filterable operations
  * based on filter class, query parameters, data provisioning, and scopes.
- *
- * @package Kettasoft\Filterable\Foundation\Caching
  */
 class CacheKeyGenerator
 {
     /**
-     * Cache key prefix
+     * Cache key prefix.
      *
      * @var string
      */
     protected string $prefix;
 
     /**
-     * Cache key version for invalidation
+     * Cache key version for invalidation.
      *
      * @var string
      */
     protected string $version;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param string|null $prefix
      * @param string|null $version
@@ -42,13 +40,14 @@ class CacheKeyGenerator
     }
 
     /**
-     * Generate a cache key for a filterable operation
+     * Generate a cache key for a filterable operation.
      *
-     * @param string $filterClass
-     * @param array $filters
-     * @param array $providedData
-     * @param array $scopes
+     * @param string       $filterClass
+     * @param array        $filters
+     * @param array        $providedData
+     * @param array        $scopes
      * @param Builder|null $query
+     *
      * @return string
      */
     public function generate(
@@ -76,9 +75,10 @@ class CacheKeyGenerator
     }
 
     /**
-     * Generate a simple cache key from components
+     * Generate a simple cache key from components.
      *
      * @param string ...$components
+     *
      * @return string
      */
     public function simple(string ...$components): string
@@ -87,9 +87,10 @@ class CacheKeyGenerator
     }
 
     /**
-     * Normalize class name for cache key
+     * Normalize class name for cache key.
      *
      * @param string $className
+     *
      * @return string
      */
     protected function normalizeClassName(string $className): string
@@ -99,9 +100,10 @@ class CacheKeyGenerator
     }
 
     /**
-     * Hash filters array into deterministic string
+     * Hash filters array into deterministic string.
      *
      * @param array $filters
+     *
      * @return string
      */
     protected function hashFilters(array $filters): string
@@ -124,9 +126,10 @@ class CacheKeyGenerator
     }
 
     /**
-     * Hash provided data into deterministic string
+     * Hash provided data into deterministic string.
      *
      * @param array $providedData
+     *
      * @return string
      */
     protected function hashProvidedData(array $providedData): string
@@ -137,13 +140,14 @@ class CacheKeyGenerator
 
         ksort($providedData);
 
-        return 'data_' . md5(json_encode($providedData));
+        return 'data_'.md5(json_encode($providedData));
     }
 
     /**
-     * Hash scopes into deterministic string
+     * Hash scopes into deterministic string.
      *
      * @param array $scopes
+     *
      * @return string
      */
     protected function hashScopes(array $scopes): string
@@ -154,13 +158,14 @@ class CacheKeyGenerator
 
         ksort($scopes);
 
-        return 'scope_' . md5(json_encode($scopes));
+        return 'scope_'.md5(json_encode($scopes));
     }
 
     /**
-     * Generate a fingerprint for the query builder
+     * Generate a fingerprint for the query builder.
      *
      * @param Builder $query
+     *
      * @return string
      */
     protected function generateQueryFingerprint(Builder $query): string
@@ -170,16 +175,17 @@ class CacheKeyGenerator
         $bindings = $query->getBindings();
 
         // Create fingerprint
-        return 'query_' . md5($sql . json_encode($bindings));
+        return 'query_'.md5($sql.json_encode($bindings));
     }
 
     /**
-     * Generate a cache key with user scope
+     * Generate a cache key with user scope.
      *
-     * @param string $filterClass
+     * @param string     $filterClass
      * @param int|string $userId
-     * @param array $filters
-     * @param array $providedData
+     * @param array      $filters
+     * @param array      $providedData
+     *
      * @return string
      */
     public function forUser(
@@ -197,12 +203,13 @@ class CacheKeyGenerator
     }
 
     /**
-     * Generate a cache key with tenant scope
+     * Generate a cache key with tenant scope.
      *
-     * @param string $filterClass
+     * @param string     $filterClass
      * @param int|string $tenantId
-     * @param array $filters
-     * @param array $providedData
+     * @param array      $filters
+     * @param array      $providedData
+     *
      * @return string
      */
     public function forTenant(
@@ -220,12 +227,13 @@ class CacheKeyGenerator
     }
 
     /**
-     * Generate a cache key with custom scopes
+     * Generate a cache key with custom scopes.
      *
      * @param string $filterClass
-     * @param array $scopes
-     * @param array $filters
-     * @param array $providedData
+     * @param array  $scopes
+     * @param array  $filters
+     * @param array  $providedData
+     *
      * @return string
      */
     public function withScopes(
@@ -243,7 +251,7 @@ class CacheKeyGenerator
     }
 
     /**
-     * Get the cache key prefix
+     * Get the cache key prefix.
      *
      * @return string
      */
@@ -253,19 +261,21 @@ class CacheKeyGenerator
     }
 
     /**
-     * Set the cache key prefix
+     * Set the cache key prefix.
      *
      * @param string $prefix
+     *
      * @return self
      */
     public function setPrefix(string $prefix): self
     {
         $this->prefix = $prefix;
+
         return $this;
     }
 
     /**
-     * Get the cache key version
+     * Get the cache key version.
      *
      * @return string
      */
@@ -275,14 +285,16 @@ class CacheKeyGenerator
     }
 
     /**
-     * Set the cache key version
+     * Set the cache key version.
      *
      * @param string $version
+     *
      * @return self
      */
     public function setVersion(string $version): self
     {
         $this->version = $version;
+
         return $this;
     }
 }

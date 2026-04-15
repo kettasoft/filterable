@@ -3,10 +3,10 @@
 namespace Kettasoft\Filterable\Tests\Unit;
 
 use Illuminate\Support\Facades\Cache;
-use Kettasoft\Filterable\Tests\TestCase;
-use Kettasoft\Filterable\Tests\Models\Post;
 use Kettasoft\Filterable\Foundation\Caching\CacheKeyGenerator;
 use Kettasoft\Filterable\Foundation\Caching\FilterableCacheManager;
+use Kettasoft\Filterable\Tests\Models\Post;
+use Kettasoft\Filterable\Tests\TestCase;
 
 class FilterableCacheTest extends TestCase
 {
@@ -50,11 +50,13 @@ class FilterableCacheTest extends TestCase
 
         $result1 = $manager->remember('test_remember', 60, function () use (&$callCount) {
             $callCount++;
+
             return 'computed_value';
         });
 
         $result2 = $manager->remember('test_remember', 60, function () use (&$callCount) {
             $callCount++;
+
             return 'computed_value';
         });
 
@@ -187,15 +189,15 @@ class FilterableCacheTest extends TestCase
     public function it_caches_filterable_results_on_first_execution()
     {
         // Create a simple test filter
-        $filter = new class extends \Kettasoft\Filterable\Filterable {
+        $filter = new class() extends \Kettasoft\Filterable\Filterable {
             protected $filters = [];
         };
 
         // Set up test data
         $post = Post::create([
-            'title' => 'Test Post',
+            'title'   => 'Test Post',
             'content' => 'Test Body',
-            'status' => 'active',
+            'status'  => 'active',
         ]);
 
         // Enable caching and execute
@@ -211,15 +213,15 @@ class FilterableCacheTest extends TestCase
     public function it_retrieves_cached_results_on_second_execution()
     {
         // Create test filter
-        $filterClass = new class extends \Kettasoft\Filterable\Filterable {
+        $filterClass = new class() extends \Kettasoft\Filterable\Filterable {
             protected $filters = [];
         };
 
         // Create initial data
         $post1 = Post::create([
-            'title' => 'First Post',
+            'title'   => 'First Post',
             'content' => 'Body 1',
-            'status' => 'active',
+            'status'  => 'active',
         ]);
 
         // First execution - should cache
@@ -232,9 +234,9 @@ class FilterableCacheTest extends TestCase
 
         // Create more data AFTER caching
         $post2 = Post::create([
-            'title' => 'Second Post',
+            'title'   => 'Second Post',
             'content' => 'Body 2',
-            'status' => 'active',
+            'status'  => 'active',
         ]);
 
         // Second execution - should return cached results (still 1 post, not 2)
@@ -254,14 +256,14 @@ class FilterableCacheTest extends TestCase
     /** @test */
     public function it_executes_query_when_caching_is_disabled()
     {
-        $filter = new class extends \Kettasoft\Filterable\Filterable {
+        $filter = new class() extends \Kettasoft\Filterable\Filterable {
             protected $filters = [];
         };
 
         $post1 = Post::create([
-            'title' => 'Post 1',
+            'title'   => 'Post 1',
             'content' => 'Body 1',
-            'status' => 'active',
+            'status'  => 'active',
         ]);
 
         // Execute without caching
@@ -270,9 +272,9 @@ class FilterableCacheTest extends TestCase
 
         // Add another post
         $post2 = Post::create([
-            'title' => 'Post 2',
+            'title'   => 'Post 2',
             'content' => 'Body 2',
-            'status' => 'active',
+            'status'  => 'active',
         ]);
 
         // Execute again without caching - should see both posts
@@ -283,21 +285,21 @@ class FilterableCacheTest extends TestCase
     /** @test */
     public function it_creates_different_cache_for_different_terminal_methods()
     {
-        $filterClass = new class extends \Kettasoft\Filterable\Filterable {
+        $filterClass = new class() extends \Kettasoft\Filterable\Filterable {
             protected $filters = [];
         };
 
         // Create test data
         Post::create([
-            'title' => 'Post 1',
+            'title'   => 'Post 1',
             'content' => 'Body 1',
-            'status' => 'active',
+            'status'  => 'active',
         ]);
 
         Post::create([
-            'title' => 'Post 2',
+            'title'   => 'Post 2',
             'content' => 'Body 2',
-            'status' => 'active',
+            'status'  => 'active',
         ]);
 
         // Cache with get()
@@ -321,15 +323,15 @@ class FilterableCacheTest extends TestCase
     /** @test */
     public function it_caches_with_user_scope()
     {
-        $filterClass = new class extends \Kettasoft\Filterable\Filterable {
+        $filterClass = new class() extends \Kettasoft\Filterable\Filterable {
             protected $filters = [];
         };
 
         // Create test data
         $post = Post::create([
-            'title' => 'Scoped Post',
+            'title'   => 'Scoped Post',
             'content' => 'Body',
-            'status' => 'active',
+            'status'  => 'active',
         ]);
 
         // Cache with user scope
@@ -346,9 +348,9 @@ class FilterableCacheTest extends TestCase
 
         // Add more data
         Post::create([
-            'title' => 'Another Post',
+            'title'   => 'Another Post',
             'content' => 'Body',
-            'status' => 'active',
+            'status'  => 'active',
         ]);
 
         $results2 = $filter2->cache(60)
@@ -363,15 +365,15 @@ class FilterableCacheTest extends TestCase
     /** @test */
     public function it_can_flush_cached_results()
     {
-        $filterClass = new class extends \Kettasoft\Filterable\Filterable {
+        $filterClass = new class() extends \Kettasoft\Filterable\Filterable {
             protected $filters = [];
         };
 
         // Create initial data
         Post::create([
-            'title' => 'Post 1',
+            'title'   => 'Post 1',
             'content' => 'Body 1',
-            'status' => 'active',
+            'status'  => 'active',
         ]);
 
         // Cache results
@@ -384,9 +386,9 @@ class FilterableCacheTest extends TestCase
 
         // Add more data
         Post::create([
-            'title' => 'Post 2',
+            'title'   => 'Post 2',
             'content' => 'Body 2',
-            'status' => 'active',
+            'status'  => 'active',
         ]);
 
         // Flush cache
@@ -404,16 +406,16 @@ class FilterableCacheTest extends TestCase
     /** @test */
     public function it_caches_paginated_results()
     {
-        $filterClass = new class extends \Kettasoft\Filterable\Filterable {
+        $filterClass = new class() extends \Kettasoft\Filterable\Filterable {
             protected $filters = [];
         };
 
         // Create test data
         for ($i = 1; $i <= 25; $i++) {
             Post::create([
-                'title' => "Post $i",
+                'title'   => "Post $i",
                 'content' => "Body $i",
-                'status' => 'active',
+                'status'  => 'active',
             ]);
         }
 
@@ -429,9 +431,9 @@ class FilterableCacheTest extends TestCase
         // Add more posts
         for ($i = 26; $i <= 30; $i++) {
             Post::create([
-                'title' => "Post $i",
+                'title'   => "Post $i",
                 'content' => "Body $i",
-                'status' => 'active',
+                'status'  => 'active',
             ]);
         }
 
@@ -448,7 +450,7 @@ class FilterableCacheTest extends TestCase
     /** @test */
     public function it_uses_cache_tags_correctly()
     {
-        $filterClass = new class extends \Kettasoft\Filterable\Filterable {
+        $filterClass = new class() extends \Kettasoft\Filterable\Filterable {
             protected $filters = [];
         };
 
@@ -459,9 +461,9 @@ class FilterableCacheTest extends TestCase
 
         // Create test data
         Post::create([
-            'title' => 'Tagged Post',
+            'title'   => 'Tagged Post',
             'content' => 'Body',
-            'status' => 'active',
+            'status'  => 'active',
         ]);
 
         // Cache with tags
@@ -475,9 +477,9 @@ class FilterableCacheTest extends TestCase
 
         // Add more data
         Post::create([
-            'title' => 'Another Post',
+            'title'   => 'Another Post',
             'content' => 'Body',
-            'status' => 'active',
+            'status'  => 'active',
         ]);
 
         // Flush by tags
@@ -496,15 +498,15 @@ class FilterableCacheTest extends TestCase
     /** @test */
     public function it_respects_cache_when_condition()
     {
-        $filterClass = new class extends \Kettasoft\Filterable\Filterable {
+        $filterClass = new class() extends \Kettasoft\Filterable\Filterable {
             protected $filters = [];
         };
 
         // Create test data
         Post::create([
-            'title' => 'Post 1',
+            'title'   => 'Post 1',
             'content' => 'Body 1',
-            'status' => 'active',
+            'status'  => 'active',
         ]);
 
         // Cache only when condition is true
@@ -517,9 +519,9 @@ class FilterableCacheTest extends TestCase
 
         // Add more data
         Post::create([
-            'title' => 'Post 2',
+            'title'   => 'Post 2',
             'content' => 'Body 2',
-            'status' => 'active',
+            'status'  => 'active',
         ]);
 
         // Don't cache when condition is false

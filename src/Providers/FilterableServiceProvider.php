@@ -2,35 +2,34 @@
 
 namespace Kettasoft\Filterable\Providers;
 
-use Illuminate\Http\Request;
-use InvalidArgumentException;
-use Kettasoft\Filterable\Filterable;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Contracts\Foundation\Application;
-use Kettasoft\Filterable\Commands\MakeFilterCommand;
-use Kettasoft\Filterable\Commands\TestFilterCommand;
-use Kettasoft\Filterable\Commands\ListFiltersCommand;
-use Kettasoft\Filterable\Commands\InspectFilterCommand;
-use Kettasoft\Filterable\Commands\SetupFilterableCommand;
+use Illuminate\Http\Request;
+use Illuminate\Support\ServiceProvider;
+use InvalidArgumentException;
 use Kettasoft\Filterable\Commands\FilterableDiscoverCommand;
-use Kettasoft\Filterable\Foundation\Events\FilterableEventManager;
-use Kettasoft\Filterable\Foundation\Caching\FilterableCacheManager;
+use Kettasoft\Filterable\Commands\InspectFilterCommand;
+use Kettasoft\Filterable\Commands\ListFiltersCommand;
+use Kettasoft\Filterable\Commands\MakeFilterCommand;
+use Kettasoft\Filterable\Commands\SetupFilterableCommand;
+use Kettasoft\Filterable\Commands\TestFilterCommand;
+use Kettasoft\Filterable\Filterable;
 use Kettasoft\Filterable\Foundation\Caching\CacheInvalidationObserver;
-use Kettasoft\Filterable\Foundation\Profiler\Storage\FileProfilerStorage;
-use Kettasoft\Filterable\Foundation\Profiler\Storage\DatabaseProfilerStorage;
+use Kettasoft\Filterable\Foundation\Caching\FilterableCacheManager;
+use Kettasoft\Filterable\Foundation\Events\FilterableEventManager;
 use Kettasoft\Filterable\Foundation\Profiler\Contracts\ProfilerStorageContract;
+use Kettasoft\Filterable\Foundation\Profiler\Storage\DatabaseProfilerStorage;
+use Kettasoft\Filterable\Foundation\Profiler\Storage\FileProfilerStorage;
 
 /**
  * Service provider for the Kettasoft Filterable package.
- * 
+ *
  * This provider handles:
  * - Configuration publishing and merging
  * - Service bindings and singletons
  * - Command registration
  * - Stub publishing
  * - Profiler storage configuration
- * 
- * @package Kettasoft\Filterable\Providers
+ *
  * @method void registerCustomEngines()
  * @method void registerCustomSanitizers()
  * @method void registerAdditionalServices()
@@ -43,12 +42,12 @@ class FilterableServiceProvider extends ServiceProvider
     /**
      * Configuration file path relative to package root.
      */
-    private const CONFIG_PATH = __DIR__ . '/../../config/filterable.php';
+    private const CONFIG_PATH = __DIR__.'/../../config/filterable.php';
 
     /**
      * Stubs directory path relative to package root.
      */
-    private const STUBS_PATH = __DIR__ . '/../../stubs/';
+    private const STUBS_PATH = __DIR__.'/../../stubs/';
 
     /**
      * Package configuration key.
@@ -65,12 +64,12 @@ class FilterableServiceProvider extends ServiceProvider
      */
     private const PROFILER_DRIVERS = [
         'database' => DatabaseProfilerStorage::class,
-        'log' => FileProfilerStorage::class,
+        'log'      => FileProfilerStorage::class,
     ];
 
     /**
      * Bootstrap any application services.
-     * 
+     *
      * This method is called after all providers have been registered.
      * It handles asset publishing, command registration, and other
      * bootstrap operations that depend on the container.
@@ -87,7 +86,7 @@ class FilterableServiceProvider extends ServiceProvider
 
     /**
      * Register any application services.
-     * 
+     *
      * This method is called during the registration phase and should
      * only register bindings in the container. It should not perform
      * any operations that depend on other services being available.
@@ -106,7 +105,7 @@ class FilterableServiceProvider extends ServiceProvider
 
     /**
      * Publish package assets (config files, stubs, etc.).
-     * 
+     *
      * Separates different types of publishable assets with clear
      * tags for selective publishing.
      *
@@ -116,24 +115,24 @@ class FilterableServiceProvider extends ServiceProvider
     {
         // Publish configuration file
         $this->publishes([
-            self::CONFIG_PATH => config_path(self::CONFIG_KEY . '.php'),
-        ], [self::CONFIG_KEY . '-config', 'config']);
+            self::CONFIG_PATH => config_path(self::CONFIG_KEY.'.php'),
+        ], [self::CONFIG_KEY.'-config', 'config']);
 
         // Publish stub files for code generation
         $this->publishes([
             self::STUBS_PATH => base_path('stubs'),
-        ], [self::CONFIG_KEY . '-stubs', 'stubs']);
+        ], [self::CONFIG_KEY.'-stubs', 'stubs']);
 
         // Allow publishing all assets at once
         $this->publishes([
-            self::CONFIG_PATH => config_path(self::CONFIG_KEY . '.php'),
-            self::STUBS_PATH => base_path('stubs'),
+            self::CONFIG_PATH => config_path(self::CONFIG_KEY.'.php'),
+            self::STUBS_PATH  => base_path('stubs'),
         ], self::CONFIG_KEY);
     }
 
     /**
      * Merge package configuration with application configuration.
-     * 
+     *
      * This ensures package defaults are available even if the user
      * hasn't published the config file.
      *
@@ -146,7 +145,7 @@ class FilterableServiceProvider extends ServiceProvider
 
     /**
      * Register core service bindings.
-     * 
+     *
      * Registers the main Filterable class as a singleton to ensure
      * consistent state across the application request lifecycle.
      *
@@ -172,7 +171,7 @@ class FilterableServiceProvider extends ServiceProvider
 
     /**
      * Register the FilterableEventManager as a singleton.
-     * 
+     *
      * This ensures that only one instance of the event manager exists
      * throughout the application lifecycle, maintaining consistent
      * event listener registration across the entire application.
@@ -191,7 +190,7 @@ class FilterableServiceProvider extends ServiceProvider
 
     /**
      * Register the FilterableCacheManager as a singleton.
-     * 
+     *
      * This ensures that only one instance of the cache manager exists
      * throughout the application lifecycle, providing consistent caching
      * behavior across all filterable instances.
@@ -210,12 +209,13 @@ class FilterableServiceProvider extends ServiceProvider
 
     /**
      * Register profiler storage implementations.
-     * 
+     *
      * Uses a factory pattern to create storage instances based on
      * configuration, with clear error handling for invalid drivers.
      *
-     * @return void
      * @throws InvalidArgumentException When an unsupported storage driver is configured
+     *
+     * @return void
      */
     protected function registerProfilerStorage(): void
     {
@@ -224,8 +224,8 @@ class FilterableServiceProvider extends ServiceProvider
 
             if (!isset(self::PROFILER_DRIVERS[$driver])) {
                 throw new InvalidArgumentException(
-                    "Unsupported profiler storage driver [{$driver}]. " .
-                        "Supported drivers are: " . implode(', ', array_keys(self::PROFILER_DRIVERS))
+                    "Unsupported profiler storage driver [{$driver}]. ".
+                        'Supported drivers are: '.implode(', ', array_keys(self::PROFILER_DRIVERS))
                 );
             }
 
@@ -237,7 +237,7 @@ class FilterableServiceProvider extends ServiceProvider
 
     /**
      * Register cache invalidation observers for auto-invalidation.
-     * 
+     *
      * Sets up automatic cache invalidation when configured models change.
      *
      * @return void
@@ -249,7 +249,7 @@ class FilterableServiceProvider extends ServiceProvider
 
     /**
      * Register Artisan commands.
-     * 
+     *
      * Only registers commands when running in console to avoid
      * unnecessary overhead in web requests.
      *
@@ -273,7 +273,7 @@ class FilterableServiceProvider extends ServiceProvider
 
     /**
      * Register package extensions and hooks.
-     * 
+     *
      * Provides extensibility points for developers to customize
      * package behavior without modifying core files.
      *
@@ -299,7 +299,7 @@ class FilterableServiceProvider extends ServiceProvider
 
     /**
      * Boot package extensions and perform post-registration setup.
-     * 
+     *
      * Provides boot-time extensibility points for operations that
      * require the full container to be available.
      *
@@ -325,7 +325,7 @@ class FilterableServiceProvider extends ServiceProvider
 
     /**
      * Get the services provided by the provider.
-     * 
+     *
      * This method helps Laravel optimize the container by knowing
      * which services this provider offers.
      *
@@ -344,7 +344,7 @@ class FilterableServiceProvider extends ServiceProvider
 
     /**
      * Determine if the provider is deferred.
-     * 
+     *
      * Returns false to ensure the provider is always loaded since
      * it provides essential configuration merging and publishing.
      *

@@ -2,4 +2,6 @@
 
 namespace Kettasoft\Filterable\Foundation\Contracts;
 
-interface ShouldReturnQueryBuilder {}
+interface ShouldReturnQueryBuilder
+{
+}

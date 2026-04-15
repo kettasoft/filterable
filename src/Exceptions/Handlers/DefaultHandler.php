@@ -2,8 +2,8 @@
 
 namespace Kettasoft\Filterable\Exceptions\Handlers;
 
-use Kettasoft\Filterable\Engines\Foundation\Engine;
 use Kettasoft\Filterable\Engines\Exceptions\SkipExecution;
+use Kettasoft\Filterable\Engines\Foundation\Engine;
 use Kettasoft\Filterable\Exceptions\FilterableExceptionHandler;
 
 /**
@@ -13,13 +13,13 @@ class DefaultHandler extends FilterableExceptionHandler
 {
     /**
      * @inheritDoc
-     * @var SkipExecution $exception
+     *
+     * @var SkipExecution
      */
     public function handle(\Throwable|SkipExecution $exception, Engine $engine): bool
     {
         if ($this->hasSkipping($exception)) {
             /** @var SkipExecution $exception */
-
             if ($engine->isStrict() || $this->isStrictThrowing()) {
                 throw $exception;
             }

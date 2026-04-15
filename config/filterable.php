@@ -179,8 +179,8 @@ return [
         |
         */
         'direction_map' => [
-            'asc' => 'asc',
-            'desc' => 'desc',
+            'asc'    => 'asc',
+            'desc'   => 'desc',
             'prefix' => '-', // "-field" = desc
         ],
 
@@ -247,17 +247,17 @@ return [
             |
             */
             'allowed_operators' => [
-                'eq' => '=',
-                'neq' => '!=',
-                'gt' => '>',
-                'lt' => '<',
-                'gte' => '>=',
-                'lte' => '<=',
-                'like' => 'like',
-                'nlike' => 'not like',
-                'in' => 'in',
-                'nin' => 'not in',
-                'null' => 'is null',
+                'eq'      => '=',
+                'neq'     => '!=',
+                'gt'      => '>',
+                'lt'      => '<',
+                'gte'     => '>=',
+                'lte'     => '<=',
+                'like'    => 'like',
+                'nlike'   => 'not like',
+                'in'      => 'in',
+                'nin'     => 'not in',
+                'null'    => 'is null',
                 'notnull' => 'is not null',
                 'between' => 'between',
             ],
@@ -295,17 +295,17 @@ return [
             |
             */
             'allowed_operators' => [
-                'eq' => '=',
-                'neq' => '!=',
-                'gt' => '>',
-                'lt' => '<',
-                'gte' => '>=',
-                'lte' => '<=',
-                'like' => 'like',
-                'nlike' => 'not like',
-                'in' => 'in',
-                'nin' => 'not in',
-                'null' => 'is null',
+                'eq'      => '=',
+                'neq'     => '!=',
+                'gt'      => '>',
+                'lt'      => '<',
+                'gte'     => '>=',
+                'lte'     => '<=',
+                'like'    => 'like',
+                'nlike'   => 'not like',
+                'in'      => 'in',
+                'nin'     => 'not in',
+                'null'    => 'is null',
                 'notnull' => 'is not null',
                 'between' => 'between',
             ],
@@ -394,17 +394,17 @@ return [
             |
             */
             'allowed_operators' => [
-                'eq' => '=',
-                'neq' => '!=',
-                'gt' => '>',
-                'lt' => '<',
-                'gte' => '>=',
-                'lte' => '<=',
-                'like' => 'like',
-                'nlike' => 'not like',
-                'in' => 'in',
-                'nin' => 'not in',
-                'null' => 'is null',
+                'eq'      => '=',
+                'neq'     => '!=',
+                'gt'      => '>',
+                'lt'      => '<',
+                'gte'     => '>=',
+                'lte'     => '<=',
+                'like'    => 'like',
+                'nlike'   => 'not like',
+                'in'      => 'in',
+                'nin'     => 'not in',
+                'null'    => 'is null',
                 'notnull' => 'is not null',
                 'between' => 'between',
             ],
@@ -461,17 +461,17 @@ return [
             |
             */
             'allowed_operators' => [
-                'eq' => '=',
-                'neq' => '!=',
-                'gt' => '>',
-                'lt' => '<',
-                'gte' => '>=',
-                'lte' => '<=',
-                'like' => 'like',
-                'nlike' => 'not like',
-                'in' => 'in',
-                'nin' => 'not in',
-                'null' => 'is null',
+                'eq'      => '=',
+                'neq'     => '!=',
+                'gt'      => '>',
+                'lt'      => '<',
+                'gte'     => '>=',
+                'lte'     => '<=',
+                'like'    => 'like',
+                'nlike'   => 'not like',
+                'in'      => 'in',
+                'nin'     => 'not in',
+                'null'    => 'is null',
                 'notnull' => 'is not null',
                 'between' => 'between',
             ],
@@ -527,7 +527,7 @@ return [
             |
             */
             'normalize_keys' => false,
-        ]
+        ],
     ],
 
     /*
@@ -842,7 +842,7 @@ return [
         */
         'auto_invalidate' => [
             'enabled' => env('FILTERABLE_AUTO_INVALIDATE', false),
-            'models' => [
+            'models'  => [
                 // Define model-to-tags mappings here
             ],
         ],
@@ -857,7 +857,7 @@ return [
         |
         */
         'tracking' => [
-            'enabled' => env('FILTERABLE_CACHE_TRACKING', false),
+            'enabled'     => env('FILTERABLE_CACHE_TRACKING', false),
             'log_channel' => env('FILTERABLE_CACHE_LOG_CHANNEL', 'daily'),
         ],
     ],
@@ -900,5 +900,5 @@ return [
         |
         */
         'strict' => env('FILTERABLE_EXCEPTION_STRICT', false),
-    ]
+    ],
 ];

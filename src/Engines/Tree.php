@@ -3,98 +3,105 @@
 namespace Kettasoft\Filterable\Engines;
 
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Kettasoft\Filterable\Engines\Foundation\Appliers\Applier;
+use Kettasoft\Filterable\Engines\Foundation\ClauseApplier;
+use Kettasoft\Filterable\Engines\Foundation\ClauseFactory;
+use Kettasoft\Filterable\Engines\Foundation\Engine;
 use Kettasoft\Filterable\Support\Payload;
 use Kettasoft\Filterable\Support\TreeNode;
 use Kettasoft\Filterable\Traits\FieldNormalizer;
-use Kettasoft\Filterable\Engines\Foundation\Engine;
-use Kettasoft\Filterable\Engines\Foundation\ClauseApplier;
-use Kettasoft\Filterable\Engines\Foundation\ClauseFactory;
-use Kettasoft\Filterable\Engines\Foundation\Appliers\Applier;
 
 class Tree extends Engine
 {
-  use FieldNormalizer;
+    use FieldNormalizer;
 
-  /**
-   * Engine name.
-   * @var string
-   */
-  protected $name = 'tree';
+    /**
+     * Engine name.
+     *
+     * @var string
+     */
+    protected $name = 'tree';
 
-  /**
-   * Apply filters to the query.
-   * @param \Illuminate\Contracts\Database\Eloquent\Builder $builder
-   * @return Builder
-   */
-  public function execute(Builder $builder): Builder
-  {
-    $data = $this->context->getData();
+    /**
+     * Apply filters to the query.
+     *
+     * @param \Illuminate\Contracts\Database\Eloquent\Builder $builder
+     *
+     * @return Builder
+     */
+    public function execute(Builder $builder): Builder
+    {
+        $data = $this->context->getData();
 
-    return $this->applyNode($builder, TreeNode::parse($data));
-  }
-
-  /**
-   * Apply tree node to the query builder.
-   * @param \Illuminate\Contracts\Database\Eloquent\Builder $builder
-   * @param \Kettasoft\Filterable\Support\TreeNode $node
-   * @return Builder
-   */
-  private function applyNode(Builder $builder, TreeNode $node)
-  {
-    if ($node->isGroup()) {
-      $builder->where(function (Builder $query) use ($node) {
-        foreach ($node->children as $child) {
-          $this->attempt(function () use ($child, $query) {
-            $method = strtolower($child->logical) === 'and' ? 'where' : 'orWhere';
-
-            $query->{$method}(function ($sub) use ($child) {
-              $this->applyNode($sub, $child);
-            });
-          });
-        }
-      });
-    } else {
-
-      $clause = (new ClauseFactory($this))->make(
-        new Payload($node->field, $node->operator ?? $this->defaultOperator(), $this->sanitizeValue($node->field, $node->value), $node->value)
-      );
-
-      if ($clause->isRelational()) {
-        $clause->relation($this->getResources()->relations)->resolve($builder, $clause);
-      } else {
-        Applier::apply(new ClauseApplier($clause), $builder);
-      }
-
-      $this->commit($node->field, $clause);
+        return $this->applyNode($builder, TreeNode::parse($data));
     }
 
-    return $builder;
-  }
+    /**
+     * Apply tree node to the query builder.
+     *
+     * @param \Illuminate\Contracts\Database\Eloquent\Builder $builder
+     * @param \Kettasoft\Filterable\Support\TreeNode          $node
+     *
+     * @return Builder
+     */
+    private function applyNode(Builder $builder, TreeNode $node)
+    {
+        if ($node->isGroup()) {
+            $builder->where(function (Builder $query) use ($node) {
+                foreach ($node->children as $child) {
+                    $this->attempt(function () use ($child, $query) {
+                        $method = strtolower($child->logical) === 'and' ? 'where' : 'orWhere';
 
-  /**
-   * Check if normalize field option is enable in engine.
-   * @return bool
-   */
-  protected function hasNormalizeFieldCondition(): bool
-  {
-    return config('filterable.engines.tree.normalize_keys', false);
-  }
+                        $query->{$method}(function ($sub) use ($child) {
+                            $this->applyNode($sub, $child);
+                        });
+                    });
+                }
+            });
+        } else {
+            $clause = (new ClauseFactory($this))->make(
+                new Payload($node->field, $node->operator ?? $this->defaultOperator(), $this->sanitizeValue($node->field, $node->value), $node->value)
+            );
 
-  /**
-   * Default operator for use.
-   * @return mixed|\Illuminate\Config\Repository
-   */
-  public function defaultOperator()
-  {
-    return config('filterable.engines.tree.default_operator', null);
-  }
+            if ($clause->isRelational()) {
+                $clause->relation($this->getResources()->relations)->resolve($builder, $clause);
+            } else {
+                Applier::apply(new ClauseApplier($clause), $builder);
+            }
 
-  /**
-   * Get engine name.
-   * @return string
-   */
-  public function getEngineName(): string
-  {
-    return $this->name;
-  }
+            $this->commit($node->field, $clause);
+        }
+
+        return $builder;
+    }
+
+    /**
+     * Check if normalize field option is enable in engine.
+     *
+     * @return bool
+     */
+    protected function hasNormalizeFieldCondition(): bool
+    {
+        return config('filterable.engines.tree.normalize_keys', false);
+    }
+
+    /**
+     * Default operator for use.
+     *
+     * @return mixed|\Illuminate\Config\Repository
+     */
+    public function defaultOperator()
+    {
+        return config('filterable.engines.tree.default_operator', null);
+    }
+
+    /**
+     * Get engine name.
+     *
+     * @return string
+     */
+    public function getEngineName(): string
+    {
+        return $this->name;
+    }
 }

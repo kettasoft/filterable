@@ -3,74 +3,81 @@
 namespace Kettasoft\Filterable\Sanitization;
 
 use Illuminate\Support\Traits\ForwardsCalls;
-use Kettasoft\Filterable\Sanitization\HandlerFactory;
 
 class Sanitizer implements \Countable
 {
-  use ForwardsCalls;
+    use ForwardsCalls;
 
-  /**
-   * Registered sanitizers to operate upon.
-   * @var array
-   */
-  protected array $sanitizers = [];
+    /**
+     * Registered sanitizers to operate upon.
+     *
+     * @var array
+     */
+    protected array $sanitizers = [];
 
-  /**
-   * Create new Sanitizer instance.
-   * @param array $sanitizers
-   */
-  public function __construct(array $sanitizers)
-  {
-    $this->sanitizers = $sanitizers;
-  }
-
-  /**
-   * Handle sanitizers.
-   * @param string $field
-   * @param mixed $value
-   */
-  public function handle(string $field, mixed $value)
-  {
-    if (empty($field) || !array_key_exists($field, $this->sanitizers)) {
-      return $value;
+    /**
+     * Create new Sanitizer instance.
+     *
+     * @param array $sanitizers
+     */
+    public function __construct(array $sanitizers)
+    {
+        $this->sanitizers = $sanitizers;
     }
 
-    foreach ($this->sanitizers as $key => $resolver) {
-      if ($key === $field) {
-        $value = HandlerFactory::handle($value, $resolver);
-      }
+    /**
+     * Handle sanitizers.
+     *
+     * @param string $field
+     * @param mixed  $value
+     */
+    public function handle(string $field, mixed $value)
+    {
+        if (empty($field) || !array_key_exists($field, $this->sanitizers)) {
+            return $value;
+        }
+
+        foreach ($this->sanitizers as $key => $resolver) {
+            if ($key === $field) {
+                $value = HandlerFactory::handle($value, $resolver);
+            }
+        }
+
+        return $value;
     }
 
-    return $value;
-  }
+    /**
+     * Get the number of registered sanitizers.
+     *
+     * @return int
+     */
+    public function count(): int
+    {
+        return count($this->sanitizers);
+    }
 
-  /**
-   * Get the number of registered sanitizers.
-   * @return int
-   */
-  public function count(): int
-  {
-    return count($this->sanitizers);
-  }
+    /**
+     * Get registered sanitizers.
+     *
+     * @return array
+     */
+    public function getSanitizers(): array
+    {
+        return $this->sanitizers;
+    }
 
-  /**
-   * Get registered sanitizers.
-   * @return array
-   */
-  public function getSanitizers(): array
-  {
-    return $this->sanitizers;
-  }
+    /**
+     * Set sanitizer classes.
+     *
+     * @param array $sanitizers
+     * @param bool  $override   Override current sanitizers when (true)
+     *
+     * @return static
+     */
+    public function setSanitizers(array $sanitizers, bool $override = true): static
+    {
+        $this->sanitizers = $override ? $sanitizers : array_merge($this->sanitizers, $sanitizers);
 
-  /**
-   * Set sanitizer classes
-   * @param array $sanitizers
-   * @param bool $override Override current sanitizers when (true)
-   * @return static
-   */
-  public function setSanitizers(array $sanitizers, bool $override = true): static
-  {
-    $this->sanitizers = $override ? $sanitizers : array_merge($this->sanitizers, $sanitizers);
-    return $this;
-  }
+        return $this;
+    }
 }

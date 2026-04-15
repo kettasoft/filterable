@@ -2,16 +2,16 @@
 
 namespace Kettasoft\Filterable\Commands;
 
-use ReflectionClass;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Eloquent\Model;
+use ReflectionClass;
 
 /**
  * Discover searchable columns and suggest indexes for a model.
- * 
+ *
  * Usage: php artisan filterable:discover Post --suggest-indexes
  */
 class FilterableDiscoverCommand extends Command
@@ -44,7 +44,7 @@ class FilterableDiscoverCommand extends Command
         }
 
         $this->newLine();
-        $this->info("Model: " . get_class($this->model));
+        $this->info('Model: '.get_class($this->model));
         $this->info("Table: {$this->table}");
 
         // Discover columns
@@ -90,6 +90,7 @@ class FilterableDiscoverCommand extends Command
 
                     if (!$this->model instanceof Model) {
                         $this->error("Class {$class} is not an Eloquent model");
+
                         return false;
                     }
 
@@ -99,15 +100,18 @@ class FilterableDiscoverCommand extends Command
                     }
 
                     $this->table = $this->model->getTable();
+
                     return true;
                 } catch (\Exception $e) {
-                    $this->error("Error instantiating model: " . $e->getMessage());
+                    $this->error('Error instantiating model: '.$e->getMessage());
+
                     return false;
                 }
             }
         }
 
         $this->error("Model class not found: {$modelClass}");
+
         return false;
     }
 
@@ -126,12 +130,12 @@ class FilterableDiscoverCommand extends Command
             $type = $columnInfo['type'] ?? 'unknown';
 
             $columnData = [
-                'name' => $column,
-                'type' => $type,
+                'name'       => $column,
+                'type'       => $type,
                 'searchable' => $this->isSearchableColumn($column, $type),
                 'filterable' => $this->isFilterableColumn($column, $type),
-                'sortable' => true,
-                'indexed' => $this->isColumnIndexed($column),
+                'sortable'   => true,
+                'indexed'    => $this->isColumnIndexed($column),
                 'suggestion' => $this->getColumnSuggestion($column, $type),
             ];
 
@@ -161,15 +165,16 @@ class FilterableDiscoverCommand extends Command
                 }
 
                 return [
-                    'type' => $type,
+                    'type'     => $type,
                     'nullable' => ($columnDetails['Null'] ?? 'YES') === 'YES',
-                    'default' => $columnDetails['Default'] ?? null,
+                    'default'  => $columnDetails['Default'] ?? null,
                 ];
             }
         } catch (\Exception $e) {
             // Fallback to Schema facade
             try {
                 $type = Schema::connection($connectionName)->getColumnType($this->table, $column);
+
                 return ['type' => $type];
             } catch (\Exception $e) {
                 // Ignore
@@ -277,8 +282,8 @@ class FilterableDiscoverCommand extends Command
         try {
             $stats = [
                 'distinct_count' => DB::table($this->table)->distinct()->count($column),
-                'null_count' => DB::table($this->table)->whereNull($column)->count(),
-                'sample_values' => DB::table($this->table)
+                'null_count'     => DB::table($this->table)->whereNull($column)->count(),
+                'sample_values'  => DB::table($this->table)
                     ->select($column)
                     ->distinct()
                     ->limit(5)
@@ -360,8 +365,8 @@ class FilterableDiscoverCommand extends Command
 
                 if ($return instanceof \Illuminate\Database\Eloquent\Relations\Relation) {
                     $this->relationships[$name] = [
-                        'type' => class_basename($return),
-                        'related' => get_class($return->getRelated()),
+                        'type'       => class_basename($return),
+                        'related'    => get_class($return->getRelated()),
                         'searchable' => $this->isRelationSearchable($return),
                     ];
                 }
@@ -382,8 +387,7 @@ class FilterableDiscoverCommand extends Command
 
             // Check for name/title columns
             return collect($columns)->contains(
-                fn($col) =>
-                in_array($col, ['name', 'title', 'email', 'username'])
+                fn ($col) => in_array($col, ['name', 'title', 'email', 'username'])
             );
         } catch (\Exception $e) {
             return false;
@@ -396,8 +400,8 @@ class FilterableDiscoverCommand extends Command
         $this->info('📋 Discovered Columns:');
         $this->newLine();
 
-        $searchable = collect($this->columns)->filter(fn($col) => $col['searchable']);
-        $filterable = collect($this->columns)->filter(fn($col) => $col['filterable']);
+        $searchable = collect($this->columns)->filter(fn ($col) => $col['searchable']);
+        $filterable = collect($this->columns)->filter(fn ($col) => $col['filterable']);
 
         if ($searchable->isNotEmpty()) {
             $this->line('<fg=green>Searchable Columns:</>');
@@ -464,7 +468,7 @@ class FilterableDiscoverCommand extends Command
                 $this->line("  Null count: {$stats['null_count']}");
 
                 if (isset($stats['avg_length'])) {
-                    $this->line("  Avg length: " . number_format($stats['avg_length'], 2));
+                    $this->line('  Avg length: '.number_format($stats['avg_length'], 2));
                 }
 
                 if (!empty($stats['sample_values'])) {
@@ -488,7 +492,7 @@ class FilterableDiscoverCommand extends Command
 
                 $this->suggestedIndexes[] = [
                     'column' => $name,
-                    'type' => $this->suggestIndexType($name, $col),
+                    'type'   => $this->suggestIndexType($name, $col),
                     'reason' => $reason,
                 ];
             }
@@ -496,10 +500,11 @@ class FilterableDiscoverCommand extends Command
 
         if (empty($this->suggestedIndexes)) {
             $this->info('No index suggestions - all important columns are indexed');
+
             return;
         }
 
-        $rows = collect($this->suggestedIndexes)->map(fn($idx) => [
+        $rows = collect($this->suggestedIndexes)->map(fn ($idx) => [
             $idx['column'],
             $idx['type'],
             $idx['reason'],
@@ -544,7 +549,7 @@ class FilterableDiscoverCommand extends Command
             return;
         }
 
-        if (!$this->confirm('Create ' . count($this->suggestedIndexes) . ' suggested index(es)?')) {
+        if (!$this->confirm('Create '.count($this->suggestedIndexes).' suggested index(es)?')) {
             return;
         }
 
@@ -567,7 +572,7 @@ class FilterableDiscoverCommand extends Command
 
                 $this->info("✅ Created {$index['type']} index on {$index['column']}");
             } catch (\Exception $e) {
-                $this->error("❌ Failed to create index on {$index['column']}: " . $e->getMessage());
+                $this->error("❌ Failed to create index on {$index['column']}: ".$e->getMessage());
             }
         }
     }

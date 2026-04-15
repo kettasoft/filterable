@@ -6,7 +6,7 @@ use Kettasoft\Filterable\Contracts\Matchable;
 
 /**
  * Class representing the status of a filtered event.
- * 
+ *
  * @implements \Stringable
  * @implements \Kettasoft\Filterable\Contracts\Matchable
  */
@@ -23,6 +23,7 @@ class FilterableState implements \Stringable, Matchable
      * Create a new FilteredEventStatus instance.
      *
      * @param string $status
+     *
      * @return void
      */
     public function __construct(string $status)
@@ -34,6 +35,7 @@ class FilterableState implements \Stringable, Matchable
      * Check if the filtered event has the given status.
      *
      * @param mixed $status
+     *
      * @return bool
      */
     public function is(mixed $status): bool

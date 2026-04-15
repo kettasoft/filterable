@@ -3,8 +3,8 @@
 namespace Kettasoft\Filterable\Tests\Unit\Filterable;
 
 use Kettasoft\Filterable\Filterable;
-use Kettasoft\Filterable\Tests\TestCase;
 use Kettasoft\Filterable\Tests\Models\Post;
+use Kettasoft\Filterable\Tests\TestCase;
 
 class FilterableProvidedDataTest extends TestCase
 {
@@ -15,7 +15,7 @@ class FilterableProvidedDataTest extends TestCase
         Post::factory(5)->create();
 
         Filterable::provide([
-            "post_id" => 1,
+            'post_id' => 1,
         ]);
     }
 
@@ -23,12 +23,12 @@ class FilterableProvidedDataTest extends TestCase
     {
         $filterable = Filterable::tap(function (Filterable $f) {
             $f->setBuilder(Post::query());
-            $f->getBuilder()->where("id", $f->provided("post_id"));
+            $f->getBuilder()->where('id', $f->provided('post_id'));
         });
 
         $this->assertStringContainsString('where "id" = 1', $filterable->filter()->toRawSql());
         $this->assertEquals(1, $filterable->filter()->count());
-        $this->assertEquals(1, $filterable->provided("post_id"));
+        $this->assertEquals(1, $filterable->provided('post_id'));
     }
 
     public function test_it_can_get_all_provided_data(): void
@@ -42,9 +42,9 @@ class FilterableProvidedDataTest extends TestCase
     {
         $filterable = Filterable::create();
 
-        $this->assertTrue($filterable->hasProvided("post_id"));
-        $this->assertFalse($filterable->hasProvided("non_existing_key"));
-        $this->assertEquals(1, $filterable->provided("post_id"));
-        $this->assertEquals(null, $filterable->provided("non_existing_key"));
+        $this->assertTrue($filterable->hasProvided('post_id'));
+        $this->assertFalse($filterable->hasProvided('non_existing_key'));
+        $this->assertEquals(1, $filterable->provided('post_id'));
+        $this->assertEquals(null, $filterable->provided('non_existing_key'));
     }
 }

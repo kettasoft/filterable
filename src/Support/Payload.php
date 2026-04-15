@@ -3,10 +3,10 @@
 namespace Kettasoft\Filterable\Support;
 
 use Carbon\Carbon;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
-use Illuminate\Contracts\Support\Jsonable;
-use Illuminate\Contracts\Support\Arrayable;
 
 /**
  * @template TKey of array-key
@@ -14,637 +14,663 @@ use Illuminate\Contracts\Support\Arrayable;
  */
 class Payload implements \Stringable, Arrayable, Jsonable
 {
-  use Macroable;
+    use Macroable;
 
-  /**
-   * Request field.
-   * @var string
-   */
-  public string $field;
+    /**
+     * Request field.
+     *
+     * @var string
+     */
+    public string $field;
 
-  /**
-   * Requested operator.
-   * @var string
-   */
-  public string $operator;
+    /**
+     * Requested operator.
+     *
+     * @var string
+     */
+    public string $operator;
 
-  /**
-   * Request value.
-   * @var mixed
-   */
-  public mixed $value;
+    /**
+     * Request value.
+     *
+     * @var mixed
+     */
+    public mixed $value;
 
-  /**
-   * Value before sanitizing.
-   * @var mixed
-   */
-  public mixed $rawValue;
+    /**
+     * Value before sanitizing.
+     *
+     * @var mixed
+     */
+    public mixed $rawValue;
 
-  /**
-   * Create new Payload instance.
-   * @param string $field
-   * @param string $operator
-   * @param mixed $value
-   * @param mixed $rawValue
-   */
-  public function __construct(string $field, string $operator, mixed $value, mixed $rawValue)
-  {
-    $this->field = $field;
-    $this->operator = $operator;
-    $this->value = $value;
-    $this->rawValue = $rawValue;
-  }
-
-  /**
-   * Shortcut to create Payload instance.
-   * @param mixed $field
-   * @param mixed $operator
-   * @param mixed $value
-   * @param mixed $rawValue
-   * @return Payload
-   */
-  public static function create($field, $operator, $value, $rawValue): static
-  {
-    return new static($field, $operator, $value, $rawValue);
-  }
-
-  /**
-   * Get the original unmodified value.
-   * 
-   * @return mixed
-   */
-  public function raw(): mixed
-  {
-    return $this->rawValue;
-  }
-
-  /**
-   * Get the length of the payload value.
-   * 
-   * @return int
-   */
-  public function length(): int
-  {
-    return is_string($this->value) ? mb_strlen($this->value) : count((array) $this->value);
-  }
-
-  /**
-   * Check if the payload is empty.
-   *
-   * @return bool
-   */
-  public function isEmpty(): bool
-  {
-    return empty($this->value);
-  }
-
-  /**
-   * Check if the payload is an empty string.
-   *
-   * @return bool
-   */
-  public function isEmptyString(): bool
-  {
-    return is_string($this->value) && trim($this->value) === '';
-  }
-
-  /**
-   * Check if the payload is not null or empty.
-   *
-   * @return bool
-   */
-  public function isNotNullOrEmpty(): bool
-  {
-    return !$this->isNull() && !$this->isEmpty() && !$this->isEmptyString();
-  }
-
-  /**
-   * Check if the payload is not empty.
-   *
-   * @return bool
-   */
-  public function isNotEmpty(): bool
-  {
-    return !$this->isEmpty();
-  }
-
-  /**
-   * Check if the payload value is null.
-   *
-   * @return bool
-   */
-  public function isNull(): bool
-  {
-    return is_null($this->value);
-  }
-
-  /**
-   * Check if the payload value is a boolean.
-   *
-   * @return bool
-   */
-  public function isBoolean(): bool
-  {
-    if (is_bool($this->value)) {
-      return true;
+    /**
+     * Create new Payload instance.
+     *
+     * @param string $field
+     * @param string $operator
+     * @param mixed  $value
+     * @param mixed  $rawValue
+     */
+    public function __construct(string $field, string $operator, mixed $value, mixed $rawValue)
+    {
+        $this->field = $field;
+        $this->operator = $operator;
+        $this->value = $value;
+        $this->rawValue = $rawValue;
     }
 
-    return filter_var($this->value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) !== null;
-  }
-
-  /**
-   * Check if the payload value is a valid JSON string.
-   *
-   * @param bool $strict When true, only JSON objects/arrays are considered valid.
-   *                     When false, any valid JSON (string, number, boolean, null, object, array) is accepted.
-   * @return bool
-   */
-  public function isJson(bool $strict = true): bool
-  {
-    if (!is_string($this->value)) {
-      return false;
+    /**
+     * Shortcut to create Payload instance.
+     *
+     * @param mixed $field
+     * @param mixed $operator
+     * @param mixed $value
+     * @param mixed $rawValue
+     *
+     * @return Payload
+     */
+    public static function create($field, $operator, $value, $rawValue): static
+    {
+        return new static($field, $operator, $value, $rawValue);
     }
 
-    $decoded = json_decode($this->value, true);
-
-    if (json_last_error() !== JSON_ERROR_NONE) {
-      return false;
+    /**
+     * Get the original unmodified value.
+     *
+     * @return mixed
+     */
+    public function raw(): mixed
+    {
+        return $this->rawValue;
     }
 
-    if ($strict) {
-      return is_array($decoded);
+    /**
+     * Get the length of the payload value.
+     *
+     * @return int
+     */
+    public function length(): int
+    {
+        return is_string($this->value) ? mb_strlen($this->value) : count((array) $this->value);
     }
 
-    return true;
-  }
-
-  /**
-   * Check if the payload value is numeric.
-   * 
-   * @return bool
-   */
-  public function isNumeric(): bool
-  {
-    return is_numeric($this->value);
-  }
-
-  /**
-   * Check if the payload value is a string.
-   *
-   * @return bool
-   */
-  public function isString(): bool
-  {
-    return is_string($this->value);
-  }
-
-  /**
-   * Check if the payload value is an array.
-   *
-   * @return bool
-   */
-  public function isArray(): bool
-  {
-    return is_array($this->value);
-  }
-
-  /**
-   * Check if the payload value is true.
-   *
-   * @return bool
-   */
-  public function isTrue(): bool
-  {
-    return $this->isBoolean() && filter_var($this->value, FILTER_VALIDATE_BOOLEAN) === true;
-  }
-
-  /**
-   * Check if the payload value is false.
-   *
-   * @return bool
-   */
-  public function isFalse(): bool
-  {
-    return $this->isBoolean() && filter_var($this->value, FILTER_VALIDATE_BOOLEAN) === false;
-  }
-
-  /**
-   * Check if the payload value is a valid date.
-   * 
-   * @return bool
-   */
-  public function isDate(): bool
-  {
-    if (! $this->isString()) {
-      return false;
+    /**
+     * Check if the payload is empty.
+     *
+     * @return bool
+     */
+    public function isEmpty(): bool
+    {
+        return empty($this->value);
     }
 
-    return strtotime($this->value) !== false;
-  }
-
-  /**
-   * Check if the payload value is a valid timestamp.
-   * 
-   * @return bool
-   */
-  public function isTimestamp(): bool
-  {
-    return $this->isNumeric() && (int) $this->value > 0;
-  }
-
-  /**
-   * Get the payload value as a Carbon instance.
-   * 
-   * @return Carbon|null
-   */
-  public function asCarbon(): Carbon|null
-  {
-    if ($this->isTimestamp()) {
-      return Carbon::createFromTimestamp((int) $this->value);
+    /**
+     * Check if the payload is an empty string.
+     *
+     * @return bool
+     */
+    public function isEmptyString(): bool
+    {
+        return is_string($this->value) && trim($this->value) === '';
     }
 
-    if ($this->isDate()) {
-      return Carbon::parse($this->value);
+    /**
+     * Check if the payload is not null or empty.
+     *
+     * @return bool
+     */
+    public function isNotNullOrEmpty(): bool
+    {
+        return !$this->isNull() && !$this->isEmpty() && !$this->isEmptyString();
     }
 
-    return null;
-  }
-
-  /**
-   * Check if the payload value matches the given regex pattern.
-   * 
-   * @param string $pattern
-   * @return bool
-   */
-  public function regex(string $pattern): bool
-  {
-    if (! $this->isString()) {
-      return false;
+    /**
+     * Check if the payload is not empty.
+     *
+     * @return bool
+     */
+    public function isNotEmpty(): bool
+    {
+        return !$this->isEmpty();
     }
 
-    return preg_match($pattern, $this->value) === 1;
-  }
-
-  /**
-   * Get the payload value as a boolean.
-   *
-   * Returns `true` or `false` if the value can be interpreted as a boolean
-   * (e.g. actual bool, "true", "false", 1, 0, "1", "0"), otherwise returns null.
-   *
-   * @return bool|null
-   */
-  public function asBoolean(): ?bool
-  {
-    return $this->isBoolean() ? filter_var($this->value, FILTER_VALIDATE_BOOLEAN) : null;
-  }
-
-  /**
-
-   * Convert the payload value to a slug.
-   * 
-   * @param string $operator
-   * @return string
-   */
-  public function asSlug(string $operator = '-'): string
-  {
-    $value = (string) $this->value;
-
-    return Str::slug($value, $operator);
-  }
-
-  /**
-   * Check if the payload value is in the given haystack.
-   *
-   * @param mixed ...$haystack
-   * @return bool
-   */
-  public function in(...$haystack): bool
-  {
-    if (count($haystack) === 1 && is_array($haystack[0])) {
-      $haystack = $haystack[0];
+    /**
+     * Check if the payload value is null.
+     *
+     * @return bool
+     */
+    public function isNull(): bool
+    {
+        return is_null($this->value);
     }
 
-    return in_array($this->value, (array) $haystack, true);
-  }
+    /**
+     * Check if the payload value is a boolean.
+     *
+     * @return bool
+     */
+    public function isBoolean(): bool
+    {
+        if (is_bool($this->value)) {
+            return true;
+        }
 
-  /**
-   * Check if the payload value is not in the given haystack.
-   *
-   * @param mixed ...$haystack
-   * @return bool
-   */
-  public function notIn(...$haystack): bool
-  {
-    return !$this->in(...$haystack);
-  }
-
-  /**
-   * Perform multiple is* checks on the payload.
-   *
-   * Example: $payload->is('isJson', 'isNotEmpty')
-   *
-   * @param mixed ...$checks
-   * @return bool
-   *
-   * @throws \InvalidArgumentException if any of the check methods do not exist.
-   */
-  public function is(...$checks): bool
-  {
-    foreach ($checks as $check) {
-      $negate = false;
-
-      // If there is a ! at the beginning, negate the result
-      if (str_starts_with($check, '!')) {
-        $negate = true;
-        $check = substr($check, 1); // Remove the '!' for method name
-      }
-
-      $method = 'is' . ucfirst($check);
-
-      if (!method_exists($this, $method)) {
-        throw new \InvalidArgumentException("Method $method does not exist");
-      }
-
-      $result = $this->$method();
-
-      if ($negate) {
-        $result = !$result;
-      }
-
-      if (!$result) {
-        return false; // Any check failed, return false immediately
-      }
+        return filter_var($this->value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) !== null;
     }
 
-    return true;
-  }
+    /**
+     * Check if the payload value is a valid JSON string.
+     *
+     * @param bool $strict When true, only JSON objects/arrays are considered valid.
+     *                     When false, any valid JSON (string, number, boolean, null, object, array) is accepted.
+     *
+     * @return bool
+     */
+    public function isJson(bool $strict = true): bool
+    {
+        if (!is_string($this->value)) {
+            return false;
+        }
 
-  /**
-   * Perform multiple is* checks on the payload, returning true if any pass.
-   *
-   * Example: $payload->isAny('isJson', 'isNotEmpty')
-   *
-   * @param mixed ...$checks
-   * @return bool
-   *
-   * @throws \InvalidArgumentException if any of the check methods do not exist.
-   */
-  public function isAny(...$checks): bool
-  {
-    foreach ($checks as $check) {
-      $negate = false;
+        $decoded = json_decode($this->value, true);
 
-      // If there is a ! at the beginning, negate the result
-      if (str_starts_with($check, '!')) {
-        $negate = true;
-        $check = substr($check, 1); // Remove the '!' for method name
-      }
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return false;
+        }
 
-      $method = 'is' . ucfirst($check);
+        if ($strict) {
+            return is_array($decoded);
+        }
 
-      if (!method_exists($this, $method)) {
-        throw new \InvalidArgumentException("Method $method does not exist");
-      }
-
-      $result = $this->$method();
-
-      if ($negate) {
-        $result = !$result;
-      }
-
-      if ($result) {
-        return true; // Any check passed, return true immediately
-      }
+        return true;
     }
 
-    return false;
-  }
-
-  /**
-   * Return a new Payload instance with the given value.
-   *
-   * @param mixed $value
-   * @return Payload
-   */
-  public function setValue(mixed $value): Payload
-  {
-    $this->value = $value;
-    return $this;
-  }
-
-  /**
-   * Set the payload field.
-   *
-   * @param string $field
-   * @return Payload
-   */
-  public function setField(string $field): Payload
-  {
-    $this->field = $field;
-    return $this;
-  }
-
-  /**
-   * Set the payload operator.
-   *
-   * @param string $operator
-   * @return Payload
-   */
-  public function setOperator(string $operator): Payload
-  {
-    $this->operator = $operator;
-    return $this;
-  }
-
-  /**
-   * Get the payload field.
-   *
-   * @return string
-   */
-  public function getField(): string
-  {
-    return $this->field;
-  }
-
-  /**
-   * Get the payload operator.
-   * 
-   * @return string
-   */
-  public function getOperator(): string
-  {
-    return $this->operator;
-  }
-
-  /**
-   * Get the payload value as an array.
-   *
-   * If the value is a valid JSON string representing an array/object,
-   * it will be decoded into an array. If the value is already an array,
-   * it will be returned directly. Otherwise returns null.
-   *
-   * @return array<TKey, TValue>|null
-   */
-  public function asArray(): ?array
-  {
-    return $this->isJson() ? json_decode($this->value, true) : (is_array($this->value) ? $this->value : null);
-  }
-
-  /**
-   * Get the payload value as an integer.
-   *
-   * If the value is numeric, it will be cast to int. Otherwise returns null.
-   *
-   * @return int|null
-   */
-  public function asInt(): ?int
-  {
-    return $this->isNumeric() ? (int) $this->value : null;
-  }
-
-  /**
-   * Explode the payload value into an array using the given delimiter.
-   *
-   * If the value is a string, it will be split by the delimiter.
-   * If the value is already an array, it will be returned as is.
-   *
-   * @param string $delimiter The delimiter to split the string by.
-   * @param bool $overwrite Whether to replace the original payload value. Defaults to false.
-   * @return array
-   */
-  public function explode(string $delimiter = ',', bool $overwrite = false): array
-  {
-    if ($this->isArray()) {
-      return (array) $this->value;
+    /**
+     * Check if the payload value is numeric.
+     *
+     * @return bool
+     */
+    public function isNumeric(): bool
+    {
+        return is_numeric($this->value);
     }
 
-    if ($this->isString()) {
-      $exploded = explode($delimiter, $this->value);
-
-      if ($overwrite) {
-        $this->value = $exploded;
-      }
-
-      return $exploded;
+    /**
+     * Check if the payload value is a string.
+     *
+     * @return bool
+     */
+    public function isString(): bool
+    {
+        return is_string($this->value);
     }
 
-    // If value is neither string nor array, just return it as-is
-    return (array) $this->value;
-  }
-
-  /**
-   * Alias for explode method.
-   *
-   * @param string $delimiter The delimiter to split the string by.
-   * @param bool $overwrite Whether to replace the original payload value. Defaults to false.
-   * @return array
-   */
-  public function split(string $delimiter = ',', bool $overwrite = false): array
-  {
-    return $this->explode($delimiter, $overwrite);
-  }
-
-  /**
-   * Cast the payload value to the given type using the corresponding as* method.
-   *
-   * Supported types: 'boolean', 'array', 'int', 'carbon', 'slug', 'like', 'json'.
-   *
-   * Example: $payload->cast('int'), $payload->cast('boolean')
-   *
-   * @param string $type
-   * @param mixed ...$args Additional arguments to pass to the cast method.
-   * @return mixed
-   *
-   * @throws \InvalidArgumentException if the cast type method does not exist.
-   */
-  public function cast(string $type, mixed ...$args): mixed
-  {
-    $method = 'as' . ucfirst($type);
-
-    if (!method_exists($this, $method)) {
-      throw new \InvalidArgumentException("Cast type [{$type}] is not supported. Method {$method} does not exist.");
+    /**
+     * Check if the payload value is an array.
+     *
+     * @return bool
+     */
+    public function isArray(): bool
+    {
+        return is_array($this->value);
     }
 
-    $this->value = $this->$method(...$args);
+    /**
+     * Check if the payload value is true.
+     *
+     * @return bool
+     */
+    public function isTrue(): bool
+    {
+        return $this->isBoolean() && filter_var($this->value, FILTER_VALIDATE_BOOLEAN) === true;
+    }
 
-    return $this->value;
-  }
+    /**
+     * Check if the payload value is false.
+     *
+     * @return bool
+     */
+    public function isFalse(): bool
+    {
+        return $this->isBoolean() && filter_var($this->value, FILTER_VALIDATE_BOOLEAN) === false;
+    }
 
-  /**
-   * Alias for cast method.
-   *
-   * @param string $type
-   * @param mixed ...$args Additional arguments to pass to the cast method.
-   * @return mixed
-   *
-   * @throws \InvalidArgumentException if the cast type method does not exist.
-   */
-  public function as(string $type, mixed ...$args): mixed
-  {
-    return $this->cast($type, ...$args);
-  }
+    /**
+     * Check if the payload value is a valid date.
+     *
+     * @return bool
+     */
+    public function isDate(): bool
+    {
+        if (!$this->isString()) {
+            return false;
+        }
 
-  /**
-   * Wrap the value with a given prefix and suffix.
-   *
-   * @param string $prefix
-   * @param string $suffix
-   * @return string
-   */
-  protected function wrap(string $prefix, string $suffix): string
-  {
-    return sprintf('%s%s%s', $prefix, $this->value, $suffix);
-  }
+        return strtotime($this->value) !== false;
+    }
 
-  /**
-   * Get the value wrapped for a LIKE query.
-   *
-   * Example: "%value%", "value%", "%value", etc.
-   *
-   * @param string $side
-   * @return string
-   */
-  public function asLike(string $side = 'both'): string
-  {
-    return match ($side) {
-      'both' => $this->wrap('%', '%'),
-      'start' => $this->wrap('%', ''),
-      'end' => $this->wrap('', '%'),
-      default => throw new \InvalidArgumentException(sprintf("The side value is not valid. valid sides: %s, %s, %s", 'both', 'start', 'end'))
-    };
-  }
+    /**
+     * Check if the payload value is a valid timestamp.
+     *
+     * @return bool
+     */
+    public function isTimestamp(): bool
+    {
+        return $this->isNumeric() && (int) $this->value > 0;
+    }
 
-  /**
-   * Get the instance as an array.
-   *
-   * @return array<TKey, TValue>
-   */
-  public function toArray()
-  {
-    return [
-      'field' => $this->field,
-      'operator' => $this->operator,
-      'value' => $this->value,
-      'rawValue' => $this->rawValue,
-    ];
-  }
+    /**
+     * Get the payload value as a Carbon instance.
+     *
+     * @return Carbon|null
+     */
+    public function asCarbon(): ?Carbon
+    {
+        if ($this->isTimestamp()) {
+            return Carbon::createFromTimestamp((int) $this->value);
+        }
 
-  /**
-   * Convert the object to its JSON representation.
-   *
-   * @param  int  $options
-   * @return string
-   */
-  public function toJson($options = 0)
-  {
-    return json_encode($this->toArray(), $options);
-  }
+        if ($this->isDate()) {
+            return Carbon::parse($this->value);
+        }
 
-  /**
-   * Return request value on read class as a string.
-   */
-  public function __toString()
-  {
-    return $this->value;
-  }
+        return null;
+    }
+
+    /**
+     * Check if the payload value matches the given regex pattern.
+     *
+     * @param string $pattern
+     *
+     * @return bool
+     */
+    public function regex(string $pattern): bool
+    {
+        if (!$this->isString()) {
+            return false;
+        }
+
+        return preg_match($pattern, $this->value) === 1;
+    }
+
+    /**
+     * Get the payload value as a boolean.
+     *
+     * Returns `true` or `false` if the value can be interpreted as a boolean
+     * (e.g. actual bool, "true", "false", 1, 0, "1", "0"), otherwise returns null.
+     *
+     * @return bool|null
+     */
+    public function asBoolean(): ?bool
+    {
+        return $this->isBoolean() ? filter_var($this->value, FILTER_VALIDATE_BOOLEAN) : null;
+    }
+
+    /**
+     * Convert the payload value to a slug.
+     *
+     * @param string $operator
+     *
+     * @return string
+     */
+    public function asSlug(string $operator = '-'): string
+    {
+        $value = (string) $this->value;
+
+        return Str::slug($value, $operator);
+    }
+
+    /**
+     * Check if the payload value is in the given haystack.
+     *
+     * @param mixed ...$haystack
+     *
+     * @return bool
+     */
+    public function in(...$haystack): bool
+    {
+        if (count($haystack) === 1 && is_array($haystack[0])) {
+            $haystack = $haystack[0];
+        }
+
+        return in_array($this->value, (array) $haystack, true);
+    }
+
+    /**
+     * Check if the payload value is not in the given haystack.
+     *
+     * @param mixed ...$haystack
+     *
+     * @return bool
+     */
+    public function notIn(...$haystack): bool
+    {
+        return !$this->in(...$haystack);
+    }
+
+    /**
+     * Perform multiple is* checks on the payload.
+     *
+     * Example: $payload->is('isJson', 'isNotEmpty')
+     *
+     * @param mixed ...$checks
+     *
+     * @throws \InvalidArgumentException if any of the check methods do not exist.
+     *
+     * @return bool
+     */
+    public function is(...$checks): bool
+    {
+        foreach ($checks as $check) {
+            $negate = false;
+
+            // If there is a ! at the beginning, negate the result
+            if (str_starts_with($check, '!')) {
+                $negate = true;
+                $check = substr($check, 1); // Remove the '!' for method name
+            }
+
+            $method = 'is'.ucfirst($check);
+
+            if (!method_exists($this, $method)) {
+                throw new \InvalidArgumentException("Method $method does not exist");
+            }
+
+            $result = $this->$method();
+
+            if ($negate) {
+                $result = !$result;
+            }
+
+            if (!$result) {
+                return false; // Any check failed, return false immediately
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Perform multiple is* checks on the payload, returning true if any pass.
+     *
+     * Example: $payload->isAny('isJson', 'isNotEmpty')
+     *
+     * @param mixed ...$checks
+     *
+     * @throws \InvalidArgumentException if any of the check methods do not exist.
+     *
+     * @return bool
+     */
+    public function isAny(...$checks): bool
+    {
+        foreach ($checks as $check) {
+            $negate = false;
+
+            // If there is a ! at the beginning, negate the result
+            if (str_starts_with($check, '!')) {
+                $negate = true;
+                $check = substr($check, 1); // Remove the '!' for method name
+            }
+
+            $method = 'is'.ucfirst($check);
+
+            if (!method_exists($this, $method)) {
+                throw new \InvalidArgumentException("Method $method does not exist");
+            }
+
+            $result = $this->$method();
+
+            if ($negate) {
+                $result = !$result;
+            }
+
+            if ($result) {
+                return true; // Any check passed, return true immediately
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Return a new Payload instance with the given value.
+     *
+     * @param mixed $value
+     *
+     * @return Payload
+     */
+    public function setValue(mixed $value): Payload
+    {
+        $this->value = $value;
+
+        return $this;
+    }
+
+    /**
+     * Set the payload field.
+     *
+     * @param string $field
+     *
+     * @return Payload
+     */
+    public function setField(string $field): Payload
+    {
+        $this->field = $field;
+
+        return $this;
+    }
+
+    /**
+     * Set the payload operator.
+     *
+     * @param string $operator
+     *
+     * @return Payload
+     */
+    public function setOperator(string $operator): Payload
+    {
+        $this->operator = $operator;
+
+        return $this;
+    }
+
+    /**
+     * Get the payload field.
+     *
+     * @return string
+     */
+    public function getField(): string
+    {
+        return $this->field;
+    }
+
+    /**
+     * Get the payload operator.
+     *
+     * @return string
+     */
+    public function getOperator(): string
+    {
+        return $this->operator;
+    }
+
+    /**
+     * Get the payload value as an array.
+     *
+     * If the value is a valid JSON string representing an array/object,
+     * it will be decoded into an array. If the value is already an array,
+     * it will be returned directly. Otherwise returns null.
+     *
+     * @return array<TKey, TValue>|null
+     */
+    public function asArray(): ?array
+    {
+        return $this->isJson() ? json_decode($this->value, true) : (is_array($this->value) ? $this->value : null);
+    }
+
+    /**
+     * Get the payload value as an integer.
+     *
+     * If the value is numeric, it will be cast to int. Otherwise returns null.
+     *
+     * @return int|null
+     */
+    public function asInt(): ?int
+    {
+        return $this->isNumeric() ? (int) $this->value : null;
+    }
+
+    /**
+     * Explode the payload value into an array using the given delimiter.
+     *
+     * If the value is a string, it will be split by the delimiter.
+     * If the value is already an array, it will be returned as is.
+     *
+     * @param string $delimiter The delimiter to split the string by.
+     * @param bool   $overwrite Whether to replace the original payload value. Defaults to false.
+     *
+     * @return array
+     */
+    public function explode(string $delimiter = ',', bool $overwrite = false): array
+    {
+        if ($this->isArray()) {
+            return (array) $this->value;
+        }
+
+        if ($this->isString()) {
+            $exploded = explode($delimiter, $this->value);
+
+            if ($overwrite) {
+                $this->value = $exploded;
+            }
+
+            return $exploded;
+        }
+
+        // If value is neither string nor array, just return it as-is
+        return (array) $this->value;
+    }
+
+    /**
+     * Alias for explode method.
+     *
+     * @param string $delimiter The delimiter to split the string by.
+     * @param bool   $overwrite Whether to replace the original payload value. Defaults to false.
+     *
+     * @return array
+     */
+    public function split(string $delimiter = ',', bool $overwrite = false): array
+    {
+        return $this->explode($delimiter, $overwrite);
+    }
+
+    /**
+     * Cast the payload value to the given type using the corresponding as* method.
+     *
+     * Supported types: 'boolean', 'array', 'int', 'carbon', 'slug', 'like', 'json'.
+     *
+     * Example: $payload->cast('int'), $payload->cast('boolean')
+     *
+     * @param string $type
+     * @param mixed  ...$args Additional arguments to pass to the cast method.
+     *
+     * @throws \InvalidArgumentException if the cast type method does not exist.
+     *
+     * @return mixed
+     */
+    public function cast(string $type, mixed ...$args): mixed
+    {
+        $method = 'as'.ucfirst($type);
+
+        if (!method_exists($this, $method)) {
+            throw new \InvalidArgumentException("Cast type [{$type}] is not supported. Method {$method} does not exist.");
+        }
+
+        $this->value = $this->$method(...$args);
+
+        return $this->value;
+    }
+
+    /**
+     * Alias for cast method.
+     *
+     * @param string $type
+     * @param mixed  ...$args Additional arguments to pass to the cast method.
+     *
+     * @throws \InvalidArgumentException if the cast type method does not exist.
+     *
+     * @return mixed
+     */
+    public function as(string $type, mixed ...$args): mixed
+    {
+        return $this->cast($type, ...$args);
+    }
+
+    /**
+     * Wrap the value with a given prefix and suffix.
+     *
+     * @param string $prefix
+     * @param string $suffix
+     *
+     * @return string
+     */
+    protected function wrap(string $prefix, string $suffix): string
+    {
+        return sprintf('%s%s%s', $prefix, $this->value, $suffix);
+    }
+
+    /**
+     * Get the value wrapped for a LIKE query.
+     *
+     * Example: "%value%", "value%", "%value", etc.
+     *
+     * @param string $side
+     *
+     * @return string
+     */
+    public function asLike(string $side = 'both'): string
+    {
+        return match ($side) {
+            'both'  => $this->wrap('%', '%'),
+            'start' => $this->wrap('%', ''),
+            'end'   => $this->wrap('', '%'),
+            default => throw new \InvalidArgumentException(sprintf('The side value is not valid. valid sides: %s, %s, %s', 'both', 'start', 'end'))
+        };
+    }
+
+    /**
+     * Get the instance as an array.
+     *
+     * @return array<TKey, TValue>
+     */
+    public function toArray()
+    {
+        return [
+            'field'    => $this->field,
+            'operator' => $this->operator,
+            'value'    => $this->value,
+            'rawValue' => $this->rawValue,
+        ];
+    }
+
+    /**
+     * Convert the object to its JSON representation.
+     *
+     * @param int $options
+     *
+     * @return string
+     */
+    public function toJson($options = 0)
+    {
+        return json_encode($this->toArray(), $options);
+    }
+
+    /**
+     * Return request value on read class as a string.
+     */
+    public function __toString()
+    {
+        return $this->value;
+    }
 }

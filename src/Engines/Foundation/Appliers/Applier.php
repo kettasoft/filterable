@@ -7,8 +7,8 @@ use Kettasoft\Filterable\Engines\Contracts\Appliable;
 
 abstract class Applier
 {
-  public static function apply(Appliable $appliable, Builder $builder)
-  {
-    return $appliable->apply($builder);
-  }
+    public static function apply(Appliable $appliable, Builder $builder)
+    {
+        return $appliable->apply($builder);
+    }
 }

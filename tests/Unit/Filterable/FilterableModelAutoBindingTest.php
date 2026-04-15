@@ -2,33 +2,33 @@
 
 namespace Kettasoft\Filterable\Tests\Unit\Filterable;
 
+use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Kettasoft\Filterable\Exceptions\FilterClassNotResolvedException;
+use Kettasoft\Filterable\Tests\Http\Filters\PostFilter;
 use Kettasoft\Filterable\Tests\TestCase;
 use Kettasoft\Filterable\Traits\HasFilterable;
-use Illuminate\Contracts\Database\Query\Builder;
-use Kettasoft\Filterable\Tests\Http\Filters\PostFilter;
-use Kettasoft\Filterable\Exceptions\FilterClassNotResolvedException;
 
 class FilterableModelAutoBindingTest extends TestCase
 {
-  public function test_it_applies_filter_automatically_from_model_property()
-  {
-    $model = new class extends Model {
-      use HasFilterable;
-      protected $filterable = PostFilter::class;
-    };
+    public function test_it_applies_filter_automatically_from_model_property()
+    {
+        $model = new class() extends Model {
+            use HasFilterable;
+            protected $filterable = PostFilter::class;
+        };
 
-    $this->assertInstanceOf(Builder::class, $model->filter());
-  }
+        $this->assertInstanceOf(Builder::class, $model->filter());
+    }
 
-  public function test_it_throws_exception_if_no_filter_class_and_no_model_property()
-  {
-    $model = new class extends Model {
-      use HasFilterable;
-    };
+    public function test_it_throws_exception_if_no_filter_class_and_no_model_property()
+    {
+        $model = new class() extends Model {
+            use HasFilterable;
+        };
 
-    $this->expectException(FilterClassNotResolvedException::class);
+        $this->expectException(FilterClassNotResolvedException::class);
 
-    $model->filter();
-  }
+        $model->filter();
+    }
 }

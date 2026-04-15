@@ -3,34 +3,31 @@
 namespace Kettasoft\Filterable\Foundation\Caching;
 
 use Illuminate\Database\Eloquent\Model;
-use Kettasoft\Filterable\Foundation\Caching\FilterableCacheManager;
 
 /**
- * CacheInvalidationObserver - Automatically invalidate caches when models change
+ * CacheInvalidationObserver - Automatically invalidate caches when models change.
  *
  * Observes model events (created, updated, deleted) and flushes
  * associated cache tags to ensure data consistency.
- *
- * @package Kettasoft\Filterable\Foundation\Caching
  */
 class CacheInvalidationObserver
 {
     /**
-     * Cache manager instance
+     * Cache manager instance.
      *
      * @var FilterableCacheManager
      */
     protected FilterableCacheManager $cacheManager;
 
     /**
-     * Model-to-tags mapping from configuration
+     * Model-to-tags mapping from configuration.
      *
      * @var array
      */
     protected array $modelTagsMap;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -39,9 +36,10 @@ class CacheInvalidationObserver
     }
 
     /**
-     * Handle the Model "created" event
+     * Handle the Model "created" event.
      *
      * @param Model $model
+     *
      * @return void
      */
     public function created(Model $model): void
@@ -50,9 +48,10 @@ class CacheInvalidationObserver
     }
 
     /**
-     * Handle the Model "updated" event
+     * Handle the Model "updated" event.
      *
      * @param Model $model
+     *
      * @return void
      */
     public function updated(Model $model): void
@@ -61,9 +60,10 @@ class CacheInvalidationObserver
     }
 
     /**
-     * Handle the Model "deleted" event
+     * Handle the Model "deleted" event.
      *
      * @param Model $model
+     *
      * @return void
      */
     public function deleted(Model $model): void
@@ -72,9 +72,10 @@ class CacheInvalidationObserver
     }
 
     /**
-     * Handle the Model "force deleted" event
+     * Handle the Model "force deleted" event.
      *
      * @param Model $model
+     *
      * @return void
      */
     public function forceDeleted(Model $model): void
@@ -83,9 +84,10 @@ class CacheInvalidationObserver
     }
 
     /**
-     * Handle the Model "restored" event
+     * Handle the Model "restored" event.
      *
      * @param Model $model
+     *
      * @return void
      */
     public function restored(Model $model): void
@@ -94,9 +96,10 @@ class CacheInvalidationObserver
     }
 
     /**
-     * Invalidate cache for a model
+     * Invalidate cache for a model.
      *
      * @param Model $model
+     *
      * @return void
      */
     protected function invalidateCacheForModel(Model $model): void
@@ -117,9 +120,10 @@ class CacheInvalidationObserver
     }
 
     /**
-     * Get cache tags for a model class
+     * Get cache tags for a model class.
      *
      * @param string $modelClass
+     *
      * @return array
      */
     protected function getTagsForModel(string $modelClass): array
@@ -128,10 +132,11 @@ class CacheInvalidationObserver
     }
 
     /**
-     * Log cache invalidation
+     * Log cache invalidation.
      *
      * @param string $modelClass
-     * @param array $tags
+     * @param array  $tags
+     *
      * @return void
      */
     protected function logInvalidation(string $modelClass, array $tags): void
@@ -141,15 +146,15 @@ class CacheInvalidationObserver
         \Illuminate\Support\Facades\Log::channel($channel)->info(
             'Filterable cache invalidated',
             [
-                'model' => $modelClass,
-                'tags' => $tags,
+                'model'     => $modelClass,
+                'tags'      => $tags,
                 'timestamp' => now()->toIso8601String(),
             ]
         );
     }
 
     /**
-     * Register the observer for auto-invalidation
+     * Register the observer for auto-invalidation.
      *
      * @return void
      */

@@ -3,9 +3,9 @@
 namespace Kettasoft\Filterable\Tests\Unit;
 
 use Kettasoft\Filterable\Filterable;
-use Kettasoft\Filterable\Tests\TestCase;
-use Kettasoft\Filterable\Tests\Models\Tag;
 use Kettasoft\Filterable\Tests\Models\Post;
+use Kettasoft\Filterable\Tests\Models\Tag;
+use Kettasoft\Filterable\Tests\TestCase;
 
 class FilterableHasRelationsTest extends TestCase
 {
@@ -16,6 +16,7 @@ class FilterableHasRelationsTest extends TestCase
         Tag::factory(5)->create(['post_id' => 1]);
         Tag::factory(5)->create(['post_id' => 1, 'name' => 'archived']);
     }
+
     public function test_it_can_filter_using_has_relation()
     {
         // HasMany relation
@@ -30,7 +31,7 @@ class FilterableHasRelationsTest extends TestCase
             $filterable->useEngine('ruleset');
 
             $filterable->setAllowedFields([
-                'name'
+                'name',
             ]);
         })->apply();
 

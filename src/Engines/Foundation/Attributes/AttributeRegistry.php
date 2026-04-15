@@ -8,34 +8,35 @@ use ReflectionMethod;
 
 class AttributeRegistry
 {
-  /**
-   * Get handlers for the given method of a filterable class.
-   *
-   * @param Filterable $filterable
-   * @param string $method
-   * @return array<int, MethodAttribute>
-   */
-  public function getHandlersForMethod(Filterable $filterable, string $method): array
-  {
-    $reflection = new ReflectionMethod($filterable, $method);
+    /**
+     * Get handlers for the given method of a filterable class.
+     *
+     * @param Filterable $filterable
+     * @param string     $method
+     *
+     * @return array<int, MethodAttribute>
+     */
+    public function getHandlersForMethod(Filterable $filterable, string $method): array
+    {
+        $reflection = new ReflectionMethod($filterable, $method);
 
-    $resolved = [];
+        $resolved = [];
 
-    foreach ($reflection->getAttributes() as $attribute) {
-      $instance = $attribute->newInstance();
+        foreach ($reflection->getAttributes() as $attribute) {
+            $instance = $attribute->newInstance();
 
-      if (! $instance instanceof MethodAttribute) {
-        continue;
-      }
+            if (!$instance instanceof MethodAttribute) {
+                continue;
+            }
 
-      $resolved[] = $instance;
+            $resolved[] = $instance;
+        }
+
+        usort(
+            $resolved,
+            fn ($a, $b) => $a::stage() <=> $b::stage()
+        );
+
+        return $resolved;
     }
-
-    usort(
-      $resolved,
-      fn($a, $b) => $a::stage() <=> $b::stage()
-    );
-
-    return $resolved;
-  }
 }

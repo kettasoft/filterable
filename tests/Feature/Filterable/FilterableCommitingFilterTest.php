@@ -11,16 +11,18 @@ class FilterableCommitingFilterTest extends TestCase
     public function test_it_saving_applied_filters()
     {
         request()->merge([
-            'status' => 'active',
+            'status'   => 'active',
             'category' => 'news',
         ]);
 
-        $filterable = new class extends Filterable {
+        $filterable = new class() extends Filterable {
             protected $filters = ['status', 'category'];
+
             public function status($payload)
             {
                 return $this->builder->where('status', $payload->value);
             }
+
             public function category($payload)
             {
                 return $this->builder->where('category', $payload->value);
