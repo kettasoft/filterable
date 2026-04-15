@@ -67,13 +67,6 @@ trait HasFilterableCache
     protected $cacheWhenCallback = null;
 
     /**
-     * Cache key generator instance
-     *
-     * @var CacheKeyGenerator|null
-     */
-    protected ?CacheKeyGenerator $cacheKeyGenerator = null;
-
-    /**
      * Enable caching with optional TTL
      *
      * @param DateTimeInterface|int|null $ttl Time to live in seconds or DateTimeInterface
@@ -333,17 +326,20 @@ trait HasFilterableCache
     }
 
     /**
-     * Get cache key generator instance
+     * Get or create cache key generator
      *
      * @return CacheKeyGenerator
      */
     protected function getCacheKeyGenerator(): CacheKeyGenerator
     {
-        if ($this->cacheKeyGenerator === null) {
-            $this->cacheKeyGenerator = new CacheKeyGenerator();
+        $generator = $this->context->getCacheKeyGenerator();
+
+        if ($generator === null) {
+            $generator = new CacheKeyGenerator();
+            $this->context->setCacheKeyGenerator($generator);
         }
 
-        return $this->cacheKeyGenerator;
+        return $generator;
     }
 
     /**
