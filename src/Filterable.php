@@ -2,38 +2,54 @@
 
 namespace Kettasoft\Filterable;
 
+use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Facades\App;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Traits\Macroable;
-use Kettasoft\Filterable\Foundation\Invoker;
-use Kettasoft\Filterable\Contracts\Commitable;
-use Kettasoft\Filterable\Foundation\Resources;
-use Kettasoft\Filterable\Contracts\Validatable;
 use Kettasoft\Filterable\Contracts\Authorizable;
-use Kettasoft\Filterable\Sanitization\Sanitizer;
-use Illuminate\Contracts\Database\Eloquent\Builder;
+use Kettasoft\Filterable\Contracts\Commitable;
+use Kettasoft\Filterable\Contracts\FilterableContext;
+use Kettasoft\Filterable\Contracts\Validatable;
+use Kettasoft\Filterable\Engines\Factory\EngineManager;
 use Kettasoft\Filterable\Engines\Foundation\Clause;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
-use Kettasoft\Filterable\Foundation\Sorting\Sorter;
-use Kettasoft\Filterable\Contracts\FilterableContext;
-use Kettasoft\Filterable\Engines\Factory\EngineManager;
-use Kettasoft\Filterable\Foundation\Contracts\Sortable;
-use Kettasoft\Filterable\Foundation\FilterableSettings;
-use Kettasoft\Filterable\Exceptions\MissingBuilderException;
-use Kettasoft\Filterable\Foundation\Traits\HandleFluentReturn;
 use Kettasoft\Filterable\Engines\Foundation\Executors\Executer;
+use Kettasoft\Filterable\Exceptions\Contracts\ExceptionHandlerInterface;
+use Kettasoft\Filterable\Exceptions\MissingBuilderException;
+use Kettasoft\Filterable\Exceptions\RequestSourceIsNotSupportedException;
 use Kettasoft\Filterable\Foundation\Contracts\FilterableProfile;
+use Kettasoft\Filterable\Foundation\Contracts\ShouldReturnQueryBuilder;
+use Kettasoft\Filterable\Foundation\Contracts\Sortable;
 use Kettasoft\Filterable\Foundation\Contracts\Sorting\Invokable;
 use Kettasoft\Filterable\Foundation\Events\Contracts\EventManager;
 use Kettasoft\Filterable\Foundation\Events\FilterableEventManager;
+use Kettasoft\Filterable\Foundation\FilterableSettings;
+use Kettasoft\Filterable\Foundation\Invoker;
+use Kettasoft\Filterable\Foundation\Resources;
+use Kettasoft\Filterable\Foundation\Runtime\Context;
+use Kettasoft\Filterable\Foundation\Sorting\Sorter;
+use Kettasoft\Filterable\Foundation\Traits\HandleFluentReturn;
 use Kettasoft\Filterable\HttpIntegration\HeaderDrivenEngineSelector;
-use Kettasoft\Filterable\Foundation\Contracts\ShouldReturnQueryBuilder;
-use Kettasoft\Filterable\Exceptions\Contracts\ExceptionHandlerInterface;
-use Kettasoft\Filterable\Exceptions\RequestSourceIsNotSupportedException;
+use Kettasoft\Filterable\Sanitization\Sanitizer;
 use Kettasoft\Filterable\Support\Payload;
 
+/**
+ * The main Filterable class that provides the core functionality for applying filters to Eloquent queries.
+ * 
+ * This class serves as the central point for managing filter execution, including:
+ * - Handling incoming requests and parsing filter data
+ * - Managing the filter engine and its execution
+ * - Providing hooks for authorization, validation, and committing applied clauses
+ * - Integrating with an event system to allow extensibility at various stages of the filtering process
+ * - Supporting sorting and caching mechanisms
+ * 
+ * The Filterable class is designed to be flexible and extensible, allowing developers to customize behavior through traits, events, and configuration.
+ * 
+ * @package Kettasoft\Filterable
+ * @property \Illuminate\Database\Eloquent\Builder $builder
+ */
 class Filterable implements FilterableContext, Authorizable, Validatable, Commitable
 {
   use Traits\InteractsWithFilterKey,
@@ -84,22 +100,24 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
   protected $requestSource = 'query';
 
   /**
-   * The Builder instance.
-   * @var \Illuminate\Database\Eloquent\Builder
+   * Runtime context for this filterable instance.
+   * 
+   * Encapsulates all transient state that changes during filter execution:
+   * - Applied filter clauses
+   * - Skipped payloads
+   * - Parsed request data
+   * - Query builder instance
+   * - Cache key generator
+   * 
+   * @var Context
    */
-  protected Builder $builder;
+  protected Context $context;
 
   /**
    * Registered sanitizers to operate upon.
    * @var array
    */
   protected $sanitizers = [];
-
-  /**
-   * All received data from request.
-   * @var array
-   */
-  protected $data = [];
 
   /**
    * Specify which fields are allowed to be filtered.
@@ -161,19 +179,8 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
   protected static EventManager $eventManager;
 
   /**
-   * Applied clauses.
-   * @var array
-   */
-  protected $applied = [];
-
-  /**
-   * Skipped payloads.
-   * @var array<Payload>
-   */
-  protected array $skipped = [];
-
-  /**
    * Create a new Filterable instance.
+   * 
    * @param Request|null $request
    */
   public function __construct(Request|null $request = null)
@@ -192,6 +199,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
   {
     $this->request = $request ?: App::make(Request::class);
     $this->registerEventManager();
+    $this->context = new Context();
 
     // Fire initializing event
     $this->fireEvent('filterable.initializing', ['filterable' => $this]);
@@ -276,79 +284,77 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
   }
 
   /**
-   * Commit clause.
-   *
-   * @param string $key
-   * @param Clause $clause
-   * @return bool
-   */
-  /**
    * Commit applied clauses.
-   * @param string $key
-   * @param Clause $clause
-   * @return bool
+   * 
+   * Records a filter clause that has been successfully applied to the query.
+   * This is a wrapper method that delegates to the runtime state.
+   * 
+   * @param string $key The field name or unique identifier for the clause
+   * @param Clause $clause The clause object representing the applied filter
+   * @return bool Always returns true to indicate success
    */
   public function commit(string $key, Clause $clause): bool
   {
-    $this->applied[$key] = $clause;
+    $this->context->commitClause($key, $clause);
     return true;
   }
 
   /**
    * Register a skipped payload.
-   * @param Payload $payload
-   * @param string|null $reason Optional reason for skipping
-   * @return bool
+   * 
+   * Records information about a filter that was skipped during execution.
+   * This is a wrapper method that delegates to the runtime state.
+   * 
+   * @param Payload $payload The payload that was skipped
+   * @param string|null $reason Optional explanation for why it was skipped
+   * @return bool Always returns true to indicate the skip was recorded
    */
   public function skip(Payload $payload, ?string $reason = null): bool
   {
-    $this->skipped[] = [
-      'payload' => $payload,
-      'reason' => $reason,
-      'field' => $payload->field,
-      'value' => $payload->value,
-      'timestamp' => now(),
-    ];
-
+    $this->context->skipPayload($payload, $reason);
     return true;
   }
 
   /**
    * Get all skipped payloads.
-   * @return array
+   * 
+   * Retrieves information about filters that were skipped, optionally filtered by field.
+   * This is a wrapper method that delegates to the runtime state.
+   * 
+   * @param string|null $field Optional field name to filter skipped payloads
+   * @return array All skipped payloads or filtered by field
    */
   public function skipped(?string $field = null): array
   {
-    if ($field === null) {
-      return $this->skipped;
-    }
-
-    return array_filter($this->skipped, fn($item) => $item['field'] === $field);
+    return $this->context->getSkipped($field);
   }
 
   /**
    * Check if a specific field was skipped.
-   * @param string $field
-   * @return bool
+   * 
+   * Determines whether any filters for the given field were skipped.
+   * This is a wrapper method that delegates to the runtime state.
+   * 
+   * @param string $field The field name to check
+   * @return bool True if the field has skipped filters, false otherwise
    */
   public function hasSkipped(string $field): bool
   {
-    return !empty($this->skipped($field));
+    return $this->context->hasSkipped($field);
   }
 
   /**
    * Get applied clauses.
-   *
-   * @param string $key
-   * @return array|Clause|null
+   * 
+   * Retrieves all applied clauses or a specific clause by key.
+   * This is a wrapper method that delegates to the runtime state.
+   * 
+   * @param string|null $key Optional field name to get a specific clause
+   * @return array|Clause|null All clauses if key is null, specific clause otherwise, or null if not found
    */
   public function applied($key = null)
   {
-    if (!$key) {
-      return $this->applied;
-    }
-
-    return $this->applied[$key] ?? null;
+    return $this->context->getApplied($key);
   }
 
   /**
@@ -401,7 +407,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
 
       $builder = $this->initQueryBuilderInstance($builder);
 
-      $this->builder = $this->initially($builder);
+      $this->context->setBuilder($this->initially($builder));
 
       $builder = Executer::execute($this->engine, $builder);
 
@@ -579,8 +585,8 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
     if ($builder)
       return $builder;
 
-    if (isset($this->builder))
-      return $this->builder;
+    if ($this->context->hasBuilder())
+      return $this->context->getBuilder();
 
     if ($this->model instanceof Model) {
       return $this->model->query();
@@ -729,13 +735,19 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
 
   /**
    * Set manual data injection.
-   * @param array $data
-   * @param bool $override
-   * @return static
+   * 
+   * Manually sets filter data, optionally merging with existing data.
+   * Useful for programmatically applying filters without HTTP request.
+   * This is a wrapper method that delegates to the runtime state.
+   * 
+   * @param array $data The filter data to set
+   * @param bool $override If true, replaces existing data; if false, merges with existing
+   * @return static Returns $this for method chaining
    */
   public function setData(array $data, bool $override = true): static
   {
-    $this->data = $override ? $data : array_merge($this->data, $data);
+    $currentData = $this->context->getData();
+    $this->context->setData($override ? $data : array_merge($currentData, $data));
     return $this;
   }
 
@@ -774,21 +786,30 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
   }
 
   /**
-   * Parse incomming data from request.
+   * Parse incoming request data.
+   * 
+   * Extracts filter parameters from the HTTP request and stores them in runtime state.
+   * 
    * @return void
    */
   private function parseIncomingRequestData()
   {
-    $this->data = [...$this->request->all(), ...$this->request->json()->all()];
+    $this->context->setData([...$this->request->all(), ...$this->request->json()->all()]);
   }
 
   /**
-   * Get current data.
-   * @return array
+   * Get current filter data.
+   * 
+   * Returns the filter parameters extracted from the request.
+   * If a filter key is set, returns data scoped to that key.
+   * This is a wrapper method that delegates to the runtime state.
+   * 
+   * @return mixed The filter data array or scoped data
    */
   public function getData(): mixed
   {
-    return $this->filterKey === null ? $this->data : $this->data[$this->filterKey] ?? $this->data;
+    $data = $this->context->getData();
+    return $this->filterKey === null ? $data : ($data[$this->filterKey] ?? $data);
   }
 
   /**
@@ -957,21 +978,29 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
 
   /**
    * Get registered filter builder.
-   * @return Builder
+   * 
+   * Returns the Eloquent query builder that filters are being applied to.
+   * This is a wrapper method that delegates to the runtime state.
+   * 
+   * @return Builder The query builder instance
    */
   public function getBuilder(): Builder
   {
-    return $this->builder;
+    return $this->context->getBuilder();
   }
 
   /**
    * Set a new builder.
-   * @param Builder $builder
-   * @return static
+   * 
+   * Attaches an Eloquent query builder to this filterable instance.
+   * This is a wrapper method that delegates to the runtime state.
+   * 
+   * @param Builder $builder The query builder to attach
+   * @return static Returns $this for method chaining
    */
   public function setBuilder(Builder $builder): static
   {
-    $this->builder = $builder;
+    $this->context->setBuilder($builder);
     return $this;
   }
 
@@ -982,7 +1011,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
    */
   public function autoSetAllowedFieldsFromModel(bool $override = false): static
   {
-    $fillable = $this->builder->getModel()->getFillable();
+    $fillable = $this->context->getBuilder()->getModel()->getFillable();
     $this->allowedFields = $override ? $fillable : array_merge($this->allowedFields, $fillable);
 
     return $this;
@@ -1031,12 +1060,33 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
   }
 
   /**
-   * Dynamically retrieve attributes from the request.
-   * @param mixed $property
-   * @return mixed
+   * Dynamically retrieve attributes.
+   * 
+   * Provides backward compatibility for accessing runtime state properties
+   * (builder, data, applied, skipped) as if they were direct properties.
+   * 
+   * @param mixed $property The property name
+   * @return mixed The property value
    */
   public function __get($property): mixed
   {
+    // Backward compatibility: map state properties to state object
+    if ($property === 'builder') {
+      return $this->context->getBuilder();
+    }
+
+    if ($property === 'data') {
+      return $this->context->getData();
+    }
+
+    if ($property === 'applied') {
+      return $this->context->getApplied();
+    }
+
+    if ($property === 'skipped') {
+      return $this->context->getSkipped();
+    }
+
     if (property_exists($this, $property)) {
       return $this->{$property};
     }
