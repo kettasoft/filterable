@@ -12,11 +12,11 @@ Inside your Eloquent model, define a `$filterable` property and assign the class
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Kettasoft\Filterable\Traits\HasFilterable;
+use Kettasoft\Filterable\Traits\InteractsWithFilterable;
 
 class User extends Model
 {
-    use HasFilterable;
+    use InteractsWithFilterable;
     protected $filterable = \App\Http\Filters\UserFilter::class;
 }
 ```
@@ -31,11 +31,11 @@ The package will automatically resolve and use the UserFilter class defined in t
 
 ## 🧠 Notes
 
--   If no $filterable is set on the model, you will still need to pass the filter class manually to filter().
--   This feature works nicely with your existing filter engines and aliases.
+- If no $filterable is set on the model, you will still need to pass the filter class manually to filter().
+- This feature works nicely with your existing filter engines and aliases.
 
 ## ✅ Benefits
 
--   Cleaner, shorter code.
--   Better encapsulation.
--   Each model manages its own filtering logic.
+- Cleaner, shorter code.
+- Better encapsulation.
+- Each model manages its own filtering logic.
