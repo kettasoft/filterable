@@ -1,9 +1,9 @@
 ---
 title: Introduction
 description:
-    Filterable is a Laravel package for advanced Eloquent query filtering.
-    It supports multiple filtering engines, deep relationship filtering,
-    and a clean expressive syntax — ideal for APIs, dashboards, and data search systems.
+  Filterable is a Laravel package for advanced Eloquent query filtering.
+  It supports multiple filtering engines, deep relationship filtering,
+  and a clean expressive syntax — ideal for APIs, dashboards, and data search systems.
 tags: [introduction, overview, features, why use filterable]
 ---
 
@@ -27,7 +27,7 @@ on query parameters, nested relationships, or even dynamic methods — all with 
 
 Choose the engine that fits your use case:
 
-- [Ruleset Engine](/engines/ruleset) — flat rule arrays with operator support
+- [Ruleset Engine](/engines/rule-set) — flat rule arrays with operator support
 - [Invokable Engine](/engines/invokable) — method-based dynamic filtering
 - [Tree Engine](/engines/tree) — nested relationship filtering
 - [Expression Engine](/engines/expression) — advanced expression-based filtering
