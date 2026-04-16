@@ -67,7 +67,7 @@ class FilterResolverTest extends \Kettasoft\Filterable\Tests\TestCase
   public function test_it_resolve_filterable_instance_from_model_getter()
   {
     $model = new class extends Post {
-      public function getFilterable(): ?string
+      public function getFilterable(): string|array
       {
         return PostFilter::class;
       }
