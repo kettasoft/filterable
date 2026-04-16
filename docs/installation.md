@@ -1,8 +1,8 @@
 ---
 title: Installation Guide
 description: Learn how to install the Filterable Laravel package via Composer,
-    register the service provider, publish config files, and create your first
-    filter class — fully set up in minutes.
+  register the service provider, publish config files, and create your first
+  filter class — fully set up in minutes.
 tags: [installation, setup, getting started, requirements]
 ---
 
@@ -73,7 +73,7 @@ class Post extends Model
 Generate a filter class for your model using the Artisan command:
 
 ```bash
-php artisan kettasoft:make-filter PostFilter --filters=title,status
+php artisan filterable:make-filter PostFilter --filters=title,status
 ```
 
 This generates a dedicated filter class where you define your filter methods.

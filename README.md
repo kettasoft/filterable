@@ -87,7 +87,7 @@ $posts = Post::filter(PostFilter::class)->paginate();
 ```php
 class Post extends Model
 {
-    use HasFilterable;
+    use InteractsWithFilterable;
 
     protected $filterable = PostFilter::class;
 }
@@ -165,17 +165,17 @@ Send a nested AND/OR JSON tree — the engine recursively translates it into Elo
 
 ```json
 {
-    "filter": {
-        "and": [
-            { "field": "status", "operator": "eq", "value": "active" },
-            {
-                "or": [
-                    { "field": "age", "operator": "gt", "value": 25 },
-                    { "field": "city", "operator": "eq", "value": "Cairo" }
-                ]
-            }
+  "filter": {
+    "and": [
+      { "field": "status", "operator": "eq", "value": "active" },
+      {
+        "or": [
+          { "field": "age", "operator": "gt", "value": 25 },
+          { "field": "city", "operator": "eq", "value": "Cairo" }
         ]
-    }
+      }
+    ]
+  }
 }
 ```
 

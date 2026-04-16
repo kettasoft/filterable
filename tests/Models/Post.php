@@ -4,7 +4,7 @@ namespace Kettasoft\Filterable\Tests\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Kettasoft\Filterable\Tests\Models\Tag;
-use Kettasoft\Filterable\Traits\HasFilterable;
+use Kettasoft\Filterable\Traits\InteractsWithFilterable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,7 +12,7 @@ use Kettasoft\Filterable\Tests\Database\Factories\PostFactory;
 
 class Post extends Model
 {
-  use HasFactory, HasFilterable;
+  use HasFactory, InteractsWithFilterable;
 
   protected $fillable = ['title', 'status', 'content', 'views', 'is_featured', 'description', 'tags'];
 
