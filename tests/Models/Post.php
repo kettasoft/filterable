@@ -7,6 +7,7 @@ use Kettasoft\Filterable\Tests\Models\Tag;
 use Kettasoft\Filterable\Traits\InteractsWithFilterable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Kettasoft\Filterable\Tests\Database\Factories\PostFactory;
 
@@ -14,7 +15,7 @@ class Post extends Model
 {
   use HasFactory, InteractsWithFilterable;
 
-  protected $fillable = ['title', 'status', 'content', 'views', 'is_featured', 'description', 'tags'];
+  protected $fillable = ['title', 'status', 'content', 'views', 'is_featured', 'description', 'tags', 'user_id'];
 
   protected $casts = [
     'is_featured' => 'boolean',
@@ -35,6 +36,11 @@ class Post extends Model
   public function tags(): HasMany
   {
     return $this->hasMany(Tag::class);
+  }
+
+  public function user(): BelongsTo
+  {
+    return $this->belongsTo(User::class);
   }
 
   protected static function newFactory(): PostFactory

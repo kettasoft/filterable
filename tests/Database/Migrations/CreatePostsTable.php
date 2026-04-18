@@ -17,6 +17,7 @@ class CreatePostsTable extends Migration
   {
     Schema::create('posts', function (Blueprint $table) {
       $table->id();
+      $table->foreignIdFor(\Kettasoft\Filterable\Tests\Models\User::class)->nullable()->constrained()->cascadeOnDelete();
       $table->string('title');
       $table->text('content')->nullable();
       $table->enum('status', ['active', 'pending', 'stopped']);
