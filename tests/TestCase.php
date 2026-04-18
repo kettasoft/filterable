@@ -35,9 +35,9 @@ class TestCase extends BaseTestCase
   public function migrate()
   {
     $migrations = [
+      CreateUsersTable::class,
       CreatePostsTable::class,
       CreateTagsTable::class,
-      CreateUsersTable::class
     ];
 
     foreach ($migrations as $migration) {
