@@ -232,6 +232,27 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
   }
 
   /**
+   * Create a new Filterable instance for a specific model.
+   * 
+   * @param \Illuminate\Database\Eloquent\Model|Builder|string $model
+   * @param \Illuminate\Http\Request|null $request
+   * @return static
+   */
+  public static function for(Model|Builder|string $model, Request|null $request = null): static
+  {
+    $instance = static::create($request);
+
+    if ($model instanceof Builder) {
+      $instance->setBuilder($model);
+      return $instance;
+    }
+
+    $instance->setModel($model);
+
+    return $instance;
+  }
+
+  /**
    * Get request source.
    *
    * @return string
