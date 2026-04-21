@@ -1030,20 +1030,6 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
   }
 
   /**
-   * Retrieve an input item from the request.
-   * @param string $key
-   * @return mixed
-   */
-  public function get(string $key)
-  {
-    if (!in_array($source = $this->requestSource ?? config('filterable.request_source', 'query'), ['query', 'input', 'json'])) {
-      throw new RequestSourceIsNotSupportedException($source);
-    }
-
-    return $this->request->{$source}($key);
-  }
-
-  /**
    * Get exception handler instance.
    *
    * @return ExceptionHandlerInterface
@@ -1090,7 +1076,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
       return $this->{$property};
     }
 
-    return $this->get($property);
+    return $this->request->{$this->requestSource}($property);
   }
 
   /**
