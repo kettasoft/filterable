@@ -310,17 +310,31 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
   /**
    * Create a new Filterable instance for a specific model.
    *
-   * @param \Illuminate\Database\Eloquent\Model|string $model
+   * @param \Illuminate\Database\Eloquent\Model|\Illuminate\Contracts\Database\Eloquent\Builder|string $model
    * @param \Illuminate\Http\Request|null $request
    * @return static
    */
-  public static function for(Model|string $model, Request|null $request = null): static
+  public static function for(Model|Builder|string $model, Request|null $request = null): static
   {
-    $instance = static::create($request)->setModel($model);
+    $instance = static::create($request);
 
-    $instance->initQueryBuilderInstance();
+    if ($instance->isModel($model)) {
+      $instance->setModel($model);
+    }
+
+    $instance->initQueryBuilderInstance($model);
 
     return $instance;
+  }
+
+  /**
+   * Check if the model is a valid model instance or class.
+   * @param Model|string $model
+   * @return bool
+   */
+  protected function isModel($model): bool
+  {
+    return $model instanceof Model || (is_string($model) && class_exists($model) && is_subclass_of($model, Model::class));
   }
 
   /**
@@ -671,13 +685,12 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
    * @param \Illuminate\Contracts\Database\Eloquent\Builder|null $builder
    * @throws \Kettasoft\Filterable\Exceptions\MissingBuilderException
    */
-  private function initQueryBuilderInstance(Builder|null $builder = null)
+  private function initQueryBuilderInstance($builder = null)
   {
     $resolvedBuilder = match (true) {
       $builder instanceof Builder => $builder,
       $this->context->hasBuilder() => $this->context->getBuilder(),
-      $this->model instanceof Model => $this->model->query(),
-      is_a($this->model, Model::class, true) => $this->model::query(),
+      $this->isModel($this->model) => $this->model::query(),
       default => throw new MissingBuilderException
     };
 
