@@ -12,6 +12,12 @@ use Kettasoft\Filterable\Tests\Http\Filters\PostFilter;
 
 class FilterProfilerTest extends TestCase
 {
+  public function tearDown(): void
+  {
+    Profiler::dispatcher()->flush();
+    parent::tearDown();
+  }
+
   public function test_it_triggers_slow_query_event()
   {
     $triggered = false;
