@@ -25,6 +25,7 @@ class CreatePostsTable extends Migration
       $table->boolean('is_featured')->default(false);
       $table->text('description')->nullable();
       $table->json('tags')->nullable();
+      $table->softDeletes();
       $table->timestamps();
     });
   }
