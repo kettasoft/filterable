@@ -139,7 +139,7 @@ class FilterableFacadeTest extends TestCase
         
         $sql = Filterable::setBuilder($builder)->toSql();
         
-        $this->assertEquals('select * from "posts"', strtolower($sql));
+        $this->assertEquals('select * from "posts" where "posts"."deleted_at" is null', strtolower($sql));
     }
 
     /** @test */
