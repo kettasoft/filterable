@@ -2,11 +2,12 @@
 
 namespace Kettasoft\Filterable\Tests\Unit\Foundation;
 
+use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 use Kettasoft\Filterable\Filterable;
-use Kettasoft\Filterable\Tests\TestCase;
 use Kettasoft\Filterable\Tests\Models\Post;
 use Kettasoft\Filterable\Tests\Models\User;
-use Illuminate\Http\Request;
+use Kettasoft\Filterable\Tests\TestCase;
 
 class FilterableForMethodTest extends TestCase
 {
@@ -25,6 +26,18 @@ class FilterableForMethodTest extends TestCase
 
     $this->assertInstanceOf(Filterable::class, $filterable);
     $this->assertInstanceOf(Post::class, $filterable->getModel());
+  }
+
+  public function test_it_creates_filterable_instance_for_builder()
+  {
+    $builder = Post::query();
+    $filterable = Filterable::for($builder->where('id', 1));
+    $filterable->where('title', 'test');
+
+    $sql = $filterable->filter()->toRawSql();
+    $this->assertInstanceOf(Filterable::class, $filterable);
+    $this->assertInstanceOf(Builder::class, $filterable->getBuilder());
+    $this->assertStringContainsString('where "id" = 1 and "title" = \'test\'', $sql);
   }
 
   public function test_it_accepts_custom_request()
