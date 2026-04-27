@@ -9,11 +9,12 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Kettasoft\Filterable\Tests\Database\Factories\PostFactory;
 
 class Post extends Model
 {
-  use HasFactory, InteractsWithFilterable;
+  use HasFactory, InteractsWithFilterable, SoftDeletes;
 
   protected $fillable = ['title', 'status', 'content', 'views', 'is_featured', 'description', 'tags', 'user_id'];
 

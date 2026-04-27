@@ -12,6 +12,7 @@ use function Opis\Closure\{serialize, unserialize};
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Kettasoft\Filterable\Foundation\Profiler\Profiler;
 use Illuminate\Contracts\Database\Eloquent\Builder as EloquentBuilder;
+use Kettasoft\Filterable\Contracts\HasBuilder;
 use Kettasoft\Filterable\Foundation\Contracts\HasDynamicCalls;
 
 use Kettasoft\Filterable\Foundation\Traits\HandleFluentReturn;
@@ -27,7 +28,7 @@ use Kettasoft\Filterable\Foundation\Contracts\QueryBuilderInterface;
  * 
  * @link https://kettasoft.github.io/filterable/execution/invoker
  */
-class Invoker implements QueryBuilderInterface, Serializable, HasDynamicCalls
+class Invoker implements QueryBuilderInterface, Serializable, HasDynamicCalls, HasBuilder
 {
   use ForwardsCalls,
     HandleFluentReturn;
@@ -186,11 +187,23 @@ class Invoker implements QueryBuilderInterface, Serializable, HasDynamicCalls
   /**
    * Get the underlying query builder instance.
    *
-   * @return Builder|EloquentBuilder|QueryBuilderInterface
+   * @return \Illuminate\Contracts\Database\Eloquent\Builder
    */
-  public function getBuilder(): EloquentBuilder|Builder|QueryBuilderInterface
+  public function getBuilder(): EloquentBuilder
   {
     return $this->builder;
+  }
+
+  /**
+   * Set the underlying query builder instance.
+   *
+   * @param EloquentBuilder $builder
+   * @return static
+   */
+  public function setBuilder(EloquentBuilder $builder): static
+  {
+    $this->builder = $builder;
+    return $this;
   }
 
   /**

@@ -2,7 +2,7 @@
 
 namespace Kettasoft\Filterable\Foundation\Traits;
 
-use Kettasoft\Filterable\Foundation\Contracts\QueryBuilderInterface;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 
 trait HandleFluentReturn
 {
@@ -12,16 +12,16 @@ trait HandleFluentReturn
    * If the result is an instance of Builder, it updates the internal builder
    * reference and returns $this for fluent chaining. Otherwise, it returns the result as-is.
    *
-   * @param mixed $result The result returned from the forwarded call.
+   * @param string $method The method name that was called.
+   * @param array $args The arguments passed to the method.
    * @return mixed Returns $this if the result is a Builder, otherwise returns the original result.
    */
   protected function handleFluentReturn($method, $args)
   {
+    $result = $this->forwardCallTo($this->getBuilder(), $method, $args);
 
-    $result = $this->forwardCallTo($this->builder, $method, $args);
-
-    if ($result instanceof QueryBuilderInterface) {
-      $this->builder = $result;
+    if ($result instanceof Builder) {
+      $this->setBuilder($result);
       return $this;
     }
 

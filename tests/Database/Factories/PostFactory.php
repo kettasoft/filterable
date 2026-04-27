@@ -24,7 +24,7 @@ class PostFactory extends Factory
       'title' => $this->faker->word,
       'content' => $this->faker->text,
       'status' => $this->faker->randomElement(['active', 'pending', 'stopped']),
-      'views' => $this->faker->numberBetween(0, 1000),
+      'views' => 0,
       'is_featured' => $this->faker->boolean,
       'description' => $this->faker->optional()->text,
       'tags' => $this->faker->optional()->randomElements(['php', 'laravel', 'javascript', 'vue'], $this->faker->numberBetween(0, 3)),
