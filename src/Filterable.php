@@ -796,14 +796,24 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
 
   /**
    * Override the default engine for this filterable instance.
-   * @param \Kettasoft\Filterable\Engines\Foundation\Engine|string $engine
-   * @return Filterable
+   * @param Engine|class-string<Engine> $engine
+   * @return static
    */
   public function useEngine(Engine|string $engine): static
   {
     $this->engine = EngineManager::generate($engine, $this);
 
     return $this;
+  }
+
+  /**
+   * Alias name for {@see useEngine} method.
+   * @param Engine|class-string<Engine> $engine
+   * @return static
+   */
+  public function using(Engine|string $engine): static
+  {
+    return $this->useEngine($engine);
   }
 
   /**
