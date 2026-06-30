@@ -60,7 +60,12 @@ class PayloadFactory
     $field = $payload->field;
     // allow wildcard * as "all fields allowed"
     $isWildcardAllowed = ($this->engine->getAllowedFields()[0] ?? false) === '*';
-    if (!(in_array($field, $this->engine->getAllowedFields(), true) || $this->isRelational($field) || $isWildcardAllowed)) {
+
+    if ($isWildcardAllowed) {
+      return;
+    }
+
+    if (!(in_array($field, $this->engine->getAllowedFields(), true) || $this->isRelational($field))) {
       throw new NotAllowedFieldException($field, $payload);
     }
 
