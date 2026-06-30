@@ -29,6 +29,8 @@ class Ruleset extends Engine
   public function execute(Builder $builder): Builder
   {
     $data = $this->context->getData();
+    // Convert array notation to dot notation for relations
+    $data = \Kettasoft\Filterable\Support\RelationFieldParser::parse($data);
 
     foreach ($data as $field => $dissector) {
       $this->attempt(function () use ($builder, $dissector, $field): bool {
