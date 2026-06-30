@@ -1188,10 +1188,6 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
    */
   public function __call($method, $parameters)
   {
-    if (\in_array($method, $this->executors)) {
-      return $this->apply()->{$method}(...$parameters);
-    }
-
-    return $this->handleFluentReturn($method, $parameters);
+    return $this->apply()->{$method}(...$parameters);
   }
 }
