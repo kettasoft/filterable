@@ -10,6 +10,7 @@ It is ideal when you want the power of RuleSet-style syntax but also need to fil
 
 ```http
 GET /posts?filter[status]=pending&filter[author.profile.name][like]=kettasoft
+GET /posts?filter[author][profile][name][like]=kettasoft
 ```
 
 This will:
@@ -25,7 +26,7 @@ This will:
 - Each filter can be a:
     - Simple key-value pair (e.g., `filter[status]=active`)
     - Operator-based pair (e.g., `filter[name][like]=kettasoft`)
-    - Nested relation filter (e.g., `filter[author.profile.name]=ahmed`)
+    - Nested relation filter using dot notation or nested request keys (e.g., `filter[author][profile][name]=ahmed`)
 
 - The engine determines the filter structure and applies the corresponding query constraints.
 
@@ -45,7 +46,7 @@ This default is configurable in the engine settings.
 ## ✅ Supported Features
 
 - ✅ Flat and nested filters
-- ✅ Dot notation for relationships (e.g., `author.profile.name`)
+- ✅ Dot notation and nested request arrays for relationships
 - ✅ Customizable default operator
 - ✅ Whitelisting of allowed fields & relations
 - ✅ Works well with eager loading and relationship validation
@@ -65,6 +66,17 @@ Filterable::create()->useEngine('expression')
   ])->paginate()
 ```
 
+Relation authorization supports several forms:
+
+```php
+->allowRelations(['author'])                       // Every field below author
+->allowRelations(['author' => ['name', 'email']]) // Selected fields
+->allowRelations(['author' => ['*']])             // Explicit field wildcard
+->allowRelations(['author.profile' => ['name']])  // Deep relation
+```
+
+Only configured relation paths are flattened. Ordinary array values, operator expressions, and structured conditions remain unchanged.
+
 In **strict mode**, unsupported fields will be rejected with a validation error.
 
 ---
@@ -79,7 +91,7 @@ Post::filter($filters, Expression::class)->get();
 
 ## 🧠 Internal Logic (Simplified)
 
-- Parse the `filter` array recursively.
+- Normalize configured nested relation fields to dot notation.
 - Detect relationships via dot notation.
 - Resolve the relation path and apply `whereHas` queries for related models.
 - Build appropriate SQL queries via the Eloquent builder.
