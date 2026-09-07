@@ -87,7 +87,7 @@ $posts = Post::filter(PostFilter::class)->paginate();
 ```php
 class Post extends Model
 {
-    use HasFilterable;
+    use InteractsWithFilterable;
 
     protected $filterable = PostFilter::class;
 }

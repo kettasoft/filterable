@@ -2,7 +2,7 @@
 
 ## Overview
 
-By default, to use the **`filter()`** macro on Eloquent models, you must use the HasFilterable trait in each model. However, if you prefer to automatically register the **`filter()`** method on all Eloquent builders without modifying individual models, you can use the **`AutoRegisterFilterableServiceProvider`**.
+By default, to use the **`filter()`** macro on Eloquent models, you must use the InteractsWithFilterable trait in each model. However, if you prefer to automatically register the **`filter()`** method on all Eloquent builders without modifying individual models, you can use the **`AutoRegisterFilterableServiceProvider`**.
 
 ### ✅ How to Use
 
@@ -17,12 +17,12 @@ By default, to use the **`filter()`** macro on Eloquent models, you must use the
 ```
 
 2. Remove the Trait (Optional)
-   You can now remove the HasFilterable trait from your Eloquent models:
+   You can now remove the InteractsWithFilterable trait from your Eloquent models:
 
 ```php
 class User extends Model
 {
-    // No need for HasFilterable trait
+    // No need for InteractsWithFilterable trait
 }
 ```
 
@@ -48,4 +48,4 @@ $users = User::filter()->get();
 
 -   ✅ You want zero setup per model.
 -   ✅ You prefer centralized control over all query filtering.
--   ❌ You want explicit opt-in per model using HasFilterable.
+-   ❌ You want explicit opt-in per model using InteractsWithFilterable.
