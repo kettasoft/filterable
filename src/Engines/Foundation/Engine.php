@@ -13,6 +13,7 @@ use Kettasoft\Filterable\Engines\Contracts\HasFieldMap;
 use Kettasoft\Filterable\Engines\Exceptions\SkipExecution;
 use Kettasoft\Filterable\Engines\Contracts\HasAllowedFieldChecker;
 use Kettasoft\Filterable\Engines\Contracts\HasInteractsWithOperators;
+use Kettasoft\Filterable\Support\Payload;
 
 abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Strictable, Executable, HasAllowedFieldChecker, Skippable
 {
@@ -53,9 +54,9 @@ abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Stricta
   /**
    * @inheritDoc
    */
-  public function skip(string $message, mixed $clause = null): never
+  public function skip(string $message, ?Payload $payload = null): never
   {
-    throw new SkipExecution($message, $clause);
+    throw new SkipExecution($message, $payload);
   }
 
   /**
@@ -160,13 +161,13 @@ abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Stricta
   }
 
   /**
-   * Commit applied clauses.
+   * Commit an applied payload.
    * @param string $key
-   * @param Clause $clause
+   * @param Payload $payload
    * @return bool
    */
-  final protected function commit(string $key, Clause $clause): bool
+  final protected function commit(string $key, Payload $payload): bool
   {
-    return $this->context->commit($key, $clause);
+    return $this->context->commit($key, $payload);
   }
 }

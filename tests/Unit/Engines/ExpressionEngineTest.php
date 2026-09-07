@@ -8,6 +8,7 @@ use Kettasoft\Filterable\Tests\TestCase;
 use Kettasoft\Filterable\Tests\Models\Tag;
 use Kettasoft\Filterable\Tests\Models\Post;
 use Kettasoft\Filterable\Engines\Expression;
+use Kettasoft\Filterable\Support\Payload;
 use Symfony\Component\HttpFoundation\InputBag;
 use Kettasoft\Filterable\Engines\Exceptions\InvalidOperatorException;
 use Kettasoft\Filterable\Engines\Exceptions\NotAllowedFieldException;
@@ -127,6 +128,43 @@ class ExpressionEngineTest extends TestCase
       ->apply(Post::query());
 
     $this->assertEquals(1, $filter->count());
+  }
+
+  /**
+   * @test
+   */
+  public function it_can_apply_a_nested_relation_payload()
+  {
+    $request = Request::create('/posts?filter[tags.post.status]=stopped');
+
+    $filter = Filterable::withRequest($request)
+      ->setRelations(['tags.post' => ['status']])
+      ->useEngine(Expression::class)
+      ->apply(Post::query());
+
+    $this->assertEquals(1, $filter->count());
+  }
+
+  /**
+   * @test
+   */
+  public function validation_exceptions_expose_the_rejected_payload()
+  {
+    $request = Request::create('/posts?status=pending');
+
+    try {
+      Filterable::withRequest($request)
+        ->strict()
+        ->setAllowedFields([])
+        ->useEngine(Expression::class)
+        ->apply(Post::query());
+
+      $this->fail('Expected a not allowed field exception.');
+    } catch (NotAllowedFieldException $exception) {
+      $this->assertInstanceOf(Payload::class, $exception->getPayload());
+      $this->assertSame('status', $exception->getPayload()->field);
+      $this->assertSame('pending', $exception->getPayload()->rawValue);
+    }
   }
 
   /**

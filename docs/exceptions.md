@@ -63,6 +63,9 @@ Typical scenarios include:
 This allows engines to ignore irrelevant or incomplete input without failing the
 whole filtering pipeline.
 
+When the exception is associated with an input, the rejected `Payload` can be
+inspected with `$exception->getPayload()`.
+
 ---
 
 ### **StrictnessException**

@@ -14,7 +14,7 @@ use Kettasoft\Filterable\Contracts\Validatable;
 use Kettasoft\Filterable\Contracts\Authorizable;
 use Kettasoft\Filterable\Sanitization\Sanitizer;
 use Illuminate\Contracts\Database\Eloquent\Builder;
-use Kettasoft\Filterable\Engines\Foundation\Clause;
+use Kettasoft\Filterable\Support\Payload;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
 use Kettasoft\Filterable\Foundation\Sorting\Sorter;
 use Kettasoft\Filterable\Contracts\FilterableContext;
@@ -160,7 +160,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
   protected static EventManager $eventManager;
 
   /**
-   * Applied clauses.
+   * Applied payloads.
    * @var array
    */
   protected $applied = [];
@@ -269,23 +269,23 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
   }
 
   /**
-   * Commit clause.
+   * Commit an applied payload.
    *
    * @param string $key
-   * @param Clause $clause
+   * @param Payload $payload
    * @return bool
    */
-  public function commit(string $key, Clause $clause): bool
+  public function commit(string $key, Payload $payload): bool
   {
-    $this->applied[$key] = $clause;
+    $this->applied[$key] = clone $payload;
     return true;
   }
 
   /**
-   * Get applied clauses.
+   * Get applied payloads.
    *
    * @param string $key
-   * @return array|Clause|null
+   * @return array|Payload|null
    */
   public function applied($key = null)
   {
