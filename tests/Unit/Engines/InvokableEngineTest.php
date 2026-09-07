@@ -3,6 +3,7 @@
 namespace Kettasoft\Filterable\Tests\Unit\Engines;
 
 use Kettasoft\Filterable\Filterable;
+use Kettasoft\Filterable\Exceptions\FilterableMethodConflictException;
 use Kettasoft\Filterable\Tests\TestCase;
 use Kettasoft\Filterable\Support\Payload;
 use Kettasoft\Filterable\Tests\Models\Post;
@@ -981,5 +982,106 @@ class InvokableEngineTest extends TestCase
     $this->assertTrue($posts->first()->is_featured);
     $this->assertEquals('active', $posts->first()->status);
     $this->assertGreaterThanOrEqual(100, $posts->first()->views);
+  }
+
+  /**
+   * @test
+   */
+  public function it_throws_exception_when_filter_method_conflicts_with_core_filterable_methods()
+  {
+    $this->expectException(FilterableMethodConflictException::class);
+
+    request()->merge([
+      'apply' => 'test'
+    ]);
+
+    $filter = new class extends Filterable {
+      protected $filters = ['apply'];
+    };
+
+    Post::filter($filter)->get();
+  }
+
+  /**
+   * @test
+   */
+  public function it_throws_exception_for_multiple_core_method_conflicts()
+  {
+    $coreMethodsThatShouldConflict = [
+      'apply',
+      'filter',
+      'getData',
+      'getModel',
+      'getBuilder',
+      'getEngine'
+    ];
+
+    foreach ($coreMethodsThatShouldConflict as $coreMethod) {
+      request()->merge([
+        $coreMethod => 'test_value'
+      ]);
+
+      try {
+        $filter = new class($coreMethod) extends Filterable {
+          protected $filters = [];
+
+          public function __construct($method)
+          {
+            $this->filters = [$method];
+            parent::__construct();
+          }
+        };
+
+        Post::filter($filter)->get();
+
+        $this->fail("Expected FilterableMethodConflictException for method: {$coreMethod}");
+      } catch (FilterableMethodConflictException $e) {
+        $this->assertStringContainsString($coreMethod, $e->getMessage());
+        $this->assertStringContainsString('conflicts with core Filterable method', $e->getMessage());
+      }
+    }
+  }
+
+  /**
+   * @test
+   */
+  public function it_allows_filter_methods_that_do_not_conflict()
+  {
+    Post::query()->delete();
+
+    Post::factory()->create(['status' => 'active', 'title' => 'Active Post']);
+    Post::factory()->create(['status' => 'pending', 'title' => 'Pending Post']);
+
+    request()->merge([
+      'custom_status' => 'active'
+    ]);
+
+    $filter = new class extends Filterable {
+      protected $filters = ['custom_status'];
+
+      public function customStatus(Payload $payload)
+      {
+        $this->builder->where('status', $payload->value);
+      }
+    };
+
+    $posts = Post::filter($filter)->get();
+
+    $this->assertCount(1, $posts);
+    $this->assertEquals('active', $posts->first()->status);
+    $this->assertEquals('Active Post', $posts->first()->title);
+  }
+
+  /**
+   * @test
+   */
+  public function it_properly_formats_exception_message()
+  {
+    $exception = new FilterableMethodConflictException('testMethod');
+
+    $this->assertSame(
+      'Filter method [testMethod] conflicts with core Filterable method.',
+      $exception->getMessage()
+    );
   }
 }
