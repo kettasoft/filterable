@@ -1,7 +1,12 @@
 # Payload
 
-The **Payload** class is a lightweight data wrapper used to represent a single filter input.  
-It normalizes values, provides utility methods, and makes it easier to work with common patterns such as wildcard search, JSON detection, boolean casting, and more.
+The **Payload** class represents a single filter throughout its lifecycle. It
+contains the original request value, the sanitized or transformed value, and
+the resolved field and operator used by the filtering engine.
+
+It also provides utility methods for common patterns such as wildcard search,
+JSON detection, boolean casting, and more. Successfully applied filters are
+available as `Payload` snapshots through `Filterable::applied()`.
 
 ---
 
@@ -27,10 +32,10 @@ class PostFilter extends Filterable
 
 | Property    | Type     | Description                            |
 | ----------- | -------- | -------------------------------------- |
-| `$field`    | `string` | The field passed from the request.     |
-| `$operator` | `string` | The operator passed from the request.  |
-| `$value`    | `mixed`  | The raw value passed from the request. |
-| `$rawValue` | `mixed`  | The original value before sanitizing.  |
+| `$field`    | `string` | The resolved field used by the engine.       |
+| `$operator` | `string` | The resolved database operator.              |
+| `$value`    | `mixed`  | The sanitized or transformed filter value.   |
+| `$rawValue` | `mixed`  | The original value before sanitization.      |
 
 ---
 

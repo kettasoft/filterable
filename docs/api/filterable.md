@@ -269,11 +269,25 @@ Return the strict flag (`true`/`false`) or `null` when not explicitly set.
 
 ---
 
-### States & Clauses
+### Applied Payloads
 
-#### `applied($key): mixed`
+#### `applied(?string $key = null): array|Payload|null`
 
-Get applied claueses.
+Get all applied payloads, or retrieve one by its key. Each stored payload is a
+snapshot taken after sanitization, operator/field resolution, attribute
+transformations, and filter execution.
+
+```php
+$filter = PostFilter::create();
+$filter->apply(Post::query());
+
+$payload = $filter->applied('status');
+
+$payload->field;    // "status"
+$payload->operator; // "="
+$payload->value;    // final transformed value
+$payload->rawValue; // original request value
+```
 
 ---
 
