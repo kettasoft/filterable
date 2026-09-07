@@ -53,7 +53,7 @@ abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Stricta
 
   /**
    * Skip the current filter execution with a message and payload.
-   * 
+   *
    * @param \Kettasoft\Filterable\Support\Payload $payload The payload being skipped
    * @param string|null $message The reason for skipping
    * @return never

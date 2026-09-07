@@ -167,7 +167,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
 
   /**
    * Skipped payloads.
-   * @var array<Payload>
+   * @var array<int, array{payload: Payload, reason: string|null, field: string, value: mixed, timestamp: \Carbon\Carbon}>
    */
   protected array $skipped = [];
 
@@ -295,6 +295,8 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
    */
   public function skip(Payload $payload, ?string $reason = null): bool
   {
+    $payload = clone $payload;
+
     $this->skipped[] = [
       'payload' => $payload,
       'reason' => $reason,
@@ -316,7 +318,10 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
       return $this->skipped;
     }
 
-    return array_filter($this->skipped, fn($item) => $item['field'] === $field);
+    return array_values(array_filter(
+      $this->skipped,
+      fn($item) => $item['field'] === $field
+    ));
   }
 
   /**
