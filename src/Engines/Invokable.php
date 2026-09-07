@@ -3,8 +3,8 @@
 namespace Kettasoft\Filterable\Engines;
 
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use ReflectionMethod;
 use Illuminate\Support\Str;
-use Illuminate\Support\Traits\ForwardsCalls;
 use Kettasoft\Filterable\Engines\Foundation\Attributes\AttributeContext;
 use Kettasoft\Filterable\Engines\Foundation\Attributes\AttributePipeline;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
@@ -16,8 +16,6 @@ use Kettasoft\Filterable\Support\Payload;
 
 class Invokable extends Engine
 {
-  use ForwardsCalls;
-
   /**
    * Engine name.
    * @var string
@@ -85,7 +83,13 @@ class Invokable extends Engine
     $process = $pipeline->process($this->context, $method);
 
     $process->then(function () use ($method, $payload) {
-      $this->forwardCallTo($this->context, $method, [$payload]);
+      $result = (new ReflectionMethod($this->context, $method))
+        ->invoke($this->context, $payload);
+
+      if ($result instanceof Builder) {
+        $this->builder = $result;
+        $this->context->setBuilder($result);
+      }
     })
       ->catch(function ($e) {
         throw $e;
