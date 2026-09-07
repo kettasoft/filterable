@@ -12,11 +12,11 @@ Inside your Eloquent model, define a `$filterable` property and assign the class
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Kettasoft\Filterable\Traits\HasFilterable;
+use Kettasoft\Filterable\Traits\InteractsWithFilterable;
 
 class User extends Model
 {
-    use HasFilterable;
+    use InteractsWithFilterable;
     protected $filterable = \App\Http\Filters\UserFilter::class;
 }
 ```
@@ -28,6 +28,8 @@ $users = User::filter()->get();
 ```
 
 The package will automatically resolve and use the UserFilter class defined in the model.
+
+> **Upgrading:** The previous `HasFilterable` trait remains available as a deprecated compatibility wrapper. Existing models will continue to work, but new code should use `InteractsWithFilterable`.
 
 ## 🧠 Notes
 
