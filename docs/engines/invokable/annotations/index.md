@@ -199,16 +199,17 @@ protected function search(Payload $payload)
 
 The `AttributeContext` object passed to each annotation's `handle()` method contains:
 
-| Property  | Type    | Description                                       |
-| --------- | ------- | ------------------------------------------------- |
-| `query`   | `mixed` | The Eloquent query builder instance               |
-| `payload` | `mixed` | The `Payload` object with the filter value        |
-| `state`   | `array` | Shared state array (`method`, `key`, custom data) |
+| Property  | Type      | Description                                    |
+| --------- | --------- | ---------------------------------------------- |
+| `engine`  | `Engine`  | The active engine and its `Filterable` context |
+| `payload` | `Payload` | The current filter payload                     |
 
-You can read and write to `state` for inter-attribute communication:
+Use the engine to access the current filter or builder. Transform annotations
+can update the payload for attributes that run later in the pipeline:
 
 ```php
-$context->set('my_flag', true);
-$context->get('my_flag'); // true
-$context->has('my_flag'); // true
+$filter = $context->engine->getContext();
+$builder = $filter->getBuilder();
+
+$context->payload->setValue(trim($context->payload->value));
 ```

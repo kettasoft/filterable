@@ -57,18 +57,19 @@ public static function stage(): int
 
 `handle()` receives an `AttributeContext` with:
 
-| Property  | Type      | Description                                               |
-| --------- | --------- | --------------------------------------------------------- |
-| `query`   | `mixed`   | The Eloquent query builder                                |
-| `payload` | `Payload` | The filter payload (field, operator, value, rawValue)     |
-| `state`   | `array`   | Shared state between annotations in the same pipeline run |
+| Property  | Type      | Description                                           |
+| --------- | --------- | ----------------------------------------------------- |
+| `engine`  | `Engine`  | The active engine and its `Filterable` context        |
+| `payload` | `Payload` | The filter payload (field, operator, value, raw value) |
 
-You can read and write to `state` for inter-annotation communication:
+Use the engine to reach the active filter or query builder, and mutate the
+payload when a downstream annotation should receive a transformed value:
 
 ```php
-$context->set('my_flag', true);
-$context->get('my_flag'); // true
-$context->has('my_flag'); // true
+$filter = $context->engine->getContext();
+$builder = $filter->getBuilder();
+
+$context->payload->setValue(trim($context->payload->value));
 ```
 
 ---
@@ -230,4 +231,4 @@ protected function salary(Payload $payload)
 - Use `Stage::VALIDATE` for constraints that should run after the value is already cleaned.
 - Use `SkipExecution` for optional filters, `StrictnessException` for required ones.
 - Add `Attribute::IS_REPEATABLE` to `#[Attribute(...)]` if the annotation should be stackable on the same method.
-- Store computed values in `$context->state` if a downstream annotation (in the same pipeline run) needs them.
+- Write transformed values to `$context->payload` when a downstream annotation needs them.
