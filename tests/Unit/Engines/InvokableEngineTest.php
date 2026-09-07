@@ -889,12 +889,14 @@ class InvokableEngineTest extends TestCase
         'title' => 'trim'
       ];
 
+      public $sanitizedValue;
+
+      public $rawValue;
+
       public function title(Payload $payload)
       {
-        // Value is sanitized
-        $this->assertEquals('Test', $payload->value);
-        // Raw value is not sanitized
-        $this->assertEquals('  Test  ', $payload->raw());
+        $this->sanitizedValue = $payload->value;
+        $this->rawValue = $payload->raw();
 
         return $this->builder->where('title', $payload->value);
       }
@@ -902,6 +904,8 @@ class InvokableEngineTest extends TestCase
 
     $posts = Post::filter($filter)->get();
 
+    $this->assertSame('Test', $filter->sanitizedValue);
+    $this->assertSame('  Test  ', $filter->rawValue);
     $this->assertCount(1, $posts);
   }
 
