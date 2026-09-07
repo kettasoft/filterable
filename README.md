@@ -85,6 +85,10 @@ $posts = Post::filter(PostFilter::class)->paginate();
 **4. Or bind the filter directly to the model**
 
 ```php
+use App\Http\Filters\PostFilter;
+use Illuminate\Database\Eloquent\Model;
+use Kettasoft\Filterable\Traits\InteractsWithFilterable;
+
 class Post extends Model
 {
     use InteractsWithFilterable;

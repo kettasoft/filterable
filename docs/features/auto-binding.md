@@ -29,6 +29,8 @@ $users = User::filter()->get();
 
 The package will automatically resolve and use the UserFilter class defined in the model.
 
+> **Upgrading:** The previous `HasFilterable` trait remains available as a deprecated compatibility wrapper. Existing models will continue to work, but new code should use `InteractsWithFilterable`.
+
 ## 🧠 Notes
 
 -   If no $filterable is set on the model, you will still need to pass the filter class manually to filter().
