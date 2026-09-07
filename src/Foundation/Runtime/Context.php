@@ -9,7 +9,7 @@ use Kettasoft\Filterable\Support\Payload;
 /**
  * Holds transient state for a single Filterable instance.
  */
-class Context
+final class Context
 {
   /**
    * @var array<string, Payload>

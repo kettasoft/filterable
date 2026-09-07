@@ -314,7 +314,7 @@ trait HasFilterableCache
         $generator = $this->getCacheKeyGenerator();
 
         $filters = method_exists($this, 'getFilters') ? $this->getFilters() : [];
-        $providedData = $this->getData();
+        $providedData = $this->context->getData();
 
         return $generator->generate(
             static::class,

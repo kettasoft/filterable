@@ -18,7 +18,10 @@ trait InteractsWithValidation
       return;
     }
 
-    $validator = validator(Arr::only($this->getData(), array_keys($this->rules())), $this->rules());
+    $validator = validator(
+      Arr::only($this->context->getData(), array_keys($this->rules())),
+      $this->rules()
+    );
 
     if ($validator->fails()) {
       throw new ValidationException($validator);

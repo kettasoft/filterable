@@ -177,7 +177,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
   /**
    * Keep runtime state isolated between cloned filter instances.
    */
-  public function __clone()
+  public function __clone(): void
   {
     $this->context = clone $this->context;
     $this->engine = $this->engine->cloneForContext($this);
@@ -221,7 +221,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
     // Fire resolved event after initialization is complete
     $this->fireEvent('filterable.resolved', [
       'engine' => $this->engine,
-      'data' => $this->getData(),
+      'data' => $this->context->getData(),
     ]);
   }
 
@@ -394,7 +394,8 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
 
       $builder = $this->initQueryBuilderInstance($builder);
 
-      $this->context->setBuilder($this->initially($builder));
+      $builder = $this->initially($builder);
+      $this->context->setBuilder($builder);
 
       $builder = Executer::execute($this->engine, $builder);
 
@@ -407,11 +408,14 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
         'filterable' => $this
       ]);
 
+      $builder = $this->finally($builder);
+      $this->context->setBuilder($builder);
+
       if ($this instanceof ShouldReturnQueryBuilder || $this->shouldReturnQueryBuilder) {
-        return $this->finally($builder);
+        return $builder;
       }
 
-      $invoker = new Invoker($this->finally($builder));
+      $invoker = new Invoker($builder);
 
       // Pass caching settings to invoker
       if ($this->isCachingEnabled()) {
@@ -973,7 +977,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
    */
   public function getBuilder(): Builder
   {
-    return $this->context->getBuilder();
+    return $this->context->getBuilder() ?? throw new MissingBuilderException;
   }
 
   /**
