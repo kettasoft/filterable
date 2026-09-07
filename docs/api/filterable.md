@@ -259,7 +259,12 @@ Return the allowed fields.
 
 #### `allowedOperators(array $operators): static`
 
-Override globally allowed operators for this instance.
+Restrict the instance to selected operator aliases or resolved SQL values.
+
+```php
+$filterable->allowedOperators(['gte', 'in']);
+$filterable->allowedOperators(['>=', 'in']);
+```
 
 #### `getAllowedOperators(): array`
 
