@@ -88,7 +88,7 @@ use Kettasoft\Filterable\Engines\Exceptions\SkipExecution;
 use Kettasoft\Filterable\Engines\Exceptions\StrictnessException;
 
 // Silent skip
-throw new SkipExecution('Value too short.');
+throw new SkipExecution('Value too short.', $context->payload);
 
 // Hard fail
 throw new StrictnessException('This field is required.');
@@ -127,7 +127,8 @@ class MinLength implements MethodAttribute
 
         if (is_string($value) && mb_strlen($value) < $this->length) {
             throw new SkipExecution(
-                "Value must be at least {$this->length} characters."
+                "Value must be at least {$this->length} characters.",
+                $context->payload
             );
         }
     }
@@ -207,7 +208,10 @@ class OnlyWhen implements MethodAttribute
     public function handle(AttributeContext $context): void
     {
         if (! auth()->user()?->hasRole($this->role)) {
-            throw new SkipExecution("User does not have role: {$this->role}");
+            throw new SkipExecution(
+                "User does not have role: {$this->role}",
+                $context->payload
+            );
         }
     }
 }

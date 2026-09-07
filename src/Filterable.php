@@ -166,6 +166,12 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
   protected $applied = [];
 
   /**
+   * Skipped payloads.
+   * @var array<int, array{payload: Payload, reason: string|null, field: string, value: mixed, timestamp: \Carbon\Carbon}>
+   */
+  protected array $skipped = [];
+
+  /**
    * Create a new Filterable instance.
    * @param Request|null $request
    */
@@ -279,6 +285,53 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
   {
     $this->applied[$key] = clone $payload;
     return true;
+  }
+
+  /**
+   * Register a skipped payload.
+   * @param Payload $payload
+   * @param string|null $reason Optional reason for skipping
+   * @return bool
+   */
+  public function skip(Payload $payload, ?string $reason = null): bool
+  {
+    $payload = clone $payload;
+
+    $this->skipped[] = [
+      'payload' => $payload,
+      'reason' => $reason,
+      'field' => $payload->field,
+      'value' => $payload->value,
+      'timestamp' => now(),
+    ];
+
+    return true;
+  }
+
+  /**
+   * Get all skipped payloads.
+   * @return array
+   */
+  public function skipped(?string $field = null): array
+  {
+    if ($field === null) {
+      return $this->skipped;
+    }
+
+    return array_values(array_filter(
+      $this->skipped,
+      fn($item) => $item['field'] === $field
+    ));
+  }
+
+  /**
+   * Check if a specific field was skipped.
+   * @param string $field
+   * @return bool
+   */
+  public function hasSkipped(string $field): bool
+  {
+    return !empty($this->skipped($field));
   }
 
   /**

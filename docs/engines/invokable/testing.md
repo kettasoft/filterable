@@ -72,16 +72,23 @@ public function test_title_filter_uses_like_operator(): void
 ## Testing Skipped Filters
 
 When a filter is skipped (e.g. via `#[SkipIf]`, `#[In]`, or `#[Authorize]`),
-the clause should not appear in the query:
+the condition should not appear in the query and its payload should be recorded:
 
 ```php
 public function test_status_filter_is_skipped_when_value_is_invalid(): void
 {
     $request = $this->makeRequest(['status' => 'invalid_status']);
 
-    $query = Post::filter(PostFilter::class, $request);
+    $filter = new PostFilter($request);
+    $query = Post::filter($filter);
 
     $this->assertStringNotContainsString('status', $query->toSql());
+    $this->assertTrue($filter->hasSkipped('status'));
+
+    $skipped = $filter->skipped('status')[0];
+
+    $this->assertSame('status', $skipped['payload']->field);
+    $this->assertNotEmpty($skipped['reason']);
 }
 ```
 

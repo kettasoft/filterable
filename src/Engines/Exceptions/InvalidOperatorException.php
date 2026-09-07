@@ -9,6 +9,7 @@ class InvalidOperatorException extends SkipExecution
   /**
    * InvalidOperatorException constructor.
    * @param string $operator
+   * @param Payload|null $payload
    */
   public function __construct(string $operator, ?Payload $payload = null)
   {

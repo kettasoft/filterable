@@ -8,9 +8,10 @@ class NotAllowedEmptyValueException extends SkipExecution
 {
     /**
      * NotAllowedEmptyValueException constructor.
-     * @param mixed $message
+     * @param string $message
+     * @param Payload|null $payload
      */
-    public function __construct($message = "", ?Payload $payload = null)
+    public function __construct(string $message = "", ?Payload $payload = null)
     {
         parent::__construct($message, $payload);
     }

@@ -291,6 +291,36 @@ $payload->rawValue; // original request value
 
 ---
 
+### Skipped Payloads
+
+#### `skipped(?string $field = null): array`
+
+Get every skipped payload, or only entries for a specific field. Each entry
+contains a payload snapshot, the skip reason, field, value, and
+timestamp.
+
+#### `hasSkipped(string $field): bool`
+
+Determine whether a payload for the given field was skipped.
+
+```php
+$filter = PostFilter::create();
+$filter->apply(Post::query());
+
+if ($filter->hasSkipped('status')) {
+    $entry = $filter->skipped('status')[0];
+
+    $entry['payload'];   // Payload snapshot
+    $entry['reason'];    // Why the filter was skipped
+    $entry['timestamp']; // Carbon timestamp
+}
+```
+
+Skipped payloads are recorded in both permissive and strict modes. Strict mode
+still rethrows the associated `SkipExecution` exception after recording it.
+
+---
+
 ### Flow Control
 
 #### `when(bool $condition, callable $callback): static`

@@ -20,6 +20,11 @@ class DefaultHandler extends FilterableExceptionHandler
         if ($this->hasSkipping($exception)) {
             /** @var SkipExecution $exception */
 
+            // Register the skipped payload in the context
+            if ($payload = $exception->getPayload()) {
+                $engine->getContext()->skip($payload, $exception->getMessage());
+            }
+
             if ($engine->isStrict() || $this->isStrictThrowing()) {
                 throw $exception;
             }
