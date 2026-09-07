@@ -20,7 +20,7 @@ class $$CLASS$$ extends Filterable
     /**
      * Initial processing of the query builder before applying filters.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $builder
+     * @param Builder $builder
      * @return Builder
      */
     protected function initially(Builder $builder): Builder
@@ -31,7 +31,7 @@ class $$CLASS$$ extends Filterable
     /**
      * Finalize the query builder after all filters have been applied.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $builder
+     * @param Builder $builder
      * @return Builder
      */
     protected function finally(Builder $builder): Builder

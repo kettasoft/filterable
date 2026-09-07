@@ -86,6 +86,7 @@ php artisan filterable:make-filter PostFilter --filters=test
 -   Use the `--force` flag if you want to **re-publish** the configuration file and overwrite existing settings.
 -   The command automatically detects whether the `app/Http/Filters` directory already exists.
 -   `filterable:make-filter` uses the defaults from `config/filterable.php`, but you can override them per run with `--namespace` and `--path`.
+-   Class names and namespaces must be valid PHP qualified names; invalid values fail without creating a file.
 
 ---
 

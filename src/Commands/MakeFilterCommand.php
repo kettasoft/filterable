@@ -27,6 +27,16 @@ class MakeFilterCommand extends Command
     $namespace = $this->getFilterNamespace();
     $filePath = $savePath . "/{$class}.php";
 
+    if (!$this->isValidQualifiedName($class)) {
+      $this->error("The filter class name [{$class}] is not valid.");
+      return Command::FAILURE;
+    }
+
+    if (!$this->isValidQualifiedName($namespace)) {
+      $this->error("The filter namespace [{$namespace}] is not valid.");
+      return Command::FAILURE;
+    }
+
     Stub::setBasePath(config('filterable.generator.stubs'));
 
     // Ensure directory exists
@@ -139,5 +149,16 @@ class MakeFilterCommand extends Command
   protected function isAbsolutePath(string $path): bool
   {
     return Str::startsWith($path, ['/']) || preg_match('/^[A-Za-z]:[\\\\\\/]/', $path) === 1;
+  }
+
+  /**
+   * Determine whether a class or namespace is a valid PHP qualified name.
+   */
+  protected function isValidQualifiedName(string $name): bool
+  {
+    return preg_match(
+      '/^[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*(?:\\\\[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*)*$/D',
+      $name
+    ) === 1;
   }
 }

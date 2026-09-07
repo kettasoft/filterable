@@ -94,4 +94,57 @@ class MakeFilterCommandTest extends TestCase
     $this->assertTrue(File::exists($filePath));
     $this->assertStringContainsString("namespace {$namespace};", File::get($filePath));
   }
+
+  /**
+   * It normalizes forward slashes in a custom namespace.
+   * @test
+   */
+  public function it_normalizes_custom_namespace_separators()
+  {
+    $filePath = base_path('tests/tmp/Modules/Blog/SlashFilter.php');
+
+    $result = Artisan::call('filterable:make-filter', [
+      'name' => 'SlashFilter',
+      '--path' => 'tests/tmp/Modules/Blog',
+      '--namespace' => 'Modules/Blog/Filters',
+    ]);
+
+    $this->assertEquals(Command::SUCCESS, $result);
+    $this->assertStringContainsString(
+      'namespace Modules\\Blog\\Filters;',
+      File::get($filePath)
+    );
+  }
+
+  /**
+   * It rejects a namespace that would generate invalid PHP.
+   * @test
+   */
+  public function it_rejects_an_invalid_custom_namespace()
+  {
+    $result = Artisan::call('filterable:make-filter', [
+      'name' => 'InvalidNamespaceFilter',
+      '--path' => 'tests/tmp/Invalid',
+      '--namespace' => 'Modules/Invalid-Namespace/Filters',
+    ]);
+
+    $this->assertEquals(Command::FAILURE, $result);
+    $this->assertStringContainsString('is not valid', Artisan::output());
+    $this->assertFalse(File::exists(base_path('tests/tmp/Invalid/InvalidNamespaceFilter.php')));
+  }
+
+  /**
+   * It rejects a class name that would generate invalid PHP.
+   * @test
+   */
+  public function it_rejects_an_invalid_filter_class_name()
+  {
+    $result = Artisan::call('filterable:make-filter', [
+      'name' => '123InvalidFilter',
+    ]);
+
+    $this->assertEquals(Command::FAILURE, $result);
+    $this->assertStringContainsString('class name [123InvalidFilter] is not valid', Artisan::output());
+    $this->assertFalse(File::exists(base_path('tests/tmp/Filters/123InvalidFilter.php')));
+  }
 }
