@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+
+- Applied filters are now represented directly by `Payload`; the redundant
+  `Clause` wrapper and its supporting classes have been removed.
+- `Filterable::applied()` now returns final `Payload` snapshots, including the
+  original `rawValue`.
+- Query application now preserves complete nested relation paths consistently
+  across expression, ruleset, and tree engines.
+
+### Breaking Changes
+
+- `Clause`, `ClauseFactory`, `ClauseApplier`, `RelationResolver`, and
+  `ClauseKeyMapper` have been removed.
+- `Commitable::commit()` and `Filterable::commit()` now accept `Payload`.
+- `SkipExecution::getClause()` has been replaced by `getPayload()`.
+
 ## [2.0.0] - 2025-07-29
 
 ### Added
