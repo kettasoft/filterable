@@ -45,7 +45,7 @@ class Invokable extends Engine
     foreach ($this->context->getFilterAttributes() as $filter) {
       $method = $this->getMethodName($filter);
 
-      // Check for method name conflicts with Filterable core methods BEFORE attempt.
+      // Conflicts are configuration errors and must not be swallowed in non-strict mode.
       if (method_exists(Filterable::class, $method)) {
         throw new FilterableMethodConflictException($method);
       }

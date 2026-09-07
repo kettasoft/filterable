@@ -147,6 +147,13 @@ If `$mentors` is empty or not defined, the engine automatically matches request 
 'created_at'  → calls createdAt()
 ```
 
+::: warning Reserved Method Names
+Filter methods must not resolve to a method already defined by the base
+`Filterable` class, such as `apply`, `filter`, or `getBuilder`. The engine
+throws a `FilterableMethodConflictException` when a conflict is detected. Use
+`$mentors` to map the request key to a unique filter method name.
+:::
+
 ---
 
 ## Attribute Pipeline
