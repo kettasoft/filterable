@@ -263,7 +263,7 @@ Sanitization happens early in the filter execution pipeline:
 4. **Field-specific sanitizers** (per key, in order)
 5. **Filtering**
 
-This ensures all downstream processes work with clean, normalized data.
+This ensures each query condition receives a clean, normalized payload. Class-level request validation has already completed at this point.
 
 ---
 
@@ -289,10 +289,13 @@ class ProductFilter extends Filterable
     'per_page' => new ClampSanitizer(min: 1, max: 100)
   ];
 
-  protected $rules = [
-    'name' => ['sometimes', 'string', 'max:255'],
-    'price' => ['sometimes', 'numeric', 'min:0']
-  ];
+  public function rules(): array
+  {
+    return [
+      'name' => ['sometimes', 'string', 'max:255'],
+      'price' => ['sometimes', 'numeric', 'min:0']
+    ];
+  }
 
   public function name(Payload $payload)
   {

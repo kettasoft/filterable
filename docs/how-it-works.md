@@ -1,110 +1,87 @@
 ---
-title: How It Works
-description: Learn about the core concepts and architecture of Filterable, including its pluggable engine system and how to use different engines for various filtering strategies.
-tags: [how it works, architecture, engines, filtering strategies]
+title: How Filterable Works
+description: Follow a filter request from incoming data to the final Eloquent query and choose the right engine.
+tags: [concepts, engines, filtering]
 ---
 
-# How It Works
+# How Filterable Works
 
-Filterable operates on a pluggable **Engine-based architecture**, giving you full control over how filters are interpreted and applied.
+Filterable sits between incoming filter data and an Eloquent query. It prepares the data, checks your filter policy, asks the selected engine to apply each condition, and then forwards terminal calls such as `get()`, `first()`, `count()`, and `paginate()` to the filtered query.
 
-Each **engine** encapsulates a distinct filtering strategy — allowing you to choose the one that best fits your use case.
+```text
+Request or provided data
+        ↓
+Authorization → Request validation
+        ↓
+Selected engine → Payload sanitization
+        ↓
+Eloquent query → Sorting → Result
+```
 
-## Engine Overview
+## Two ways to start a filter
 
-| Engine                             | Description                                                                                            |
-| ---------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| [`Ruleset`](engines/rule-set)      | Applies a flat array of key-operator-value pairs. Best for simple APIs or when using query strings.    |
-| [`Invokable`](engines/invokable)   | Maps each filter key to a method on your filter class. Great for encapsulating filter logic per field. |
-| [`Expression`](engines/expression) | Flexible and expressive filtering engine designed to handle both flat and deeply nested filters.       |
-| [`Tree`](engines/tree)             | Supports nested and grouped logical filtering (`AND` / `OR`), ideal for advanced search scenarios.     |
-
----
-
-## Invokable Engine
-
-The **Invokable Engine** maps each incoming filter key to a method within your custom filter class.
-
-### Example Filter Class
+Bind a filter class to a model when it is the model's default filtering policy:
 
 ```php
-class PostFilter extends Filterable
+use App\Http\Filters\PostFilter;
+use Kettasoft\Filterable\Traits\InteractsWithFilterable;
+
+class Post extends Model
 {
-    protected $filters = ['status', 'title'];
+    use InteractsWithFilterable;
 
-    public function status($value)
-    {
-        return $this->builder->where('status', $value);
-    }
+    protected $filterable = PostFilter::class;
+}
 
-    public function title($value)
-    {
-        return $this->builder->where('title', 'like', "%$value%");
-    }
+$posts = Post::filter()->paginate();
+```
+
+Or create a model-aware filter directly when choosing the engine at the call site:
+
+```php
+$posts = Filterable::for(Post::class, $request)
+    ->using('ruleset')
+    ->setAllowedFields(['status', 'title'])
+    ->paginate();
+```
+
+## Choose an engine by request shape
+
+| Engine | Choose it when | Typical input |
+| --- | --- | --- |
+| [Invokable](/engines/invokable/) | Each field needs custom PHP behavior | `?status=active&search=laravel` |
+| [Ruleset](/engines/rule-set) | The client chooses from approved operators | `?filter[views][gte]=100` |
+| [Expression](/engines/expression) | Requests include nested relational fields | `?filter[author][name][like]=%john%` |
+| [Tree](/engines/tree) | The client sends grouped `AND`/`OR` conditions | A JSON condition tree |
+
+## Payloads
+
+Every accepted condition becomes a `Payload` containing the field, resolved operator, sanitized value, and original value. Invokable filters receive that payload directly:
+
+```php
+protected function status(Payload $payload): Builder
+{
+    return $this->builder->where('status', $payload->value);
 }
 ```
 
-### Usage in Controller
+Ruleset, Expression, and Tree apply their payloads automatically.
+
+## Safe filtering
+
+Use allowed fields, operators, and relations to define what clients may query. Strict mode throws when input violates that policy; permissive mode skips the rejected condition and keeps a diagnostic record.
+
+Request validation runs before the engine. The engine then parses each condition and sanitizes its payload before applying it to the query.
+
+## Query execution
+
+Filterable applies filters automatically before common Builder operations:
 
 ```php
-public function index(PostFilter $filter)
-{
-    $posts = Post::filter($filter)->paginate(10);
-    return view('posts.index', compact('posts'));
-}
+$filterable->get();
+$filterable->first();
+$filterable->count();
+$filterable->paginate();
 ```
 
----
-
-## Expression Engine
-
-Write custom SQL logic for filtering in a centralized callback.
-
-### Usage
-
-```php
-Post::filterUsing(function ($query, $filters) {
-    if (isset($filters['published'])) {
-        $query->where('published_at', '!=', null);
-    }
-    return $query;
-})->get();
-```
-
----
-
-## Tree Engine
-
-Ideal for complex filters with nested conditions.
-
-```json
-{
-    "and": [
-        {
-            "field": "status",
-            "operator": "eq",
-            "value": "active"
-        },
-        {
-            "or": [
-                {
-                    "field": "title",
-                    "operator": "like",
-                    "value": "Laravel"
-                },
-                {
-                    "field": "author.name",
-                    "operator": "eq",
-                    "value": "John"
-                }
-            ]
-        }
-    ]
-}
-```
-
-```php
-Post::filter(Filterable::create()->useEngine('tree'))->get();
-```
-
-Supports relation filtering and nested depth control via configuration.
+You can also continue building the Eloquent query fluently. See the individual engine guides for their accepted request formats and configuration.

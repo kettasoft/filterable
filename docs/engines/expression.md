@@ -59,8 +59,8 @@ This default is configurable in the engine settings.
 To avoid unauthorized or unintended access, you can configure the engine to only accept specific fields or relations:
 
 ```php
-Filterable::create()->useEngine('expression')
-  ->allowedFields(['status'])
+Filterable::for(Post::class, $request)->using('expression')
+  ->setAllowedFields(['status'])
   ->allowRelations([
     'author.profile' => ['name'] // specific fields in this relation
   ])->paginate()
@@ -84,7 +84,9 @@ In **strict mode**, unsupported fields will be rejected with a validation error.
 ## 📌 Use Case
 
 ```php
-Post::filter($filters, Expression::class)->get();
+Filterable::for(Post::class, $request)
+  ->using('expression')
+  ->get();
 ```
 
 ---
