@@ -7,8 +7,8 @@ use Kettasoft\Filterable\Support\Payload;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
 use Kettasoft\Filterable\Support\ConditionNormalizer;
 use Kettasoft\Filterable\Support\ValidateTableColumns;
-use Kettasoft\Filterable\Engines\Foundation\ClauseApplier;
-use Kettasoft\Filterable\Engines\Foundation\ClauseFactory;
+use Kettasoft\Filterable\Engines\Foundation\PayloadApplier;
+use Kettasoft\Filterable\Engines\Foundation\PayloadFactory;
 use Kettasoft\Filterable\Engines\Foundation\Appliers\Applier;
 use Kettasoft\Filterable\Engines\Foundation\Parsers\Dissector;
 
@@ -37,12 +37,12 @@ class Expression extends Engine
 
         $dissector = Dissector::parse($condition, $this->defaultOperator());
 
-        $clause = (new ClauseFactory($this))->make(
+        $payload = (new PayloadFactory($this))->make(
           new Payload($field, $dissector->operator, $this->sanitizeValue($field, $dissector->value), $dissector->value)
         );
 
-        Applier::apply(new ClauseApplier($clause), $builder);
-        return $this->commit($field, $clause);
+        Applier::apply(new PayloadApplier($payload), $builder);
+        return $this->commit($field, $payload);
       });
     }
 

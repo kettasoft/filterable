@@ -7,8 +7,8 @@ use Kettasoft\Filterable\Support\Payload;
 use Kettasoft\Filterable\Support\TreeNode;
 use Kettasoft\Filterable\Traits\FieldNormalizer;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
-use Kettasoft\Filterable\Engines\Foundation\ClauseApplier;
-use Kettasoft\Filterable\Engines\Foundation\ClauseFactory;
+use Kettasoft\Filterable\Engines\Foundation\PayloadApplier;
+use Kettasoft\Filterable\Engines\Foundation\PayloadFactory;
 use Kettasoft\Filterable\Engines\Foundation\Appliers\Applier;
 
 class Tree extends Engine
@@ -55,17 +55,13 @@ class Tree extends Engine
       });
     } else {
 
-      $clause = (new ClauseFactory($this))->make(
+      $payload = (new PayloadFactory($this))->make(
         new Payload($node->field, $node->operator ?? $this->defaultOperator(), $this->sanitizeValue($node->field, $node->value), $node->value)
       );
 
-      if ($clause->isRelational()) {
-        $clause->relation($this->getResources()->relations)->resolve($builder, $clause);
-      } else {
-        Applier::apply(new ClauseApplier($clause), $builder);
-      }
+      Applier::apply(new PayloadApplier($payload), $builder);
 
-      $this->commit($node->field, $clause);
+      $this->commit($node->field, $payload);
     }
 
     return $builder;
