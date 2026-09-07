@@ -44,6 +44,14 @@ Add the following line to the providers array in config/app.php or bootstrap/pro
 php artisan filterable:make-filter PostFilter --filters=title,status
 ```
 
+To generate the class in a custom namespace or directory:
+
+```bash
+php artisan filterable:make-filter PostFilter \
+  --namespace="Modules\\Blog\\App\\Filters" \
+  --path="Modules/Blog/app/Filters"
+```
+
 **2. Define your filters**
 
 ```php
