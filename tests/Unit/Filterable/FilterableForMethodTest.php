@@ -5,6 +5,7 @@ namespace Kettasoft\Filterable\Tests\Unit\Filterable;
 use Illuminate\Http\Request;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Kettasoft\Filterable\Filterable;
+use Kettasoft\Filterable\Foundation\Invoker;
 use Kettasoft\Filterable\Support\Payload;
 use Kettasoft\Filterable\Tests\TestCase;
 use Kettasoft\Filterable\Tests\Models\Post;
@@ -78,13 +79,13 @@ class FilterableForMethodTest extends TestCase
     $this->assertInstanceOf(Post::class, $filterable->getBuilder()->getModel());
   }
 
-  public function test_builder_methods_remain_fluent_on_filterable()
+  public function test_builder_methods_are_forwarded_through_an_invoker()
   {
     $filterable = Filterable::for(Post::class);
 
     $result = $filterable->where('status', 'published');
 
-    $this->assertSame($filterable, $result);
+    $this->assertInstanceOf(Invoker::class, $result);
     $this->assertStringContainsString('where "status" = ?', $filterable->getBuilder()->toSql());
   }
 
@@ -105,7 +106,7 @@ class FilterableForMethodTest extends TestCase
     $filterClass = new class extends Filterable {
       protected $filters = ['status'];
 
-      public function status(Payload $payload): Builder
+      protected function status(Payload $payload): Builder
       {
         return $this->getBuilder()->where($payload->field, $payload->value);
       }

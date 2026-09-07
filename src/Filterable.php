@@ -728,6 +728,17 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
   }
 
   /**
+   * Alias for {@see useEngine()}.
+   *
+   * @param Engine|class-string<Engine>|string $engine
+   * @return static
+   */
+  public function using(Engine|string $engine): static
+  {
+    return $this->useEngine($engine);
+  }
+
+  /**
    * Get current engine.
    * @return Engine
    */
@@ -1052,11 +1063,12 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
   }
 
   /**
-   * Retrieve an input item from the request.
-   * @param string $key
-   * @return mixed
+   * Retrieve an input item from the configured request source.
+   * @param string $key The key to retrieve from the request
+   * @return mixed The value from the request source
+   * @throws RequestSourceIsNotSupportedException
    */
-  public function get(string $key)
+  public function getFromRequest(string $key): mixed
   {
     if (!in_array($source = $this->requestSource ?? config('filterable.request_source', 'query'), ['query', 'input', 'json'])) {
       throw new RequestSourceIsNotSupportedException($source);
@@ -1112,7 +1124,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
       return $this->{$property};
     }
 
-    return $this->get($property);
+    return $this->getFromRequest($property);
   }
 
   /**
@@ -1123,6 +1135,6 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
    */
   public function __call($method, $parameters)
   {
-    return $this->handleFluentReturn($method, $parameters);
+    return $this->forwardCallTo($this->apply(), $method, $parameters);
   }
 }

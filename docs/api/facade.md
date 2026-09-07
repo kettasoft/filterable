@@ -38,6 +38,9 @@ use Filterable;
 // Create a new filterable instance
 $filterable = Filterable::create();
 
+// Create an initialized filterable query
+$filterable = Filterable::for(User::class);
+
 // Apply filters to a query builder
 $results = Filterable::create()
     ->setModel(User::class)
@@ -136,6 +139,9 @@ Filterable::create()->withoutSanitizers();
 // Use specific engine
 Filterable::create()->useEngine('expression'); // or 'tree', 'ruleset', etc.
 
+// Fluent alias when building a query
+Filterable::for(User::class)->using('ruleset');
+
 // Enable header-driven mode
 Filterable::create()->withHeaderDrivenMode([
     'header_name' => 'X-Filter-Engine',
@@ -164,6 +170,7 @@ The facade provides access to all public methods of the Filterable class, organi
 ### Static Factory Methods
 
 -   `create()` - Create new Filterable instance
+-   `for()` - Create an initialized instance for a model or builder
 -   `withRequest()` - Create new Filterable instance with custom Request
 
 ### Core Filtering Methods
@@ -197,7 +204,7 @@ The facade provides access to all public methods of the Filterable class, organi
 -   `setData()` - Set manual data injection
 -   `getData()` - Get current data
 -   `setSource()` - Set request source
--   `get()` - Retrieve input item from request
+-   `getFromRequest()` - Retrieve an input item from the configured request source
 
 And many more methods for advanced configuration and customization.
 

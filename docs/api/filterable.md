@@ -111,6 +111,20 @@ $users = $invoker->get();
 
 Alias of `apply()`.
 
+#### Automatic Builder execution
+
+Instances created with `for()` apply their filters automatically before forwarding any dynamic Builder method. The returned `Invoker` keeps subsequent Builder calls fluent, so Laravel methods and macros work without maintaining a package-side method list.
+
+```php
+$posts = Filterable::for(Post::class, $request)
+    ->using('ruleset')
+    ->setAllowedFields(['status'])
+    ->where('published', true)
+    ->paginate(15);
+```
+
+This applies consistently to query construction, retrieval, aggregates, pagination, streaming, mutations, and custom Builder macros.
+
 #### `shouldReturnQueryBuilder(): static`
 
 Force `apply()` to return the Eloquent Builder instead of the Invoker wrapper.
@@ -191,9 +205,9 @@ Return current working data. If a `filterKey` is set (via traits), returns that 
 
 Set the request source: `query`, `input`, or `json`. Throws when unsupported.
 
-#### `get(string $key): mixed`
+#### `getFromRequest(string $key): mixed`
 
-Retrieve an input value from the configured source.
+Retrieve an input value from the configured request source. The `get()` method is reserved for Eloquent Builder execution and therefore triggers automatic filter application.
 
 ---
 
@@ -202,6 +216,10 @@ Retrieve an input value from the configured source.
 #### `useEngine(Engine|string $engine): static`
 
 Override the engine for this instance. Accepts an engine instance or a supported engine key.
+
+#### `using(Engine|string $engine): static`
+
+Fluent alias for `useEngine()`, useful when building a query with `for()`.
 
 #### `getEngine(): Engine`
 
@@ -414,7 +432,7 @@ Set and return class aliases as a collection.
 
 #### `__get($property): mixed`
 
-Proxy missing properties to the request source via `get($property)` when not present on the instance.
+Proxy missing properties to the request source via `getFromRequest($property)` when not present on the instance.
 
 ---
 

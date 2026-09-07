@@ -44,6 +44,7 @@ use Illuminate\Support\Facades\Facade;
  * 
  * Engine Configuration:
  * @method static \Kettasoft\Filterable\Filterable useEngine(\Kettasoft\Filterable\Engines\Foundation\Engine|string $engine) Override the default engine for this filterable instance.
+ * @method static \Kettasoft\Filterable\Filterable using(\Kettasoft\Filterable\Engines\Foundation\Engine|string $engine) Alias for useEngine.
  * @method static \Kettasoft\Filterable\Engines\Foundation\Engine getEngine() Get current engine.
  * 
  * Request & Data Management:
@@ -53,7 +54,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static mixed getData() Get current data.
  * @method static array getFilterAttributes() Fetch all relevant filters from the filter API class.
  * @method static \Kettasoft\Filterable\Filterable setSource(string $source) Set request source.
- * @method static mixed get(string $key) Retrieve an input item from the request.
+ * @method static mixed getFromRequest(string $key) Retrieve an input item from the request.
  * 
  * Sanitization:
  * @method static \Kettasoft\Filterable\Filterable setSanitizers(array $sanitizers, bool $override = true) Set a new sanitizers classes.
