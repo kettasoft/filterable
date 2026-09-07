@@ -202,6 +202,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Custom Operator Strategies
+    |--------------------------------------------------------------------------
+    |
+    | Map a resolved operator to a class implementing the Operator contract.
+    | Entries here override the built-in strategies.
+    |
+    */
+    'operator_strategies' => [
+        // 'contains' => App\Filtering\Operators\ContainsOperator::class,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Filter Engines
     |--------------------------------------------------------------------------
     |
@@ -264,6 +277,7 @@ return [
                 'null' => 'is null',
                 'notnull' => 'is not null',
                 'between' => 'between',
+                'nbetween' => 'not between',
             ],
         ],
 
@@ -312,6 +326,7 @@ return [
                 'null' => 'is null',
                 'notnull' => 'is not null',
                 'between' => 'between',
+                'nbetween' => 'not between',
             ],
 
             /*
@@ -411,6 +426,7 @@ return [
                 'null' => 'is null',
                 'notnull' => 'is not null',
                 'between' => 'between',
+                'nbetween' => 'not between',
             ],
 
             /*
@@ -478,6 +494,7 @@ return [
                 'null' => 'is null',
                 'notnull' => 'is not null',
                 'between' => 'between',
+                'nbetween' => 'not between',
             ],
 
             /*
