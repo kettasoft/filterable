@@ -194,6 +194,19 @@ class Invoker implements QueryBuilderInterface, Serializable, HasDynamicCalls
   }
 
   /**
+   * Replace the underlying query builder instance.
+   *
+   * @param QueryBuilder|EloquentBuilder|QueryBuilderInterface $builder
+   * @return static
+   */
+  public function setBuilder(QueryBuilder|EloquentBuilder|QueryBuilderInterface $builder): static
+  {
+    $this->builder = $builder;
+
+    return $this;
+  }
+
+  /**
    * Enable caching for this invoker
    *
    * @param string $cacheKey

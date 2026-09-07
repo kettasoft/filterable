@@ -70,6 +70,22 @@ Create a new Filterable instance using the provided request or the current conta
 $filterable = Filterable::create();
 ```
 
+#### `static for(Model|Builder|string $source, Request|null $request = null): static`
+
+Create a Filterable instance with its model and query builder ready for use. Existing constraints are preserved when a builder is supplied.
+
+```php
+$filterable = Filterable::for(User::class)
+    ->setAllowedFields(['name', 'email']);
+
+$filterable = Filterable::for(
+    User::query()->where('active', true),
+    $customRequest
+);
+```
+
+Invalid class strings are rejected with an `InvalidArgumentException`.
+
 #### `static withRequest(Request $request): static`
 
 Create a new instance bound to a specific request.
