@@ -13,10 +13,21 @@ use Kettasoft\Filterable\Engines\Exceptions\NotAllowedEmptyValueException;
  */
 class PayloadFactory
 {
+  /**
+   * Create a new PayloadFactory instance.
+   *
+   * @param Engine $engine The engine instance to use for validation and resolution.
+   */
   public function __construct(protected Engine $engine) {}
 
   /**
    * Validate and resolve the given payload.
+   * 
+   * @param Payload $payload The payload to validate and resolve.
+   * @return Payload The validated and resolved payload.
+   * @throws NotAllowedFieldException If the field is not allowed.
+   * @throws InvalidOperatorException If the operator is not allowed and strict mode is enabled.
+   * @throws NotAllowedEmptyValueException If empty values are not allowed and the payload is
    */
   public function make(Payload $payload): Payload
   {
@@ -29,16 +40,33 @@ class PayloadFactory
       ->setOperator($this->resolveOperator($payload));
   }
 
+  /**
+   * Validate the field of the payload.
+   *
+   * @param Payload $payload The payload containing the field to validate.
+   * @throws NotAllowedFieldException If the field is not allowed.
+   */
   protected function validateField(Payload $payload): void
   {
     $field = $payload->field;
-    $isWildcardAllowed = ($this->engine->getAllowedFields()[0] ?? false) === '*';
+    $allowedFields = $this->engine->getAllowedFields();
 
-    if (!(in_array($field, $this->engine->getAllowedFields(), true) || $this->isRelational($field) || $isWildcardAllowed)) {
+    if (in_array('*', $allowedFields, true)) {
+      return;
+    }
+
+    if (!(in_array($field, $allowedFields, true) || $this->isRelational($field))) {
       throw new NotAllowedFieldException($field, $payload);
     }
   }
 
+  /**
+   * Validate the operator of the payload.
+   *
+   * @param Payload $payload The payload containing the operator to validate.
+   * @return bool True if the operator is valid, false otherwise.
+   * @throws InvalidOperatorException If the operator is not allowed and strict mode is enabled.
+   */
   protected function validateOperator(Payload $payload): bool
   {
     $operator = $payload->operator;
@@ -50,6 +78,11 @@ class PayloadFactory
     return (bool) $this->engine->defaultOperator();
   }
 
+  /**
+   * Validate the value of the payload.
+   *
+   * @throws NotAllowedEmptyValueException if empty values are not allowed and the payload is empty.
+   */
   protected function validateValue(Payload $payload): void
   {
     if ($this->engine->isIgnoredEmptyValues() && $payload->isEmpty()) {
@@ -57,17 +90,35 @@ class PayloadFactory
     }
   }
 
+  /**
+   * Resolve the field name based on the engine's field mapping.
+   * 
+   * @param Payload $payload The payload containing the field to resolve.
+   * @return string The resolved field name.
+   */
   protected function resolveField(Payload $payload): string
   {
     return $this->engine->getFieldsMap()[$payload->field] ?? $payload->field;
   }
 
+  /**
+   * Resolve the operator based on the engine's allowed operators.
+   * 
+   * @param Payload $payload The payload containing the operator to resolve.
+   * @return string The resolved operator.
+   */
   protected function resolveOperator(Payload $payload): string
   {
     return $this->engine->allowedOperators()[$payload->operator]
       ?? Operators::fromString($this->engine->defaultOperator());
   }
 
+  /**
+   * Determines if the given field is a relational field.
+   *
+   * @param string $field The field to check.
+   * @return bool True if the field is relational, false otherwise.
+   */
   protected function isRelational(string $field): bool
   {
     return $this->engine->getContext()->hasRelationPath($field);
