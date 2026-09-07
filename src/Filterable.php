@@ -7,6 +7,7 @@ use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Facades\App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Traits\Macroable;
+use Illuminate\Support\Traits\ForwardsCalls;
 use Kettasoft\Filterable\Foundation\Invoker;
 use Kettasoft\Filterable\Contracts\Commitable;
 use Kettasoft\Filterable\Foundation\Resources;
@@ -45,6 +46,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
     Traits\InteractsWithProvidedData,
     Traits\HasFilterableCache,
     HandleFluentReturn,
+    ForwardsCalls,
     Macroable;
 
   /**
@@ -635,6 +637,34 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
   public static function create(Request|null $request = null): static
   {
     return new static($request ?? App::make(Request::class));
+  }
+
+  /**
+   * Create a new Filterable instance for a model or Eloquent builder.
+   *
+   * @param Model|Builder|class-string<Model> $source
+   * @param Request|null $request
+   * @return static
+   */
+  public static function for(Model|Builder|string $source, Request|null $request = null): static
+  {
+    if (is_string($source) && !is_a($source, Model::class, true)) {
+      throw new \InvalidArgumentException("Model [{$source}] must extend " . Model::class . '.');
+    }
+
+    $instance = static::create($request);
+
+    if ($source instanceof Builder) {
+      return $instance
+        ->setModel($source->getModel())
+        ->setBuilder($source);
+    }
+
+    $instance->setModel($source);
+
+    return $instance->setBuilder(
+      $source instanceof Model ? $source->newQuery() : $source::query()
+    );
   }
 
   /**

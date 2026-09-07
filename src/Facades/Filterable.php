@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Facade;
  * 
  * Static Factory Methods:
  * @method static \Kettasoft\Filterable\Filterable create(\Illuminate\Http\Request|null $request = null) Create new Filterable instance.
+ * @method static \Kettasoft\Filterable\Filterable for(\Illuminate\Database\Eloquent\Model|\Illuminate\Contracts\Database\Eloquent\Builder|string $source, \Illuminate\Http\Request|null $request = null) Create a Filterable instance for a model or builder.
  * @method static \Kettasoft\Filterable\Filterable withRequest(\Illuminate\Http\Request $request) Create new Filterable instance with custom Request.
  * 
  * Static Event Methods:
