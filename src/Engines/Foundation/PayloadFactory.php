@@ -7,6 +7,7 @@ use Kettasoft\Filterable\Engines\Foundation\Enums\Operators;
 use Kettasoft\Filterable\Engines\Exceptions\InvalidOperatorException;
 use Kettasoft\Filterable\Engines\Exceptions\NotAllowedFieldException;
 use Kettasoft\Filterable\Engines\Exceptions\NotAllowedEmptyValueException;
+use Kettasoft\Filterable\Engines\Foundation\Operators\OperatorResolver;
 
 /**
  * Validate and resolve payloads before they are applied.
@@ -33,11 +34,14 @@ class PayloadFactory
   {
     $this->validateField($payload);
     $this->validateOperator($payload);
-    $this->validateValue($payload);
 
-    return $payload
+    $payload
       ->setField($this->resolveField($payload))
       ->setOperator($this->resolveOperator($payload));
+
+    $this->validateValue($payload);
+
+    return $payload;
   }
 
   /**
@@ -70,8 +74,14 @@ class PayloadFactory
   protected function validateOperator(Payload $payload): bool
   {
     $operator = $payload->operator;
+    $allowedOperators = $this->engine->allowedOperators();
+    $isAllowed = array_key_exists($operator, $allowedOperators)
+      || in_array(OperatorResolver::normalize($operator), array_map(
+        [OperatorResolver::class, 'normalize'],
+        array_values($allowedOperators)
+      ), true);
 
-    if (! array_key_exists($operator, $this->engine->allowedOperators()) && $this->engine->isStrict()) {
+    if (! $isAllowed && $this->engine->isStrict()) {
       throw new InvalidOperatorException($operator, $payload);
     }
 
@@ -85,6 +95,10 @@ class PayloadFactory
    */
   protected function validateValue(Payload $payload): void
   {
+    if (in_array(OperatorResolver::normalize($payload->operator), ['is null', 'is not null'], true)) {
+      return;
+    }
+
     if ($this->engine->isIgnoredEmptyValues() && $payload->isEmpty()) {
       throw new NotAllowedEmptyValueException('Empty values are not allowed.', $payload);
     }
@@ -109,8 +123,19 @@ class PayloadFactory
    */
   protected function resolveOperator(Payload $payload): string
   {
-    return $this->engine->allowedOperators()[$payload->operator]
-      ?? Operators::fromString($this->engine->defaultOperator());
+    $allowedOperators = $this->engine->allowedOperators();
+
+    if (array_key_exists($payload->operator, $allowedOperators)) {
+      return $allowedOperators[$payload->operator];
+    }
+
+    foreach ($allowedOperators as $operator) {
+      if (OperatorResolver::normalize($operator) === OperatorResolver::normalize($payload->operator)) {
+        return $operator;
+      }
+    }
+
+    return Operators::fromString($this->engine->defaultOperator());
   }
 
   /**

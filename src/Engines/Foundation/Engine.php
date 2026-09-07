@@ -2,7 +2,6 @@
 
 namespace Kettasoft\Filterable\Engines\Foundation;
 
-use Illuminate\Support\Arr;
 use Kettasoft\Filterable\Filterable;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Foundation\Resources;
@@ -119,7 +118,14 @@ abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Stricta
       return $this->getOperatorsFromConfig();
     }
 
-    return Arr::only($this->getOperatorsFromConfig(), $this->context->getAllowedOperators());
+    $requested = $this->context->getAllowedOperators();
+
+    return array_filter(
+      $this->getOperatorsFromConfig(),
+      fn($operator, $alias) => in_array($alias, $requested, true)
+        || in_array($operator, $requested, true),
+      ARRAY_FILTER_USE_BOTH
+    );
   }
 
   /**

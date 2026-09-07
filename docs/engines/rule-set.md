@@ -95,8 +95,11 @@ This default can be set via the engine configuration.
 | like     | LIKE           | `filter[title][like]=%laravel%`                             |
 | in       | IN             | `filter[id][in][]=1&filter[id][in][]=2`                     |
 | between  | BETWEEN        | `filter[price][between][]=100&filter[price][between][]=200` |
+| nbetween | NOT BETWEEN    | `filter[price][nbetween][]=100&filter[price][nbetween][]=200` |
+| null     | IS NULL        | `filter[deleted_at][null]`                                  |
+| notnull  | IS NOT NULL    | `filter[published_at][notnull]`                             |
 
-> Operators are customizable and extendable. You may add your own by overriding the engine's resolver.
+> Operators are customizable through [operator strategies](/features/operators).
 
 ---
 

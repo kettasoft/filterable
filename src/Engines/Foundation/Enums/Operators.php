@@ -18,6 +18,8 @@ enum Operators: string
   case NOT_IN = 'NOT IN';
   case IS_NULL = 'IS NULL';
   case IS_NOT_NULL = 'IS NOT NULL';
+  case BETWEEN = 'BETWEEN';
+  case NOT_BETWEEN = 'NOT BETWEEN';
 
   public function toString(): string
   {
@@ -28,17 +30,19 @@ enum Operators: string
   {
     return match ($operator) {
       'eq' => self::EQUALS->value,
-      'ne' => self::NOT_EQUALS->value,
+      'ne', 'neq' => self::NOT_EQUALS->value,
       'gt' => self::GREATER_THAN->value,
       'lt' => self::LESS_THAN->value,
       'gte' => self::GREATER_THAN_OR_EQUAL->value,
       'lte' => self::LESS_THAN_OR_EQUAL->value,
       'like' => self::LIKE->value,
-      'not_like' => self::NOT_LIKE->value,
+      'nlike', 'not_like' => self::NOT_LIKE->value,
       'in' => self::IN->value,
-      'not_in' => self::NOT_IN->value,
-      'is_null' => self::IS_NULL->value,
-      'is_not_null' => self::IS_NOT_NULL->value,
+      'nin', 'not_in' => self::NOT_IN->value,
+      'null', 'is_null' => self::IS_NULL->value,
+      'notnull', 'is_not_null' => self::IS_NOT_NULL->value,
+      'between' => self::BETWEEN->value,
+      'nbetween', 'not_between' => self::NOT_BETWEEN->value,
       default => throw new InvalidOperatorException($operator),
     };
   }

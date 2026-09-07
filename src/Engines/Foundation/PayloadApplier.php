@@ -5,10 +5,16 @@ namespace Kettasoft\Filterable\Engines\Foundation;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Engines\Contracts\Appliable;
 use Kettasoft\Filterable\Support\Payload;
+use Kettasoft\Filterable\Engines\Foundation\Operators\OperatorResolver;
 
 class PayloadApplier implements Appliable
 {
-  public function __construct(protected Payload $payload) {}
+  protected OperatorResolver $operators;
+
+  public function __construct(protected Payload $payload, ?OperatorResolver $operators = null)
+  {
+    $this->operators = $operators ?? OperatorResolver::fromConfig();
+  }
 
   public function apply(Builder $builder): Builder
   {
@@ -26,11 +32,7 @@ class PayloadApplier implements Appliable
 
   protected function applyDirect(Builder $builder): Builder
   {
-    return $builder->where(
-      $this->payload->field,
-      $this->payload->operator,
-      $this->payload->value
-    );
+    return $this->applyOperator($builder, $this->payload);
   }
 
   protected function applyRelational(Builder $builder): Builder
@@ -40,7 +42,14 @@ class PayloadApplier implements Appliable
     $relation = implode('.', $segments);
 
     return $builder->whereHas($relation, function (Builder $query) use ($field): Builder {
-      return $query->where($field, $this->payload->operator, $this->payload->value);
+      $payload = clone $this->payload;
+
+      return $this->applyOperator($query, $payload->setField($field));
     });
+  }
+
+  protected function applyOperator(Builder $builder, Payload $payload): Builder
+  {
+    return $this->operators->resolve($payload->operator)->apply($builder, $payload);
   }
 }

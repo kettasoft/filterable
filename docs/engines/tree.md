@@ -56,6 +56,9 @@ This structure is then translated into an Eloquent query builder statement in La
 | `null`    | is null        |
 | `notnull` | is not null    |
 | `between` | between        |
+| `nbetween` | not between   |
+
+See [Operator Strategies](/features/operators) for value formats, per-filter allow-listing, and custom operators.
 
 ## Error Handling
 

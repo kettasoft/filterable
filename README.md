@@ -146,7 +146,7 @@ GET /posts?filter[id][in][]=1&filter[id][in][]=2
 GET /posts?filter[tags][name]=featured
 ```
 
-Supported operators: `eq` `neq` `gt` `gte` `lt` `lte` `like` `nlike` `in` `between`
+Supported operators: `eq` `neq` `gt` `gte` `lt` `lte` `like` `nlike` `in` `nin` `between` `nbetween` `null` `notnull`
 
 ### Expression Engine
 

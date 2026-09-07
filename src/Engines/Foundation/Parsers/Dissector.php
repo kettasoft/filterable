@@ -62,6 +62,10 @@ class Dissector
       return [$raw['operator'], $raw['value']];
     }
 
+    if (is_array($raw) && !array_is_list($raw) && count($raw) === 1) {
+      return [array_key_first($raw), reset($raw)];
+    }
+
     if (is_string($raw) && str_contains($raw, ':')) {
       return explode(':', $raw, 2);
     }

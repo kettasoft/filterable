@@ -32,7 +32,7 @@ class Ruleset extends Engine
     $data = RelationFieldParser::parse(
       $this->context->getData(),
       $this->context->getRelations(),
-      array_keys($this->allowedOperators())
+      array_merge(array_keys($this->allowedOperators()), array_values($this->allowedOperators()))
     );
 
     foreach ($data as $field => $dissector) {
