@@ -3,6 +3,7 @@
 namespace Kettasoft\Filterable\Tests\Unit\Sanitization;
 
 use Kettasoft\Filterable\Sanitization\Defaults\TrimSanitizer;
+use Kettasoft\Filterable\Sanitization\Contracts\Sanitizable;
 use Kettasoft\Filterable\Sanitization\Sanitizer;
 use Kettasoft\Filterable\Tests\TestCase;
 
@@ -68,6 +69,62 @@ class SanitizeUnitTest extends TestCase
     $afterSanitize = Sanitizer::apply($value, $resolvers);
 
     $this->assertEquals(strtoupper(trim($value)), $afterSanitize);
+  }
+
+  /**
+   * It can sanitize a value using an invokable object.
+   * @test
+   */
+  public function it_can_sanitize_value_using_an_invokable_object()
+  {
+    $resolver = new class {
+      public function __invoke($value)
+      {
+        return strtoupper(trim($value));
+      }
+    };
+
+    $this->assertSame('VALUE', Sanitizer::apply('  value  ', $resolver));
+  }
+
+  /**
+   * It can sanitize a value using a callable array.
+   * @test
+   */
+  public function it_can_sanitize_value_using_a_callable_array()
+  {
+    $resolver = new class {
+      public function normalize($value)
+      {
+        return strtolower(trim($value));
+      }
+    };
+
+    $this->assertSame(
+      'value',
+      Sanitizer::apply('  VALUE  ', [$resolver, 'normalize'])
+    );
+  }
+
+  /**
+   * Sanitizable objects take precedence over their __invoke method.
+   * @test
+   */
+  public function it_uses_the_sanitizable_contract_for_invokable_sanitizers()
+  {
+    $resolver = new class implements Sanitizable {
+      public function sanitize($value): mixed
+      {
+        return 'sanitized:' . trim($value);
+      }
+
+      public function __invoke($value)
+      {
+        return 'invoked:' . trim($value);
+      }
+    };
+
+    $this->assertSame('sanitized:value', Sanitizer::apply(' value ', $resolver));
   }
 
   /**

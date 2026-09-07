@@ -70,6 +70,13 @@ The package includes 12 ready-to-use sanitizers accessible via **short aliases**
 
 ---
 
+::: warning Output Escaping
+`strip_tags` removes markup but preserves text inside tags, including script
+contents. `escape_html` is an output-formatting helper for HTML contexts; it is
+not a substitute for validation, authorization, or context-aware escaping at
+the final output boundary.
+:::
+
 ## Usage Patterns
 
 ### 1. Using Aliases (Recommended)

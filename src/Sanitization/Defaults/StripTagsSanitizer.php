@@ -11,7 +11,7 @@ use Kettasoft\Filterable\Sanitization\Contracts\Sanitizable;
  *
  * @example
  *   protected $sanitizers = ['bio' => 'strip_tags'];
- *   // "<b>Hello</b> <script>alert(1)</script>" → "Hello "
+ *   // "<b>Hello</b> <script>alert(1)</script>" → "Hello alert(1)"
  */
 class StripTagsSanitizer implements Sanitizable
 {

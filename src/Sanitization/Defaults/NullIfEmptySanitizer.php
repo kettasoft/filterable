@@ -12,7 +12,7 @@ use Kettasoft\Filterable\Sanitization\Contracts\Sanitizable;
  *
  * @example
  *   protected $sanitizers = ['search' => 'null_if_empty'];
- *   // ""  → null  |  "0" → null  |  "hello" → "hello"
+ *   // ""  → null  |  "0" → "0"  |  "hello" → "hello"
  */
 class NullIfEmptySanitizer implements Sanitizable
 {
@@ -22,7 +22,7 @@ class NullIfEmptySanitizer implements Sanitizable
    */
   protected array $emptyValues;
 
-  public function __construct(array $emptyValues = ['', '0', 'null', 'undefined', 'none'])
+  public function __construct(array $emptyValues = ['', 'null', 'undefined', 'none'])
   {
     $this->emptyValues = $emptyValues;
   }

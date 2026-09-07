@@ -298,9 +298,17 @@ class SanitizerDefaultsTest extends TestCase
   public function test_null_if_empty_sanitizer_returns_null_for_default_empty_values()
   {
     $s = new NullIfEmptySanitizer;
-    foreach (['0', 'null', 'undefined', 'none'] as $v) {
+    foreach (['null', 'undefined', 'none'] as $v) {
       $this->assertNull($s->sanitize($v), "Expected null for: $v");
     }
+  }
+
+  public function test_null_if_empty_sanitizer_preserves_zero()
+  {
+    $s = new NullIfEmptySanitizer;
+
+    $this->assertSame('0', $s->sanitize('0'));
+    $this->assertSame(0, $s->sanitize(0));
   }
 
   public function test_null_if_empty_sanitizer_preserves_non_empty_string()
@@ -440,5 +448,13 @@ class SanitizerDefaultsTest extends TestCase
 
     $this->assertArrayHasKey('my_trim', Sanitizer::getAliases());
     $this->assertSame('hello', Sanitizer::apply('  hello  ', 'my_trim'));
+  }
+
+  public function test_extend_rejects_a_class_that_is_not_sanitizable()
+  {
+    $this->expectException(\InvalidArgumentException::class);
+    $this->expectExceptionMessage('must implement');
+
+    Sanitizer::extend('invalid', \stdClass::class);
   }
 }

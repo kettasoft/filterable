@@ -14,7 +14,11 @@ class ClosureHandler implements SanitizeHandler
    */
   public function __construct($sanitizer)
   {
-    $this->sanitizer = $sanitizer;
+    if (!is_callable($sanitizer)) {
+      throw new \InvalidArgumentException('The sanitizer must be callable.');
+    }
+
+    $this->sanitizer = \Closure::fromCallable($sanitizer);
   }
 
   /**

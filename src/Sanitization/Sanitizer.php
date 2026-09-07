@@ -19,6 +19,7 @@ use Kettasoft\Filterable\Sanitization\Handlers\ArrayHandler;
 use Kettasoft\Filterable\Sanitization\Handlers\ObjectHandler;
 use Kettasoft\Filterable\Sanitization\Handlers\StringHandler;
 use Kettasoft\Filterable\Sanitization\Handlers\ClosureHandler;
+use Kettasoft\Filterable\Sanitization\Contracts\Sanitizable;
 use Kettasoft\Filterable\Sanitization\Contracts\SanitizeHandler;
 
 class Sanitizer implements \Countable
@@ -70,6 +71,14 @@ class Sanitizer implements \Countable
    */
   public static function extend(string $alias, string $class): void
   {
+    if (!is_a($class, Sanitizable::class, true)) {
+      throw new \InvalidArgumentException(sprintf(
+        'Sanitizer class [%s] must implement [%s].',
+        $class,
+        Sanitizable::class
+      ));
+    }
+
     static::$aliases[$alias] = $class;
   }
 
@@ -156,6 +165,7 @@ class Sanitizer implements \Countable
   protected static function makeHandler(mixed $sanitizer): SanitizeHandler
   {
     return match (true) {
+      $sanitizer instanceof Sanitizable => new ObjectHandler($sanitizer),
       is_string($sanitizer)   => new StringHandler(static::resolveAlias($sanitizer)),
       is_callable($sanitizer) => new ClosureHandler($sanitizer),
       is_array($sanitizer)    => new ArrayHandler($sanitizer),

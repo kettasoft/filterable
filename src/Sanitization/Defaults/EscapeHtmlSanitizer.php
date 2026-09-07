@@ -5,8 +5,9 @@ namespace Kettasoft\Filterable\Sanitization\Defaults;
 use Kettasoft\Filterable\Sanitization\Contracts\Sanitizable;
 
 /**
- * Converts HTML special characters to their entity equivalents,
- * preventing XSS while preserving the string for safe output.
+ * Converts HTML special characters to their entity equivalents for use in
+ * HTML text contexts. Applications must still escape values at their final
+ * output boundary according to that output context.
  *
  * Alias: 'escape_html'
  *
