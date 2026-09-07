@@ -2,7 +2,7 @@
 
 The **Ruleset Engine** is a straightforward filtering strategy that interprets filters as flat rule arrays. It's especially suitable for simple request formats, where each filter targets a specific field using one or more operators.
 
-This engine is ideal for APIs and frontends that send clean key-value pairs or use operator-based nesting.
+This engine is ideal for APIs and frontends that send clean key-value pairs, use operator-based nesting, or submit relational fields as nested arrays.
 
 ---
 
@@ -46,6 +46,28 @@ This will be interpreted as:
 ```php
 ['name' => ['like' => 'kettasoft']]
 ```
+
+#### 🔹 Format 3: Relational field
+
+Relational fields may use either nested request keys or dot notation:
+
+```http
+/posts?filter[tags][name]=featured
+/posts?filter[tags.name]=featured
+```
+
+Authorize the relation before applying the request:
+
+```php
+Filterable::for(Post::class, $request)
+    ->using('ruleset')
+    ->allowRelations(['tags' => ['name']])
+    ->get();
+```
+
+Nested input is converted to `tags.name` internally. Operator and list arrays remain intact, so requests such as `filter[tags][name][like]=%php%` and `filter[tags][id][in][]=1` work as expected.
+
+Use `['tags']` to allow every field on a relation, `['tags' => ['*']]` for an explicit field wildcard, or `['tags.post' => ['status']]` for a deep relation.
 
 ---
 
@@ -108,5 +130,6 @@ If any validation fails, an exception will be thrown instead of silently ignorin
 ### 🌿 Best Practices
 
 -   Always define `allowed fields` and `allowed operators` in your filter class.
+-   Prefer field-specific relation definitions such as `['tags' => ['name']]` when the client does not need access to every related field.
 -   Use request validation or sanitizers to clean filter input before applying to query.
 -   Avoid exposing sensitive fields via filters unless explicitly allowed.

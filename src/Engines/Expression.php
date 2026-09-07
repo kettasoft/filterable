@@ -4,6 +4,7 @@ namespace Kettasoft\Filterable\Engines;
 
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Support\Payload;
+use Kettasoft\Filterable\Support\RelationFieldParser;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
 use Kettasoft\Filterable\Support\ConditionNormalizer;
 use Kettasoft\Filterable\Support\ValidateTableColumns;
@@ -27,7 +28,11 @@ class Expression extends Engine
    */
   public function execute(Builder $builder): Builder
   {
-    $filters = $this->context->getData();
+    $filters = RelationFieldParser::parse(
+      $this->context->getData(),
+      $this->context->getRelations(),
+      array_keys($this->allowedOperators())
+    );
 
     foreach ($filters as $field => $condition) {
       $this->attempt(function () use ($builder, $field, $condition) {

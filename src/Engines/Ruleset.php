@@ -4,6 +4,7 @@ namespace Kettasoft\Filterable\Engines;
 
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Support\Payload;
+use Kettasoft\Filterable\Support\RelationFieldParser;
 use Kettasoft\Filterable\Traits\FieldNormalizer;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
 use Kettasoft\Filterable\Engines\Foundation\PayloadApplier;
@@ -28,7 +29,11 @@ class Ruleset extends Engine
    */
   public function execute(Builder $builder): Builder
   {
-    $data = $this->context->getData();
+    $data = RelationFieldParser::parse(
+      $this->context->getData(),
+      $this->context->getRelations(),
+      array_keys($this->allowedOperators())
+    );
 
     foreach ($data as $field => $dissector) {
       $this->attempt(function () use ($builder, $dissector, $field): bool {

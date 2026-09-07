@@ -136,23 +136,25 @@ Available annotations: `#[Authorize]` `#[SkipIf]` `#[Cast]` `#[Sanitize]` `#[Tri
 
 ### Ruleset Engine
 
-Flat field-operator-value format, ideal for REST APIs where the frontend controls which operator to use.
+Field-operator-value format, including nested relational fields, ideal for REST APIs where the frontend controls which operator to use.
 
 ```
 GET /posts?filter[status]=published
 GET /posts?filter[title][like]=%laravel%
 GET /posts?filter[views][gte]=100
 GET /posts?filter[id][in][]=1&filter[id][in][]=2
+GET /posts?filter[tags][name]=featured
 ```
 
 Supported operators: `eq` `neq` `gt` `gte` `lt` `lte` `like` `nlike` `in` `between`
 
 ### Expression Engine
 
-Everything Ruleset does, plus filtering through deep Eloquent relationships using dot notation.
+Everything Ruleset does, plus filtering through deep Eloquent relationships using dot notation or nested request keys.
 
 ```
 GET /posts?filter[author.profile.name][like]=ahmed
+GET /posts?filter[author][profile][name][like]=ahmed
 ```
 
 ```php

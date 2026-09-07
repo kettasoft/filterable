@@ -2,8 +2,6 @@
 
 namespace Kettasoft\Filterable\Traits;
 
-use Illuminate\Support\Arr;
-
 trait InteractsWithRelationsFiltering
 {
   /**
@@ -41,8 +39,18 @@ trait InteractsWithRelationsFiltering
    */
   public function isRelationAllowed(string $relation, $field): bool
   {
-    if (in_array($relation, $this->relations, true)) {
-      return isset($this->relations[$relation]) ? in_array($field, $this->relations[$relation]) : false;
+    $root = explode('.', $relation, 2)[0];
+
+    foreach ($this->relations as $allowedRelation => $fields) {
+      if (is_int($allowedRelation) && $fields === $root) {
+        return true;
+      }
+
+      if ($allowedRelation !== $relation || !is_array($fields)) {
+        continue;
+      }
+
+      return in_array('*', $fields, true) || in_array($field, $fields, true);
     }
 
     return false;
@@ -63,7 +71,7 @@ trait InteractsWithRelationsFiltering
    * @param string $path
    * @return bool
    */
-  public function hasRelationPath(string $path)
+  public function hasRelationPath(string $path): bool
   {
     if (str_contains($path, '.')) {
 
@@ -73,11 +81,7 @@ trait InteractsWithRelationsFiltering
 
       $path = implode('.', $relations);
 
-      if (Arr::isAssoc($this->relations)) {
-        return isset($this->relations[$path]) && in_array($field, $this->relations[$path]);
-      }
-
-      return in_array($relations[0], $this->relations);
+      return $this->isRelationAllowed($path, $field);
     }
 
     return false;
