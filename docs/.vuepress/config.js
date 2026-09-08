@@ -108,6 +108,7 @@ export default defineUserConfig({
                     { text: "Sanitization", link: "/sanitization" },
                     { text: "Authorization", link: "/authorization" },
                     { text: "Sorting", link: "/sorting" },
+                    { text: "AI Assistant Guide", link: "/ai-assistant" },
                     { text: "Caching Overview", link: "/caching/overview" },
                 ],
             },
@@ -124,6 +125,7 @@ export default defineUserConfig({
                         { text: "Installation", link: "/installation" },
                         { text: "How It Works", link: "/how-it-works" },
                         { text: "Service Provider", link: "/service-provider" },
+                        { text: "AI Assistant Guide", link: "/ai-assistant" },
                     ],
                 },
 

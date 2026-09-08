@@ -8,7 +8,7 @@ tags: [installation, setup, requirements]
 
 ## Requirements
 
-- PHP 8.1 or later
+- PHP 8.2 or later
 - Laravel 10, 11, or 12
 
 ## Install the package

@@ -350,7 +350,7 @@ php artisan filterable:inspect PostFilter
 
 ## Requirements
 
-- PHP 8.1+
+- PHP 8.2+
 - Laravel 10.x or higher
 - Redis or Memcached recommended for tagged caching
 
@@ -366,6 +366,7 @@ For full documentation, installation, and usage examples, visit: **[kettasoft.gi
 - [Authorization](https://kettasoft.github.io/filterable/authorization.html)
 - [CLI Reference](https://kettasoft.github.io/filterable/cli/setup.html)
 - [API Reference](https://kettasoft.github.io/filterable/api/filterable.html)
+- [AI Assistant Guide](https://kettasoft.github.io/filterable/ai-assistant.html)
 
 ---
 
