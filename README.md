@@ -1,4 +1,4 @@
-<p align="center"><img src="docs/.vuepress/public/images/filterable-banner.png" alt="Filterable — Eloquent filters, without the controller noise." /></p>
+<p align="center"><img src="docs/.vuepress/public/images/filterable-readme-banner.png" alt="Filterable — Eloquent filters, without the controller noise." /></p>
 <p align="center">A powerful and flexible Laravel package for advanced, clean, and scalable filtering of Eloquent models using multiple customizable engines.</p><p align="center">
 <a href="https://packagist.org/packages/kettasoft/filterable"><img src="https://github.com/kettasoft/filterable/actions/workflows/php.yml/badge.svg?style=flat-square" alt="Tests"></a>
 <a href="https://packagist.org/packages/kettasoft/filterable"><img src="http://poser.pugx.org/kettasoft/filterable/v?style=flat-square" alt="Latest Version on Packagist"></a>
