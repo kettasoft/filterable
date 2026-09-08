@@ -48,7 +48,7 @@ export default defineUserConfig({
             seo: {
                 author: "Kettasoft", // Author name for SEO meta tags
                 autoDescription: true, // Automatically generate description meta tag from page content
-                fallBackImage: "/images/banner.png", // Fallback image for SEO meta tags when no image is specified in the page frontmatter
+                fallBackImage: "/images/filterable-banner.png", // Fallback image for SEO meta tags when no image is specified in the page frontmatter
             },
         },
 
