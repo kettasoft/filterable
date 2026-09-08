@@ -111,4 +111,4 @@ $filter = Filterable::create()
 
 ## See also
 
--   API reference: [`api/filterable.md`](/api/filterable.md#flow-control) (methods: `when`, `unless`, `through`)
+-   API reference: [`Filterable`](/api/filterable#flow-control) (methods: `when`, `unless`, `through`)

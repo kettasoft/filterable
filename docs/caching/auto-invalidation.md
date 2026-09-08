@@ -462,5 +462,5 @@ $projects = Project::filter()
 
 -   [Cache profiles →](./profiles.md)
 -   [Monitoring and debugging →](./monitoring.md)
--   [API reference →](../api/caching.md)
+-   [API reference →](/caching/api-reference)
     :::

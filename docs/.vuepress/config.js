@@ -74,7 +74,23 @@ export default defineUserConfig({
 
         navbar: [
             { text: "Home", link: "/" },
-            { text: "Installation", link: "/installation" },
+            {
+                text: "Get Started",
+                items: [
+                    { text: "Introduction", link: "/introduction" },
+                    { text: "Installation", link: "/installation" },
+                    { text: "How It Works", link: "/how-it-works" },
+                ],
+            },
+            {
+                text: "Engines",
+                items: [
+                    { text: "Invokable", link: "/engines/invokable/" },
+                    { text: "Ruleset", link: "/engines/rule-set" },
+                    { text: "Expression", link: "/engines/expression" },
+                    { text: "Tree", link: "/engines/tree" },
+                ],
+            },
             {
                 text: "CLI",
                 items: [
@@ -86,8 +102,12 @@ export default defineUserConfig({
                 ],
             },
             {
-                text: "Advanced",
+                text: "Guides",
                 items: [
+                    { text: "Validation", link: "/validation" },
+                    { text: "Sanitization", link: "/sanitization" },
+                    { text: "Authorization", link: "/authorization" },
+                    { text: "Sorting", link: "/sorting" },
                     { text: "Caching Overview", link: "/caching/overview" },
                 ],
             },
@@ -95,11 +115,17 @@ export default defineUserConfig({
 
         sidebar: {
             "/": [
-                { text: "Home", link: "/" },
-                { text: "Introduction", link: "/introduction" },
-                { text: "Installation", link: "/installation" },
-                { text: "Service Provider", link: "/service-provider" },
-                { text: "How It Works", link: "/how-it-works" },
+                {
+                    text: "Start Here",
+                    collapsed: false,
+                    items: [
+                        { text: "Home", link: "/" },
+                        { text: "Introduction", link: "/introduction" },
+                        { text: "Installation", link: "/installation" },
+                        { text: "How It Works", link: "/how-it-works" },
+                        { text: "Service Provider", link: "/service-provider" },
+                    ],
+                },
 
                 {
                     text: "Engines",
@@ -192,6 +218,20 @@ export default defineUserConfig({
                 },
 
                 {
+                    text: "Core Guides",
+                    collapsed: true,
+                    items: [
+                        { text: "Validation", link: "/validation" },
+                        { text: "Sanitization", link: "/sanitization" },
+                        { text: "Authorization", link: "/authorization" },
+                        { text: "Sorting", link: "/sorting" },
+                        { text: "Profile Management", link: "/profile-management" },
+                        { text: "Profiler", link: "/profiler" },
+                        { text: "Exceptions", link: "/exceptions" },
+                    ],
+                },
+
+                {
                     text: "Features",
                     collapsed: true,
                     items: [
@@ -227,6 +267,10 @@ export default defineUserConfig({
                         {
                             text: "Data Provisioning",
                             link: "/features/data-provisioning",
+                        },
+                        {
+                            text: "Operator Strategies",
+                            link: "/features/operators",
                         },
                     ],
                 },
@@ -320,13 +364,6 @@ export default defineUserConfig({
                     ],
                 },
 
-                { text: "Exceptions", link: "/exceptions" },
-                { text: "Profile Management", link: "/profile-management" },
-                { text: "Profiler", link: "/profiler" },
-                { text: "Sorting", link: "/sorting" },
-                { text: "Authorization", link: "/authorization" },
-                { text: "Validation", link: "/validation" },
-                { text: "Sanitization", link: "/sanitization" },
             ],
         },
     }),
