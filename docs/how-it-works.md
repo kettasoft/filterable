@@ -84,4 +84,4 @@ $filterable->count();
 $filterable->paginate();
 ```
 
-You can also continue building the Eloquent query fluently. See the individual engine guides for their accepted request formats and configuration.
+You can also continue building the Eloquent query fluently. Use [Choose an Engine](/choosing-an-engine) to compare request formats, then open the guide for the engine that matches your API.

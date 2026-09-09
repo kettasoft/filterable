@@ -79,7 +79,9 @@ export default defineUserConfig({
                 items: [
                     { text: "Introduction", link: "/introduction" },
                     { text: "Installation", link: "/installation" },
+                    { text: "Quick Start", link: "/quick-start" },
                     { text: "How It Works", link: "/how-it-works" },
+                    { text: "Choose an Engine", link: "/choosing-an-engine" },
                 ],
             },
             {
@@ -120,12 +122,14 @@ export default defineUserConfig({
                     text: "Start Here",
                     collapsed: false,
                     items: [
-                        { text: "Home", link: "/" },
                         { text: "Introduction", link: "/introduction" },
                         { text: "Installation", link: "/installation" },
+                        { text: "Quick Start", link: "/quick-start" },
                         { text: "How It Works", link: "/how-it-works" },
-                        { text: "Service Provider", link: "/service-provider" },
-                        { text: "AI Assistant Guide", link: "/ai-assistant" },
+                        {
+                            text: "Choose an Engine",
+                            link: "/choosing-an-engine",
+                        },
                     ],
                 },
 
@@ -142,70 +146,12 @@ export default defineUserConfig({
                                     link: "/engines/invokable/",
                                 },
                                 {
-                                    text: "Custom Annotations",
-                                    link: "/engines/invokable/custom-annotations",
+                                    text: "Attributes",
+                                    link: "/engines/invokable/annotations/",
                                 },
                                 {
-                                    text: "Annotations",
-                                    collapsed: true,
-                                    items: [
-                                        {
-                                            text: "Annotations Overview",
-                                            link: "/engines/invokable/annotations/",
-                                        },
-                                        {
-                                            text: "Authorize",
-                                            link: "/engines/invokable/annotations/authorize",
-                                        },
-                                        {
-                                            text: "SkipIf",
-                                            link: "/engines/invokable/annotations/skip-if",
-                                        },
-                                        {
-                                            text: "Trim",
-                                            link: "/engines/invokable/annotations/trim",
-                                        },
-                                        {
-                                            text: "Sanitize",
-                                            link: "/engines/invokable/annotations/sanitize",
-                                        },
-                                        {
-                                            text: "Cast",
-                                            link: "/engines/invokable/annotations/cast",
-                                        },
-                                        {
-                                            text: "DefaultValue",
-                                            link: "/engines/invokable/annotations/default-value",
-                                        },
-                                        {
-                                            text: "MapValue",
-                                            link: "/engines/invokable/annotations/map-value",
-                                        },
-                                        {
-                                            text: "Explode",
-                                            link: "/engines/invokable/annotations/explode",
-                                        },
-                                        {
-                                            text: "Required",
-                                            link: "/engines/invokable/annotations/required",
-                                        },
-                                        {
-                                            text: "In",
-                                            link: "/engines/invokable/annotations/in",
-                                        },
-                                        {
-                                            text: "Between",
-                                            link: "/engines/invokable/annotations/between",
-                                        },
-                                        {
-                                            text: "Regex",
-                                            link: "/engines/invokable/annotations/regex",
-                                        },
-                                        {
-                                            text: "Scope",
-                                            link: "/engines/invokable/annotations/scope",
-                                        },
-                                    ],
+                                    text: "Custom Attributes",
+                                    link: "/engines/invokable/custom-annotations",
                                 },
                                 {
                                     text: "Testing",
@@ -213,9 +159,9 @@ export default defineUserConfig({
                                 },
                             ],
                         },
-                        { text: "Tree", link: "/engines/tree" },
                         { text: "Ruleset", link: "/engines/rule-set" },
                         { text: "Expression", link: "/engines/expression" },
+                        { text: "Tree", link: "/engines/tree" },
                     ],
                 },
 

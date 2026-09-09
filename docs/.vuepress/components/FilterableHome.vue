@@ -231,7 +231,7 @@ onUnmounted(() => {
                     logic across your application.
                 </p>
                 <div class="hero-actions">
-                    <a class="button button-primary" href="./introduction.html"
+                    <a class="button button-primary" href="./quick-start.html"
                         >Start building <span>→</span></a
                     >
                     <a

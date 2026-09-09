@@ -34,4 +34,4 @@ Instead of forcing every project into one request format, Filterable provides fo
 
 ## Where to go next
 
-Start with the [Installation Guide](/installation), then read [How Filterable Works](/how-it-works) to choose the engine that matches your request format.
+Install the package, then follow the [Quick Start](/quick-start) to build a working endpoint. Before defining a public request contract, compare the options in [Choose an Engine](/choosing-an-engine).

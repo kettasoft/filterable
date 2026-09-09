@@ -68,4 +68,4 @@ php artisan filterable:make-filter PostFilter \
   --path="Modules/Blog/app/Filters"
 ```
 
-Continue with [How Filterable Works](/how-it-works), or go directly to the [Invokable Engine](/engines/invokable/) to define filter methods.
+Continue with the [Quick Start](/quick-start) to build your first filtered endpoint. If you already know the package basics, use [Choose an Engine](/choosing-an-engine) to design your request contract.
