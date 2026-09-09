@@ -1,100 +1,111 @@
-# ⚙️ Expression Engine
-
-The **Expression Engine** is a flexible and expressive filtering engine designed to handle both flat and deeply nested filters, including relationships and their attributes.
-
-It is ideal when you want the power of RuleSet-style syntax but also need to filter through relationships and nested relations easily.
-
+---
+title: Expression Engine
+description: Build structured field and operator filters with explicit relational allowlists.
+tags: [engines, expression, relations, operators]
 ---
 
-## 📦 Example Request
+# Expression Engine
+
+The Expression engine accepts an explicit field/operator/value structure and applies approved conditions automatically. It is a strong fit for APIs whose clients send nested operator objects and relational field paths.
+
+## Choose Expression when
+
+- Operators should be visible in the request structure.
+- The frontend sends filter objects rather than compact strings.
+- Direct and deeply nested relations are part of the API contract.
+- You do not need client-defined `AND` and `OR` groups.
+
+## Request shape
 
 ```http
-GET /posts?filter[status]=pending&filter[author.profile.name][like]=kettasoft
-GET /posts?filter[author][profile][name][like]=kettasoft
+GET /api/posts?filter[status][eq]=published&filter[views][gte]=100
 ```
 
-This will:
+The request clearly identifies each field, operator, and value. Equality may use the configured default operator:
 
-- Filter posts where `status` is `pending`
-- AND where the related author's profile `name` contains `kettasoft`
+```http
+GET /api/posts?filter[status]=published
+```
 
----
-
-## 🛠️ How It Works
-
-- Filters are parsed from the request's `filter` key.
-- Each filter can be a:
-    - Simple key-value pair (e.g., `filter[status]=active`)
-    - Operator-based pair (e.g., `filter[name][like]=kettasoft`)
-    - Nested relation filter using dot notation or nested request keys (e.g., `filter[author][profile][name]=ahmed`)
-
-- The engine determines the filter structure and applies the corresponding query constraints.
-
----
-
-## 🔧 Default Operator
-
-If a filter doesn't specify an operator, the **default operator** will be used.  
-This default is configurable in the engine settings.
+## Minimal example
 
 ```php
-'default_operator' => '='
+use App\Models\Post;
+use Kettasoft\Filterable\Filterable;
+
+$posts = Filterable::for(Post::class, $request)
+    ->using('expression')
+    ->setAllowedFields(['status', 'views', 'created_at'])
+    ->allowedOperators(['eq', 'gte', 'between'])
+    ->latest()
+    ->paginate();
 ```
 
----
+Filterable normalizes each condition, creates a Payload, validates the policy, and applies the matching operator strategy.
 
-## ✅ Supported Features
+## Relational fields
 
-- ✅ Flat and nested filters
-- ✅ Dot notation and nested request arrays for relationships
-- ✅ Customizable default operator
-- ✅ Whitelisting of allowed fields & relations
-- ✅ Works well with eager loading and relationship validation
-- ✅ Prevents filtering on undefined fields (optional strict mode)
+Expression accepts dot-notated relations inside the filter structure:
 
----
+```http
+GET /api/posts?filter[author.profile.name][like]=ahmed
+```
 
-## ✅ Allowed Fields & Relations
-
-To avoid unauthorized or unintended access, you can configure the engine to only accept specific fields or relations:
+Authorize both the relation path and its public fields:
 
 ```php
-Filterable::for(Post::class, $request)->using('expression')
-  ->setAllowedFields(['status'])
-  ->allowRelations([
-    'author.profile' => ['name'] // specific fields in this relation
-  ])->paginate()
+$posts = Filterable::for(Post::class, $request)
+    ->using('expression')
+    ->setAllowedFields(['status'])
+    ->allowRelations([
+        'author.profile' => ['name'],
+        'tags' => ['name'],
+    ])
+    ->paginate();
 ```
 
-Relation authorization supports several forms:
+Use `['tags']` or `['tags' => ['*']]` only when every field on that relation is intentionally public.
+
+## Accepted condition forms
+
+Expression can normalize common structured inputs:
 
 ```php
-->allowRelations(['author'])                       // Every field below author
-->allowRelations(['author' => ['name', 'email']]) // Selected fields
-->allowRelations(['author' => ['*']])             // Explicit field wildcard
-->allowRelations(['author.profile' => ['name']])  // Deep relation
+['status' => 'published']
+['views' => ['gte' => 100]]
+['price' => ['operator' => 'between', 'value' => [10, 50]]]
 ```
 
-Only configured relation paths are flattened. Ordinary array values, operator expressions, and structured conditions remain unchanged.
+Choose one representation for an endpoint and document it consistently for client developers.
 
-In **strict mode**, unsupported fields will be rejected with a validation error.
+## Strict and permissive modes
 
----
-
-## 📌 Use Case
+Use strict mode when an invalid field or operator should fail the request:
 
 ```php
-Filterable::for(Post::class, $request)
-  ->using('expression')
-  ->get();
+->using('expression')
+->strict()
+->setAllowedFields(['status', 'views'])
+->allowedOperators(['eq', 'gte'])
 ```
 
----
+Use permissive mode when unsupported conditions may be skipped. Inspect `skipped()` when you need diagnostics or client feedback.
 
-## 🧠 Internal Logic (Simplified)
+## Column validation
 
-- Normalize configured nested relation fields to dot notation.
-- Detect relationships via dot notation.
-- Resolve the relation path and apply `whereHas` queries for related models.
-- Build appropriate SQL queries via the Eloquent builder.
-- Use the defined or default operator.
+The Expression engine can validate direct columns before generating conditions. Configure this behavior under `engines.expression.validate_columns` in `config/filterable.php`.
+
+Relation fields are governed by `allowRelations()` rather than direct table-column validation.
+
+## Common mistakes
+
+- Treating a relation path as allowed because its root relation is allowed.
+- Exposing all operators when the endpoint only needs equality and range filters.
+- Mixing several condition representations within the same public API.
+- Choosing Expression when the client needs grouped boolean logic; use the [Tree engine](/engines/tree) instead.
+
+## Next steps
+
+- Review [relational request examples](/choosing-an-engine#expression).
+- Configure [operator strategies](/features/operators).
+- Learn about [strictness and exceptions](/exceptions).

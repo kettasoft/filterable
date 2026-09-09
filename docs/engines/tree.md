@@ -1,67 +1,133 @@
+---
+title: Tree Engine
+description: Translate nested AND and OR condition trees into grouped Eloquent queries.
+tags: [engines, tree, boolean logic, json]
+---
+
 # Tree Engine
 
-This engine allows for advanced query filtering using a logical tree structure with AND/OR grouping. It is ideal for complex, nested conditions that simulate SQL-like logical grouping.
+The Tree engine turns nested JSON conditions into correctly grouped Eloquent constraints. Use it when the client must describe boolean logic, such as an advanced search builder with nested `AND` and `OR` groups.
 
-## Overview
+## Choose Tree when
 
-The engine processes a nested JSON structure where each node is either:
+- Users build groups of conditions in a search interface.
+- The client must control nested boolean logic.
+- A flat list of independent conditions cannot express the query.
+- Your API can validate and document a more complex JSON contract.
 
-- A logical group (and or or)
-- A filter condition
+For ordinary operator filters, prefer the smaller [Ruleset](/engines/rule-set) or [Expression](/engines/expression) contract.
 
-This structure is then translated into an Eloquent query builder statement in Laravel.
+## Request shape
 
-## Example JSON Filter Request
-
-```php
+```json
 {
   "filter": {
     "and": [
-      { "field": "status", "operator": "eq", "value": "active" },
+      {
+        "field": "status",
+        "operator": "eq",
+        "value": "published"
+      },
       {
         "or": [
-          { "field": "age", "operator": "gt", "value": 25 },
-          { "field": "city", "operator": "eq", "value": "Cairo" }
+          {
+            "field": "views",
+            "operator": "gte",
+            "value": 100
+          },
+          {
+            "field": "featured",
+            "operator": "eq",
+            "value": true
+          }
         ]
       }
     ]
   }
-  //...
 }
 ```
 
-## Config Options
+Each group contains either `and` or `or`. Each leaf condition contains `field`, `operator`, and `value`.
 
-| Key                 | Type     | Description                                                  |
-| ------------------- | -------- | ------------------------------------------------------------ |
-| `logic_operator`    | string   | Default logic when none is provided (`and` or `or`)          |
-| `allowed_operators` | array    | List of allowed operator aliases and their SQL equivalents   |
-| `depth_limit`       | int/null | Maximum nesting level allowed for groups. Null for unlimited |
-| `normalize_keys`    | bool     | Whether to convert field names to lowercase automatically    |
+## Minimal example
 
-## Supported Operators
+```php
+use App\Models\Post;
+use Kettasoft\Filterable\Filterable;
 
-| Alias     | SQL Equivalent |
-| --------- | -------------- |
-| `eq`      | =              |
-| `neq`     | !=             |
-| `gt`      | >              |
-| `lt`      | <              |
-| `gte`     | >=             |
-| `lte`     | <=             |
-| `like`    | like           |
-| `nlike`   | not like       |
-| `in`      | in             |
-| `nin`     | not in         |
-| `null`    | is null        |
-| `notnull` | is not null    |
-| `between` | between        |
-| `nbetween` | not between   |
+$posts = Filterable::for(Post::class, $request)
+    ->using('tree')
+    ->setAllowedFields(['status', 'views', 'featured'])
+    ->allowedOperators(['eq', 'gte'])
+    ->paginate();
+```
 
-See [Operator Strategies](/features/operators) for value formats, per-filter allow-listing, and custom operators.
+The engine preserves group boundaries when it generates nested `where` and `orWhere` clauses.
 
-## Error Handling
+## Provide a tree without an HTTP request
 
-- An exception is thrown if:
-- The tree exceeds the depth_limit
-- An invalid or disallowed operator is used
+Use `setData()` for jobs, services, or tests:
+
+```php
+$posts = Filterable::for(Post::class)
+    ->using('tree')
+    ->setAllowedFields(['status', 'views'])
+    ->allowedOperators(['eq', 'gte'])
+    ->setData([
+        'and' => [
+            [
+                'field' => 'status',
+                'operator' => 'eq',
+                'value' => 'published',
+            ],
+            [
+                'field' => 'views',
+                'operator' => 'gte',
+                'value' => 100,
+            ],
+        ],
+    ])
+    ->get();
+```
+
+When the HTTP body uses a top-level `filter` key, Filterable automatically scopes engine data to that key.
+
+## Relational fields
+
+Tree leaves may target approved relation paths. Keep the relation policy explicit:
+
+```php
+->allowRelations([
+    'author' => ['name'],
+    'author.profile' => ['country'],
+])
+```
+
+The leaf's `field` can then use a path such as `author.profile.country`.
+
+## Strict and permissive modes
+
+Strict mode is recommended for public Tree endpoints. It stops execution when a field, operator, or condition structure violates the contract.
+
+```php
+->using('tree')
+->strict()
+->setAllowedFields(['status', 'views'])
+->allowedOperators(['eq', 'gte'])
+```
+
+Permissive mode can skip rejected leaves, but malformed tree structure may still make the request unusable. Validate the incoming JSON shape before filtering.
+
+## Common mistakes
+
+- Choosing Tree for a request that only needs independent comparisons.
+- Allowing `*` fields or every operator on a public endpoint.
+- Accepting unlimited nesting without application-level limits.
+- Sending a leaf without all of `field`, `operator`, and `value`.
+- Forgetting that boolean grouping is part of the public API and must be tested.
+
+## Next steps
+
+- Compare the four contracts in [Choose an Engine](/choosing-an-engine).
+- Review [operator strategies](/features/operators).
+- Add request-shape rules with [validation](/validation).

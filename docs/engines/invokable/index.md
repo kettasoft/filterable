@@ -1,266 +1,189 @@
 ---
 title: Invokable Engine
-description: Learn about the Invokable Engine in Filterable, the default engine for dynamic method mapping in filter classes.
-tags: [engines, invokable, filtering, method mapping]
+description: Map approved request keys to focused filter methods with a rich Payload and PHP attributes.
+tags: [engines, invokable, payload, attributes]
 ---
 
-The **Invokable Engine** is the default and most commonly used engine in Filterable. It dynamically maps incoming request parameters to corresponding methods in your filter class, enabling clean, scalable filtering logic without large `switch` or `if-else` blocks.
+# Invokable Engine
 
----
+The Invokable engine maps registered request keys to methods on a filter class. It is the default engine and the best starting point when each filter needs explicit, domain-specific Eloquent logic.
 
-## Purpose
+## Choose Invokable when
 
-Automatically execute specific methods in a filter class based on incoming request keys. Each key in the request is matched with a method of the same name (or mapped name) registered in the `$filters` property, and the method is invoked with a rich [`Payload`](/api/payload) object.
+- Each public filter should have its own PHP method.
+- A filter needs joins, scopes, subqueries, or other custom builder logic.
+- You want to transform, validate, or authorize values with PHP attributes.
+- The backend—not the client—should own the query implementation.
 
----
+For operator-driven or nested request formats, compare the other options in [Choose an Engine](/choosing-an-engine).
 
-## How It Works
-
-```text
-[ Request ]
-    │
-    ▼
-[ Extract Filter Keys ] ─── from $filters property
-    │
-    ▼
-[ For Each Key ]
-    ├── Parse operator & value (Dissector)
-    ├── Create Payload (field, operator, value, rawValue)
-    ├── Run Attribute Pipeline (CONTROL → TRANSFORM → VALIDATE → BEHAVIOR)
-    ├── Call filter method with Payload
-    └── Record the final Payload as applied
-    │
-    ▼
-[ Modified Query Builder ]
-```
-
-### Step by Step
-
-1. The request is parsed and filter keys are extracted from the `$filters` property.
-2. For each key, the engine parses the value through a **Dissector** to extract the operator and value.
-3. A [`Payload`](/api/payload) object is created containing `field`, `operator`, `value`, and `rawValue`.
-4. The **Attribute Pipeline** runs all PHP attributes (annotations) on the method, sorted by stage.
-5. If the pipeline succeeds, the filter method is invoked with the [`Payload`](/api/payload).
-6. A snapshot of the final `Payload` is recorded and can be inspected through `applied()`.
-
----
-
-## Basic Example
-
-### Incoming Request
+## Request shape
 
 ```http
-GET /api/posts?status=pending&title=PHP
+GET /api/posts?status=published&search=laravel
 ```
 
-### Filter Class
+Only keys listed in `$filters` are considered. Each key maps to a method with the same camel-cased name.
+
+```text
+status      → status()
+created_at  → createdAt()
+```
+
+## Minimal example
 
 ```php
 <?php
 
 namespace App\Http\Filters;
 
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Filterable;
 use Kettasoft\Filterable\Support\Payload;
 
-class PostFilter extends Filterable
+final class PostFilter extends Filterable
 {
-    protected $filters = [
-        'title',
-        'status',
-    ];
+    protected $filters = ['status', 'search'];
 
-    protected function title(Payload $payload)
-    {
-        return $this->builder->where('title', 'like', $payload->asLike());
-    }
-
-    protected function status(Payload $payload)
+    protected function status(Payload $payload): Builder
     {
         return $this->builder->where('status', $payload->value);
     }
-}
-```
 
-### Usage
-
-```php
-$posts = Post::filter(PostFilter::class)->paginate();
-```
-
----
-
-## The [Payload](/api/payload) Object
-
-Every filter method receives a [`Payload`](/api/payload) instance, giving you full access to the parsed request data:
-
-| Property   | Type     | Description                                    |
-| ---------- | -------- | ---------------------------------------------- |
-| `field`    | `string` | The column/filter name                         |
-| `operator` | `string` | The parsed operator (e.g., `eq`, `like`, `gt`) |
-| `value`    | `mixed`  | The sanitized filter value                     |
-| `rawValue` | `mixed`  | The original raw input before sanitization     |
-
-```php
-protected function price(Payload $payload)
-{
-    return $this->builder->where('price', $payload->operator, $payload->value);
-}
-```
-
-See the full [Payload API Reference](/api/payload) for all available methods.
-
----
-
-## Method Mapping with `$mentors`
-
-By default, the engine matches request keys directly to method names (converted to camelCase). You can customize this mapping with the `$mentors` property:
-
-```php
-class PostFilter extends Filterable
-{
-    protected $filters = ['joined', 'status'];
-
-    protected $mentors = [
-        'joined' => 'filterByJoinDate',
-        'status' => 'filterByStatus',
-    ];
-
-    protected function filterByJoinDate(Payload $payload)
+    protected function search(Payload $payload): Builder
     {
-        return $this->builder->whereDate('joined_at', '>', $payload->value);
-    }
-
-    protected function filterByStatus(Payload $payload)
-    {
-        return $this->builder->where('status', $payload->value);
+        return $this->builder->where(
+            'title',
+            'like',
+            $payload->asLike('both'),
+        );
     }
 }
 ```
 
-### Automatic Fallback
+Bind the class to a model with `InteractsWithFilterable`, then execute it like a normal Eloquent query:
 
-If `$mentors` is empty or not defined, the engine automatically matches request keys to method names:
-
-```
-'status'      → calls status()
-'created_at'  → calls createdAt()
+```php
+$posts = Post::filter()->latest()->paginate();
 ```
 
-::: warning Reserved Method Names
-Filter methods must not resolve to a method already defined by the base
-`Filterable` class, such as `apply`, `filter`, or `getBuilder`. The engine
-throws a `FilterableMethodConflictException` when a conflict is detected. Use
-`$mentors` to map the request key to a unique filter method name.
+See the [Quick Start](/quick-start) for the complete model and endpoint setup.
+
+## How execution works
+
+For every registered field, the engine:
+
+1. Reads the matching request value.
+2. Resolves its operator and raw value.
+3. Creates a [`Payload`](/api/payload).
+4. Runs the method's attributes in lifecycle order.
+5. Invokes the filter method when the pipeline succeeds.
+6. Records a snapshot that is available through `applied()`.
+
+The filter method may return a Builder. If it does, that Builder becomes the current query for the next filter.
+
+## Work with Payload
+
+Every method receives one object containing the condition's full context:
+
+| Property | Contains |
+| --- | --- |
+| `field` | Public filter name |
+| `operator` | Resolved operator |
+| `value` | Current transformed value |
+| `rawValue` | Original value before transformation |
+
+```php
+protected function minimumViews(Payload $payload): Builder
+{
+    return $this->builder->where('views', '>=', $payload->asInt());
+}
+```
+
+Use the [Payload reference](/api/payload) when you need conversion, matching, or serialization helpers.
+
+## Add PHP attributes
+
+Attributes keep control and value preparation outside the query method:
+
+```php
+use Kettasoft\Filterable\Engines\Foundation\Attributes\Annotations\In;
+use Kettasoft\Filterable\Engines\Foundation\Attributes\Annotations\Required;
+use Kettasoft\Filterable\Engines\Foundation\Attributes\Annotations\Sanitize;
+use Kettasoft\Filterable\Engines\Foundation\Attributes\Annotations\Trim;
+
+#[Trim]
+#[Sanitize('lowercase')]
+#[Required]
+#[In('published', 'draft', 'archived')]
+protected function status(Payload $payload): Builder
+{
+    return $this->builder->where('status', $payload->value);
+}
+```
+
+Attributes always run by stage, regardless of their visual order on the method:
+
+| Stage | Purpose | Built-in attributes |
+| --- | --- | --- |
+| Control | Decide whether the method may run | `Authorize`, `SkipIf` |
+| Transform | Prepare the value | `Trim`, `Sanitize`, `Cast`, `MapValue`, `DefaultValue`, `Explode` |
+| Validate | Assert the prepared value | `Required`, `In`, `Between`, `Regex` |
+| Behavior | Delegate query behavior | `Scope` |
+
+Browse the [attributes guide](./annotations/) or learn how to create [custom attributes](./custom-annotations).
+
+## Map public names to methods
+
+Use `$mentors` when the public request name should differ from the PHP method:
+
+```php
+protected $filters = ['joined'];
+
+protected $mentors = [
+    'joined' => 'joinedAfter',
+];
+
+protected function joinedAfter(Payload $payload): Builder
+{
+    return $this->builder->whereDate('joined_at', '>', $payload->value);
+}
+```
+
+::: warning Reserved method names
+A public filter must not resolve to a method already defined by the base `Filterable` class, such as `apply`, `filter`, or `getBuilder`. Map that request key to a unique method with `$mentors`.
 :::
 
----
+## Query relationships
 
-## Attribute Pipeline
-
-The Invokable Engine supports **PHP 8 Attributes** (annotations) on filter methods. These attributes are processed through an **Attribute Pipeline** before the filter method executes.
-
-Attributes are sorted and executed by **stage**:
-
-| Order | Stage         | Purpose                          | Example Attributes                                                                  |
-| ----- | ------------- | -------------------------------- | ----------------------------------------------------------------------------------- |
-| 1     | **CONTROL**   | Decide whether to run the filter | `#[Authorize]`, `#[SkipIf]`                                                         |
-| 2     | **TRANSFORM** | Modify the payload value         | `#[Trim]`, `#[Sanitize]`, `#[Cast]`, `#[MapValue]`, `#[DefaultValue]`, `#[Explode]` |
-| 3     | **VALIDATE**  | Assert correctness of the value  | `#[Required]`, `#[In]`, `#[Between]`, `#[Regex]`                                    |
-| 4     | **BEHAVIOR**  | Affect query behavior            | `#[Scope]`                                                                          |
-
-### Example with Attributes
+Invokable methods own their Eloquent logic, so relational filters can use familiar builder methods:
 
 ```php
-use Kettasoft\Filterable\Engines\Foundation\Attributes\Annotations\Trim;
-use Kettasoft\Filterable\Engines\Foundation\Attributes\Annotations\Sanitize;
-use Kettasoft\Filterable\Engines\Foundation\Attributes\Annotations\Required;
-use Kettasoft\Filterable\Engines\Foundation\Attributes\Annotations\In;
-
-class PostFilter extends Filterable
+protected function author(Payload $payload): Builder
 {
-    protected $filters = ['status', 'title'];
-
-    #[Trim]
-    #[Sanitize('lowercase')]
-    #[Required]
-    #[In('active', 'pending', 'archived')]
-    protected function status(Payload $payload)
-    {
-        return $this->builder->where('status', $payload->value);
-    }
-
-    #[Trim]
-    #[Sanitize('strip_tags')]
-    protected function title(Payload $payload)
-    {
-        return $this->builder->where('title', 'like', $payload->asLike());
-    }
+    return $this->builder->whereHas(
+        'author',
+        fn (Builder $query) => $query->where(
+            'name',
+            'like',
+            $payload->asLike('both'),
+        ),
+    );
 }
 ```
 
-In this example, when a `status` filter is received:
+Choose the [Expression engine](/engines/expression) instead when clients need to send approved relation paths directly.
 
-1. **Trim** removes whitespace from the value.
-2. **Sanitize** converts it to lowercase.
-3. **Required** ensures the value is not empty (throws exception if it is).
-4. **In** validates the value is one of the allowed options (skips if not).
-5. The filter method executes with the cleaned, validated payload.
+## Common mistakes
 
-👉 See [Annotations Reference](./annotations/) for full documentation of all available attributes.
+- Forgetting to add the request key to `$filters`.
+- Using a base `Filterable` method name as a filter method.
+- Reading request data again instead of using the provided `Payload`.
+- Mixing validation and normalization into the query method when an attribute already handles them.
+- Exposing dynamic column names without an explicit allowlist or mapping.
 
----
+## Next steps
 
-## Default Operator
-
-The default operator can be configured per engine:
-
-```php
-// config/filterable.php
-'engines' => [
-    'invokable' => [
-        'default_operator' => 'eq',
-    ],
-],
-```
-
----
-
-## Key Features
-
-| Feature                           | Description                                                  |
-| --------------------------------- | ------------------------------------------------------------ |
-| **Convention over Configuration** | Method names match request keys automatically                |
-| **Safe Execution**                | Only registered filter keys in `$filters` are processed      |
-| **Attribute Pipeline**            | PHP 8 attributes for validation, transformation, and control |
-| **Custom Method Mapping**         | `$mentors` property for Flexible key-to-method mapping       |
-| **Rich Payload Object**           | Full access to field, operator, value, and raw value         |
-| **Extensible**                    | Add or override filter methods easily                        |
-
----
-
-## Lifecycle
-
-```text
-1. Controller receives request
-2. Post::filter(PostFilter::class) is called
-3. Engine extracts keys from $filters
-4. For each key present in the request:
-   a. Dissector parses the operator and value
-   b. Payload is created
-   c. Attribute Pipeline runs (CONTROL → TRANSFORM → VALIDATE → BEHAVIOR)
-   d. If pipeline passes, filter method is called with Payload
-   e. Final Payload is recorded as applied
-5. Modified Eloquent query is returned
-```
-
----
-
-## Best Practices
-
-- **Always register filters** in the `$filters` property — unregistered methods won't execute.
-- **Use attributes** to keep your filter methods focused on query logic, not validation.
-- **Combine multiple attributes** — they execute in stage order, so `#[Trim]` always runs before `#[Required]`.
-- **Type-hint [`Payload`](/api/payload)** in your filter methods for full IDE support.
-- **Use `$mentors`** to decouple public API parameter names from internal method names.
-- **Validate input** using `#[Required]`, `#[In]`, `#[Between]`, or `#[Regex]` attributes.
+- Browse all [built-in attributes](./annotations/).
+- Learn how to [test Invokable filters](./testing).
+- Review the full [Payload API](/api/payload).

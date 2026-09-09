@@ -1,138 +1,120 @@
-## ⚙️ Ruleset Engine
-
-The **Ruleset Engine** is a straightforward filtering strategy that interprets filters as flat rule arrays. It's especially suitable for simple request formats, where each filter targets a specific field using one or more operators.
-
-This engine is ideal for APIs and frontends that send clean key-value pairs, use operator-based nesting, or submit relational fields as nested arrays.
-
+---
+title: Ruleset Engine
+description: Apply compact field and operator rules through an explicit allowlist.
+tags: [engines, ruleset, operators, filtering]
 ---
 
-### ✅ When to Use
+# Ruleset Engine
 
--   When handling **simple query structures** like:
-    ```
-    GET /posts?filter[status]=pending&filter[name][like]=kettasoft
-    ```
--   When you prefer clear mapping of field-operator-value.
--   When you want to use **default operators** for common fields without specifying one explicitly.
+The Ruleset engine turns compact field/operator/value input into Eloquent constraints. The package applies each approved condition automatically, so you do not need to create one PHP method per field.
 
----
+## Choose Ruleset when
 
-### 🧩 How It Works
+- Most filters are direct comparisons.
+- The client benefits from a compact query-string format.
+- Conditions do not need nested boolean groups.
+- Allowed fields and operators are enough to define the public contract.
 
-The engine accepts a request array structured as:
+## Request shape
 
-#### 🔹 Format 1: Default operator (e.g. `eq`)
+Use the default operator for equality:
 
 ```http
-/posts?filter[status]=pending
+GET /api/posts?filter[status]=published
 ```
 
-This will be interpreted as:
+Or prefix a value with an operator:
+
+```http
+GET /api/posts?filter[views]=gte:100&filter[title]=like:%laravel%
+```
+
+Ruleset also accepts a one-key operator array such as `filter[views][gte]=100`. Prefer one format consistently in your public API.
+
+## Minimal example
 
 ```php
-['status' => ['eq' => 'pending']]
+use App\Models\Post;
+use Kettasoft\Filterable\Filterable;
+
+$posts = Filterable::for(Post::class, $request)
+    ->using('ruleset')
+    ->setAllowedFields(['status', 'views', 'title'])
+    ->allowedOperators(['eq', 'gte', 'like'])
+    ->latest()
+    ->paginate();
 ```
 
-The default operator (`eq`) is configurable through the engine's options or `Filterable` settings.
+Calling `paginate()` applies the accepted rules before forwarding the terminal operation to Eloquent.
 
-#### 🔹 Format 2: Custom operator
+## Operator resolution
+
+Without an operator, Ruleset uses the configured default—`eq` by default.
+
+```text
+filter[status]=published  → status = published
+filter[views]=gte:100     → views >= 100
+```
+
+Common built-in operators include `eq`, `neq`, `gt`, `gte`, `lt`, `lte`, `like`, `in`, `between`, `null`, and their negative variants. See [Operator Strategies](/features/operators) for the complete list and custom operators.
+
+## Relational fields
+
+Authorize relation paths before accepting them:
 
 ```http
-/posts?filter[name][like]=kettasoft
+GET /api/posts?filter[tags][name]=featured
 ```
-
-This will be interpreted as:
 
 ```php
-['name' => ['like' => 'kettasoft']]
+$posts = Filterable::for(Post::class, $request)
+    ->using('ruleset')
+    ->allowRelations(['tags' => ['name']])
+    ->paginate();
 ```
 
-#### 🔹 Format 3: Relational field
+Dot notation and nested request keys normalize to the same relation path. Deep relations can be approved explicitly:
 
-Relational fields may use either nested request keys or dot notation:
-
-```http
-/posts?filter[tags][name]=featured
-/posts?filter[tags.name]=featured
+```php
+->allowRelations([
+    'tags.post' => ['status'],
+])
 ```
 
-Authorize the relation before applying the request:
+## Strict and permissive modes
+
+Strict mode throws when a request uses a field or operator outside the configured policy:
 
 ```php
 Filterable::for(Post::class, $request)
     ->using('ruleset')
-    ->allowRelations(['tags' => ['name']])
+    ->strict()
+    ->setAllowedFields(['status'])
+    ->allowedOperators(['eq'])
     ->get();
 ```
 
-Nested input is converted to `tags.name` internally. Operator and list arrays remain intact, so requests such as `filter[tags][name][like]=%php%` and `filter[tags][id][in][]=1` work as expected.
-
-Use `['tags']` to allow every field on a relation, `['tags' => ['*']]` for an explicit field wildcard, or `['tags.post' => ['status']]` for a deep relation.
-
----
-
-### 🛠 Operator Resolution
-
-If an operator is not explicitly provided in the request, the **default operator** will be used.  
-This default can be set via the engine configuration.
+Permissive mode skips rejected conditions and keeps their diagnostic payloads available through `skipped()`:
 
 ```php
-'default_operator' => '='
+$filterable = Filterable::for(Post::class, $request)
+    ->using('ruleset')
+    ->permissive()
+    ->setAllowedFields(['status']);
+
+$posts = $filterable->get();
+$skipped = $filterable->skipped();
 ```
 
----
+## Common mistakes
 
-### 🧱 Supported Operators
+- Allowing every model column in a public endpoint.
+- Mixing compact `operator:value` and nested operator formats without documenting both.
+- Allowing relation names without restricting their fields.
+- Choosing Ruleset when a condition needs custom joins or domain logic; use [Invokable](/engines/invokable/) for that case.
 
-| Operator | SQL Equivalent | Example                                                     |
-| -------- | -------------- | ----------------------------------------------------------- |
-| eq       | =              | `filter[status]=published`                                  |
-| neq      | !=             | `filter[status][neq]=draft`                                 |
-| gt       | >              | `filter[views][gt]=100`                                     |
-| gte      | >=             | `filter[created_at][gte]=2024-01-01`                        |
-| lt       | <              | `filter[views][lt]=100`                                     |
-| lte      | <=             | `filter[views][lte]=50`                                     |
-| like     | LIKE           | `filter[title][like]=%laravel%`                             |
-| in       | IN             | `filter[id][in][]=1&filter[id][in][]=2`                     |
-| between  | BETWEEN        | `filter[price][between][]=100&filter[price][between][]=200` |
-| nbetween | NOT BETWEEN    | `filter[price][nbetween][]=100&filter[price][nbetween][]=200` |
-| null     | IS NULL        | `filter[deleted_at][null]`                                  |
-| notnull  | IS NOT NULL    | `filter[published_at][notnull]`                             |
+## Next steps
 
-> Operators are customizable through [operator strategies](/features/operators).
-
----
-
-### 🧪 Example Filter Class
-
-```php
-use Kettasoft\Filterable\Filterable;
-
-class PostFilter extends Filterable
-{
-    protected $allowedFields = ['status', 'title', 'published_at'];
-
-    protected $allowedOperators = ['eq', 'like', 'gte']; // Allowed operators
-}
-```
-
----
-
-### 🔐 Security & Strict Mode
-
-You can enforce strict filtering by enabling **strict mode**, which validates:
-
--   That each filter field is allowed.
--   That each operator is supported.
--   That no unexpected or malicious keys are applied.
-
-If any validation fails, an exception will be thrown instead of silently ignoring the input.
-
----
-
-### 🌿 Best Practices
-
--   Always define `allowed fields` and `allowed operators` in your filter class.
--   Prefer field-specific relation definitions such as `['tags' => ['name']]` when the client does not need access to every related field.
--   Use request validation or sanitizers to clean filter input before applying to query.
--   Avoid exposing sensitive fields via filters unless explicitly allowed.
+- Compare request contracts in [Choose an Engine](/choosing-an-engine).
+- Configure [operator strategies](/features/operators).
+- Add [sorting](/sorting) to the filtered query.
