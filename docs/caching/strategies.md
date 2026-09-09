@@ -423,5 +423,5 @@ class ApiPostController
 
 -   [Cache scoping details →](./scoping.md)
 -   [Auto-invalidation setup →](./auto-invalidation.md)
--   [API reference →](../api/caching.md)
+-   [API reference →](/caching/api-reference)
     :::

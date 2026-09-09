@@ -25,8 +25,8 @@ php artisan vendor:publish --tag=filterable
 ### Service Resolution
 
 ```php
-// Via Facade (requires facade registration)
-use Filterable;
+// Via Facade
+use Kettasoft\Filterable\Facades\Filterable;
 
 $filterable = Filterable::create();
 
@@ -34,9 +34,9 @@ $filterable = Filterable::create();
 $filterable = app('filterable');
 
 // Via Dependency Injection
-public function index(Filterable $filterable)
+public function index(\Kettasoft\Filterable\Filterable $filterable)
 {
-    return $filterable->setModel(User::class)->apply();
+    return $filterable->setModel(User::class)->get();
 }
 
 // Via Manual Resolution

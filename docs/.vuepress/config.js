@@ -48,7 +48,7 @@ export default defineUserConfig({
             seo: {
                 author: "Kettasoft", // Author name for SEO meta tags
                 autoDescription: true, // Automatically generate description meta tag from page content
-                fallBackImage: "/images/banner.png", // Fallback image for SEO meta tags when no image is specified in the page frontmatter
+                fallBackImage: "/images/filterable-banner.png", // Fallback image for SEO meta tags when no image is specified in the page frontmatter
             },
         },
 
@@ -74,7 +74,25 @@ export default defineUserConfig({
 
         navbar: [
             { text: "Home", link: "/" },
-            { text: "Installation", link: "/installation" },
+            {
+                text: "Get Started",
+                items: [
+                    { text: "Introduction", link: "/introduction" },
+                    { text: "Installation", link: "/installation" },
+                    { text: "Quick Start", link: "/quick-start" },
+                    { text: "How It Works", link: "/how-it-works" },
+                    { text: "Choose an Engine", link: "/choosing-an-engine" },
+                ],
+            },
+            {
+                text: "Engines",
+                items: [
+                    { text: "Invokable", link: "/engines/invokable/" },
+                    { text: "Ruleset", link: "/engines/rule-set" },
+                    { text: "Expression", link: "/engines/expression" },
+                    { text: "Tree", link: "/engines/tree" },
+                ],
+            },
             {
                 text: "CLI",
                 items: [
@@ -86,8 +104,13 @@ export default defineUserConfig({
                 ],
             },
             {
-                text: "Advanced",
+                text: "Guides",
                 items: [
+                    { text: "Validation", link: "/validation" },
+                    { text: "Sanitization", link: "/sanitization" },
+                    { text: "Authorization", link: "/authorization" },
+                    { text: "Sorting", link: "/sorting" },
+                    { text: "AI Assistant Guide", link: "/ai-assistant" },
                     { text: "Caching Overview", link: "/caching/overview" },
                 ],
             },
@@ -95,11 +118,20 @@ export default defineUserConfig({
 
         sidebar: {
             "/": [
-                { text: "Home", link: "/" },
-                { text: "Introduction", link: "/introduction" },
-                { text: "Installation", link: "/installation" },
-                { text: "Service Provider", link: "/service-provider" },
-                { text: "How It Works", link: "/how-it-works" },
+                {
+                    text: "Start Here",
+                    collapsed: false,
+                    items: [
+                        { text: "Introduction", link: "/introduction" },
+                        { text: "Installation", link: "/installation" },
+                        { text: "Quick Start", link: "/quick-start" },
+                        { text: "How It Works", link: "/how-it-works" },
+                        {
+                            text: "Choose an Engine",
+                            link: "/choosing-an-engine",
+                        },
+                    ],
+                },
 
                 {
                     text: "Engines",
@@ -114,70 +146,12 @@ export default defineUserConfig({
                                     link: "/engines/invokable/",
                                 },
                                 {
-                                    text: "Custom Annotations",
-                                    link: "/engines/invokable/custom-annotations",
+                                    text: "Attributes",
+                                    link: "/engines/invokable/annotations/",
                                 },
                                 {
-                                    text: "Annotations",
-                                    collapsed: true,
-                                    items: [
-                                        {
-                                            text: "Annotations Overview",
-                                            link: "/engines/invokable/annotations/",
-                                        },
-                                        {
-                                            text: "Authorize",
-                                            link: "/engines/invokable/annotations/authorize",
-                                        },
-                                        {
-                                            text: "SkipIf",
-                                            link: "/engines/invokable/annotations/skip-if",
-                                        },
-                                        {
-                                            text: "Trim",
-                                            link: "/engines/invokable/annotations/trim",
-                                        },
-                                        {
-                                            text: "Sanitize",
-                                            link: "/engines/invokable/annotations/sanitize",
-                                        },
-                                        {
-                                            text: "Cast",
-                                            link: "/engines/invokable/annotations/cast",
-                                        },
-                                        {
-                                            text: "DefaultValue",
-                                            link: "/engines/invokable/annotations/default-value",
-                                        },
-                                        {
-                                            text: "MapValue",
-                                            link: "/engines/invokable/annotations/map-value",
-                                        },
-                                        {
-                                            text: "Explode",
-                                            link: "/engines/invokable/annotations/explode",
-                                        },
-                                        {
-                                            text: "Required",
-                                            link: "/engines/invokable/annotations/required",
-                                        },
-                                        {
-                                            text: "In",
-                                            link: "/engines/invokable/annotations/in",
-                                        },
-                                        {
-                                            text: "Between",
-                                            link: "/engines/invokable/annotations/between",
-                                        },
-                                        {
-                                            text: "Regex",
-                                            link: "/engines/invokable/annotations/regex",
-                                        },
-                                        {
-                                            text: "Scope",
-                                            link: "/engines/invokable/annotations/scope",
-                                        },
-                                    ],
+                                    text: "Custom Attributes",
+                                    link: "/engines/invokable/custom-annotations",
                                 },
                                 {
                                     text: "Testing",
@@ -185,9 +159,23 @@ export default defineUserConfig({
                                 },
                             ],
                         },
-                        { text: "Tree", link: "/engines/tree" },
                         { text: "Ruleset", link: "/engines/rule-set" },
                         { text: "Expression", link: "/engines/expression" },
+                        { text: "Tree", link: "/engines/tree" },
+                    ],
+                },
+
+                {
+                    text: "Core Guides",
+                    collapsed: true,
+                    items: [
+                        { text: "Validation", link: "/validation" },
+                        { text: "Sanitization", link: "/sanitization" },
+                        { text: "Authorization", link: "/authorization" },
+                        { text: "Sorting", link: "/sorting" },
+                        { text: "Profile Management", link: "/profile-management" },
+                        { text: "Profiler", link: "/profiler" },
+                        { text: "Exceptions", link: "/exceptions" },
                     ],
                 },
 
@@ -227,6 +215,10 @@ export default defineUserConfig({
                         {
                             text: "Data Provisioning",
                             link: "/features/data-provisioning",
+                        },
+                        {
+                            text: "Operator Strategies",
+                            link: "/features/operators",
                         },
                     ],
                 },
@@ -320,13 +312,6 @@ export default defineUserConfig({
                     ],
                 },
 
-                { text: "Exceptions", link: "/exceptions" },
-                { text: "Profile Management", link: "/profile-management" },
-                { text: "Profiler", link: "/profiler" },
-                { text: "Sorting", link: "/sorting" },
-                { text: "Authorization", link: "/authorization" },
-                { text: "Validation", link: "/validation" },
-                { text: "Sanitization", link: "/sanitization" },
             ],
         },
     }),

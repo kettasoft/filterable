@@ -1,5 +1,4 @@
-<p align="center"><img src="https://github.com/kettasoft/filterable/blob/docs/images/logo.png" width="180" alt="Filterable Logo" /></p>
-<h1 align="center">Filterable</h1>
+<p align="center"><img src="docs/.vuepress/public/images/filterable-banner.png" alt="Filterable — Eloquent filters, without the controller noise." /></p>
 <p align="center">A powerful and flexible Laravel package for advanced, clean, and scalable filtering of Eloquent models using multiple customizable engines.</p><p align="center">
 <a href="https://packagist.org/packages/kettasoft/filterable"><img src="https://github.com/kettasoft/filterable/actions/workflows/php.yml/badge.svg?style=flat-square" alt="Tests"></a>
 <a href="https://packagist.org/packages/kettasoft/filterable"><img src="http://poser.pugx.org/kettasoft/filterable/v?style=flat-square" alt="Latest Version on Packagist"></a>
@@ -115,24 +114,25 @@ Each engine is designed for a different filtering style. Pick the one that fits 
 
 ### Invokable Engine
 
-Map request keys to methods automatically. Add PHP 8 annotations for per-method sanitization, casting, validation, and authorization with zero boilerplate.
+Map request keys to methods automatically. Add PHP 8 attributes for per-method sanitization, casting, validation, and authorization with zero boilerplate.
 
 ```php
 class PostFilter extends Filterable
 {
-    protected $filters = ['status', 'created_at'];
+    protected $filters = ['title', 'views'];
 
-    #[Cast('integer')]
-    #[DefaultValue(1)]
-    protected function status(Payload $payload) { ... }
+    #[Trim]
+    #[Required]
+    protected function title(Payload $payload) { ... }
 
-    #[SkipIf('auth()->guest()')]
-    #[Between(min: '2020-01-01', max: 'now')]
-    protected function created_at(Payload $payload) { ... }
+    #[SkipIf('empty')]
+    #[Cast('int')]
+    #[Between(min: 0, max: 100000)]
+    protected function views(Payload $payload) { ... }
 }
 ```
 
-Available annotations: `#[Authorize]` `#[SkipIf]` `#[Cast]` `#[Sanitize]` `#[Trim]` `#[DefaultValue]` `#[MapValue]` `#[Explode]` `#[Required]` `#[In]` `#[Between]` `#[Regex]` `#[Scope]`
+Available attributes: `#[Authorize]` `#[SkipIf]` `#[Cast]` `#[Sanitize]` `#[Trim]` `#[DefaultValue]` `#[MapValue]` `#[Explode]` `#[Required]` `#[In]` `#[Between]` `#[Regex]` `#[Scope]`
 
 ### Ruleset Engine
 
@@ -158,9 +158,9 @@ GET /posts?filter[author][profile][name][like]=ahmed
 ```
 
 ```php
-Filterable::create()
-    ->useEngine('expression')
-    ->allowedFields(['status', 'title'])
+Filterable::for(Post::class, $request)
+    ->using('expression')
+    ->setAllowedFields(['status', 'title'])
     ->allowRelations(['author.profile' => ['name']])
     ->paginate();
 ```
@@ -236,25 +236,28 @@ Per-method authorization is also available via the `#[Authorize]` annotation in 
 
 ### Validation & Sanitization
 
-Validation rules and sanitizers are defined directly on the filter class —
-input is cleaned and validated before any filtering logic runs.
+Validation rules and sanitizers are defined directly on the filter class.
+Both run before a condition is applied to the query.
 
-**Validation** uses Laravel's native rules format via a `$rules` property:
+**Validation** uses Laravel's native rules format via the `rules()` method:
 
 ```php
 class PostFilter extends Filterable
 {
-    protected $rules = [
-        'status' => ['required', 'string', 'in:active,pending,archived'],
-        'title'  => ['sometimes', 'string', 'max:32'],
-    ];
+    public function rules(): array
+    {
+        return [
+            'status' => ['sometimes', 'string', 'in:active,pending,archived'],
+            'title'  => ['sometimes', 'string', 'max:32'],
+        ];
+    }
 }
 ```
 
 If validation fails, a `ValidationException` is thrown automatically —
 no extra handling needed in your controller.
 
-**Sanitization** runs _before_ validation, via dedicated sanitizer classes:
+**Sanitization** prepares each payload after request validation and before its query condition is applied:
 
 ```php
 class PostFilter extends Filterable
@@ -281,7 +284,7 @@ class TrimSanitizer implements Sanitizable
 }
 ```
 
-The execution order is always: **sanitize → validate → filter**.
+The class-level execution order is: **authorize → validate request → sanitize payload → filter**.
 
 ### Sorting
 
@@ -302,11 +305,15 @@ class PostFilter extends Filterable
 Hook into the filter lifecycle to add logging, metrics, or custom behavior.
 
 ```php
-// Fired before filters are applied
-Event::listen(FilterApplying::class, fn($e) => Log::info('Filtering '.$e->model));
+use Kettasoft\Filterable\Filterable;
 
-// Fired after filters are applied
-Event::listen(FilterApplied::class, fn($e) => $metrics->record($e));
+Filterable::on('filterable.initializing', function (Filterable $filterable) {
+    Log::info('Filtering '.get_class($filterable));
+});
+
+Filterable::on('filterable.applied', function (Filterable $filterable) use ($metrics) {
+    $metrics->increment('filters.applied');
+});
 ```
 
 ### Profile Management & Profiler
@@ -342,7 +349,7 @@ php artisan filterable:inspect PostFilter
 
 ## Requirements
 
-- PHP 8.1+
+- PHP 8.2+
 - Laravel 10.x or higher
 - Redis or Memcached recommended for tagged caching
 
@@ -358,6 +365,7 @@ For full documentation, installation, and usage examples, visit: **[kettasoft.gi
 - [Authorization](https://kettasoft.github.io/filterable/authorization.html)
 - [CLI Reference](https://kettasoft.github.io/filterable/cli/setup.html)
 - [API Reference](https://kettasoft.github.io/filterable/api/filterable.html)
+- [AI Assistant Guide](https://kettasoft.github.io/filterable/ai-assistant.html)
 
 ---
 

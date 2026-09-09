@@ -48,30 +48,40 @@
 }
 
 [data-theme="dark"] {
-    --vp-c-accent: #ff4f3c9f;
-    --vp-c-accent-bg: #ffe5e3;
-    --vp-c-accent-hover: #ff6f55;
+    --vp-c-brand-1: #ff4f3c;
+    --vp-c-brand-2: #ff7548;
+    --vp-c-accent: #ff4f3c;
+    --vp-c-accent-bg: #ffedea;
+    --vp-c-accent-hover: #ff725f;
     --vp-c-accent-text: var(--vp-c-white);
-    --vp-c-accent-soft: rgba(255, 45, 32, 0.2);
-    --vp-c-gutter: #374151;
-    --vp-c-bg: #0f172a;
-    --vp-sidebar-bg-color: #0f172a;
-    --vp-c-bg-alt: #1e293b;
-    --vp-c-bg-elv: #111827;
+    --vp-c-accent-soft: rgb(255 61 46 / 15%);
+    --vp-c-gutter: rgb(255 255 255 / 7%);
+    --vp-c-bg: #0d0e13;
+    --vp-c-bg-alt: #13141a;
+    --vp-c-bg-elv: #171820;
+    --vp-c-bg-soft: #171820;
+    --vp-c-bg-safe: #14151c;
     --vp-c-white: #ffffff;
-    --vp-c-text: #f3f4f6;
-    --vp-c-text-mute: rgba(243, 244, 246, 0.78);
-    --vp-c-text-subtle: rgba(243, 244, 246, 0.56);
-    --vp-c-divider: #374151;
-    --vp-c-border: #4b5563;
-    --vp-c-border-hard: #6b7280;
-    --vp-c-shadow: rgba(0 0 0 0.4);
-    --vp-c-control: rgba(142, 150, 170, 0.1);
-    --vp-c-control-hover: rgba(142, 150, 170, 0.16);
+    --vp-c-text: #f5f5f7;
+    --vp-c-text-1: rgb(245 245 247 / 94%);
+    --vp-c-text-2: rgb(205 206 214 / 72%);
+    --vp-c-text-3: rgb(167 169 180 / 52%);
+    --vp-c-text-mute: rgb(205 206 214 / 72%);
+    --vp-c-text-subtle: rgb(167 169 180 / 52%);
+    --vp-c-divider: rgb(255 255 255 / 8%);
+    --vp-c-border: rgb(255 255 255 / 13%);
+    --vp-c-border-hard: rgb(255 255 255 / 22%);
+    --vp-c-shadow: rgb(0 0 0 / 42%);
+    --vp-c-control: rgb(255 255 255 / 6%);
+    --vp-c-control-hover: rgb(255 255 255 / 10%);
     --vp-c-control-disabled: #2c2c2c;
 
-    --vp-navbar-c-bg: var(--vp-c-bg);
-    --vp-sidebar-c-bg: var(--vp-c-bg);
+    --vp-nav-bg-color: rgb(13 14 19 / 88%);
+    --vp-nav-screen-bg-color: #0d0e13;
+    --vp-navbar-c-bg: #0d0e13;
+    --vp-sidebar-bg-color: #13141a;
+    --vp-sidebar-c-bg: #13141a;
+    --vp-local-nav-bg-color: rgb(13 14 19 / 92%);
 
     /* Badges */
     --badge-c-tip-text: #10b981;
@@ -89,10 +99,12 @@
 
     /* Code tabs */
     --vp-c-code-tab-title: rgb(255 255 255 / 90%);
-    --vp-c-code-tab-bg: var(--vp-c-bg-elv);
+    --vp-c-code-tab-bg: #14151c;
     --vp-c-code-tab-active: var(--vp-c-accent);
 
-    --code-c-bg: rgb(19, 19, 31);
+    --code-c-bg: #14151c;
+    --vp-code-block-bg: #14151c;
+    --vp-code-block-divider-color: rgb(255 255 255 / 7%);
 }
 
 a.vp-hero-action-button {
@@ -120,6 +132,96 @@ a.vp-hero-action-button.secondary:hover {
     border-color: var(--vp-c-accent-hover);
     background-color: var(--vp-c-accent);
     box-shadow: 0 6px 8px rgba(255, 45, 32, 0.2);
+}
+
+/* Keep long-form guides calm and easy to scan. */
+.vp-doc {
+    font-size: 16px;
+    line-height: 1.75;
+}
+
+.vp-doc > h1 + p {
+    max-width: 68ch;
+    margin-bottom: 2rem;
+    color: var(--vp-c-text-mute);
+    font-size: 1.08rem;
+    line-height: 1.75;
+}
+
+.vp-doc h2 {
+    margin-top: 2.65rem;
+    padding-top: 0.35rem;
+    scroll-margin-top: 6rem;
+}
+
+.vp-doc h3 {
+    margin-top: 2rem;
+    scroll-margin-top: 6rem;
+}
+
+.vp-doc li + li {
+    margin-top: 0.35rem;
+}
+
+.vp-doc hr {
+    margin-block: 2.75rem;
+    opacity: 0.58;
+}
+
+.vp-doc :not(pre) > code {
+    border: 1px solid var(--vp-c-divider);
+    border-radius: 0.32em;
+}
+
+/* The custom landing page owns its spacing and needs to extend to the viewport. */
+.vp-home-custom {
+    padding: 0 !important;
+}
+
+.vp-home-custom > .container {
+    max-width: none !important;
+}
+
+/* Blend the theme chrome into the custom landing page. */
+html.layout-home .vp-nav .vp-navbar {
+    background: rgb(255 255 255 / 82%) !important;
+    border-bottom: 1px solid rgb(17 19 26 / 8%);
+    box-shadow: 0 8px 30px rgb(17 19 26 / 3%);
+    backdrop-filter: saturate(140%) blur(18px);
+}
+
+html.layout-home .vp-footer {
+    padding-block: 32px;
+    background: #fff;
+    border-top-color: rgb(17 19 26 / 8%);
+}
+
+html.layout-home .vp-footer .message,
+html.layout-home .vp-footer .copyright {
+    color: rgb(96 101 115);
+    font-size: 12px;
+    letter-spacing: 0.03em;
+}
+
+html.layout-home[data-theme="dark"] .vp-nav .vp-navbar {
+    background: rgb(13 14 19 / 84%) !important;
+    border-bottom-color: rgb(255 255 255 / 7%);
+    box-shadow: 0 10px 35px rgb(0 0 0 / 18%);
+}
+
+html.layout-home[data-theme="dark"] .vp-navbar .mini-search-button {
+    background: rgb(255 255 255 / 5%);
+    border-color: rgb(255 255 255 / 7%);
+}
+
+html.layout-home[data-theme="dark"] .vp-footer {
+    background: #0d0e13;
+    border-top-color: rgb(255 255 255 / 7%);
+}
+
+html.layout-home[data-theme="dark"] .vp-footer .message,
+html.layout-home[data-theme="dark"] .vp-footer .copyright {
+    color: rgb(167 169 180);
 }
 
 /* ==============================

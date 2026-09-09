@@ -4,27 +4,7 @@ The Filterable package provides a facade for easier access to the Filterable fun
 
 ## Installation
 
-### 1. Register the Facade
-
-Add the facade alias to your `config/app.php` file in the `aliases` array:
-
-```php
-'aliases' => [
-    // ... other aliases
-    'Filterable' => Kettasoft\Filterable\Facades\Filterable::class,
-],
-```
-
-### 2. Service Provider Registration
-
-The `FilterableServiceProvider` is already configured to register the necessary bindings for the facade. Make sure it's registered in your `config/app.php`:
-
-```php
-'providers' => [
-    // ... other providers
-    Kettasoft\Filterable\Providers\FilterableServiceProvider::class,
-],
-```
+After registering the package service provider as described in the [Installation Guide](/installation), import the facade where you need it. A custom Laravel alias is not required.
 
 ## Usage
 
@@ -33,7 +13,7 @@ Once the facade is registered, you can use all Filterable methods statically:
 ### Basic Usage
 
 ```php
-use Filterable;
+use Kettasoft\Filterable\Facades\Filterable;
 
 // Create a new filterable instance
 $filterable = Filterable::create();
@@ -213,7 +193,7 @@ And many more methods for advanced configuration and customization.
 ### Complete Example
 
 ```php
-use Filterable;
+use Kettasoft\Filterable\Facades\Filterable;
 use App\Models\User;
 
 class UserController extends Controller

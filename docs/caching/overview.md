@@ -87,20 +87,20 @@ Caching can provide significant performance improvements:
 
 ### Getting Started
 
--   [**Getting Started**](/caching/getting-started.md) - Installation, configuration, and basic usage
--   [**Examples**](/caching/examples.md) - Real-world examples and common patterns
+-   [**Getting Started**](/caching/getting-started) - Installation, configuration, and basic usage
+-   [**Examples**](/caching/examples) - Real-world examples and common patterns
 
 ### Core Concepts
 
--   [**Caching Strategies**](/caching/strategies.md) - TTL, forever, conditional, tagged, scoped, and profile-based caching
--   [**Cache Profiles**](/caching/profiles.md) - Reusable cache configurations
--   [**Cache Scoping**](/caching/scoping.md) - User, tenant, and custom scoping
--   [**Auto-invalidation**](/caching/auto-invalidation.md) - Automatic cache clearing
+-   [**Caching Strategies**](/caching/strategies) - TTL, forever, conditional, tagged, scoped, and profile-based caching
+-   [**Cache Profiles**](/caching/profiles) - Reusable cache configurations
+-   [**Cache Scoping**](/caching/scoping) - User, tenant, and custom scoping
+-   [**Auto-invalidation**](/caching/auto-invalidation) - Automatic cache clearing
 
 ### Advanced Topics
 
--   [**Monitoring & Debugging**](/caching/monitoring.md) - Performance tracking and troubleshooting
--   [**API Reference**](/caching/api-reference.md) - Complete API documentation
+-   [**Monitoring & Debugging**](/caching/monitoring) - Performance tracking and troubleshooting
+-   [**API Reference**](/caching/api-reference) - Complete API documentation
 
 ## Installation
 
@@ -424,25 +424,25 @@ Choose your learning path:
 
 **For Beginners:**
 
-1. [Getting Started →](/caching/getting-started.md) - Basic setup and usage
-2. [Examples →](/caching/examples.md) - Real-world code examples
-3. [Caching Strategies →](/caching/strategies.md) - Different caching approaches
+1. [Getting Started →](/caching/getting-started) - Basic setup and usage
+2. [Examples →](/caching/examples) - Real-world code examples
+3. [Caching Strategies →](/caching/strategies) - Different caching approaches
 
 **For Advanced Users:**
 
-1. [Cache Profiles →](/caching/profiles.md) - Reusable configurations
-2. [Cache Scoping →](/caching/scoping.md) - Multi-tenant and user isolation
-3. [Auto-invalidation →](/caching/auto-invalidation.md) - Automatic cache clearing
-4. [Monitoring →](/caching/monitoring.md) - Performance tracking
+1. [Cache Profiles →](/caching/profiles) - Reusable configurations
+2. [Cache Scoping →](/caching/scoping) - Multi-tenant and user isolation
+3. [Auto-invalidation →](/caching/auto-invalidation) - Automatic cache clearing
+4. [Monitoring →](/caching/monitoring) - Performance tracking
 
 **For Reference:**
 
--   [API Reference →](/caching/api-reference.md) - Complete API documentation
+-   [API Reference →](/caching/api-reference) - Complete API documentation
 
 ## Support
 
 -   [GitHub Issues](https://github.com/kettasoft/filterable/issues)
--   [Documentation](https://github.com/kettasoft/filterable/docs)
+-   [Documentation](https://kettasoft.github.io/filterable/)
 
 ::: tip Contributing
 Found a bug or have a suggestion? Please open an issue on GitHub!
