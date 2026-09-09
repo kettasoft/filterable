@@ -8,8 +8,8 @@ tags: [installation, setup, requirements]
 
 ## Requirements
 
-- PHP 8.2 or later
-- Laravel 10, 11, or 12
+- Laravel 10, 11, 12, or 13
+- A PHP version supported by your Laravel release. Laravel 13 requires PHP 8.3 or later.
 
 ## Install the package
 
@@ -21,7 +21,7 @@ composer require kettasoft/filterable
 
 Register `FilterableServiceProvider` before running the package commands.
 
-For Laravel 11 and 12, add it to `bootstrap/providers.php`:
+For Laravel 11, 12, and 13, add it to `bootstrap/providers.php`:
 
 ```php
 return [

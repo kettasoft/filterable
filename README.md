@@ -349,8 +349,8 @@ php artisan filterable:inspect PostFilter
 
 ## Requirements
 
-- PHP 8.2+
-- Laravel 10.x or higher
+- Laravel 10, 11, 12, or 13
+- A PHP version supported by your Laravel release (Laravel 13 requires PHP 8.3+)
 - Redis or Memcached recommended for tagged caching
 
 ---

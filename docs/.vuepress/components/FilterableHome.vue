@@ -216,7 +216,7 @@ onUnmounted(() => {
                     target="_blank"
                     rel="noreferrer"
                 >
-                    <span class="pulse-dot"></span> Laravel 10 · 11 · 12
+                    <span class="pulse-dot"></span> Laravel 10 · 11 · 12 · 13
                     <span class="pill-arrow">↗</span>
                 </a>
                 <h1>
