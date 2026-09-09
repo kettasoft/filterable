@@ -134,6 +134,45 @@ a.vp-hero-action-button.secondary:hover {
     box-shadow: 0 6px 8px rgba(255, 45, 32, 0.2);
 }
 
+/* Keep long-form guides calm and easy to scan. */
+.vp-doc {
+    font-size: 16px;
+    line-height: 1.75;
+}
+
+.vp-doc > h1 + p {
+    max-width: 68ch;
+    margin-bottom: 2rem;
+    color: var(--vp-c-text-mute);
+    font-size: 1.08rem;
+    line-height: 1.75;
+}
+
+.vp-doc h2 {
+    margin-top: 2.65rem;
+    padding-top: 0.35rem;
+    scroll-margin-top: 6rem;
+}
+
+.vp-doc h3 {
+    margin-top: 2rem;
+    scroll-margin-top: 6rem;
+}
+
+.vp-doc li + li {
+    margin-top: 0.35rem;
+}
+
+.vp-doc hr {
+    margin-block: 2.75rem;
+    opacity: 0.58;
+}
+
+.vp-doc :not(pre) > code {
+    border: 1px solid var(--vp-c-divider);
+    border-radius: 0.32em;
+}
+
 /* The custom landing page owns its spacing and needs to extend to the viewport. */
 .vp-home-custom {
     padding: 0 !important;
