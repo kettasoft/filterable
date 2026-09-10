@@ -2,23 +2,52 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [3.0.0] - 2026-09-10
+
+### Added
+
+- A composable sanitization pipeline with reusable built-in sanitizers for
+  trimming, casting, normalization, clamping, and safe string handling.
+- A method-attribute pipeline for validation, authorization, transformation,
+  sanitization, scoping, defaults, and conditional skipping.
+- `Filterable::for()` for creating model-aware filter instances without
+  manually wiring an Eloquent builder.
+- A dedicated runtime `Context` for applied and skipped payload state.
+- Skipped-filter tracking with the original `Payload` and skip reason.
+- Nested and deeply nested relational-field filtering across all engines.
+- Extensible operator strategies and custom operator resolution.
+- Custom paths and namespaces for the `make-filter` command.
+- Laravel 13 support.
+- Versioned documentation channels for stable majors and upcoming changes.
 
 ### Changed
 
-- Applied filters are now represented directly by `Payload`; the redundant
-  `Clause` wrapper and its supporting classes have been removed.
-- `Filterable::applied()` now returns final `Payload` snapshots, including the
-  original `rawValue`.
-- Query application now preserves complete nested relation paths consistently
-  across expression, ruleset, and tree engines.
+- The filtering pipeline now uses `Payload` directly from parsing through query
+  application, removing the redundant `Clause` layer.
+- `Filterable::applied()` returns final `Payload` snapshots, including the
+  original raw value.
+- Builder methods are forwarded automatically after pending filters are
+  applied, without maintaining a manual method allowlist.
+- Query application preserves complete nested relation paths consistently
+  across the Invokable, Ruleset, Expression, and Tree engines.
+- Runtime-aware method attributes now receive the active engine and payload.
+- `InteractsWithFilterable` is the preferred model trait; `HasFilterable`
+  remains as a deprecated compatibility alias.
+- The documentation was reorganized and redesigned with clearer navigation,
+  community guides, an AI-assistant guide, and an updated package homepage.
 
 ### Breaking Changes
 
-- `Clause`, `ClauseFactory`, `ClauseApplier`, `RelationResolver`, and
-  `ClauseKeyMapper` have been removed.
-- `Commitable::commit()` and `Filterable::commit()` now accept `Payload`.
+- `Clause`, `ClauseFactory`, `ClauseApplier`, `ClauseKeyMapper`,
+  `OperatorMapper`, `OperatorDefinition`, `OperatorDefinitionContract`, and
+  `RelationResolver` have been removed.
+- `Commitable::commit()` and `Filterable::commit()` accept `Payload` instead of
+  `Clause`.
+- Engine skip hooks accept `Payload` and an optional message.
 - `SkipExecution::getClause()` has been replaced by `getPayload()`.
+- `Filterable::get()` has been replaced by `getFromRequest()`.
+- `AttributeContext` is constructed from the active engine and payload.
+- `HandlerFactory` has been removed in favor of the sanitizer pipeline.
 
 ## [2.0.0] - 2025-07-29
 
