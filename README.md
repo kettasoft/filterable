@@ -371,7 +371,7 @@ For full documentation, installation, and usage examples, visit: **[kettasoft.gi
 
 ## Contributing
 
-Found a bug or want to add an engine? PRs are welcome — please open an issue first to discuss.
+Found a bug or want to improve Filterable? Read the [contribution guide](.github/CONTRIBUTING.md) before opening a pull request. Please report vulnerabilities privately according to the [security policy](.github/SECURITY.md).
 
 ## License
 
