@@ -3,6 +3,9 @@ import { defineUserConfig } from "vuepress";
 import { viteBundler } from "@vuepress/bundler-vite";
 import { plumeTheme } from "vuepress-theme-plume";
 
+const docsBase = process.env.DOCS_BASE ?? "/filterable/";
+const docsVersion = process.env.DOCS_VERSION ?? "Versions";
+
 export default defineUserConfig({
     lang: "en-US",
     title: "Filterable",
@@ -23,7 +26,7 @@ export default defineUserConfig({
         ["meta", { name: "twitter:site", content: "@kettasoft" }],
     ],
 
-    base: "/filterable/",
+    base: docsBase,
 
     bundler: viteBundler(),
 
@@ -74,6 +77,27 @@ export default defineUserConfig({
 
         navbar: [
             { text: "Home", link: "/" },
+            {
+                text: docsVersion,
+                items: [
+                    {
+                        text: "Latest stable",
+                        link: "https://kettasoft.github.io/filterable/",
+                    },
+                    {
+                        text: "Version 3",
+                        link: "https://kettasoft.github.io/filterable/v3/",
+                    },
+                    {
+                        text: "Version 2",
+                        link: "https://kettasoft.github.io/filterable/v2/",
+                    },
+                    {
+                        text: "Next",
+                        link: "https://kettasoft.github.io/filterable/next/",
+                    },
+                ],
+            },
             {
                 text: "Get Started",
                 items: [

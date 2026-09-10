@@ -1,46 +1,276 @@
-name: Deploy Docs
+name: Documentation
 
 on:
-  push:
-    branches:
-      # make sure this is the branch you are using
-      - master
+  pull_request:
+    branches: [master]
     paths:
       - "docs/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/deploy-docs.yml"
+      - "scripts/set-docs-base.mjs"
+  push:
+    branches: [master]
+    paths:
+      - "docs/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/deploy-docs.yml"
+      - "scripts/set-docs-base.mjs"
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "Tag or commit to publish, for example v2.15.0"
+        required: true
+        default: "v2.15.0"
+        type: string
+      channel:
+        description: "Version directory, for example v2"
+        required: true
+        default: "v2"
+        type: string
+      set_as_latest:
+        description: "Also publish this version at the documentation root"
+        required: true
+        default: false
+        type: boolean
 
 permissions:
-  contents: write
+  contents: read
+
+env:
+  NODE_VERSION: "22"
+  NODE_OPTIONS: "--max_old_space_size=8192"
 
 jobs:
-  deploy-docs:
+  validate:
+    if: github.event_name == 'pull_request'
+    name: Build documentation
     runs-on: ubuntu-latest
+    concurrency:
+      group: docs-pr-${{ github.event.pull_request.number }}
+      cancel-in-progress: true
+
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
-          # if your docs needs submodules, uncomment the following line
-          # submodules: true
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v7
         with:
-          node-version: 20
+          node-version: ${{ env.NODE_VERSION }}
           cache: npm
 
-      - name: Install Deps
+      - name: Install dependencies
         run: npm ci
 
-      - name: Build Docs
+      - name: Build documentation
         env:
-          NODE_OPTIONS: --max_old_space_size=8192
-        run: |-
-          npm run docs:build
-          > docs/.vuepress/dist/.nojekyll
+          DOCS_BASE: /filterable/next/
+          DOCS_VERSION: Next
+        run: npm run docs:build
 
-      - name: Deploy Docs
+  deploy-next:
+    if: github.event_name == 'push'
+    name: Publish next documentation
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency:
+      group: docs-deployment
+      cancel-in-progress: false
+
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build next documentation
+        env:
+          DOCS_BASE: /filterable/next/
+          DOCS_VERSION: Next
+        run: |
+          npm run docs:build
+          touch docs/.vuepress/dist/.nojekyll
+
+      - name: Publish next documentation
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          # This is the branch where the docs are deployed to
           branch: docs
           folder: docs/.vuepress/dist
+          target-folder: next
+          clean: true
+          force: false
+          commit-message: "docs: publish next from ${{ github.sha }}"
+
+  deploy-release:
+    if: github.event_name == 'release' && github.event.release.prerelease == false
+    name: Publish stable documentation
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency:
+      group: docs-deployment
+      cancel-in-progress: false
+
+    steps:
+      - name: Resolve release channel
+        id: version
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          if [[ ! "$RELEASE_TAG" =~ ^v([0-9]+)\.[0-9]+\.[0-9]+([+-][0-9A-Za-z.-]+)?$ ]]; then
+            echo "Release tag must use the vMAJOR.MINOR.PATCH format." >&2
+            exit 1
+          fi
+
+          echo "channel=v${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout release tag
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.release.tag_name }}
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build versioned documentation
+        env:
+          DOCS_BASE: /filterable/${{ steps.version.outputs.channel }}/
+          DOCS_VERSION: ${{ steps.version.outputs.channel }}
+        run: |
+          npm run docs:build
+          touch docs/.vuepress/dist/.nojekyll
+
+      - name: Publish versioned documentation
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: docs
+          folder: docs/.vuepress/dist
+          target-folder: ${{ steps.version.outputs.channel }}
+          clean: true
+          force: false
+          commit-message: "docs: publish ${{ github.event.release.tag_name }}"
+
+      - name: Build latest stable documentation
+        env:
+          DOCS_BASE: /filterable/
+          DOCS_VERSION: ${{ steps.version.outputs.channel }}
+        run: |
+          npm run docs:build
+          touch docs/.vuepress/dist/.nojekyll
+
+      - name: Publish latest stable documentation
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: docs
+          folder: docs/.vuepress/dist
+          clean: false
+          force: false
+          commit-message: "docs: set ${{ github.event.release.tag_name }} as latest"
+
+  deploy-manual-version:
+    if: github.event_name == 'workflow_dispatch'
+    name: Publish requested documentation version
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency:
+      group: docs-deployment
+      cancel-in-progress: false
+
+    steps:
+      - name: Validate channel
+        env:
+          DOCS_CHANNEL: ${{ inputs.channel }}
+        run: |
+          if [[ ! "$DOCS_CHANNEL" =~ ^v[0-9]+$ ]]; then
+            echo "Channel must use the vMAJOR format, for example v2." >&2
+            exit 1
+          fi
+
+      - name: Checkout deployment tooling
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+
+      - name: Checkout requested version
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref }}
+          path: version-source
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: version-source/package-lock.json
+
+      - name: Install requested version dependencies
+        working-directory: version-source
+        run: npm ci
+
+      - name: Configure versioned base path
+        env:
+          DOCS_CHANNEL: ${{ inputs.channel }}
+        run: node scripts/set-docs-base.mjs version-source/docs/.vuepress/config.js "/filterable/$DOCS_CHANNEL/"
+
+      - name: Build requested version
+        working-directory: version-source
+        run: |
+          npm run docs:build
+          touch docs/.vuepress/dist/.nojekyll
+
+      - name: Publish requested version
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: docs
+          folder: version-source/docs/.vuepress/dist
+          target-folder: ${{ inputs.channel }}
+          clean: true
+          force: false
+          commit-message: "docs: publish ${{ inputs.ref }} to ${{ inputs.channel }}"
+
+      - name: Configure latest base path
+        if: inputs.set_as_latest
+        run: node scripts/set-docs-base.mjs version-source/docs/.vuepress/config.js "/filterable/"
+
+      - name: Build requested version as latest
+        if: inputs.set_as_latest
+        working-directory: version-source
+        run: |
+          npm run docs:build
+          touch docs/.vuepress/dist/.nojekyll
+
+      - name: Publish requested version as latest
+        if: inputs.set_as_latest
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: docs
+          folder: version-source/docs/.vuepress/dist
+          clean: false
+          force: false
+          commit-message: "docs: set ${{ inputs.ref }} as latest"
