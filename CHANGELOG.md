@@ -12,10 +12,15 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
-- Ruleset, Expression, and Tree comparisons are dispatched through the selected
-  Driver while preserving the existing Eloquent lifecycle.
+- Ruleset and Expression comparisons are dispatched through the selected Driver,
+  while Tree dispatches its complete logical Operation tree in one Driver call.
 - Driver infrastructure failures are surfaced in strict and permissive modes
   instead of being silently skipped.
+
+### Fixed
+
+- Tree groups now join their children using the group's declared `AND` or `OR`
+  boolean, including across recursively nested groups.
 
 ## [3.0.0] - 2026-09-10
 

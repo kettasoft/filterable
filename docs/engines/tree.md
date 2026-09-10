@@ -1,12 +1,12 @@
 ---
 title: Tree Engine
-description: Translate nested AND and OR condition trees into grouped Eloquent queries.
+description: Translate nested AND and OR conditions into a portable operation tree.
 tags: [engines, tree, boolean logic, json]
 ---
 
 # Tree Engine
 
-The Tree engine turns nested JSON conditions into correctly grouped Eloquent constraints. Use it when the client must describe boolean logic, such as an advanced search builder with nested `AND` and `OR` groups.
+The Tree engine turns nested JSON conditions into a backend-independent operation tree. The selected [Driver](/features/drivers) then translates the complete tree for its query backend. Use it when the client must describe boolean logic, such as an advanced search builder with nested `AND` and `OR` groups.
 
 ## Choose Tree when
 
@@ -47,7 +47,7 @@ For ordinary operator filters, prefer the smaller [Ruleset](/engines/rule-set) o
 }
 ```
 
-Each group contains either `and` or `or`. Each leaf condition contains `field`, `operator`, and `value`.
+Each group contains either `and` or `or`, and that boolean joins all of its direct children. Each leaf condition contains `field`, `operator`, and `value`. Nested groups apply their own boolean independently, so the example means `status = published AND (views >= 100 OR featured = true)`.
 
 ## Minimal example
 
@@ -62,7 +62,7 @@ $posts = Filterable::for(Post::class, $request)
     ->paginate();
 ```
 
-The engine preserves group boundaries when it generates nested `where` and `orWhere` clauses.
+The engine compiles this request into nested `Group` and `Comparison` Operations and dispatches the root group to the selected Driver once. This preserves every group boundary without coupling Tree parsing to Eloquent. An empty group applies no query constraint.
 
 ## Provide a tree without an HTTP request
 
@@ -116,7 +116,7 @@ Strict mode is recommended for public Tree endpoints. It stops execution when a 
 ->allowedOperators(['eq', 'gte'])
 ```
 
-Permissive mode can skip rejected leaves, but malformed tree structure may still make the request unusable. Validate the incoming JSON shape before filtering.
+Permissive mode can omit rejected leaves while preserving the remaining group. Applied payloads are committed only after the Driver successfully applies the complete tree. Malformed tree structure may still make the request unusable, so validate the incoming JSON shape before filtering.
 
 ## Common mistakes
 

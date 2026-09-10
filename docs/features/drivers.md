@@ -13,7 +13,7 @@ Request data
     ↓
 Engine → validation and sanitization
     ↓
-Comparison operation
+Operation or operation tree
     ↓
 Driver
     ↓
@@ -58,7 +58,7 @@ Aliases and Driver classes are resolved through Laravel's service container, so 
 - An `Operation` describes the final backend-independent comparison that should be executed.
 - The selected Driver translates that Operation into backend-specific query calls.
 
-Ruleset, Expression, and Tree dispatch their resolved comparisons through the selected Driver. Applied and skipped state continues to store `Payload` snapshots, so existing diagnostics remain unchanged.
+Ruleset and Expression dispatch each resolved comparison through the selected Driver. Tree compiles the complete condition tree into nested `Group` and `Comparison` Operations, then dispatches it in one Driver call. Applied and skipped state continues to store `Payload` snapshots, so existing diagnostics remain unchanged.
 
 ## Database Driver
 
