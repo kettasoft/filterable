@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- Backend-independent comparison and logical-group operations.
+- A driver contract and manager with an initial Eloquent database driver.
+
 ## [3.0.0] - 2026-09-10
 
 ### Added
