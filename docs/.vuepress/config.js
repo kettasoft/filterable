@@ -114,6 +114,21 @@ export default defineUserConfig({
                     { text: "Caching Overview", link: "/caching/overview" },
                 ],
             },
+            {
+                text: "Community",
+                items: [
+                    { text: "Contributing", link: "/community/contributing" },
+                    { text: "Security", link: "/community/security" },
+                    {
+                        text: "GitHub Discussions",
+                        link: "https://github.com/kettasoft/filterable/discussions",
+                    },
+                    {
+                        text: "Issue Tracker",
+                        link: "https://github.com/kettasoft/filterable/issues",
+                    },
+                ],
+            },
         ],
 
         sidebar: {
@@ -309,6 +324,21 @@ export default defineUserConfig({
                         { text: "Test Filter", link: "/cli/testing" },
                         { text: "List Filters", link: "/cli/listing" },
                         { text: "Inspect Filter", link: "/cli/inspect" },
+                    ],
+                },
+
+                {
+                    text: "Community",
+                    collapsed: true,
+                    items: [
+                        {
+                            text: "Contributing",
+                            link: "/community/contributing",
+                        },
+                        {
+                            text: "Security Policy",
+                            link: "/community/security",
+                        },
                     ],
                 },
 
