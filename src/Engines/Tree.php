@@ -5,12 +5,11 @@ namespace Kettasoft\Filterable\Engines;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Support\Payload;
 use Kettasoft\Filterable\Support\TreeNode;
-use Kettasoft\Filterable\Operations\Comparison;
-use Kettasoft\Filterable\Operations\Contracts\Operation;
-use Kettasoft\Filterable\Operations\Group;
 use Kettasoft\Filterable\Traits\FieldNormalizer;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
+use Kettasoft\Filterable\Engines\Foundation\PayloadApplier;
 use Kettasoft\Filterable\Engines\Foundation\PayloadFactory;
+use Kettasoft\Filterable\Engines\Foundation\Appliers\Applier;
 
 class Tree extends Engine
 {
@@ -29,66 +28,61 @@ class Tree extends Engine
    */
   public function execute(Builder $builder): Builder
   {
-    $payloads = [];
-    $operation = $this->compileNode(
-      TreeNode::parse($this->context->getData()),
-      $payloads
-    );
+    $data = $this->context->getData();
 
-    $builder = $this->dispatchOperation($operation, $builder);
-
-    foreach ($payloads as [$key, $payload]) {
-      $this->commit($key, $payload);
-    }
+    $this->applyNode($builder, TreeNode::parse($data));
 
     return $builder;
   }
 
   /**
-   * Compile a parsed Tree node into a backend-independent Operation tree.
+   * Apply a tree node to the query builder.
    *
-   * Invalid children handled in permissive mode are omitted from their group.
-   * Valid payloads are collected and committed only after the Driver applies
-   * the complete tree successfully.
+   * A group owns the boolean used to join its direct children. Rejected
+   * children are omitted in permissive mode without changing that boundary.
    *
-   * @param TreeNode $node Parsed condition or logical group.
-   * @param array<int, array{0: string, 1: Payload}> $payloads Pending payloads.
-   * @return Operation Compiled comparison or logical group.
+   * @param \Illuminate\Contracts\Database\Eloquent\Builder $builder
+   * @param \Kettasoft\Filterable\Support\TreeNode $node
+   * @return bool Whether the node added a query constraint.
    */
-  private function compileNode(TreeNode $node, array &$payloads): Operation
+  private function applyNode(Builder $builder, TreeNode $node): bool
   {
     if ($node->isGroup()) {
-      $operations = [];
+      $appliedChildren = 0;
 
-      foreach ($node->children as $child) {
-        $operation = null;
+      $builder->where(function (Builder $query) use ($node, &$appliedChildren): void {
+        foreach ($node->children as $child) {
+          $method = $appliedChildren === 0 || strtolower($node->logical) === 'and'
+            ? 'where'
+            : 'orWhere';
+          $childApplied = $this->attempt(function () use ($child, $query, $method): bool {
+            $applied = false;
 
-        $this->attempt(function () use ($child, &$operation, &$payloads): bool {
-          $operation = $this->compileNode($child, $payloads);
+            $query->{$method}(function (Builder $sub) use ($child, &$applied): void {
+              $applied = $this->applyNode($sub, $child);
+            });
 
-          return true;
-        });
+            return $applied;
+          });
 
-        if ($operation instanceof Operation) {
-          $operations[] = $operation;
+          if ($childApplied) {
+            $appliedChildren++;
+          }
         }
-      }
+      });
 
-      return new Group($node->logical, $operations);
+      return $appliedChildren > 0;
     }
 
     $payload = (new PayloadFactory($this))->make(
-      new Payload(
-        $node->field,
-        $node->operator ?? $this->defaultOperator(),
-        $this->sanitizeValue($node->field, $node->value),
-        $node->value
-      )
+      new Payload($node->field, $node->operator ?? $this->defaultOperator(), $this->sanitizeValue($node->field, $node->value), $node->value)
     );
 
-    $payloads[] = [$node->field, $payload];
+    Applier::apply(new PayloadApplier($payload), $builder);
 
-    return new Comparison($payload->field, $payload->operator, $payload->value);
+    $this->commit($node->field, $payload);
+
+    return true;
   }
 
   /**
