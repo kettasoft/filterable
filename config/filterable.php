@@ -78,6 +78,22 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Filter Drivers
+    |--------------------------------------------------------------------------
+    |
+    | Drivers translate backend-independent filter operations into queries for
+    | a concrete backend. The database driver remains the default and preserves
+    | the package's existing Eloquent behavior.
+    |
+    */
+    'default_driver' => 'database',
+
+    'drivers' => [
+        'database' => \Kettasoft\Filterable\Drivers\DatabaseDriver::class,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Filter Profiles
     |--------------------------------------------------------------------------
     | Configure filter profiles for different contexts or models.
