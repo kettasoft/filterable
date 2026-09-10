@@ -67,7 +67,7 @@ protected function status(Payload $payload): Builder
 }
 ```
 
-Ruleset, Expression, and Tree turn their resolved payloads into comparison operations and dispatch them through the selected [Driver](/features/drivers). Invokable methods keep direct control of their domain-specific Eloquent logic.
+Ruleset and Expression turn each resolved payload into a comparison Operation. Tree compiles all of its comparisons and logical groups into one operation tree. They dispatch these Operations through the selected [Driver](/features/drivers), while Invokable methods keep direct control of their domain-specific Eloquent logic.
 
 ## Safe filtering
 

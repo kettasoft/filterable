@@ -10,6 +10,7 @@ use Kettasoft\Filterable\Exceptions\InvalidDriverResultException;
 use Kettasoft\Filterable\Filterable;
 use Kettasoft\Filterable\Operations\Comparison;
 use Kettasoft\Filterable\Operations\Contracts\Operation;
+use Kettasoft\Filterable\Operations\Group;
 use Kettasoft\Filterable\Support\Payload;
 use Kettasoft\Filterable\Tests\Models\Post;
 use Kettasoft\Filterable\Tests\TestCase;
@@ -78,7 +79,7 @@ class DriverLifecycleTest extends TestCase
     $this->assertComparison($driver->operations[0], 'views', '>=', 20);
   }
 
-  public function test_tree_dispatches_each_leaf_comparison_to_the_driver(): void
+  public function test_tree_dispatches_a_complete_operation_tree_to_the_driver(): void
   {
     $this->seedPosts();
     $driver = new RecordingDriver();
@@ -100,9 +101,16 @@ class DriverLifecycleTest extends TestCase
       ->useDriver($driver)
       ->get();
 
-    $this->assertCount(2, $driver->operations);
-    $this->assertComparison($driver->operations[0], 'status', '=', 'active');
-    $this->assertComparison($driver->operations[1], 'views', '>=', 30);
+    $this->assertCount(1, $driver->operations);
+    $this->assertInstanceOf(Group::class, $driver->operations[0]);
+    $this->assertSame('and', $driver->operations[0]->boolean());
+
+    [$status, $nested] = $driver->operations[0]->operations();
+
+    $this->assertComparison($status, 'status', '=', 'active');
+    $this->assertInstanceOf(Group::class, $nested);
+    $this->assertSame('or', $nested->boolean());
+    $this->assertComparison($nested->operations()[0], 'views', '>=', 30);
   }
 
   public function test_invokable_domain_methods_keep_their_existing_database_behavior(): void
@@ -144,6 +152,31 @@ class DriverLifecycleTest extends TestCase
       ->setAllowedFields(['views'])
       ->useDriver(new InvalidResultDriver())
       ->get();
+  }
+
+  public function test_tree_payloads_are_not_committed_when_the_driver_fails(): void
+  {
+    $this->seedPosts();
+    $request = Request::create('/posts');
+    $request->setJson(new InputBag([
+      'filter' => [
+        'and' => [
+          ['field' => 'status', 'operator' => 'eq', 'value' => 'active'],
+          ['field' => 'views', 'operator' => 'gte', 'value' => 10],
+        ],
+      ],
+    ]));
+    $filterable = Filterable::for(Post::class, $request)
+      ->using('tree')
+      ->setAllowedFields(['status', 'views'])
+      ->useDriver(new InvalidResultDriver());
+
+    try {
+      $filterable->get();
+      $this->fail('Expected the incompatible Driver result to fail.');
+    } catch (InvalidDriverResultException) {
+      $this->assertSame([], $filterable->applied());
+    }
   }
 
   private function assertComparison(
