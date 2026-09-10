@@ -3,8 +3,9 @@
 namespace Kettasoft\Filterable\Exceptions;
 
 use InvalidArgumentException;
+use Kettasoft\Filterable\Exceptions\Contracts\DriverException;
 
-class InvalidDriverTargetException extends InvalidArgumentException
+class InvalidDriverTargetException extends InvalidArgumentException implements DriverException
 {
     /**
      * Create an exception for a backend query unsupported by a driver.

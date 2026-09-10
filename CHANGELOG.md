@@ -8,6 +8,14 @@ All notable changes to this project will be documented in this file.
 
 - Backend-independent comparison and logical-group operations.
 - A driver contract and manager with an initial Eloquent database driver.
+- Per-filter Driver selection through `useDriver()` and `getDriver()`.
+
+### Changed
+
+- Ruleset, Expression, and Tree comparisons are dispatched through the selected
+  Driver while preserving the existing Eloquent lifecycle.
+- Driver infrastructure failures are surfaced in strict and permissive modes
+  instead of being silently skipped.
 
 ## [3.0.0] - 2026-09-10
 

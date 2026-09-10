@@ -3,9 +3,10 @@
 namespace Kettasoft\Filterable\Exceptions;
 
 use LogicException;
+use Kettasoft\Filterable\Exceptions\Contracts\DriverException;
 use Kettasoft\Filterable\Operations\Contracts\Operation;
 
-class UnsupportedOperationException extends LogicException
+class UnsupportedOperationException extends LogicException implements DriverException
 {
     /**
      * Create an exception for an operation a driver cannot translate.

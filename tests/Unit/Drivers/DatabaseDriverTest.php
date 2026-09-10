@@ -116,6 +116,17 @@ class DatabaseDriverTest extends TestCase
         $this->assertSame(['Second'], $query->pluck('title')->all());
     }
 
+    public function test_a_container_resolved_driver_uses_configured_operator_strategies(): void
+    {
+        $this->seedPosts();
+        config()->set('filterable.operator_strategies.starts_with', StartsWithOperator::class);
+
+        $driver = app(DatabaseDriver::class);
+        $query = $driver->apply(new Comparison('title', 'starts_with', 'Sec'), Post::query());
+
+        $this->assertSame(['Second'], $query->pluck('title')->all());
+    }
+
     public function test_it_rejects_a_non_eloquent_target(): void
     {
         $this->expectException(InvalidDriverTargetException::class);

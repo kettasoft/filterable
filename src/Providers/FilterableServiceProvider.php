@@ -14,6 +14,7 @@ use Kettasoft\Filterable\Commands\InspectFilterCommand;
 use Kettasoft\Filterable\Commands\SetupFilterableCommand;
 use Kettasoft\Filterable\Commands\FilterableDiscoverCommand;
 use Kettasoft\Filterable\Foundation\Events\FilterableEventManager;
+use Kettasoft\Filterable\Engines\Foundation\Operators\OperatorResolver;
 use Kettasoft\Filterable\Foundation\Caching\FilterableCacheManager;
 use Kettasoft\Filterable\Foundation\Caching\CacheInvalidationObserver;
 use Kettasoft\Filterable\Foundation\Profiler\Storage\FileProfilerStorage;
@@ -98,6 +99,7 @@ class FilterableServiceProvider extends ServiceProvider
     {
         $this->mergeConfiguration();
         $this->registerCoreBindings();
+        $this->registerDriverBindings();
         $this->registerEventManager();
         $this->registerCacheManager();
         $this->registerProfilerStorage();
@@ -168,6 +170,21 @@ class FilterableServiceProvider extends ServiceProvider
         if (!class_exists('Filterable')) {
             class_alias(\Kettasoft\Filterable\Facades\Filterable::class, 'Filterable');
         }
+    }
+
+    /**
+     * Register dependencies used by backend Drivers.
+     *
+     * The resolver is intentionally transient so runtime configuration changes
+     * and per-test operator strategies are reflected by each resolved Driver.
+     *
+     * @return void
+     */
+    protected function registerDriverBindings(): void
+    {
+        $this->app->bind(OperatorResolver::class, function (): OperatorResolver {
+            return OperatorResolver::fromConfig();
+        });
     }
 
     /**

@@ -259,6 +259,10 @@ export default defineUserConfig({
                             text: "Operator Strategies",
                             link: "/features/operators",
                         },
+                        {
+                            text: "Filter Drivers",
+                            link: "/features/drivers",
+                        },
                     ],
                 },
                 {
