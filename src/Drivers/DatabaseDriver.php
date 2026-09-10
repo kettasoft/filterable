@@ -23,8 +23,10 @@ class DatabaseDriver implements Driver
 
     /**
      * Create a new database driver instance.
-     * 
-     * @param OperatorResolver|null $operators
+     *
+     * @param OperatorResolver|null $operators Resolver used to translate
+     *     comparison operators into Eloquent query operations. When omitted,
+     *     the resolver is built from the package configuration.
      */
     public function __construct(?OperatorResolver $operators = null)
     {
@@ -32,15 +34,14 @@ class DatabaseDriver implements Driver
     }
 
     /**
-     * Apply an operation to a query.
+     * Apply a backend-independent operation to an Eloquent query.
      *
-     * @param Operation $operation
-     * @param object $query
+     * @param Operation $operation Instruction to translate into Eloquent calls.
+     * @param object $query Query object expected to implement Eloquent's Builder contract.
+     * @return object The filtered Eloquent builder.
      *
-     * @return object
-     *
-     * @throws InvalidDriverTargetException
-     * @throws UnsupportedOperationException
+     * @throws InvalidDriverTargetException When the query is not an Eloquent builder.
+     * @throws UnsupportedOperationException When the operation type is not supported.
      */
     public function apply(Operation $operation, object $query): object
     {
@@ -52,14 +53,13 @@ class DatabaseDriver implements Driver
     }
 
     /**
-     * Apply an operation to a query builder.
+     * Dispatch an operation to its database-specific application method.
      *
-     * @param Operation $operation
-     * @param Builder $builder
+     * @param Operation $operation Instruction being applied.
+     * @param Builder $builder Eloquent builder receiving the instruction.
+     * @return Builder The updated Eloquent builder.
      *
-     * @return Builder
-     *
-     * @throws UnsupportedOperationException
+     * @throws UnsupportedOperationException When no database implementation exists.
      */
     private function applyToBuilder(Operation $operation, Builder $builder): Builder
     {
@@ -74,6 +74,13 @@ class DatabaseDriver implements Driver
         throw new UnsupportedOperationException('database', $operation);
     }
 
+    /**
+     * Apply a direct or relational comparison to an Eloquent builder.
+     *
+     * @param Comparison $operation Comparison to translate.
+     * @param Builder $builder Eloquent builder receiving the comparison.
+     * @return Builder The updated Eloquent builder.
+     */
     private function applyComparison(Comparison $operation, Builder $builder): Builder
     {
         if (str_contains($operation->field(), '.')) {
@@ -83,6 +90,16 @@ class DatabaseDriver implements Driver
         return $this->applyOperator($operation, $builder);
     }
 
+    /**
+     * Apply a dotted field comparison through an Eloquent relationship path.
+     *
+     * The last path segment is treated as the related field and all preceding
+     * segments are passed to Eloquent as the relationship path.
+     *
+     * @param Comparison $operation Relational comparison to translate.
+     * @param Builder $builder Parent Eloquent builder.
+     * @return Builder The updated parent builder.
+     */
     private function applyRelationalComparison(Comparison $operation, Builder $builder): Builder
     {
         $segments = explode('.', $operation->field());
@@ -97,6 +114,16 @@ class DatabaseDriver implements Driver
         });
     }
 
+    /**
+     * Apply a logically grouped collection of operations.
+     *
+     * Nested groups are recursively translated while preserving their AND/OR
+     * boundaries inside Eloquent constraint closures.
+     *
+     * @param Group $group Logical group to translate.
+     * @param Builder $builder Eloquent builder receiving the group.
+     * @return Builder The updated Eloquent builder.
+     */
     private function applyGroup(Group $group, Builder $builder): Builder
     {
         if ($group->operations() === []) {
@@ -114,6 +141,13 @@ class DatabaseDriver implements Driver
         });
     }
 
+    /**
+     * Resolve and execute the operator strategy for a comparison.
+     *
+     * @param Comparison $operation Comparison containing the resolved operator.
+     * @param Builder $builder Eloquent builder receiving the operator.
+     * @return Builder The updated Eloquent builder.
+     */
     private function applyOperator(Comparison $operation, Builder $builder): Builder
     {
         $payload = new Payload(

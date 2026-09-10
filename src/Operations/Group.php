@@ -11,16 +11,19 @@ use Kettasoft\Filterable\Operations\Contracts\Operation;
 class Group implements Operation
 {
     /**
-     * The boolean operator for the group.
-     * 
+     * Operations contained by the group.
+     *
      * @var list<Operation>
      */
     private array $operations;
 
     /**
-     * Create a new operation group.
-     * 
-     * @param iterable<Operation> $operations
+     * Create a logical group of backend-independent operations.
+     *
+     * @param string $boolean Boolean used to join members; accepts `and` or `or`.
+     * @param iterable<Operation> $operations Operations contained by the group.
+     *
+     * @throws InvalidArgumentException When the boolean or a group member is invalid.
      */
     public function __construct(private string $boolean, iterable $operations)
     {
@@ -41,13 +44,20 @@ class Group implements Operation
         }
     }
 
+    /**
+     * Get the normalized boolean used to join the group members.
+     *
+     * @return string Either `and` or `or`.
+     */
     public function boolean(): string
     {
         return $this->boolean;
     }
 
     /**
-     * @return list<Operation>
+     * Get the operations contained by this group in their original order.
+     *
+     * @return list<Operation> Ordered group members.
      */
     public function operations(): array
     {

@@ -15,11 +15,16 @@ class DriverManager
     private static array $extensions = [];
 
     /**
-     * Resolve a driver instance by name or class.
+     * Resolve a driver from an instance, configured alias, or class name.
      *
-     * @param Driver|string|null $driver
+     * Passing null resolves the configured default driver. Driver classes are
+     * instantiated through Laravel's service container.
      *
-     * @throws InvalidDriverDefinitionException
+     * @param Driver|class-string<Driver>|string|null $driver Driver instance,
+     *     configured alias, class name, or null for the default driver.
+     * @return Driver The resolved driver instance.
+     *
+     * @throws InvalidDriverDefinitionException When the definition does not implement Driver.
      */
     public static function resolve(Driver|string|null $driver = null): Driver
     {
@@ -46,11 +51,15 @@ class DriverManager
     }
 
     /**
-     * Register a new driver extension.
-     * 
-     * @param class-string<Driver> $driver
-     * 
-     * @throws InvalidDriverDefinitionException
+     * Register a driver class under a runtime alias.
+     *
+     * Runtime extensions take precedence over configured driver definitions.
+     *
+     * @param string $name Alias used to resolve the driver.
+     * @param class-string<Driver> $driver Driver implementation class.
+     * @return void
+     *
+     * @throws InvalidDriverDefinitionException When the class does not implement Driver.
      */
     public static function extend(string $name, string $driver): void
     {
