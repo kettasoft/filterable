@@ -28,11 +28,39 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    name: Laravel ${{ matrix.laravel }} / PHP ${{ matrix.php }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - laravel: "10"
+            php: "8.2"
+            illuminate: "^10.50"
+            testbench: "^8.40"
+          - laravel: "11"
+            php: "8.2"
+            illuminate: "^11.50"
+            testbench: "^9.20"
+          - laravel: "12"
+            php: "8.3"
+            illuminate: "^12.55"
+            testbench: "^10.11"
+          - laravel: "13"
+            php: "8.3"
+            illuminate: "^13.0"
+            testbench: "^11.0"
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Validate composer.json and composer.lock
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+
+      - name: Validate composer.json
         run: composer validate --strict
 
       - name: Cache Composer packages
@@ -40,15 +68,20 @@ jobs:
         uses: actions/cache@v3
         with:
           path: vendor
-          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+          key: ${{ runner.os }}-php-${{ matrix.php }}-laravel-${{ matrix.laravel }}-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
-            ${{ runner.os }}-php-
+            ${{ runner.os }}-php-${{ matrix.php }}-laravel-${{ matrix.laravel }}-
 
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-progress
-
-      # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
-      # Docs: https://getcomposer.org/doc/articles/scripts.md
+      - name: Install Laravel ${{ matrix.laravel }} dependencies
+        run: >-
+          composer update
+          "illuminate/database:${{ matrix.illuminate }}"
+          "illuminate/support:${{ matrix.illuminate }}"
+          "orchestra/testbench:${{ matrix.testbench }}"
+          --with-all-dependencies
+          --prefer-dist
+          --no-interaction
+          --no-progress
 
       - name: Run test suite
-        run: php vendor/bin/phpunit
+        run: composer test
