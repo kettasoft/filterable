@@ -1,128 +1,127 @@
 # Contributing to Filterable
 
-First off, thank you for considering contributing to Filterable. Every contribution — whether it's a bug report, a feature suggestion, or a pull request — is genuinely appreciated.
-
----
+Thank you for helping improve Filterable. Contributions can include bug reports, documentation fixes, tests, performance improvements, and new features.
 
 ## Before You Start
 
-For anything beyond a small bug fix or typo, **please open an issue first** to discuss what you'd like to change. This avoids wasted effort if the direction doesn't align with the project's goals.
+- Search the [existing issues](https://github.com/kettasoft/filterable/issues) before opening a new one.
+- Small fixes and documentation corrections can go directly to a pull request.
+- For new features, public API changes, or architectural work, open an issue or [discussion](https://github.com/kettasoft/filterable/discussions) first so the approach can be agreed on.
+- Report security vulnerabilities privately according to the [security policy](SECURITY.md), not in a public issue.
 
----
+## Development Setup
 
-## Local Setup
+Fork the repository, then clone your fork and install the dependencies:
 
 ```bash
-git clone https://github.com/kettasoft/filterable.git
+git clone git@github.com:YOUR-USERNAME/filterable.git
 cd filterable
+git remote add upstream https://github.com/kettasoft/filterable.git
 composer install
 ```
 
-Run the test suite to make sure everything is working:
+Create a focused branch from the latest `master`:
 
 ```bash
+git fetch upstream
+git switch master
+git pull --ff-only upstream master
+git switch -c type/short-description
+```
+
+Use a current PHP version supported by the dependency set in `composer.lock`. The package compatibility matrix is documented in the [installation guide](https://kettasoft.github.io/filterable/installation.html).
+
+## Making Changes
+
+- Keep each pull request focused on one feature, fix, or documentation improvement.
+- Follow the existing code style and PSR-12 conventions.
+- Preserve backward compatibility unless a breaking change has been discussed first.
+- Add or update tests for behavior changes and bug fixes.
+- Update public documentation when an API, configuration option, request shape, or command changes.
+- Never commit credentials, tokens, private request data, or generated build output.
+
+The source documentation lives in `docs/` on `master`. The `docs` branch contains the generated website and should not be edited directly.
+
+### Engine Changes
+
+Changes to an existing engine should cover its request shape, strict and permissive behavior, operators, relational fields, and error paths where relevant.
+
+New engines must extend `Kettasoft\Filterable\Engines\Foundation\Engine`, implement the required behavior, and be registered through `EngineManager`. See the [custom engines guide](https://kettasoft.github.io/filterable/features/custom-engines.html) before proposing one.
+
+## Running Checks
+
+Validate Composer metadata and run the complete PHP test suite:
+
+```bash
+composer validate --strict
 composer test
 ```
 
----
+Run a focused test while developing:
 
-## What You Can Contribute
-
-### Bug Fixes
-
-Open an issue describing the bug with a reproducible example, then submit a PR referencing that issue.
-
-### New Features
-
-Open an issue first and describe the feature and why it belongs in the package. Once discussed and approved, submit your PR.
-
-### New Engine
-
-Filterable is built around its engine architecture. If you want to add a new engine:
-
-1. Extend the `Engine` abstract class in `src/Engines/`
-2. Register it in the service provider
-3. Add full test coverage
-4. Add documentation for it
-
-Open an issue before starting so we can align on the design.
-
-### Documentation
-
-Improvements to the docs are always welcome. The documentation source lives in the `docs/` branch.
-
----
-
-## Pull Request Guidelines
-
-- **One PR per feature or fix** — keep changes focused
-- **Write tests** for any new behavior
-- **Follow existing code style** — PSR-12
-- **Reference the related issue** in your PR description
-- **Update documentation** if your change affects public-facing behavior
-
----
-
-## Commit Message Format
-
-Follow this format:
-
+```bash
+./vendor/bin/phpunit tests/Unit/Engines/RulesetEngineTest.php
 ```
+
+For documentation changes, install the Node dependencies and verify the production build:
+
+```bash
+npm ci
+npm run docs:build
+```
+
+The GitHub Actions matrix runs the package suite against all supported Laravel versions. Your pull request should pass every matrix job.
+
+## Commit Messages
+
+Use a short, imperative summary in this format:
+
+```text
 type: short description
 ```
 
-Types:
-
-| Type       | When to use                         |
-| ---------- | ----------------------------------- |
-| `feat`     | New feature                         |
-| `fix`      | Bug fix                             |
-| `docs`     | Documentation only                  |
-| `refactor` | Code change with no behavior change |
-| `test`     | Adding or updating tests            |
-| `chore`    | Build process, dependencies, config |
+| Type | Use it for |
+| --- | --- |
+| `feat` | New user-facing behavior |
+| `fix` | Bug fixes |
+| `docs` | Documentation-only changes |
+| `refactor` | Internal changes without behavior changes |
+| `test` | Test-only changes |
+| `chore` | Dependencies, CI, and maintenance |
 
 Examples:
 
-```
-feat: add support for custom operators in Ruleset engine
-fix: resolve depth limit not being enforced in Tree engine
-docs: add Expression engine examples to README
-```
-
----
-
-## Running Tests
-
-```bash
-# Run all tests
-composer test
-
-# Run a specific test file
-./vendor/bin/phpunit tests/Engines/RulesetEngineTest.php
+```text
+feat: add a custom operator strategy
+fix: enforce the tree engine depth limit
+docs: clarify expression request syntax
 ```
 
-Please make sure all existing tests pass before submitting a PR, and add tests for any new behavior you introduce.
+## Pull Request Checklist
 
----
+Before requesting review, confirm that:
 
-## Reporting a Bug
+- The PR explains the problem and the chosen solution.
+- Unrelated changes are excluded.
+- New and existing tests pass.
+- Documentation and examples match the implementation.
+- Backward-compatibility or migration concerns are called out.
+- The PR references its related issue or discussion when one exists.
 
-When opening a bug report, please include:
+Draft pull requests are welcome when you want early feedback on an agreed direction.
 
-- PHP and Laravel version
-- Package version
-- A minimal reproducible example
-- What you expected vs what actually happened
+## Reporting Bugs
 
----
+Include enough information for someone else to reproduce the problem:
 
-## Code of Conduct
+- Filterable, Laravel, and PHP versions.
+- The selected engine and relevant configuration.
+- A minimal filter class and request payload.
+- Expected and actual behavior.
+- The exception and stack trace, with sensitive values removed.
 
-Be respectful. Constructive feedback is welcome, personal attacks are not. This project follows the [Contributor Covenant](https://www.contributor-covenant.org/).
+Use [GitHub Issues](https://github.com/kettasoft/filterable/issues) for reproducible bugs and [GitHub Discussions](https://github.com/kettasoft/filterable/discussions) for usage questions and design ideas.
 
----
+## Conduct
 
-## Questions?
-
-Open a [GitHub Discussion](https://github.com/kettasoft/filterable/discussions) or an issue and we'll get back to you.
+Be respectful and constructive. Harassment, personal attacks, and discriminatory behavior are not accepted. By participating, you agree to follow the [Contributor Covenant](https://www.contributor-covenant.org/).
