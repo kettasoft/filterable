@@ -16,6 +16,8 @@ use Kettasoft\Filterable\Contracts\Authorizable;
 use Kettasoft\Filterable\Sanitization\Sanitizer;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Support\Payload;
+use Kettasoft\Filterable\Drivers\Contracts\Driver;
+use Kettasoft\Filterable\Drivers\DriverManager;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
 use Kettasoft\Filterable\Foundation\Sorting\Sorter;
 use Kettasoft\Filterable\Contracts\FilterableContext;
@@ -54,6 +56,13 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
    * @var Engine
    */
   protected Engine $engine;
+
+  /**
+   * The backend driver used to translate filter operations.
+   *
+   * @var Driver
+   */
+  protected Driver $driver;
 
   /**
    * Resources instance.
@@ -209,6 +218,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
   {
     $this->sanitizer = new Sanitizer($this->sanitizers);
     $this->resources = new Resources($this->settings());
+    $this->resolveDriver();
     $this->resolveEngine();
     $this->parseIncomingRequestData();
   }
@@ -748,6 +758,30 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
   }
 
   /**
+   * Override the backend driver for this Filterable instance.
+   *
+   * @param Driver|class-string<Driver>|string $driver Driver instance,
+   *     configured alias, or implementation class.
+   * @return static
+   */
+  public function useDriver(Driver|string $driver): static
+  {
+    $this->driver = DriverManager::resolve($driver);
+
+    return $this;
+  }
+
+  /**
+   * Get the backend driver selected for this Filterable instance.
+   *
+   * @return Driver
+   */
+  public function getDriver(): Driver
+  {
+    return $this->driver;
+  }
+
+  /**
    * Get the current request instance.
    * @return Request
    */
@@ -862,6 +896,16 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
   private function resolveEngine()
   {
     $this->useEngine((new HeaderDrivenEngineSelector($this->request))->resolve());
+  }
+
+  /**
+   * Resolve the configured default backend driver.
+   *
+   * @return void
+   */
+  private function resolveDriver(): void
+  {
+    $this->driver = DriverManager::resolve();
   }
 
   /**

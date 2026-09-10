@@ -7,9 +7,7 @@ use Kettasoft\Filterable\Support\Payload;
 use Kettasoft\Filterable\Support\RelationFieldParser;
 use Kettasoft\Filterable\Traits\FieldNormalizer;
 use Kettasoft\Filterable\Engines\Foundation\Engine;
-use Kettasoft\Filterable\Engines\Foundation\PayloadApplier;
 use Kettasoft\Filterable\Engines\Foundation\PayloadFactory;
-use Kettasoft\Filterable\Engines\Foundation\Appliers\Applier;
 use Kettasoft\Filterable\Engines\Foundation\Parsers\Dissector;
 
 class Ruleset extends Engine
@@ -36,14 +34,14 @@ class Ruleset extends Engine
     );
 
     foreach ($data as $field => $dissector) {
-      $this->attempt(function () use ($builder, $dissector, $field): bool {
+      $this->attempt(function () use (&$builder, $dissector, $field): bool {
         $dissector = Dissector::parse($dissector, $this->defaultOperator());
 
         $payload = (new PayloadFactory($this))->make(
           new Payload($field, $dissector->operator, $this->sanitizeValue($field, $dissector->value), $dissector->value)
         );
 
-        Applier::apply(new PayloadApplier($payload), $builder);
+        $builder = $this->dispatchPayload($payload, $builder);
 
         return $this->commit($field, $payload);
       });

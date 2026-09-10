@@ -13,6 +13,9 @@ use Kettasoft\Filterable\Engines\Exceptions\SkipExecution;
 use Kettasoft\Filterable\Engines\Contracts\HasAllowedFieldChecker;
 use Kettasoft\Filterable\Engines\Contracts\HasInteractsWithOperators;
 use Kettasoft\Filterable\Support\Payload;
+use Kettasoft\Filterable\Operations\Comparison;
+use Kettasoft\Filterable\Exceptions\Contracts\DriverException;
+use Kettasoft\Filterable\Exceptions\InvalidDriverResultException;
 
 abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Strictable, Executable, HasAllowedFieldChecker, Skippable
 {
@@ -45,6 +48,8 @@ abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Stricta
   {
     try {
       return $callback->call($this);
+    } catch (DriverException $e) {
+      throw $e;
     } catch (\Throwable $e) {
       return $this->context->getExceptionHandler()->handle($e, $this);
     }
@@ -169,6 +174,34 @@ abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Stricta
   public function getResources(): Resources
   {
     return $this->context->getResources();
+  }
+
+  /**
+   * Translate an approved payload into an operation and dispatch it to the driver.
+   *
+   * The current v3 execution lifecycle remains Eloquent-based, so drivers used
+   * through Filterable must return an Eloquent builder until the generic
+   * backend lifecycle is introduced.
+   *
+   * @param Payload $payload Validated and resolved filter payload.
+   * @param Builder $builder Eloquent builder receiving the operation.
+   * @return Builder The builder returned by the active driver.
+   *
+   * @throws InvalidDriverResultException When the driver returns a non-Eloquent result.
+   */
+  final protected function dispatchPayload(Payload $payload, Builder $builder): Builder
+  {
+    $driver = $this->context->getDriver();
+    $result = $driver->apply(
+      new Comparison($payload->field, $payload->operator, $payload->value),
+      $builder
+    );
+
+    if (! $result instanceof Builder) {
+      throw new InvalidDriverResultException($driver::class, $result, Builder::class);
+    }
+
+    return $result;
   }
 
   /**

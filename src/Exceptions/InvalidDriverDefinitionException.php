@@ -3,8 +3,9 @@
 namespace Kettasoft\Filterable\Exceptions;
 
 use InvalidArgumentException;
+use Kettasoft\Filterable\Exceptions\Contracts\DriverException;
 
-class InvalidDriverDefinitionException extends InvalidArgumentException
+class InvalidDriverDefinitionException extends InvalidArgumentException implements DriverException
 {
     /**
      * Create an exception for a driver definition that violates the contract.
