@@ -315,15 +315,15 @@ class TreeEngineTest extends TestCase
    * It filter with tree based engin and enable strict mode option.
    * @test
    */
-  public function it_can_filter_with_or_and_logical_operator()
+  public function it_combines_or_and_nested_and_groups_by_their_declared_boolean()
   {
     $data = [
       "filter" => [
-        "and" => [
+        "or" => [
           ["field" => "status", "operator" => "eq", "value" => "stopped"],
-          ['or' => [
+          ['and' => [
+            ["field" => "content", "operator" => "null", "value" => null],
             ["field" => "status", "operator" => "eq", "value" => "active"],
-            ["field" => "status", "operator" => "eq", "value" => "pending"],
           ]]
         ]
       ]
@@ -334,7 +334,48 @@ class TreeEngineTest extends TestCase
       ->setAllowedFields(['*'])
       ->apply(Post::query());
 
-    $this->assertEquals(45, $filter->count());
+    $this->assertEquals(30, $filter->count());
+  }
+
+  public function test_it_combines_conditions_inside_an_and_group(): void
+  {
+    $data = [
+      'filter' => [
+        'and' => [
+          ['field' => 'status', 'operator' => 'eq', 'value' => 'active'],
+          ['field' => 'content', 'operator' => 'null', 'value' => null],
+        ],
+      ],
+    ];
+
+    $filter = Filterable::create()
+      ->setData($data, true)
+      ->setAllowedFields(['status', 'content'])
+      ->apply(Post::query());
+
+    $this->assertEquals(15, $filter->count());
+  }
+
+  public function test_permissive_mode_omits_only_the_rejected_leaf_from_a_group(): void
+  {
+    $data = [
+      'filter' => [
+        'and' => [
+          ['field' => 'status', 'operator' => 'eq', 'value' => 'active'],
+          ['field' => 'private_notes', 'operator' => 'eq', 'value' => 'hidden'],
+        ],
+      ],
+    ];
+
+    $filterable = Filterable::create()
+      ->permissive()
+      ->setData($data, true)
+      ->setAllowedFields(['status']);
+
+    $this->assertEquals(15, $filterable->apply(Post::query())->count());
+    $this->assertTrue($filterable->hasSkipped('private_notes'));
+    $this->assertNotNull($filterable->applied('status'));
+    $this->assertNull($filterable->applied('private_notes'));
   }
 
   public function test_it_sanitize_value_before_applying_to_query()

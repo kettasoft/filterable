@@ -14,6 +14,7 @@ use Kettasoft\Filterable\Engines\Contracts\HasAllowedFieldChecker;
 use Kettasoft\Filterable\Engines\Contracts\HasInteractsWithOperators;
 use Kettasoft\Filterable\Support\Payload;
 use Kettasoft\Filterable\Operations\Comparison;
+use Kettasoft\Filterable\Operations\Contracts\Operation;
 use Kettasoft\Filterable\Exceptions\Contracts\DriverException;
 use Kettasoft\Filterable\Exceptions\InvalidDriverResultException;
 
@@ -191,11 +192,25 @@ abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Stricta
    */
   final protected function dispatchPayload(Payload $payload, Builder $builder): Builder
   {
-    $driver = $this->context->getDriver();
-    $result = $driver->apply(
+    return $this->dispatchOperation(
       new Comparison($payload->field, $payload->operator, $payload->value),
       $builder
     );
+  }
+
+  /**
+   * Dispatch a backend-independent operation to the active driver.
+   *
+   * @param Operation $operation Operation or operation tree to apply.
+   * @param Builder $builder Eloquent builder receiving the operation.
+   * @return Builder The builder returned by the active driver.
+   *
+   * @throws InvalidDriverResultException When the driver returns a non-Eloquent result.
+   */
+  final protected function dispatchOperation(Operation $operation, Builder $builder): Builder
+  {
+    $driver = $this->context->getDriver();
+    $result = $driver->apply($operation, $builder);
 
     if (! $result instanceof Builder) {
       throw new InvalidDriverResultException($driver::class, $result, Builder::class);
