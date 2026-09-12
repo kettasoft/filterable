@@ -81,7 +81,7 @@ class EngineManagerTest extends TestCase
 
       public function getEngineName(): string
       {
-        return false;
+        return 'custom';
       }
 
       public function defaultOperator()

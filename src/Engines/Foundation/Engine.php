@@ -4,16 +4,11 @@ namespace Kettasoft\Filterable\Engines\Foundation;
 
 use Kettasoft\Filterable\Filterable;
 use Illuminate\Contracts\Database\Eloquent\Builder;
-use Kettasoft\Filterable\Engines\Contracts\Skippable;
-use Kettasoft\Filterable\Engines\Contracts\Strictable;
-use Kettasoft\Filterable\Engines\Contracts\HasFieldMap;
 use Kettasoft\Filterable\Engines\Exceptions\SkipExecution;
-use Kettasoft\Filterable\Engines\Contracts\HasAllowedFieldChecker;
-use Kettasoft\Filterable\Engines\Contracts\HasInteractsWithOperators;
 use Kettasoft\Filterable\Engines\Foundation\Operators\OperatorResolver;
 use Kettasoft\Filterable\Support\Payload;
 
-abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Strictable, HasAllowedFieldChecker, Skippable
+abstract class Engine
 {
   /**
    * Create Engine instance.
@@ -26,6 +21,13 @@ abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Stricta
    * @return string
    */
   abstract public function getEngineName(): string;
+
+  /**
+   * Get the default operator used when a request omits one.
+   *
+   * @return mixed
+   */
+  abstract public function defaultOperator();
 
   /**
    * Apply filters to the query.

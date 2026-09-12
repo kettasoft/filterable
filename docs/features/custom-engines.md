@@ -14,7 +14,7 @@ To create a custom engine, you need to extend the base `Engine` class and implem
 
 ```php
 use Kettasoft\Filterable\Engines\Foundation\Engine;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class CustomEngine extends Engine
 {
@@ -86,15 +86,13 @@ use Kettasoft\Filterable\Facades\Filterable;
 Filterable::useEngine('custom')->apply($query);
 ```
 
-2. In a filter class:
+2. On a concrete filter instance:
 
 ```php
-use Kettasoft\Filterable\Foundation\Filter;
+use App\Filters\UserFilter;
 
-class UserFilter extends Filter
-{
-    protected string $engine = 'custom';
-}
+$filter = UserFilter::create()->using('custom');
+$users = $filter->apply($query)->get();
 ```
 
 ## Built-in Engines
@@ -106,9 +104,9 @@ The package comes with several built-in engines:
 -   `expression`: Expression-based filtering
 -   `invokable`: Callback-based filtering
 
-## Error Handling
+## Engine Requirements
 
-The engine manager includes built-in validation to ensure that custom engines implement the required interface:
+The engine manager validates that every custom engine extends the base `Engine` class. The base class requires `execute()`, `getEngineName()`, and `defaultOperator()` while providing the shared field, operator, strictness, sanitization, and payload behavior.
 
 -   Attempting to register a class that doesn't extend `Engine` will throw an `InvalidArgumentException`
 -   Using an unregistered engine name will throw an `InvalidArgumentException`
@@ -126,13 +124,16 @@ Here's a complete example of implementing and using a custom engine:
 
 ```php
 use Kettasoft\Filterable\Engines\Foundation\Engine;
-use Illuminate\Database\Eloquent\Builder;
+use Kettasoft\Filterable\Engines\Factory\EngineManager;
+use Kettasoft\Filterable\Filterable;
+use Illuminate\Contracts\Database\Eloquent\Builder;
+use App\Models\Product;
 
 class RangeEngine extends Engine
 {
     public function execute(Builder $builder): Builder
     {
-        $data = $this->getData();
+        $data = $this->getContext()->getData();
 
         foreach ($data as $field => $range) {
             if (isset($range['min'])) {
@@ -151,17 +152,20 @@ class RangeEngine extends Engine
         return 'range';
     }
 
-    // ... implement other required methods
+    public function defaultOperator(): string
+    {
+        return '=';
+    }
 }
 
 // Register the engine
 EngineManager::extend('range', RangeEngine::class);
 
-// Use in a filter
-class PriceFilter extends Filter
-{
-    protected string $engine = 'range';
-}
+// Use the engine for one filter execution
+$products = Filterable::for(Product::class)
+    ->using('range')
+    ->setData(['price' => ['min' => 100, 'max' => 500]])
+    ->get();
 ```
 
 ## Performance Considerations

@@ -16,6 +16,16 @@ All notable changes to this project will be documented in this file.
   shared payload pipeline.
 - Pass-through `Applier` and `Executer` abstractions and their redundant
   contracts; engines and payload appliers are now invoked directly.
+- Redundant capability interfaces implemented only by the base engine; the
+  abstract `Engine` class now defines its required extension contract directly.
+- Duplicated engine-specific context interfaces, including the misspelled
+  `RulesetFilterableContect`; model integration now depends on one focused
+  `FilterableContext` contract.
+
+### Fixed
+
+- Filter resolution return types now allow the raw Eloquent builder returned
+  by `shouldReturnQueryBuilder()`.
 
 ## [3.0.1] - 2026-09-12
 
