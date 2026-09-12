@@ -58,6 +58,7 @@ class InspectFilterCommand extends Command
             ['Model', $this->getModel($instance)],
             ['Allowed Fields', implode(', ', $instance->getAllowedFields() ?? []) ?: 'N/A'],
             ['Allowed Operators', implode(', ', $instance->getAllowedOperators() ?? []) ?: 'N/A'],
+            ['Field Operator Policies', $this->formatOperatorPolicies($instance->getFieldOperatorPolicies())],
             ['Provided Data', implode(', ', $this->getProvidedData($instance)) ?: 'N/A'],
             ['Ignored Empty Value', $instance->hasIgnoredEmptyValues() ? $this->highlight('Yes', 'green') : $this->highlight('No', 'red')],
             ['Strict Mode', $instance->isStrict() ? $this->highlight('Yes', 'green') : $this->highlight('No', 'red')],
@@ -69,5 +70,26 @@ class InspectFilterCommand extends Command
         ], 'box-double');
 
         return Command::SUCCESS;
+    }
+
+    /**
+     * Format field-specific operator policies for console inspection.
+     *
+     * @param array<string, list<string>> $policies
+     * @return string
+     */
+    private function formatOperatorPolicies(array $policies): string
+    {
+        if ($policies === []) {
+            return 'N/A';
+        }
+
+        return collect($policies)
+            ->map(fn (array $operators, string $field): string => sprintf(
+                '%s: %s',
+                $field,
+                $operators === [] ? '(none)' : implode('|', $operators)
+            ))
+            ->implode(', ');
     }
 }

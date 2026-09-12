@@ -99,6 +99,9 @@ use Illuminate\Support\Facades\Facade;
  * Operator Configuration:
  * @method static array getAllowedOperators() List of supported SQL operators you want to allow when parsing the expressions.
  * @method static \Kettasoft\Filterable\Filterable allowedOperators(array $operators) Set allowed operators and override global operators.
+ * @method static \Kettasoft\Filterable\Filterable operatorPolicies(array $policies, bool $override = true) Configure field-specific operator policies in one call.
+ * @method static \Kettasoft\Filterable\Filterable allowOperatorsFor(string|array $fields, array $operators) Restrict operators for one or more public fields.
+ * @method static array getFieldOperatorPolicies() Get all exact-field and wildcard operator policies.
  * 
  * Mode Configuration:
  * @method static \Kettasoft\Filterable\Filterable strict() Enable strict mode in this instance.

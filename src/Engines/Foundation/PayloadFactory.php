@@ -5,6 +5,7 @@ namespace Kettasoft\Filterable\Engines\Foundation;
 use Kettasoft\Filterable\Support\Payload;
 use Kettasoft\Filterable\Engines\Foundation\Enums\Operators;
 use Kettasoft\Filterable\Engines\Exceptions\InvalidOperatorException;
+use Kettasoft\Filterable\Engines\Exceptions\OperatorNotAllowedForFieldException;
 use Kettasoft\Filterable\Engines\Exceptions\NotAllowedFieldException;
 use Kettasoft\Filterable\Engines\Exceptions\NotAllowedEmptyValueException;
 use Kettasoft\Filterable\Engines\Foundation\Operators\OperatorResolver;
@@ -74,12 +75,16 @@ class PayloadFactory
   protected function validateOperator(Payload $payload): bool
   {
     $operator = $payload->operator;
-    $allowedOperators = $this->engine->allowedOperators();
+    $allowedOperators = $this->engine->allowedOperatorsFor($payload->field);
     $isAllowed = array_key_exists($operator, $allowedOperators)
       || in_array(OperatorResolver::normalize($operator), array_map(
         [OperatorResolver::class, 'normalize'],
         array_values($allowedOperators)
       ), true);
+
+    if (! $isAllowed && $this->engine->hasOperatorPolicyFor($payload->field)) {
+      throw new OperatorNotAllowedForFieldException($payload->field, (string) $operator, $payload);
+    }
 
     if (! $isAllowed && $this->engine->isStrict()) {
       throw new InvalidOperatorException($operator, $payload);
@@ -123,7 +128,7 @@ class PayloadFactory
    */
   protected function resolveOperator(Payload $payload): string
   {
-    $allowedOperators = $this->engine->allowedOperators();
+    $allowedOperators = $this->engine->allowedOperatorsFor($payload->field);
 
     if (array_key_exists($payload->operator, $allowedOperators)) {
       return $allowedOperators[$payload->operator];

@@ -17,6 +17,22 @@ interface HasInteractsWithOperators extends Strictable
   public function allowedOperators(): array;
 
   /**
+   * Get the globally allowed operators restricted by a field policy.
+   *
+   * @param string $field Public filter field before field mapping.
+   * @return array<string, string>
+   */
+  public function allowedOperatorsFor(string $field): array;
+
+  /**
+   * Determine whether a field has an exact or fallback operator policy.
+   *
+   * @param string $field Public filter field before field mapping.
+   * @return bool
+   */
+  public function hasOperatorPolicyFor(string $field): bool;
+
+  /**
    * Default engine operator.
    * @return string
    */
