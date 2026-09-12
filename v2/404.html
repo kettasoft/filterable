@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="generator" content="VuePress 2.0.0-rc.18" />
+    <style>
+      :root {
+        --vp-c-bg: #fff;
+      }
+
+      [data-theme='dark'] {
+        --vp-c-bg: #1b1b1f;
+      }
+
+      html,
+      body {
+        background-color: var(--vp-c-bg);
+      }
+    </style>
+    <script>
+      const userMode = localStorage.getItem('vuepress-color-scheme')
+      const systemDarkMode =
+        'matchMedia' in window
+          ? window.matchMedia('(prefers-color-scheme: dark)').matches
+          : false
+
+      if (userMode === 'light') {
+        document.documentElement.dataset.theme = 'light'
+      } else if (userMode === 'dark' || systemDarkMode) {
+        document.documentElement.dataset.theme = 'dark'
+      }
+    </script>
+    <link rel="icon" href="favicon.ico"><title>Filterable</title><meta name="description" content="Kettasoft Filterable - Powerful Eloquent Filtering Package">
+    <link rel="preload" href="/filterable/v2/assets/style-D3B0HkYg.css" as="style"><link rel="stylesheet" href="/filterable/v2/assets/style-D3B0HkYg.css">
+    <link rel="modulepreload" href="/filterable/v2/assets/app-DNl33kj1.js"><link rel="modulepreload" href="/filterable/v2/assets/404.html-B1t3vfUl.js">
+    <link rel="prefetch" href="/filterable/v2/assets/index.html-B_fG8khm.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/authorization.html-D_KSGxnE.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/events.html-CAVGt6JK.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/exceptions.html-Dy2EnO5D.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/get-started.html-CTw8bdG2.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/how-it-works.html-DzCr_1Qw.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/installation.html-CkNjKw5R.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/introduction.html-BXlC_Uzh.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/profile-management.html-DYsTLG7m.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/profiler.html-CjsUrUsx.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/sanitization.html-DXGw1cEz.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/service-provider.html-C9eQ5ap1.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/sorting.html-B0Qg_3vX.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/validation.html-BMP-CFGY.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/api-reference.html-d9ThITe1.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/auto-invalidation.html-BmneXrRB.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/examples.html-Dk0pqn-L.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/getting-started.html-rZ8UNc7z.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/monitoring.html-yHTWmWY2.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/overview.html-D8EJAHK5.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/profiles.html-Bpi0gyCC.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/scoping.html-B5gffjMH.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/strategies.html-BlCrB2Er.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/facade.html-i9VF8eJC.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/filterable.html-jKSsyWO1.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/payload.html-B3H-jCDP.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/sorter.html-C8tJehIo.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/discover.html-CdAJPdDA.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/inspect.html-B-aQ5yFE.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/listing.html-D3nQSsZt.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/setup.html-BB9U0paN.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/testing.html-3th4n-yY.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/closure.html-CAH_dQff.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/expression.html-wWiI5ByC.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/invokable.html-C_dNQVdh.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/rule-set.html-BUviUFHQ.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/tree.html-DTicA6AJ.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/invoker.html-nUnX81w_.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/aliasing.html-C0YHKMWy.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/auto-binding.html-DyN36DKE.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/auto-register-filterable-macro.html-CO20uJEm.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/conditional-logic.html-B5erMYSF.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/custom-engines.html-BQLWaYoG.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/data-provisioning.html-DKK5EZFQ.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/header-driven-filter-mode.html-B-yaNg_k.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/lifecycle-hooks.html-DGf8rux_.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/through.html-RXU-Av7U.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/index.html-qC5eH5Q2.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/authorize.html-CrWB09zx.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/between.html-COUwxTUt.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/cast.html-cpw4tBBD.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/default-value.html-JtqmkQ79.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/explode.html-DpmWTUPJ.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/in.html-jGEIXodu.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/index.html-DYx9yl9j.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/map-value.html-CUclA_kU.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/regex.html-HHQCvR7C.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/required.html-DBwxdVn6.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/sanitize.html-xjTWHdrD.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/scope.html-DKDcD8VS.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/skip-if.html-lFl-fu7n.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/trim.html-D-rMTYUE.js" as="script"><link rel="prefetch" href="/filterable/v2/assets/setupDevtools-7MC2TMWH-D_yIq4rI.js" as="script">
+  </head>
+  <body>
+    <div id="app"><!--[--><div class="vp-theme-container" vp-container data-v-67c08c1d><main class="page" data-v-67c08c1d><div class="theme-default-content" vp-content data-v-67c08c1d><h1 data-v-67c08c1d>404</h1><blockquote data-v-67c08c1d>How did we get here?</blockquote><a class="route-link" href="/filterable/v2/" data-v-67c08c1d>Take me home</a></div></main></div><!--[--><!----><div class="particles-wrapper" data-v-286d6cfe><!----></div><!--]--><!--]--></div>
+    <script type="module" src="/filterable/v2/assets/app-DNl33kj1.js" defer></script>
+  </body>
+</html>
