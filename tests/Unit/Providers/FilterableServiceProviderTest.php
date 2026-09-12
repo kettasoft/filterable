@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Providers;
+namespace Kettasoft\Filterable\Tests\Unit\Providers;
 
 use Illuminate\Http\Request;
 use InvalidArgumentException;

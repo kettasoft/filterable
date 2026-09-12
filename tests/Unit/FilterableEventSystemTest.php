@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Kettasoft\Filterable\Tests\Unit;
 
 use Kettasoft\Filterable\Tests\TestCase;
 use Kettasoft\Filterable\Tests\Models\Post;
