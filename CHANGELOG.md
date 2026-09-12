@@ -4,23 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-### Added
-
-- Backend-independent comparison and logical-group operations.
-- A driver contract and manager with an initial Eloquent database driver.
-- Per-filter Driver selection through `useDriver()` and `getDriver()`.
-
-### Changed
-
-- Ruleset and Expression comparisons are dispatched through the selected Driver,
-  while Tree dispatches its complete logical Operation tree in one Driver call.
-- Driver infrastructure failures are surfaced in strict and permissive modes
-  instead of being silently skipped.
-
 ### Fixed
 
-- Tree groups now join their children using the group's declared `AND` or `OR`
-  boolean, including across recursively nested groups.
+- Tree groups now join their direct children using the group's declared `AND`
+  or `OR` boolean, including across recursively nested groups.
 
 ## [3.0.0] - 2026-09-10
 

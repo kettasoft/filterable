@@ -15,9 +15,7 @@ Authorization → Request validation
         ↓
 Selected engine → Payload sanitization
         ↓
-Operation → Selected driver
-        ↓
-Backend query → Sorting → Result
+Eloquent query → Sorting → Result
 ```
 
 ## Two ways to start a filter
@@ -67,7 +65,7 @@ protected function status(Payload $payload): Builder
 }
 ```
 
-Ruleset and Expression turn each resolved payload into a comparison Operation. Tree compiles all of its comparisons and logical groups into one operation tree. They dispatch these Operations through the selected [Driver](/features/drivers), while Invokable methods keep direct control of their domain-specific Eloquent logic.
+Ruleset, Expression, and Tree apply their payloads automatically.
 
 ## Safe filtering
 
