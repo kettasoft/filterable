@@ -5,8 +5,6 @@ namespace Kettasoft\Filterable\Tests\Unit\Facades;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Kettasoft\Filterable\Facades\Filterable;
-use Kettasoft\Filterable\Foundation\FilterableSettings;
-use Kettasoft\Filterable\Foundation\Resources;
 use Kettasoft\Filterable\Tests\TestCase;
 
 class FilterableFacadeTest extends TestCase
@@ -32,20 +30,6 @@ class FilterableFacadeTest extends TestCase
         
         $this->assertInstanceOf(\Kettasoft\Filterable\Filterable::class, $filterable);
         $this->assertEquals($request, $filterable->getRequest());
-    }
-
-    /** @test */
-    public function it_can_get_resources_instance()
-    {
-        $resources = Filterable::getResources();
-        $this->assertInstanceOf(Resources::class, $resources);
-    }
-
-    /** @test */
-    public function it_can_get_settings_instance()
-    {
-        $settings = Filterable::settings();
-        $this->assertInstanceOf(FilterableSettings::class, $settings);
     }
 
     /** @test */

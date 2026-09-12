@@ -9,6 +9,12 @@ All notable changes to this project will be documented in this file.
 - Field-specific operator policies with exact-field and wildcard rules across
   Invokable, Ruleset, Expression, and Tree engines.
 
+### Removed
+
+- The unused `Resources`, `FilterableSettings`, and resource bag APIs.
+- Legacy field-validation, mapping, and tree-relation helpers superseded by the
+  shared payload pipeline.
+
 ## [3.0.1] - 2026-09-12
 
 ### Fixed

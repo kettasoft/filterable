@@ -4,7 +4,6 @@ namespace Kettasoft\Filterable\Engines\Foundation;
 
 use Kettasoft\Filterable\Filterable;
 use Illuminate\Contracts\Database\Eloquent\Builder;
-use Kettasoft\Filterable\Foundation\Resources;
 use Kettasoft\Filterable\Engines\Contracts\Skippable;
 use Kettasoft\Filterable\Engines\Contracts\Executable;
 use Kettasoft\Filterable\Engines\Contracts\Strictable;
@@ -210,11 +209,6 @@ abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Stricta
     $engine->context = $context;
 
     return $engine;
-  }
-
-  public function getResources(): Resources
-  {
-    return $this->context->getResources();
   }
 
   /**

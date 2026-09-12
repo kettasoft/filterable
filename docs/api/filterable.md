@@ -41,7 +41,6 @@ $users = $invoker->paginate();
 | Property             | Type                                              | Description                                     |
 | -------------------- | ------------------------------------------------- | ----------------------------------------------- |
 | `$engine`            | `\Kettasoft\Filterable\Engines\Foundation\Engine` | The active filtering engine.                    |
-| `$resources`         | `\Kettasoft\Filterable\Foundation\Resources`      | Shared resources/settings bag.                  |
 | `$filters`           | `array`                                           | Declared filter attributes in a filter class.   |
 | `$ignoreEmptyValues` | `bool`                                            | If true, skips empty/null values.               |
 | `$request`           | `\Illuminate\Http\Request`                        | Current HTTP request.                           |

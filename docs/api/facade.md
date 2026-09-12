@@ -157,8 +157,6 @@ The facade provides access to all public methods of the Filterable class, organi
 
 -   `apply()` - Apply all filters
 -   `filter()` - Alias for apply method
--   `getResources()` - Get Resources instance
--   `settings()` - Get FilterableSettings instance
 
 ### Model Configuration
 
