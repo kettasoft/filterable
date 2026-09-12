@@ -125,6 +125,25 @@ $posts = Filterable::for(Post::class, $request)
 
 This applies consistently to query construction, retrieval, aggregates, pagination, streaming, mutations, and custom Builder macros.
 
+#### `paginationPolicy(?int $defaultPerPage = null, ?int $maxPerPage = null, ?string $parameter = null, ?string $overflow = null): static`
+
+Override pagination settings for the current Filterable instance. Omitted
+values inherit from the filter class and package configuration.
+
+```php
+$posts = Filterable::for(Post::class, $request)
+    ->paginationPolicy(
+        defaultPerPage: 20,
+        maxPerPage: 100,
+        overflow: 'reject',
+    )
+    ->paginate();
+```
+
+The policy applies automatically to `paginate()`, `simplePaginate()`, and
+`cursorPaginate()` calls forwarded through the Filterable invoker. See
+[Pagination Policy](/pagination) for precedence and configuration.
+
 #### `shouldReturnQueryBuilder(): static`
 
 Force `apply()` to return the Eloquent Builder instead of the Invoker wrapper.

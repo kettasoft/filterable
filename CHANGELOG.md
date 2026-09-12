@@ -8,6 +8,9 @@ All notable changes to this project will be documented in this file.
 
 - Field-specific operator policies with exact-field and wildcard rules across
   Invokable, Ruleset, Expression, and Tree engines.
+- A pagination policy for `paginate()`, `simplePaginate()`, and
+  `cursorPaginate()` calls made through filtered queries, with global,
+  filter-class, and runtime configuration.
 
 ### Removed
 

@@ -100,6 +100,17 @@ Filterable::create()->sorting(function ($sorter) {
 });
 ```
 
+### Pagination
+
+```php
+Filterable::for(User::class, $request)
+    ->paginationPolicy(maxPerPage: 100, overflow: 'reject')
+    ->paginate();
+```
+
+The fluent override is applied to Laravel pagination methods called through
+the returned Filterable instance. See [Pagination Policy](/pagination).
+
 ### Sanitization
 
 ```php
@@ -157,6 +168,7 @@ The facade provides access to all public methods of the Filterable class, organi
 
 -   `apply()` - Apply all filters
 -   `filter()` - Alias for apply method
+-   `paginationPolicy()` - Override pagination defaults and limits at runtime
 
 ### Model Configuration
 

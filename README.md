@@ -318,6 +318,24 @@ class PostFilter extends Filterable
 // GET /posts?sort=views       (ascending)
 ```
 
+### Pagination Policy
+
+Pagination calls made through `filter()` keep Laravel's API while enforcing a
+configurable default and maximum page size:
+
+```php
+// Reads ?per_page=30 and caps it at the configured maximum.
+$posts = Post::filter()->paginate();
+
+// Runtime overrides are useful for endpoint-specific limits.
+$posts = Post::filter()
+    ->paginationPolicy(maxPerPage: 250)
+    ->cursorPaginate();
+```
+
+The policy also covers `simplePaginate()` and explicit page sizes. See the
+[Pagination Policy guide](https://kettasoft.github.io/filterable/pagination).
+
 ### Event System
 
 Hook into the filter lifecycle to add logging, metrics, or custom behavior.
