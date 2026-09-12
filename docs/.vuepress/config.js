@@ -2,6 +2,7 @@
 import { defineUserConfig } from "vuepress";
 import { viteBundler } from "@vuepress/bundler-vite";
 import { plumeTheme } from "vuepress-theme-plume";
+import { changelogPagePlugin } from "./plugins/changelogPage.js";
 
 const docsBase = process.env.DOCS_BASE ?? "/filterable/";
 const docsVersion = process.env.DOCS_VERSION ?? "Versions";
@@ -29,6 +30,8 @@ export default defineUserConfig({
     base: docsBase,
 
     bundler: viteBundler(),
+
+    plugins: [changelogPagePlugin()],
 
     theme: plumeTheme({
         hostname: "https://kettasoft.github.io",
@@ -141,6 +144,7 @@ export default defineUserConfig({
             {
                 text: "Community",
                 items: [
+                    { text: "Changelog", link: "/changelog" },
                     { text: "Contributing", link: "/community/contributing" },
                     { text: "Security", link: "/community/security" },
                     {
@@ -359,6 +363,10 @@ export default defineUserConfig({
                     text: "Community",
                     collapsed: true,
                     items: [
+                        {
+                            text: "Changelog",
+                            link: "/changelog",
+                        },
                         {
                             text: "Contributing",
                             link: "/community/contributing",

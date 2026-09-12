@@ -173,6 +173,154 @@ a.vp-hero-action-button.secondary:hover {
     border-radius: 0.32em;
 }
 
+/* Present the generated release history as a scannable timeline. */
+.changelog-page .vp-doc {
+    --changelog-card-bg: linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--vp-c-bg-elv) 96%, var(--vp-c-brand-1)),
+        var(--vp-c-bg-elv)
+    );
+    --changelog-list-bg: color-mix(
+        in srgb,
+        var(--vp-c-bg-alt) 84%,
+        transparent
+    );
+}
+
+.changelog-page .changelog-intro {
+    margin-bottom: 2.5rem;
+    padding: 1.2rem 1.35rem;
+    border-inline-start: 2px solid var(--vp-c-brand-1);
+    border-radius: 0 0.8rem 0.8rem 0;
+    background: linear-gradient(
+        90deg,
+        var(--vp-c-accent-soft),
+        transparent 78%
+    );
+}
+
+.changelog-page .changelog-intro > p:last-child {
+    max-width: 62ch;
+    margin: 0;
+    color: var(--vp-c-text-mute);
+    font-size: 1.02rem;
+    line-height: 1.7;
+}
+
+.changelog-page .changelog-eyebrow {
+    margin: 0 0 0.45rem;
+    color: var(--vp-c-brand-1);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+.changelog-page .changelog-release-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 3.5rem 0 1.4rem;
+    padding: 1rem 1.15rem;
+    border: 1px solid var(--vp-c-divider);
+    border-radius: 0.9rem;
+    background: var(--changelog-card-bg);
+    box-shadow: 0 14px 40px color-mix(in srgb, var(--vp-c-shadow) 32%, transparent);
+}
+
+.changelog-page .changelog-release-heading.is-unreleased {
+    border-color: color-mix(in srgb, var(--vp-c-brand-1) 38%, transparent);
+    background: linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--vp-c-brand-1) 11%, var(--vp-c-bg-elv)),
+        var(--vp-c-bg-elv) 70%
+    );
+}
+
+.changelog-page .changelog-release-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: var(--vp-c-text);
+    font-size: 1.3rem;
+    font-weight: 750;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
+    text-decoration: none;
+}
+
+.changelog-page a.changelog-release-title:hover {
+    color: var(--vp-c-brand-1);
+}
+
+.changelog-page .changelog-release-heading time,
+.changelog-page .changelog-release-status {
+    flex: none;
+    padding: 0.32rem 0.58rem;
+    border: 1px solid var(--vp-c-divider);
+    border-radius: 999px;
+    color: var(--vp-c-text-mute);
+    background: var(--vp-c-bg);
+    font-family: var(--vp-font-family-mono);
+    font-size: 0.72rem;
+    font-weight: 650;
+    letter-spacing: 0.02em;
+}
+
+.changelog-page .changelog-release-status {
+    border-color: color-mix(in srgb, var(--vp-c-brand-1) 28%, transparent);
+    color: var(--vp-c-brand-1);
+    background: var(--vp-c-accent-soft);
+    font-family: inherit;
+}
+
+.changelog-page .changelog-category {
+    display: inline-flex;
+    align-items: center;
+    margin: 1.65rem 0 0.75rem;
+    padding: 0.3rem 0.58rem;
+    border-radius: 999px;
+    color: var(--vp-c-text-mute);
+    background: var(--vp-c-control);
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+.changelog-page .changelog-category.is-added {
+    color: #059669;
+    background: rgb(16 185 129 / 12%);
+}
+
+.changelog-page .changelog-category.is-fixed {
+    color: #0284c7;
+    background: rgb(14 165 233 / 12%);
+}
+
+.changelog-page .changelog-category.is-breaking-changes {
+    color: var(--vp-c-brand-1);
+    background: var(--vp-c-accent-soft);
+}
+
+.changelog-page .changelog-category + ul {
+    margin: 0;
+    padding: 1rem 1.2rem 1rem 2.35rem;
+    border: 1px solid var(--vp-c-divider);
+    border-radius: 0.8rem;
+    background: var(--changelog-list-bg);
+}
+
+@media (max-width: 640px) {
+    .changelog-page .changelog-release-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 0.65rem;
+    }
+}
+
 /* The custom landing page owns its spacing and needs to extend to the viewport. */
 .vp-home-custom {
     padding: 0 !important;
