@@ -3,11 +3,10 @@
 namespace Kettasoft\Filterable\Engines\Foundation;
 
 use Illuminate\Contracts\Database\Eloquent\Builder;
-use Kettasoft\Filterable\Engines\Contracts\Appliable;
 use Kettasoft\Filterable\Support\Payload;
 use Kettasoft\Filterable\Engines\Foundation\Operators\OperatorResolver;
 
-class PayloadApplier implements Appliable
+class PayloadApplier
 {
   protected OperatorResolver $operators;
 

@@ -10,7 +10,6 @@ use Kettasoft\Filterable\Support\ConditionNormalizer;
 use Kettasoft\Filterable\Support\ValidateTableColumns;
 use Kettasoft\Filterable\Engines\Foundation\PayloadApplier;
 use Kettasoft\Filterable\Engines\Foundation\PayloadFactory;
-use Kettasoft\Filterable\Engines\Foundation\Appliers\Applier;
 use Kettasoft\Filterable\Engines\Foundation\Parsers\Dissector;
 
 class Expression extends Engine
@@ -46,7 +45,7 @@ class Expression extends Engine
           new Payload($field, $dissector->operator, $this->sanitizeValue($field, $dissector->value), $dissector->value)
         );
 
-        Applier::apply(new PayloadApplier($payload), $builder);
+        (new PayloadApplier($payload))->apply($builder);
         return $this->commit($field, $payload);
       });
     }

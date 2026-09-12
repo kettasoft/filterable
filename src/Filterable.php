@@ -23,7 +23,6 @@ use Kettasoft\Filterable\Foundation\Contracts\Sortable;
 use Kettasoft\Filterable\Exceptions\MissingBuilderException;
 use Kettasoft\Filterable\Foundation\Runtime\Context;
 use Kettasoft\Filterable\Foundation\Traits\HandleFluentReturn;
-use Kettasoft\Filterable\Engines\Foundation\Executors\Executer;
 use Kettasoft\Filterable\Foundation\Contracts\FilterableProfile;
 use Kettasoft\Filterable\Foundation\Contracts\Sorting\Invokable;
 use Kettasoft\Filterable\Foundation\Events\Contracts\EventManager;
@@ -376,7 +375,7 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
       $builder = $this->initially($builder);
       $this->context->setBuilder($builder);
 
-      $builder = Executer::execute($this->engine, $builder);
+      $builder = $this->engine->execute($builder);
 
       if (isset(self::$sorters[static::class])) {
         $builder = static::getSorting(static::class)?->apply($builder);
