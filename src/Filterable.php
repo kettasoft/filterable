@@ -22,6 +22,8 @@ use Kettasoft\Filterable\Engines\Factory\EngineManager;
 use Kettasoft\Filterable\Foundation\Contracts\Sortable;
 use Kettasoft\Filterable\Exceptions\MissingBuilderException;
 use Kettasoft\Filterable\Foundation\Runtime\Context;
+use Kettasoft\Filterable\Foundation\Pagination\PaginationPolicy;
+use Kettasoft\Filterable\Foundation\Pagination\PaginationArguments;
 use Kettasoft\Filterable\Foundation\Traits\HandleFluentReturn;
 use Kettasoft\Filterable\Foundation\Contracts\FilterableProfile;
 use Kettasoft\Filterable\Foundation\Contracts\Sorting\Invokable;
@@ -158,6 +160,13 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
    * @var bool
    */
   protected $shouldReturnQueryBuilder = false;
+
+  /**
+   * Pagination settings that override the package configuration for this filter.
+   *
+   * @var array{parameter?: string, default?: int, max?: int, overflow?: string}
+   */
+  protected $pagination = [];
 
   /**
    * Event manager instance.
@@ -394,6 +403,12 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
       }
 
       $invoker = new Invoker($builder);
+      $pagination = $this->resolvePaginationPolicy();
+
+      $invoker->withPaginationPolicy(
+        $pagination,
+        $this->request->query($pagination->parameter())
+      );
 
       // Pass caching settings to invoker
       if ($this->isCachingEnabled()) {
@@ -919,6 +934,65 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
   }
 
   /**
+   * Override pagination policy settings for this filter instance.
+   *
+   * Values omitted from this call continue to inherit from class-level or
+   * package configuration. Pagination methods keep their native Laravel API.
+   *
+   * @param int|null $defaultPerPage Page size used when none is requested.
+   * @param int|null $maxPerPage Largest accepted page size.
+   * @param string|null $parameter Query-string parameter for the page size.
+   * @param string|null $overflow Oversized-value behavior: clamp or reject.
+   * @return static
+   */
+  public function paginationPolicy(
+    ?int $defaultPerPage = null,
+    ?int $maxPerPage = null,
+    ?string $parameter = null,
+    ?string $overflow = null
+  ): static {
+    $overrides = array_filter([
+      'default' => $defaultPerPage,
+      'max' => $maxPerPage,
+      'parameter' => $parameter,
+      'overflow' => $overflow,
+    ], static fn(mixed $value): bool => $value !== null);
+
+    $previous = $this->pagination;
+    $this->pagination = array_replace($this->pagination, $overrides);
+
+    try {
+      $this->resolvePaginationPolicy();
+    } catch (\Throwable $exception) {
+      $this->pagination = $previous;
+      throw $exception;
+    }
+
+    return $this;
+  }
+
+  /**
+   * Build the effective pagination policy for the current filter instance.
+   */
+  protected function resolvePaginationPolicy(): PaginationPolicy
+  {
+    $configured = config('filterable.pagination', []);
+    $configured = is_array($configured) ? $configured : [];
+    $legacyDefault = config('filterable.paginate_limit');
+
+    if ($legacyDefault !== null) {
+      $configured['default'] = (int) $legacyDefault;
+    }
+
+    return PaginationPolicy::fromArray(array_replace([
+      'parameter' => 'per_page',
+      'default' => 15,
+      'max' => 100,
+      'overflow' => PaginationPolicy::OVERFLOW_CLAMP,
+    ], $configured, $this->pagination));
+  }
+
+  /**
    * Configure field-specific operator policies in one call.
    *
    * Each key is a public filter field or `*` fallback and each value is the
@@ -1190,6 +1264,18 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
    */
   public function __call($method, $parameters)
   {
-    return $this->forwardCallTo($this->apply(), $method, $parameters);
+    $target = $this->apply();
+
+    if ($target instanceof Builder && PaginationArguments::supports($method)) {
+      $pagination = $this->resolvePaginationPolicy();
+      $parameters = PaginationArguments::resolve(
+        $method,
+        $parameters,
+        $pagination,
+        $this->request->query($pagination->parameter())
+      );
+    }
+
+    return $this->forwardCallTo($target, $method, $parameters);
   }
 }
