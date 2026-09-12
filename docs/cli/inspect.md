@@ -42,6 +42,7 @@ php artisan filterable:inspect PostFilter
 │ Model                      │ Post                                         │
 │ Allowed Fields             │ title, content, status                       │
 │ Allowed Operators          │ =, !=, like, in                              │
+│ Field Operator Policies    │ status: eq|in, title: eq|like                 │
 │ Provided Data              │ user, request                                │
 │ Ignored Empty Value        │ Yes                                          │
 │ Strict Mode                │ No                                           │
@@ -58,6 +59,7 @@ php artisan filterable:inspect PostFilter
 ### **Features**
 
 -   Displays **all configuration details** of a Filterable class in a clear table.
+-   Shows field-specific operator policies using their public field names.
 -   Supports both **full class names** (e.g. `App\Http\Filters\PostFilter`) and **simple names** (e.g. `PostFilter`).
 -   Highlights important properties (like strict mode, sanitizers, etc.) using color for quick recognition.
 -   Useful for **debugging misconfigurations** or **verifying filter behavior**.

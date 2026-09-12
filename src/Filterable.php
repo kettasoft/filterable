@@ -118,6 +118,16 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
   protected $allowedOperators = [];
 
   /**
+   * Operator restrictions keyed by public filter field.
+   *
+   * Exact field policies take precedence over the optional `*` policy.
+   * Fields without a matching policy continue to use the global operator list.
+   *
+   * @var array<string, list<string>>
+   */
+  protected $fieldOperatorPolicies = [];
+
+  /**
    * Strict mode.
    * @var bool|null
    */
@@ -940,6 +950,86 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
   {
     $this->allowedOperators = $operators;
     return $this;
+  }
+
+  /**
+   * Configure field-specific operator policies in one call.
+   *
+   * Each key is a public filter field or `*` fallback and each value is the
+   * operator subset accepted by that field. Passing false as the second
+   * argument merges the policies and replaces only duplicate field entries.
+   *
+   * @param array<string, list<string>> $policies
+   * @param bool $override Replace all existing policies when true.
+   * @return static
+   */
+  public function operatorPolicies(array $policies, bool $override = true): static
+  {
+    $normalized = [];
+
+    foreach ($policies as $field => $operators) {
+      if (! is_string($field) || trim($field) === '') {
+        throw new \InvalidArgumentException('Field operator policy names must be non-empty strings.');
+      }
+
+      if (! is_array($operators)) {
+        throw new \InvalidArgumentException(sprintf(
+          'Operator policy for field [%s] must be an array.',
+          $field
+        ));
+      }
+
+      foreach ($operators as $operator) {
+        if (! is_string($operator) || trim($operator) === '') {
+          throw new \InvalidArgumentException('Field operator policies must contain non-empty operator strings.');
+        }
+      }
+
+      $normalized[trim($field)] = array_values(array_unique(array_map('trim', $operators)));
+    }
+
+    $this->fieldOperatorPolicies = $override
+      ? $normalized
+      : array_replace($this->fieldOperatorPolicies, $normalized);
+
+    return $this;
+  }
+
+  /**
+   * Restrict the operators accepted by one or more public filter fields.
+   *
+   * The supplied operators are intersected with the operators enabled for the
+   * active engine, so a field policy cannot enable a globally unavailable
+   * operator. Use `*` as a fallback policy for fields without an exact match.
+   *
+   * @param string|array<int, string> $fields Public field name or field names.
+   * @param list<string> $operators Operator aliases or resolved operator names.
+   * @return static
+   */
+  public function allowOperatorsFor(string|array $fields, array $operators): static
+  {
+    $fields = is_array($fields) ? $fields : [$fields];
+    $policies = [];
+
+    foreach ($fields as $field) {
+      if (! is_string($field) || trim($field) === '') {
+        throw new \InvalidArgumentException('Field operator policy names must be non-empty strings.');
+      }
+
+      $policies[trim($field)] = $operators;
+    }
+
+    return $this->operatorPolicies($policies, false);
+  }
+
+  /**
+   * Get all field-specific operator policies.
+   *
+   * @return array<string, list<string>>
+   */
+  public function getFieldOperatorPolicies(): array
+  {
+    return $this->fieldOperatorPolicies;
   }
 
   /**

@@ -72,6 +72,20 @@ class FilterableFacadeTest extends TestCase
     }
 
     /** @test */
+    public function it_can_configure_field_operator_policies()
+    {
+        $policies = [
+            '*' => ['eq'],
+            'status' => ['eq', 'in'],
+            'title' => ['eq', 'like'],
+        ];
+
+        $filterable = Filterable::operatorPolicies($policies);
+
+        $this->assertSame($policies, $filterable->getFieldOperatorPolicies());
+    }
+
+    /** @test */
     public function it_can_ignore_empty_values()
     {
         $filterable = Filterable::ignoreEmptyValues();

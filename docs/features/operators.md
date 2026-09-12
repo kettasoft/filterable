@@ -20,6 +20,8 @@ $filterable->allowedOperators(['gte', 'in']);
 $filterable->allowedOperators(['>=', 'in']);
 ```
 
+Use [Field Operator Policies](./field-operator-policies) when different fields need different subsets of the globally allowed operators.
+
 ## Custom strategies
 
 A custom strategy implements the `Operator` contract:

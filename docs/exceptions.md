@@ -53,6 +53,7 @@ Typical scenarios include:
 
 - empty values when the engine does not accept empty input,
 - unsupported operators,
+- operators rejected by a field-specific policy,
 - incomplete data structures.
 
 **Behavior:**
@@ -65,6 +66,10 @@ whole filtering pipeline.
 
 When the exception is associated with an input, the rejected `Payload` can be
 inspected with `$exception->getPayload()`.
+
+`OperatorNotAllowedForFieldException` identifies a valid engine operator that
+was rejected for a particular public field. In permissive mode its payload and
+reason are available through `skipped()`; in strict mode it is thrown.
 
 ---
 

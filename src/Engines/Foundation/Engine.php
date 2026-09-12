@@ -12,6 +12,7 @@ use Kettasoft\Filterable\Engines\Contracts\HasFieldMap;
 use Kettasoft\Filterable\Engines\Exceptions\SkipExecution;
 use Kettasoft\Filterable\Engines\Contracts\HasAllowedFieldChecker;
 use Kettasoft\Filterable\Engines\Contracts\HasInteractsWithOperators;
+use Kettasoft\Filterable\Engines\Foundation\Operators\OperatorResolver;
 use Kettasoft\Filterable\Support\Payload;
 
 abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Strictable, Executable, HasAllowedFieldChecker, Skippable
@@ -126,6 +127,51 @@ abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Stricta
         || in_array($operator, $requested, true),
       ARRAY_FILTER_USE_BOTH
     );
+  }
+
+  /**
+   * Get the globally allowed operators restricted by a field policy.
+   *
+   * Exact field policies take precedence over the optional `*` fallback.
+   * Policy entries may use either public aliases or resolved operator names.
+   *
+   * @param string $field Public filter field before field mapping.
+   * @return array<string, string>
+   */
+  public function allowedOperatorsFor(string $field): array
+  {
+    $allowed = $this->allowedOperators();
+    $policies = $this->context->getFieldOperatorPolicies();
+    $policy = $policies[$field] ?? $policies['*'] ?? null;
+
+    if ($policy === null) {
+      return $allowed;
+    }
+
+    $policy = array_map(
+      [OperatorResolver::class, 'normalize'],
+      array_values(array_filter($policy, 'is_string'))
+    );
+
+    return array_filter(
+      $allowed,
+      fn($operator, $alias) => in_array(OperatorResolver::normalize((string) $alias), $policy, true)
+        || in_array(OperatorResolver::normalize((string) $operator), $policy, true),
+      ARRAY_FILTER_USE_BOTH
+    );
+  }
+
+  /**
+   * Determine whether a field has an exact or fallback operator policy.
+   *
+   * @param string $field Public filter field before field mapping.
+   * @return bool
+   */
+  public function hasOperatorPolicyFor(string $field): bool
+  {
+    $policies = $this->context->getFieldOperatorPolicies();
+
+    return array_key_exists($field, $policies) || array_key_exists('*', $policies);
   }
 
   /**
