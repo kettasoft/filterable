@@ -9,7 +9,7 @@ use Illuminate\Support\Traits\ForwardsCalls;
 use Kettasoft\Filterable\Contracts\FilterableContext;
 use Kettasoft\Filterable\Exceptions\FilterIsNotDefinedException;
 use Kettasoft\Filterable\Filterable;
-use Kettasoft\Filterable\Foundation\Contracts\QueryBuilderInterface;
+use Kettasoft\Filterable\Foundation\Invoker;
 
 class FilterResolver
 {
@@ -41,9 +41,9 @@ class FilterResolver
   /**
    * Bind the filter instance to model.
    * @throws \Kettasoft\Filterable\Exceptions\FilterIsNotDefinedException
-   * @return QueryBuilderInterface
+   * @return Invoker|Builder
    */
-  public function resolve(): QueryBuilderInterface|Filterable
+  public function resolve(): Invoker|Builder
   {
     if ($this->filter instanceof FilterableContext) {
       return $this->forwardCallTo($this->filter, 'apply', [$this->builder]);
@@ -66,10 +66,11 @@ class FilterResolver
 
   /**
    * Apply the filter to the query builder.
-   * 
-   * @param mixed $filter
+   *
+   * @param class-string<FilterableContext> $filter
+   * @return Invoker|Builder
    */
-  protected function apply($filter)
+  protected function apply(string $filter): Invoker|Builder
   {
     $filter = App::make($filter);
     return $this->forwardCallTo($filter, 'apply', [$this->builder]);

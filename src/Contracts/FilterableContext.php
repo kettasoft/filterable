@@ -2,19 +2,19 @@
 
 namespace Kettasoft\Filterable\Contracts;
 
-use Kettasoft\Filterable\Engines\Contracts\{
-  TreeFilterableContext,
-  RulesetFilterableContect,
-  ExpressionEngineContext,
-  InvokableEngineContext
-};
-use Kettasoft\Filterable\Sanitization\Sanitizer;
+use Illuminate\Contracts\Database\Eloquent\Builder;
+use Kettasoft\Filterable\Foundation\Invoker;
 
-interface FilterableContext extends TreeFilterableContext, RulesetFilterableContect, ExpressionEngineContext, InvokableEngineContext
+/**
+ * Contract for filter objects that can be resolved by model integration.
+ */
+interface FilterableContext
 {
   /**
-   * Get sanitizer instance.
-   * @return Sanitizer
+   * Apply the filter to an Eloquent query.
+   *
+   * @param Builder|null $builder
+   * @return Invoker|Builder
    */
-  public function getSanitizerInstance(): Sanitizer;
+  public function apply(Builder|null $builder = null): Invoker|Builder;
 }
