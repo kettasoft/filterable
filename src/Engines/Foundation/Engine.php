@@ -5,7 +5,6 @@ namespace Kettasoft\Filterable\Engines\Foundation;
 use Kettasoft\Filterable\Filterable;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Kettasoft\Filterable\Engines\Contracts\Skippable;
-use Kettasoft\Filterable\Engines\Contracts\Executable;
 use Kettasoft\Filterable\Engines\Contracts\Strictable;
 use Kettasoft\Filterable\Engines\Contracts\HasFieldMap;
 use Kettasoft\Filterable\Engines\Exceptions\SkipExecution;
@@ -14,7 +13,7 @@ use Kettasoft\Filterable\Engines\Contracts\HasInteractsWithOperators;
 use Kettasoft\Filterable\Engines\Foundation\Operators\OperatorResolver;
 use Kettasoft\Filterable\Support\Payload;
 
-abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Strictable, Executable, HasAllowedFieldChecker, Skippable
+abstract class Engine implements HasInteractsWithOperators, HasFieldMap, Strictable, HasAllowedFieldChecker, Skippable
 {
   /**
    * Create Engine instance.

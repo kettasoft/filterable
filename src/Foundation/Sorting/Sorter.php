@@ -4,7 +4,6 @@ namespace Kettasoft\Filterable\Foundation\Sorting;
 
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Database\Eloquent\Builder;
-use Kettasoft\Filterable\Engines\Contracts\Appliable;
 use Kettasoft\Filterable\Foundation\Contracts\Sortable;
 
 /**
@@ -15,7 +14,7 @@ use Kettasoft\Filterable\Foundation\Contracts\Sortable;
  * @mixin \Kettasoft\Filterable\Foundation\Contracts\Sortable
  * @link https://kettasoft.github.io/filterable/sorting
  */
-class Sorter implements Appliable, Sortable
+class Sorter implements Sortable
 {
   /**
    * List of allowed sortable fields.

@@ -14,6 +14,8 @@ All notable changes to this project will be documented in this file.
 - The unused `Resources`, `FilterableSettings`, and resource bag APIs.
 - Legacy field-validation, mapping, and tree-relation helpers superseded by the
   shared payload pipeline.
+- Pass-through `Applier` and `Executer` abstractions and their redundant
+  contracts; engines and payload appliers are now invoked directly.
 
 ## [3.0.1] - 2026-09-12
 
