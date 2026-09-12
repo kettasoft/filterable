@@ -20,7 +20,7 @@ trait InteractsWithFilterable
 {
   /**
    * Apply all relevant thread filters.
-   * @param \Illuminate\Contracts\Database\Eloquent\Builder $query
+   * @param $query
    * @param FilterableContext|string|array|null $filter
    * @return Invoker|Builder
    */
@@ -31,7 +31,7 @@ trait InteractsWithFilterable
 
   /**
    * Get defined filterable class from model.
-   * @throws \Kettasoft\Filterable\Exceptions\FilterClassNotResolvedException
+   * @throws FilterClassNotResolvedException
    */
   public function getFilterable()
   {
@@ -40,15 +40,5 @@ trait InteractsWithFilterable
     }
 
     return $this->filterable;
-  }
-
-  /**
-   * Get the number of models to return per page.
-   *
-   * @return int
-   */
-  public function getPerPage()
-  {
-    return config('filterable.paginate_limit') ?? request('perPage', parent::getPerPage());
   }
 }

@@ -70,6 +70,19 @@ class FilterableFacadeTest extends TestCase
     }
 
     /** @test */
+    public function it_can_configure_the_runtime_pagination_policy()
+    {
+        $filterable = Filterable::paginationPolicy(
+            defaultPerPage: 20,
+            maxPerPage: 50,
+            parameter: 'limit',
+            overflow: 'reject'
+        );
+
+        $this->assertInstanceOf(\Kettasoft\Filterable\Filterable::class, $filterable);
+    }
+
+    /** @test */
     public function it_can_ignore_empty_values()
     {
         $filterable = Filterable::ignoreEmptyValues();

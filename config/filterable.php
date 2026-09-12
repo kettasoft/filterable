@@ -566,13 +566,21 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Default Paginator Limit For `paginateFilter` and `simplePaginateFilter`
+    | Pagination Policy
     |--------------------------------------------------------------------------
     |
-    | Set paginate limit
+    | Pagination calls made through filter() read their page size from the
+    | configured query parameter and enforce a consistent maximum. Explicit
+    | paginate() arguments take precedence over request input, but they remain
+    | subject to the same maximum.
     |
     */
-    'paginate_limit' => env('PAGINATION_LIMIT_DEFAULT', 15),
+    'pagination' => [
+        'parameter' => env('FILTERABLE_PAGINATION_PARAMETER', 'per_page'),
+        'default' => (int) env('FILTERABLE_PAGINATION_DEFAULT', 15),
+        'max' => (int) env('FILTERABLE_PAGINATION_MAX', 100),
+        'overflow' => env('FILTERABLE_PAGINATION_OVERFLOW', 'clamp'),
+    ],
 
     /*
     |--------------------------------------------------------------------------

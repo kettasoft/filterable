@@ -30,6 +30,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Kettasoft\Filterable\Foundation\Invoker|\Illuminate\Contracts\Database\Eloquent\Builder filter(\Illuminate\Contracts\Database\Eloquent\Builder|null $builder = null) Alias name for apply method.
  * @method static \Kettasoft\Filterable\Filterable sorting(callable|string|\Kettasoft\Filterable\Foundation\Contracts\Sorting\Invokable $sorting) Define sorting rules for the current filterable instance.
  * @method static \Kettasoft\Filterable\Filterable shouldReturnQueryBuilder() Should return Query Builder instance when invoke apply.
+ * @method static \Kettasoft\Filterable\Filterable paginationPolicy(int|null $defaultPerPage = null, int|null $maxPerPage = null, string|null $parameter = null, string|null $overflow = null) Override pagination policy settings for this filter instance.
  * 
  * Model Configuration:
  * @method static \Kettasoft\Filterable\Filterable setModel(\Illuminate\Database\Eloquent\Model|string $model) Set model.

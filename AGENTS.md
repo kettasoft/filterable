@@ -164,6 +164,25 @@ provably engine-specific.
   surface in permissive mode.
 - New failure modes require tests for strict and permissive behavior.
 
+## Pagination policy
+
+- Pagination policy belongs to the Filterable execution boundary, not to an
+  engine; keep it consistent across every engine.
+- Calls to `paginate()`, `simplePaginate()`, and `cursorPaginate()` forwarded
+  through the `Invoker` must use the same policy resolver.
+- When `shouldReturnQueryBuilder()` is enabled, pagination called directly on
+  the Filterable instance must use the shared argument adapter before forwarding
+  to the raw builder. A builder returned by an explicit `apply()` call is outside
+  the package execution boundary.
+- An explicit `$perPage` argument takes precedence over request input, but the
+  effective maximum remains authoritative.
+- Preserve Laravel pagination arguments, named arguments, paginator return
+  types, and `paginate()` closure support.
+- Do not apply Filterable pagination policy to direct Eloquent queries that do
+  not pass through `filter()`.
+- Normalize pagination arguments before cache keys are generated so equivalent
+  effective page sizes share the correct execution identity.
+
 ## Invokable attributes and sanitization
 
 - Method attributes operate through `AttributeContext`,

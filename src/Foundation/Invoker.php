@@ -13,6 +13,8 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
 use Kettasoft\Filterable\Foundation\Profiler\Profiler;
 use Illuminate\Contracts\Database\Eloquent\Builder as EloquentBuilder;
 use Kettasoft\Filterable\Foundation\Contracts\HasDynamicCalls;
+use Kettasoft\Filterable\Foundation\Pagination\PaginationPolicy;
+use Kettasoft\Filterable\Foundation\Pagination\PaginationArguments;
 
 use Kettasoft\Filterable\Foundation\Traits\HandleFluentReturn;
 use Kettasoft\Filterable\Foundation\Caching\FilterableCacheManager;
@@ -87,6 +89,16 @@ class Invoker implements QueryBuilderInterface, Serializable, HasDynamicCalls
    * @var bool
    */
   protected bool $cacheForever = false;
+
+  /**
+   * Pagination policy applied to pagination calls forwarded by this invoker.
+   */
+  protected ?PaginationPolicy $paginationPolicy = null;
+
+  /**
+   * Page-size value read from the policy's configured request parameter.
+   */
+  protected mixed $requestedPerPage = null;
 
   /**
    * Create a new Invoker instance.
@@ -231,6 +243,21 @@ class Invoker implements QueryBuilderInterface, Serializable, HasDynamicCalls
   }
 
   /**
+   * Apply a pagination policy to pagination calls forwarded by this invoker.
+   *
+   * @param PaginationPolicy $policy The effective global, class, and runtime policy.
+   * @param mixed $requestedPerPage Page size read from request input.
+   * @return static
+   */
+  public function withPaginationPolicy(PaginationPolicy $policy, mixed $requestedPerPage = null): static
+  {
+    $this->paginationPolicy = $policy;
+    $this->requestedPerPage = $requestedPerPage;
+
+    return $this;
+  }
+
+  /**
    * Check if this is a terminal method that should fetch data
    *
    * @param string $method
@@ -308,7 +335,9 @@ class Invoker implements QueryBuilderInterface, Serializable, HasDynamicCalls
       'builder_bindings' => $this->builder->getBindings(),
       'beforeCallback' => $this->beforeCallback ? serialize($this->beforeCallback) : null,
       'afterCallback' => $this->afterCallback ? serialize($this->afterCallback) : null,
-      'errorCallback' => $this->errorCallback ? serialize($this->errorCallback) : null
+      'errorCallback' => $this->errorCallback ? serialize($this->errorCallback) : null,
+      'paginationPolicy' => $this->paginationPolicy?->toArray(),
+      'requestedPerPage' => $this->requestedPerPage,
     ]);
   }
 
@@ -330,6 +359,10 @@ class Invoker implements QueryBuilderInterface, Serializable, HasDynamicCalls
     $this->beforeCallback = $unserialized['beforeCallback'];
     $this->afterCallback = $unserialized['afterCallback'];
     $this->errorCallback = $unserialized['errorCallback'];
+    $this->paginationPolicy = isset($unserialized['paginationPolicy'])
+      ? PaginationPolicy::fromArray($unserialized['paginationPolicy'])
+      : null;
+    $this->requestedPerPage = $unserialized['requestedPerPage'] ?? null;
   }
 
   /**
@@ -342,6 +375,8 @@ class Invoker implements QueryBuilderInterface, Serializable, HasDynamicCalls
    */
   public function __call($method, $args)
   {
+    $args = $this->applyPaginationPolicy($method, $args);
+
     if (is_callable($callback = $this->beforeCallback)) {
       call_user_func($callback, $this->builder);
     }
@@ -366,6 +401,27 @@ class Invoker implements QueryBuilderInterface, Serializable, HasDynamicCalls
 
       throw $th;
     }
+  }
+
+  /**
+   * Resolve the per-page argument for Laravel pagination methods.
+   *
+   * @param string $method Forwarded builder method.
+   * @param array $args Arguments supplied to the builder method.
+   * @return array Arguments with a policy-compliant per-page value.
+   */
+  protected function applyPaginationPolicy(string $method, array $args): array
+  {
+    if ($this->paginationPolicy === null) {
+      return $args;
+    }
+
+    return PaginationArguments::resolve(
+      $method,
+      $args,
+      $this->paginationPolicy,
+      $this->requestedPerPage
+    );
   }
 
   /**

@@ -56,6 +56,11 @@ Terminal builder methods such as `get()`, `first()`, and `paginate()` apply the 
 automatically. Do not add repeated `apply()` calls unless the code specifically needs the
 applied Eloquent builder before a terminal operation.
 
+Pagination calls made through `filter()` also apply the package pagination policy. Prefer
+the familiar `paginate()`, `simplePaginate()`, and `cursorPaginate()` methods. Use
+`paginationPolicy(maxPerPage: ...)` for a justified endpoint-specific limit; do not pass a
+large explicit page size expecting it to bypass the configured maximum.
+
 ## Choose the engine from the request contract
 
 Do not change engines without checking the client request shape.
