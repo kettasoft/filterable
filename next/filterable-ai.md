@@ -118,6 +118,10 @@ The filter class discovers eligible apply methods automatically. Do not introduc
 - Treat all filter input as untrusted.
 - Prefer explicit field and operator allowlists with `setAllowedFields()` and
   `allowedOperators()`.
+- Use `operatorPolicies()` when different fields require different operator subsets.
+  Use `allowOperatorsFor()` only as a convenient update for one or two fields.
+  Treat its policies as restrictions on the engine-wide allowlist, not as a way to
+  register new operators.
 - Preserve the package lifecycle: authorization, request validation, payload
   sanitization, then filter application.
 - Use strict mode when invalid fields or operators must fail visibly; otherwise confirm
@@ -142,6 +146,22 @@ The package accepts supported relational input in nested or dot notation. Do not
 arbitrary relation fields or use a wildcard unless the application deliberately permits it.
 
 ## Operator strategies
+
+Field-specific policies may use public aliases or resolved operator values:
+
+```php
+$filterable
+    ->allowedOperators(['eq', 'like', 'gte', 'lte'])
+    ->operatorPolicies([
+        'status' => ['eq'],
+        'title' => ['eq', 'like'],
+        'views' => ['gte', 'lte'],
+    ]);
+```
+
+Policies are matched against the public field name before field mapping. Exact policies
+override the optional `*` policy. A violation throws in strict mode and is recorded as a
+skipped filter in permissive mode; do not manually replace it with another operator.
 
 Ruleset, Expression, and Tree share the operator strategy pipeline. For a custom operator:
 
