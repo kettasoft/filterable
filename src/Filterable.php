@@ -10,7 +10,6 @@ use Illuminate\Support\Traits\Macroable;
 use Illuminate\Support\Traits\ForwardsCalls;
 use Kettasoft\Filterable\Foundation\Invoker;
 use Kettasoft\Filterable\Contracts\Commitable;
-use Kettasoft\Filterable\Foundation\Resources;
 use Kettasoft\Filterable\Contracts\Validatable;
 use Kettasoft\Filterable\Contracts\Authorizable;
 use Kettasoft\Filterable\Sanitization\Sanitizer;
@@ -21,7 +20,6 @@ use Kettasoft\Filterable\Foundation\Sorting\Sorter;
 use Kettasoft\Filterable\Contracts\FilterableContext;
 use Kettasoft\Filterable\Engines\Factory\EngineManager;
 use Kettasoft\Filterable\Foundation\Contracts\Sortable;
-use Kettasoft\Filterable\Foundation\FilterableSettings;
 use Kettasoft\Filterable\Exceptions\MissingBuilderException;
 use Kettasoft\Filterable\Foundation\Runtime\Context;
 use Kettasoft\Filterable\Foundation\Traits\HandleFluentReturn;
@@ -54,12 +52,6 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
    * @var Engine
    */
   protected Engine $engine;
-
-  /**
-   * Resources instance.
-   * @var Resources
-   */
-  protected Resources $resources;
 
   /**
    * Registered filters to operate upon.
@@ -218,7 +210,6 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
   public function booting()
   {
     $this->sanitizer = new Sanitizer($this->sanitizers);
-    $this->resources = new Resources($this->settings());
     $this->resolveEngine();
     $this->parseIncomingRequestData();
   }
@@ -364,30 +355,6 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
   private function registerEventManager(array $options = [])
   {
     self::$eventManager = App::make(FilterableEventManager::class, $options);
-  }
-
-  /**
-   * Get Resources instance.
-   * @return Resources
-   */
-  public function getResources(): Resources
-  {
-    return $this->resources;
-  }
-
-  /**
-   * Get FilterableSettings instance.
-   * @return FilterableSettings
-   */
-  public function settings(): FilterableSettings
-  {
-    return FilterableSettings::init(
-      $this->allowedFields,
-      $this->relations,
-      $this->allowedOperators,
-      $this->sanitizers,
-      $this->fieldsMap
-    );
   }
 
   /**
@@ -1040,7 +1007,6 @@ class Filterable implements FilterableContext, Authorizable, Validatable, Commit
   public function setAllowedFields(array $fields, bool $override = false): static
   {
     $this->allowedFields = $override ? $fields : array_merge($this->allowedFields, $fields);
-    $this->resources->fields->fill($this->allowedFields);
     return $this;
   }
 

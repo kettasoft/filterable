@@ -26,8 +26,6 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Illuminate\Support\Collection aliases(array $aliases) Get all aliases.
  * 
  * Core Filtering Methods:
- * @method static \Kettasoft\Filterable\Foundation\Resources getResources() Get Resources instance.
- * @method static \Kettasoft\Filterable\Foundation\FilterableSettings settings() Get FilterableSettings instance.
  * @method static \Kettasoft\Filterable\Foundation\Invoker|\Illuminate\Contracts\Database\Eloquent\Builder apply(\Illuminate\Contracts\Database\Eloquent\Builder|null $builder = null) Apply all filters.
  * @method static \Kettasoft\Filterable\Foundation\Invoker|\Illuminate\Contracts\Database\Eloquent\Builder filter(\Illuminate\Contracts\Database\Eloquent\Builder|null $builder = null) Alias name for apply method.
  * @method static \Kettasoft\Filterable\Filterable sorting(callable|string|\Kettasoft\Filterable\Foundation\Contracts\Sorting\Invokable $sorting) Define sorting rules for the current filterable instance.
