@@ -191,6 +191,24 @@ Supports depth limiting, strict operator whitelisting, and normalized field keys
 
 ## Features
 
+### Field-specific operator policies
+
+Restrict operators per public field without weakening the engine-wide allowlist:
+
+```php
+$posts = Filterable::for(Post::class, $request)
+    ->using('ruleset')
+    ->setAllowedFields(['status', 'title', 'views'])
+    ->operatorPolicies([
+        '*' => ['eq'],
+        'title' => ['eq', 'like'],
+        'views' => ['eq', 'gte', 'lte'],
+    ])
+    ->paginate();
+```
+
+Exact field policies override the `*` fallback. Policy violations throw in strict mode and are recorded as skipped filters in permissive mode.
+
 ### Caching
 
 A complete caching system built into the filter pipeline — not bolted on after the fact.

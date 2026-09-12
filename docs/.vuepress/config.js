@@ -259,6 +259,10 @@ export default defineUserConfig({
                             text: "Operator Strategies",
                             link: "/features/operators",
                         },
+                        {
+                            text: "Field Operator Policies",
+                            link: "/features/field-operator-policies",
+                        },
                     ],
                 },
                 {

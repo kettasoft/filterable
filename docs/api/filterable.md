@@ -51,6 +51,7 @@ $users = $invoker->paginate();
 | `$data`              | `array`                                           | Merged request data (query + json).             |
 | `$allowedFields`     | `array`                                           | Whitelisted fields for filtering.               |
 | `$allowedOperators`  | `array`                                           | Allowed SQL operators for expression parsing.   |
+| `$fieldOperatorPolicies` | `array<string, list<string>>`                 | Additional operator restrictions per public field. |
 | `$strict`            | `bool \| null`                                    | Explicit strict or permissive mode.             |
 | `$fieldsMap`         | `array`                                           | Field-name mapping (input -> column).           |
 | `$model`             | `\Illuminate\Database\Eloquent\Model \| string`   | The target model or class-string.               |
@@ -269,6 +270,37 @@ $filterable->allowedOperators(['>=', 'in']);
 #### `getAllowedOperators(): array`
 
 Return allowed operators.
+
+#### `allowOperatorsFor(string|array $fields, array $operators): static`
+
+Restrict one or more public fields to a subset of the globally available operators.
+
+```php
+$filterable
+    ->allowOperatorsFor('status', ['eq', 'in'])
+    ->allowOperatorsFor(['price', 'discount'], ['eq', 'gte', 'lte']);
+```
+
+#### `operatorPolicies(array $policies, bool $override = true): static`
+
+Configure many field policies in one call. Exact fields and the optional `*`
+fallback share the same map:
+
+```php
+$filterable->operatorPolicies([
+    '*' => ['eq'],
+    'status' => ['eq', 'in'],
+    'title' => ['eq', 'like'],
+    'views' => ['eq', 'gte', 'lte'],
+]);
+```
+
+Pass `false` as the second argument to merge with existing policies. Duplicate
+field entries are replaced rather than merging their operator lists.
+
+#### `getFieldOperatorPolicies(): array`
+
+Return all exact-field and wildcard operator policies.
 
 #### `setFieldsMap($fields, bool $override = true): static`
 
